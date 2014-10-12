@@ -63,8 +63,8 @@
 
 	<target name="test" depends="compile-test"
 		description="Run unit tests">
-		<junit printsummary="yes" showoutput="yes">
-			<classpath refid="junit.class.path" />
+		<junit printsummary="yes" showoutput="yes" fork="true">
+			<classpath refid="junit.class.path"/>
 			<batchtest>
 				<fileset dir="${src}">
 					<include name="**/test/**/*Test*" />

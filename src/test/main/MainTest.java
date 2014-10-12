@@ -10,7 +10,7 @@ public class MainTest {
 
 	@Test
 	public void test() {
-		assertEquals("Hello World! FALSE!", Main.test());
+		assertEquals("Hello World!", Main.test());
 	}
 
 }

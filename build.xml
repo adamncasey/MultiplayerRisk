@@ -1,0 +1,68 @@
+<project name="RiskyBusiness" default="dist" basedir=".">
+	<description>
+		Project Description?
+	</description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src"/>
+	<property name="testsrc" location="test"/>
+	<property name="build" location="build"/>
+	<property name="bin"  location="bin"/>
+	<property name="lib" location="lib" />
+	
+	<!-- Class path for JUnit + built files -->
+	<path id="junit.class.path">
+		<fileset dir="${lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="compile" depends="init"
+		description="Compile main program source" >
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}">
+			<classpath refid="junit.class.path" />
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile"
+		description="generate the distribution" >
+		<!-- Create the distribution directory -->
+		<mkdir dir="${bin}/lib"/>
+
+		<!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+		<jar jarfile="${bin}/lib/MyProject-${DSTAMP}.jar" basedir="${build}"/>
+	</target>
+
+	<target name="clean"
+		description="clean up" >
+		<!-- Delete the ${build} and ${bin} directory trees -->
+		<delete dir="${build}"/>
+		<delete dir="${bin}"/>
+	</target>
+
+	<target name="compile-test" depends="compile"
+		description="Compile test code" >
+		<!-- Compile the java code from ${testsrc} into ${build} -->
+		<javac srcdir="${testsrc}" destdir="${build}"/>
+	</target>
+
+	<target name="test" depends="compile-test"
+		description="Run unit tests">
+		<junit printsummary="yes" showoutput="yes">
+			<classpath refid="junit.class.path" />
+			<batchtest>
+				<fileset dir="${testsrc}">
+					<include name="**/*Test*" />
+				</fileset>
+			</batchtest>
+			<formatter type="plain" usefile="false"/>
+		</junit>
+	</target>
+</project>

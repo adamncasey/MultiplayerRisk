@@ -16,13 +16,11 @@ public class Game {
     */
     private ArrayList<IPlayer> players;
 
-
    /**
     * Configure the game for a specific set of players and settings.
     * @param players The list of IPlayers that will play the game
-    * @return No return value
     */
-    public void initialize(ArrayList<IPlayer> players){
+    public Game(ArrayList<IPlayer> players){
         this.players = new ArrayList<IPlayer>(players);
     }
 

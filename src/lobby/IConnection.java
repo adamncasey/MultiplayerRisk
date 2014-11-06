@@ -3,6 +3,11 @@ package lobby;
 /**
  * IConnection: Low level interface for connection to network entities.
  * @author James
+ * 
+ * Possible nice additions:
+ * -> Error recovery.
+ * -> Reconnection functionality.
+ *  
  */
 public interface IConnection {
 	

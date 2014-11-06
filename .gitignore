@@ -13,3 +13,5 @@ hs_err_pid*
 
 # Vim temp files
 *.swp
+.project
+.classpath

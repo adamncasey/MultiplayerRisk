@@ -1,5 +1,4 @@
 package lobby;
-import networking.Message;
 
 /**
  * IConnection: Low level interface for connection to network entities.
@@ -23,7 +22,7 @@ public interface IConnection {
 	 * @return Response code.
 	 * @throws ConnectionLostException If the connection is lost.
 	 */
-	public int sendMessage(Message message) throws ConnectionLostException;
+	public void send(String message) throws ConnectionLostException;
 	
 	/**
 	 * Receives a message.
@@ -31,7 +30,7 @@ public interface IConnection {
 	 * @throws ConnectionLostException If the connection is lost.
 	 * @throws TimeoutException If response times-out.
 	 */
-	public Message recieveMessage() throws ConnectionLostException, TimeoutException;
+	public String receive() throws ConnectionLostException, TimeoutException;
 	
 	/**
 	 * Sets the message timeout.
@@ -46,13 +45,7 @@ public interface IConnection {
 	public int getTimeout();
 	
 	/**
-	 * Sets the listening port number.
-	 * @param port Port number
-	 */
-	public void setPort(int port);
-	
-	/**
-	 * Sets the listening port number.
+	 * Returns the remote port number to which this socket is connected.
 	 * @return Port number
 	 */
 	public int getPort();

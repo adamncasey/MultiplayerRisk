@@ -68,6 +68,8 @@ public class LocalGameLobby extends GameLobby {
 		IConnection newConnection;
 
 		// TODO: Start broadcasting the lobby.
+		LobbyMulticastThread t = new LobbyMulticastThread();
+		t.run();
 
 		// Listen for new clients.
 		try {

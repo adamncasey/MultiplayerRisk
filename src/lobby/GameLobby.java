@@ -8,6 +8,14 @@ import player.IPlayer;
  *
  */
 public abstract class GameLobby {
+	
+	/**
+	 * Default listening port.
+	 */
+	public static final int DEFAULT_GAME_PORT = 4444;
+	
+	// The max number of players in a lobby.
+	public static final int MAX_LOBBY_SIZE = 10; 
 
 	/**
 	 * Gets the IP address of the lobby.

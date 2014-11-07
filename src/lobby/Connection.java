@@ -103,6 +103,7 @@ public class Connection implements IConnection {
 			socket.setSoTimeout(milliseconds);
 		} catch (SocketException e) {
 			// TODO: Log exception ?
+			e.printStackTrace();
 		}
 	}
 

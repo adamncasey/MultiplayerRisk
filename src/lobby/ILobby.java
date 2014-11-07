@@ -25,5 +25,5 @@ public interface ILobby {
 	 * @return The game lobby created.
 	 * @throws PortInUseException If the port is already in use.
 	 */
-	public LocalGameLobby createGameLobby() throws PortInUseException;
+	public LocalGameLobby createGameLobby(String friendlyName) throws PortInUseException;
 }

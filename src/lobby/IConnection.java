@@ -12,11 +12,6 @@ package lobby;
 public interface IConnection {
 	
 	/**
-	 * Default listening port.
-	 */
-	public static final int DEFAULT_LISTENING_PORT = 1000;
-	
-	/**
 	 * The default timeout for receipt of a message.
 	 */
 	public static final int DEFAULT_TIMEOUT = 1000;

@@ -1,31 +1,29 @@
 package lobby;
 
-import player.IPlayer;
-
 /**
- * ILobby: Interface representing a game lobby.
+ * Interface through which UI performs lobby related actions.
  * @author James
  *
  */
 public interface ILobby {
 
 	/**
-	 * Gets the IP address of the lobby.
-	 * @return IP Address of the lobby host.
+	 * Searches the network for game lobbies.
+	 * @return Game lobbies found on the network.
 	 */
-	public String getHostIPAddress();
+	public RemoteGameLobby[] searchForLobbies();
 	
 	/**
-	 * Gets information about the players in the lobby.
-	 * @return Players in the lobby.
+	 * Joins a game lobby.
+	 * @param lobby The lobby to join.
+	 * @return True if joined successfully.
 	 */
-	public IPlayer[] getPlayers();
+	public boolean joinGameLobby(RemoteGameLobby lobby);
 	
 	/**
-	 * Gets the friendly name of the lobby.
-	 * @return Friendly name of the lobby.
+	 * Creates a game lobby.
+	 * @return The game lobby created.
+	 * @throws PortInUseException If the port is already in use.
 	 */
-	public String getName();
-	
-	
+	public LocalGameLobby createGameLobby() throws PortInUseException;
 }

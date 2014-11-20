@@ -22,12 +22,12 @@ public class SimplePlayer implements IPlayer {
     }
 
     public Message getMove(int stage){
-        Message m = new Message();
+        Message m = null;
         return m;
     }
 
     public boolean confirmMove(int stage, Message move){
-        Message m = new Message();
+        Message m = null;
         // SimplePlayer uses the game state to confirm moves,
         // other players would confirm moves in other ways (i.e. across the network)
         return state.isMoveValid(m);

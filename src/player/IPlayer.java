@@ -18,6 +18,8 @@ public interface IPlayer {
     public String getId(); 
 
    /**
+    * TODO: I don't think this method should return Message. We could do with a GameMove type. (Adam)
+    * 
     * Get a move from the player.
     * @param stage The tye of move (current stage of the turn)
     * @return The move in Message format

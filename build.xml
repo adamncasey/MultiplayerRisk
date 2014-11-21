@@ -11,10 +11,12 @@
 	<property name="out.dir"  location="bin" />
 	<property name="out.jarname" location="${out.dir}/RiskyBusiness.jar" />
 
-	<!-- Class path for JUnit lib + non-test files -->
+	<!-- Class path for libraries + non-test files -->
 	<path id="junit.class.path">
 		<pathelement location="${lib}/junit-4.11.jar"/>
 		<pathelement location="${lib}/hamcrest-core-1.2.1.jar"/>
+		
+		<pathelement location="${lib}/json-simple-1.1.1.jar"/>
 
 		<pathelement path="${build}"/>
 	</path>

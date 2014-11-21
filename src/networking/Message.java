@@ -4,11 +4,18 @@ package networking;
  * The format network messages are parsed into/serialised from.
  */
 public class Message {
-	Command command;
+	public Message(Command command, boolean signed, long playerId, Object payload) {
+		this.command = command;
+		this.payload = payload;
+		this.signed = signed;
+		this.playerId = playerId;
+	}
 	
-	Object payload;
+	public final Command command;
 	
-	String signature; // May not make it into final protocol
+	public final Object payload;
 	
-	String playerId;
+	public final boolean signed; // Not filled in at the moment.
+	
+	public final long playerId;
 }

@@ -216,7 +216,7 @@ public class MessageParserTests {
 				"}\r\n" + 
 				"";
 		
-		Message msg = Parser.parseMessage(message);
+		Parser.parseMessage(message);
 	}
 
 	@Test(expected=ParserException.class)
@@ -230,14 +230,14 @@ public class MessageParserTests {
 				"}\r\n" + 
 				"";
 		
-		Message msg = Parser.parseMessage(message);
+		Parser.parseMessage(message);
 	}
 
 	@Test(expected=ParserException.class)
 	public void testJsonMustBeObject() throws ParserException {
 		String message = "[]";
 		
-		Message msg = Parser.parseMessage(message);
+		Parser.parseMessage(message);
 	}
 
 }

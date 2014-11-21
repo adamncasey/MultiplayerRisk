@@ -11,4 +11,21 @@ public class LobbyClient {
      *          Received PING
      *
      */
+	
+	public boolean accept() {
+		// send message JOIN_ACCEPT (player_id, ack timeout, move timeout)
+		return false;
+	}
+	
+	public void reject() {
+		
+	}
+	
+	public void sendPing() {
+		
+	}
+	
+	public void receivePing() {
+		
+	}
 }

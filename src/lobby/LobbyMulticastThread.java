@@ -47,15 +47,9 @@ public class LobbyMulticastThread extends Thread {
             }
             
 
-		} catch (SocketException e) {
+		} catch (Exception e) {
 			// TODO: Log exception ?
 			e.printStackTrace();
-		} catch (UnknownHostException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 	}
 }

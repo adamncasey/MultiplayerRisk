@@ -2,9 +2,7 @@ package networking;
 
 import player.IPlayer;
 
-import lobby.LobbyClient;
-
-import java.net.ServerSocket;
+import java.net.Socket;
 
 // Interface used by GameManager / NetworkPlayer?
 public class Network {
@@ -19,7 +17,7 @@ public class Network {
 	 * @param socket
 	 * @return
 	 */
-	public static LobbyClient getLobbyClient(ServerSocket socket) {
+	public static LobbyClient getLobbyClient(Socket socket) {
 		// socket.accept
 
 		// readMessage

@@ -1,4 +1,4 @@
-package lobby;
+package networking;
 
 /**
  * Stores Client state through the Lobby process

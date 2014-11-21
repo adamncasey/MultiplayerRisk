@@ -6,8 +6,10 @@ import java.util.ArrayList;
 
 import networking.Connection;
 import networking.IConnection;
+import networking.LobbyClient;
 import networking.PortInUseException;
 import player.IPlayer;
+import networking.Network;
 
 /**
  * ILocalGameLobby: A locally hosted game lobby to which network players can
@@ -24,7 +26,7 @@ public class LocalGameLobby extends GameLobby {
 
 	private String friendlyName;
 
-	ArrayList<IPlayer> players = new ArrayList<IPlayer>();
+	ArrayList<LobbyClient> players = new ArrayList<LobbyClient>();
 
 	// ================================================================================
 	// Constructors
@@ -68,9 +70,9 @@ public class LocalGameLobby extends GameLobby {
 	public void open() throws PortInUseException {
 		ServerSocket server;
 		Socket newClient;
-		IConnection newConnection;
+		LobbyClient lobbyClient;
 
-		// TODO: Start broadcasting the lobby.
+		// Start broadcasting the lobby.
 		LobbyMulticastThread t = new LobbyMulticastThread();
 		t.start();
 
@@ -80,10 +82,15 @@ public class LocalGameLobby extends GameLobby {
 
 			while (true) {
 				newClient = server.accept();
-				newConnection = new Connection(newClient);
-
-				// Create IPlayer from the new connection & add to IPlayer.
-				// -> players.add(new NetworkPlayer(...));
+				lobbyClient = Network.getLobbyClient(newClient);
+				
+				// If lobby client.accept() == true
+				if(true) {
+					players.add(lobbyClient);
+				}
+				else {
+					// Scrap it.
+				}
 			}
 		} catch (Exception e) {
 			throw new PortInUseException();

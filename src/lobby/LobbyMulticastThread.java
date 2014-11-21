@@ -8,7 +8,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 /**
- * LobbyBroadcastThread: Broadcasts a lobby on the local network.
+ * LobbyMulticastThread: Broadcasts a lobby on the local network.
  * @author James
  *
  */

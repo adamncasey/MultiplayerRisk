@@ -1,5 +1,7 @@
 package logic;
 
+import java.io.*;
+
 /**
  * Board --- Stores information about the game board.
  */
@@ -8,15 +10,25 @@ public class Board {
     // t[n][0] = territory number
     // t[n][1] = player id
     // t[n][2] = number of armies // not sure if its important to remember what cards make up the army (or if it was an initial army)
-    public int[42][3] territories;
+//    public int[42][3] territories;
 
     // TODO - way to store links between territories.
 
    /**
     * Take a board file and initiate this object.
     */
-    public void loadBoard(String filename){ 
+    public void loadBoard(String filename){
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            String line;
+            while((line = reader.readLine()) != null){
+                System.out.println(line);
+            }
+        } catch(IOException e){
+            e.printStackTrace();
+        }
     }
+
 
     // add one Infantry to any unclaimed territory on the board
     public void setup2ClaimTerritory(GameMove move) throws InvalidTerritoryException {

@@ -1,7 +1,7 @@
 package player;
 
-import logic.GameState;
-import networking.Message;
+import java.util.*;
+import logic.*;
 
 /**
  * SimplePlayer --- Implements the basic features of IPlayer for testing purposes.
@@ -21,7 +21,7 @@ public class SimplePlayer implements IPlayer {
         return id;
     }
 
-    public Card addCard(Card card){
+    public void addCard(Card card){
         hand.add(card);
     }
 
@@ -31,9 +31,9 @@ public class SimplePlayer implements IPlayer {
     }
 
     public boolean confirmMove(int stage, GameMove move){
-        GameMove move = null;
+        GameMove m = null;
         // SimplePlayer uses the game state to confirm moves,
         // other players would confirm moves in other ways (i.e. across the network)
-        return state.isMoveValid(move);
+        return state.isMoveValid(m);
     }
 }

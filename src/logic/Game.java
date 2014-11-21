@@ -3,7 +3,7 @@ package logic;
 import java.util.ArrayList;
 import java.util.Random;
 
-import player.IPlayer;
+import player.*;
 import networking.Message;
 
 /**
@@ -73,7 +73,7 @@ public class Game {
     private void turn(IPlayer activePlayer){
         // Current protocol has 4 stages per turn
         for(int i = 0; i != 4; ++i){
-            Message move = activePlayer.getMove(i);
+            GameMove move = activePlayer.getMove(i);
             boolean legal = true; // Is the move legal?
             for(IPlayer p : players){
                 // Don't confirm with the player who made the move
@@ -84,7 +84,7 @@ public class Game {
                 legal = legal && confirmation;
             }
             if(legal){
-                state.update(move);
+                state.makeMove(move);
             } else {
                 // What do we do when a move isn't legal?
             }

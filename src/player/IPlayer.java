@@ -2,14 +2,13 @@ package player;
 
 import java.util.ArrayList;
 import networking.Message;
+import logic.*;
 
 /**
  * IPlayer --- The common interface between players and game logic.
  */
 public interface IPlayer {
     // This interface will change with the protocol nothing here is final
-
-    private ArrayList<Card> hand;
 
    /**
     * Get the player's unique identifier.

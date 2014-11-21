@@ -2,7 +2,7 @@ package logic;
 
 import java.io.IOException;
 
-public class TerritoryOcupiedException extends IOException {
+public class InvalidTerritoryException extends IOException {
 	
 }
 

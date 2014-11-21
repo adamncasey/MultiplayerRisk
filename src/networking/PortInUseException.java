@@ -1,4 +1,4 @@
-package lobby;
+package networking;
 
 public class PortInUseException extends Exception {
 

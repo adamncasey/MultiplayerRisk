@@ -5,6 +5,7 @@ import networking.parser.ParserException;
 public enum Command {
 	JOIN("join"),
 	JOIN_ACCEPT("accept_join_game"),
+	JOIN_REJECT("reject_join_game"),
 	ACKNOWLEDGEMENT("acknowledgement"),
 	TRADE_IN_CARDS("trade_in_cards"),
 	DEPLOY("deploy"),

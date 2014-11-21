@@ -1,5 +1,7 @@
 package lobby;
 
+import networking.PortInUseException;
+
 /**
  * Interface through which UI performs lobby related actions.
  * @author James
@@ -23,7 +25,7 @@ public interface ILobby {
 	/**
 	 * Creates a game lobby.
 	 * @return The game lobby created.
-	 * @throws PortInUseException If the port is already in use.
+	 * @throws networking.PortInUseException If the port is already in use.
 	 */
 	public LocalGameLobby createGameLobby(String friendlyName) throws PortInUseException;
 }

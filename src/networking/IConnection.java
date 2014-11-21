@@ -1,4 +1,4 @@
-package lobby;
+package networking;
 
 /**
  * IConnection: Low level interface for connection to network entities.

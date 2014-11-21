@@ -4,6 +4,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import networking.Connection;
+import networking.IConnection;
+import networking.PortInUseException;
 import player.IPlayer;
 
 /**
@@ -59,7 +62,7 @@ public class LocalGameLobby extends GameLobby {
 	/**
 	 * Open the lobby to network players.
 	 * 
-	 * @throws PortInUseException
+	 * @throws networking.PortInUseException
 	 *             If the application port is already in use
 	 */
 	public void open() throws PortInUseException {

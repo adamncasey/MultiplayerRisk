@@ -3,7 +3,7 @@ package test.lobby;
 import lobby.LobbyMulticastThread;
 import lobby.LobbyFinder;
 
-public class LobbyTest {
+public class LobbyDevMain {
 
 	public static void main(String[] args) {
         

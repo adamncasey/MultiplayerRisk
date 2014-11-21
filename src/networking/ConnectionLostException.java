@@ -1,4 +1,4 @@
-package lobby;
+package networking;
 
 import java.io.IOException;
 

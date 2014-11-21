@@ -73,7 +73,7 @@ public class Parser {
 		
 		// TODO Signature check.
 		
-		return new Message(command, false, (long) message.get("player_id"), message.get("payload"));
+		return new Message(command, false, (Long) message.get("player_id"), message.get("payload"));
 	}
 	
 	/**

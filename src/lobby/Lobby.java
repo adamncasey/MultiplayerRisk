@@ -1,5 +1,7 @@
 package lobby;
 
+import networking.PortInUseException;
+
 public class Lobby implements ILobby {
 
 	@Override

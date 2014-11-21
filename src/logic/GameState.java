@@ -6,21 +6,23 @@ import networking.Message;
 
 /**
  * GameState --- Stores and updates the game board, can be queried to check if a move is valid.
- * @author Nathan Blades
  */
 public class GameState {
 
+    private Board board;
+    
 
     public GameState(){
     } 
 
 
-    public boolean isMoveValid(Message m){
+    public boolean isMoveValid(GameMove move){
         return true;
     }
 
-    public void update(Message m){
 
-    }
-   
+    // GameMove should have some information about the type of move allowing GameState to update the board appropriately
+    public void makeMove(GameMove move){
+
+    } 
 }

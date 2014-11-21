@@ -7,8 +7,8 @@ import player.IPlayer;
 import networking.Message;
 
 /**
+ * TODO - Decide how this should all work, what is here now doesnt make sense because it assumes a p2p game rather than a central server
  * game --- the main game loop that lets each player take their turn, it links player moves to the gamestate.
- * @author Nathan Blades
  */
 public class Game {
 

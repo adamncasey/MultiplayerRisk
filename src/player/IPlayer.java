@@ -1,15 +1,15 @@
 package player;
 
+import java.util.ArrayList;
 import networking.Message;
 
 /**
  * IPlayer --- The common interface between players and game logic.
- * @author Nathan Blades
  */
 public interface IPlayer {
     // This interface will change with the protocol nothing here is final
-    // Not sure if using Message is best
-    // The current idea is that GameState gets a move from the active player then confirms that the move is ok with all of the other players
+
+    private ArrayList<Card> hand;
 
    /**
     * Get the player's unique identifier.
@@ -18,13 +18,16 @@ public interface IPlayer {
     public String getId(); 
 
    /**
-    * TODO: I don't think this method should return Message. We could do with a GameMove type. (Adam)
-    * 
+    * The Game / Central server will provide a card, the player should keep track of it.
+    */
+    public void addCard(Card card);
+
+   /**
     * Get a move from the player.
     * @param stage The tye of move (current stage of the turn)
-    * @return The move in Message format
+    * @return The move in GameMove format
     */
-    public Message getMove(int stage);
+    public GameMove getMove(int stage);
 
    /**
     * Confirm that a move is legal.
@@ -32,5 +35,5 @@ public interface IPlayer {
     * @param move The move to be confirmed
     * @return True when the move is legal, False otherwise
     */
-    public boolean confirmMove(int stage, Message move);
+    public boolean confirmMove(int stage, GameMove move);
 }

@@ -28,6 +28,11 @@ public class LocalGameLobby extends GameLobby {
 	ArrayList<LobbyClient> players = new ArrayList<LobbyClient>();
 	
 	boolean lobbyOpen = true;
+	
+	
+	public LocalGameLobby(String friendlyName) {
+		this.friendlyName = friendlyName;
+	}
 
 	// ================================================================================
 	// Override

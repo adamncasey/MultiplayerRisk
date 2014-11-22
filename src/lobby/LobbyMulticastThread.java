@@ -22,12 +22,9 @@ public class LobbyMulticastThread extends Thread {
 	
 	byte[] buf = new byte[256];
 	
-	String message = "THIS IS A LOBBY!";
-	
 	public LobbyMulticastThread(String lobbyName) {
-		buf = message.getBytes();
+		buf = lobbyName.getBytes();
 	}
-	
 	
 	public void run() {
 		try {

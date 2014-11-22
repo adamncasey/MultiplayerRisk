@@ -20,7 +20,7 @@ public class Lobby implements ILobby {
 	public LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers)
 			throws PortInUseException {
 		
-		LocalGameLobby lobby = new LocalGameLobby();
+		LocalGameLobby lobby = new LocalGameLobby(friendlyName);
 		lobby.start();
 		
 		return lobby;

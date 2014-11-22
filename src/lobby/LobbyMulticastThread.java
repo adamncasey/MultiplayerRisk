@@ -14,13 +14,13 @@ public class LobbyMulticastThread extends Thread {
 	public static final int BROADCAST_PORT = 4446;
 	public static final String BROADCAST_IP_ADDRESS = "230.0.0.1";
 	
-	private boolean lobbyOpen;
+	private boolean lobbyOpen = true;
 	
 	DatagramSocket socket = null;
 	DatagramPacket packet;
 	InetAddress group;
 	
-	byte[] buf;
+	byte[] buf = new byte[256];
 	
 	String message = "THIS IS A LOBBY!";
 	

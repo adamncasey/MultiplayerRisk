@@ -1,7 +1,9 @@
 package lobby;
 
+import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import networking.LobbyClient;
@@ -33,13 +35,20 @@ public class LocalGameLobby extends GameLobby {
 
 	@Override
 	public String getHostIPAddress() {
-		// TODO Auto-generated method stub
-		return null;
+		String address = "Unknown";
+		
+		try {
+			address = Inet4Address.getLocalHost().getHostAddress().toString();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return address;
 	}
 
 	@Override
 	public ArrayList<LobbyClient> getPlayers() {
-		// TODO Auto-generated method stub
 		return players;
 	}
 

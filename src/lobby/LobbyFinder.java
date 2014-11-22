@@ -30,6 +30,8 @@ public class LobbyFinder {
 				String received = new String(packet.getData(), 0,
 						packet.getLength());
 				System.out.println("Recieved Packet!: " + received);
+				
+				
 			}
 
 			socket.leaveGroup(address);

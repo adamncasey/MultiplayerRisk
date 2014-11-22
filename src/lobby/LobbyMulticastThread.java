@@ -34,7 +34,7 @@ public class LobbyMulticastThread extends Thread {
             
             while(lobbyOpen) {
                 socket.send(packet);
-                System.out.println("Sent packet");
+                //System.out.println("Sent packet");
                 
                 try {
                     sleep(1000);

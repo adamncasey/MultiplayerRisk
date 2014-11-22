@@ -1,6 +1,8 @@
 package lobby;
 
-import player.IPlayer;
+import java.util.ArrayList;
+
+import networking.LobbyClient;
 
 /**
  * IRemoteGameLobby: A remote network game lobby which could be joined.
@@ -16,13 +18,13 @@ public class RemoteGameLobby extends GameLobby {
 	}
 
 	@Override
-	public IPlayer[] getPlayers() {
+	public ArrayList<LobbyClient> getPlayers() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getName() {
+	public String getFriendlyName() {
 		// TODO Auto-generated method stub
 		return null;
 	}

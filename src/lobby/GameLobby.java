@@ -1,13 +1,15 @@
 package lobby;
 
-import player.IPlayer;
+import java.util.ArrayList;
+
+import networking.LobbyClient;
 
 /**
  * ILobby: Interface representing a game lobby.
  * @author James
  *
  */
-public abstract class GameLobby {
+public abstract class GameLobby extends Thread {
 	
 	/**
 	 * Default listening port.
@@ -27,13 +29,13 @@ public abstract class GameLobby {
 	 * Gets information about the players in the lobby.
 	 * @return Players in the lobby.
 	 */
-	public abstract IPlayer[] getPlayers();
+	public abstract ArrayList<LobbyClient> getPlayers();
 	
 	/**
 	 * Gets the friendly name of the lobby.
 	 * @return Friendly name of the lobby.
 	 */
-	public abstract String getName();
+	public abstract String getFriendlyName();
 	
 	
 }

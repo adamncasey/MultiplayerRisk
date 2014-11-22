@@ -17,10 +17,13 @@ public class Lobby implements ILobby {
 	}
 
 	@Override
-	public LocalGameLobby createGameLobby(String friendlyName)
+	public LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers)
 			throws PortInUseException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		LocalGameLobby lobby = new LocalGameLobby();
+		lobby.start();
+		
+		return lobby;
 	}
 
 }

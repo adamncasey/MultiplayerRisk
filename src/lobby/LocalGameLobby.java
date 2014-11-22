@@ -4,11 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import networking.Connection;
-import networking.IConnection;
 import networking.LobbyClient;
-import networking.PortInUseException;
-import player.IPlayer;
 import networking.Network;
 
 /**
@@ -25,19 +21,14 @@ public class LocalGameLobby extends GameLobby {
 	// ================================================================================
 
 	private String friendlyName;
+	private int maxPlayers = 1;
 
 	ArrayList<LobbyClient> players = new ArrayList<LobbyClient>();
+	
+	boolean lobbyOpen = true;
 
 	// ================================================================================
-	// Constructors
-	// ================================================================================
-
-	public LocalGameLobby() {
-
-	}
-
-	// ================================================================================
-	// Common
+	// Override
 	// ================================================================================
 
 	@Override
@@ -47,13 +38,13 @@ public class LocalGameLobby extends GameLobby {
 	}
 
 	@Override
-	public IPlayer[] getPlayers() {
+	public ArrayList<LobbyClient> getPlayers() {
 		// TODO Auto-generated method stub
-		return null;
+		return players;
 	}
 
 	@Override
-	public String getName() {
+	public String getFriendlyName() {
 		return this.friendlyName;
 	}
 
@@ -63,37 +54,56 @@ public class LocalGameLobby extends GameLobby {
 
 	/**
 	 * Open the lobby to network players.
-	 * 
-	 * @throws networking.PortInUseException
-	 *             If the application port is already in use
 	 */
-	public void open() throws PortInUseException {
+	public void run() {
 		ServerSocket server;
 		Socket newClient;
 		LobbyClient lobbyClient;
 
 		// Start broadcasting the lobby.
-		LobbyMulticastThread t = new LobbyMulticastThread();
+		LobbyMulticastThread t = new LobbyMulticastThread(friendlyName);
 		t.start();
 
 		// Listen for new clients.
 		try {
 			server = new ServerSocket(DEFAULT_GAME_PORT);
 
-			while (true) {
+			while (lobbyOpen && players.size() < maxPlayers) {
 				newClient = server.accept();
 				lobbyClient = Network.getLobbyClient(newClient);
 				
-				// If lobby client.accept() == true
-				if(true) {
+				if(lobbyClient.accept()) {
 					players.add(lobbyClient);
 				}
-				else {
-					// Scrap it.
-				}
 			}
+			
+			server.close();
+			
+			t.setLobbyOpen(false);
+			
 		} catch (Exception e) {
-			throw new PortInUseException();
+			// TODO: Log exception.
+			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Close the lobby.
+	 */
+	public void close() {
+		this.lobbyOpen = false;
+	}
+
+	
+	// ================================================================================
+	// Accessors
+	// ================================================================================
+
+	public int getMaxPlayers() {
+		return maxPlayers;
+	}
+
+	public void setMaxPlayers(int maxPlayers) {
+		this.maxPlayers = maxPlayers;
 	}
 }

@@ -13,19 +13,19 @@ public interface ILobby {
 	 * Searches the network for game lobbies.
 	 * @return Game lobbies found on the network.
 	 */
-	public RemoteGameLobby[] searchForLobbies();
+	RemoteGameLobby[] searchForLobbies();
 	
 	/**
 	 * Joins a game lobby.
 	 * @param lobby The lobby to join.
 	 * @return True if joined successfully.
 	 */
-	public boolean joinGameLobby(RemoteGameLobby lobby);
+	boolean joinGameLobby(RemoteGameLobby lobby);
 	
 	/**
 	 * Creates a game lobby.
 	 * @return The game lobby created.
 	 * @throws networking.PortInUseException If the port is already in use.
 	 */
-	public LocalGameLobby createGameLobby(String friendlyName) throws PortInUseException;
+	LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers) throws PortInUseException;
 }

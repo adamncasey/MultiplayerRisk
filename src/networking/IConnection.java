@@ -30,7 +30,7 @@ public interface IConnection {
 	 * @throws ConnectionLostException If the connection is lost.
 	 * @throws TimeoutException If response times-out.
 	 */
-	public String receive() throws ConnectionLostException, TimeoutException;
+	public String receiveLine() throws ConnectionLostException, TimeoutException;
 	
 	/**
 	 * Sets the message timeout.

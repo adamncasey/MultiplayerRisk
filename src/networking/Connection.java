@@ -46,13 +46,12 @@ public class Connection implements IConnection {
 	}
 
 	@Override
-	public String receive() throws ConnectionLostException, TimeoutException {
+	public String receiveLine() throws ConnectionLostException, TimeoutException {
 		try {
-			in.readLine();
+			return in.readLine();
 		} catch (IOException e) {
 			throw new ConnectionLostException();
 		}
-		return null;
 	}
 
 	@Override

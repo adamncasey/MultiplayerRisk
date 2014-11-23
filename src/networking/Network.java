@@ -68,9 +68,28 @@ public class Network {
 		return null;
 	}
 
+	/**
+	 * Reads a line from conn, and parses it as a JSON Object in the protocol format.
+	 * @param conn - Connection to read from
+	 * @return Message on success
+	 * @return null on failure.
+	 * TODO: Decide if this is enough detail. Could be useful to provide different exceptions for IOError vs Bad Packet
+	 */
 	static Message readMessage(IConnection conn) {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on representatives to formally agree on this
-		// TODO Write this
-		return null;
+		Message message;
+		try {
+			String msgString = conn.receiveLine();
+
+			message = Parser.parseMessage(msgString);
+		} catch (ConnectionLostException e) {
+			return null;
+		} catch (TimeoutException e) {
+			return null;
+		} catch (ParserException e) {
+			return null;
+		}
+
+		return message;
 	}
 }

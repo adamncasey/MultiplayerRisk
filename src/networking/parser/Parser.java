@@ -72,9 +72,9 @@ public class Parser {
 			throw new ParserException("Unsupported Message type. " + command);
 		}
 		
-		// TODO Signature check.
+		// TODO Signature check + ack ID
 		
-		return new Message(command, false, (Long) message.get("player_id"), message.get("payload"));
+		return new Message(command, false, (Long) message.get("player_id"), message.get("payload"), null);
 	}
 	
 	/**

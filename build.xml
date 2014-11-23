@@ -15,8 +15,9 @@
 	<path id="junit.class.path">
 		<pathelement location="${lib}/junit-4.11.jar"/>
 		<pathelement location="${lib}/hamcrest-core-1.2.1.jar"/>
-		
+
 		<pathelement location="${lib}/json-simple-1.1.1.jar"/>
+		<pathelement location="${lib}/commons-lang3-3.3.2.jar"/>
 
 		<pathelement path="${build}"/>
 	</path>

@@ -1,5 +1,6 @@
 package networking.parser;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
@@ -40,7 +41,7 @@ public class Parser {
 		
 		JSONObject message = (JSONObject)parsed;
 		
-		validateMessageFields(message);
+		validateObjectField(message);
 		
 		Command command = Command.parse((String) message.get("command"));
 		
@@ -82,20 +83,20 @@ public class Parser {
 	 * 
 	 * TODO: Here might be a good time to verify signatures
 	 * 
-	 * @param message
+	 * @param object
 	 * @throws ParserException
 	 */
-	private static void validateMessageFields(JSONObject message) throws ParserException {
-		validateType(message, "command", String.class);
-		validateType(message, "signature", String.class);
-		validateType(message, "player_id", Number.class);
+	private static void validateObjectField(JSONObject object) throws ParserException {
+		validateType(object, "command", String.class);
+		validateType(object, "signature", String.class);
+		validateType(object, "player_id", Number.class);
 		
-		if(message.get("ack_id") != null) {
-			validateType(message, "ack_id", Number.class);
+		if(object.get("ack_id") != null) {
+			validateType(object, "ack_id", Number.class);
 		}
 	}
 
-	private static void validateType(JSONObject object, String key, Class<?> class1) throws ParserException {
+	public static void validateType(JSONObject object, String key, Class<?> class1) throws ParserException {
 		if(object.get(key) != null && class1.isAssignableFrom(object.get(key).getClass())) {
 			return;
 		}

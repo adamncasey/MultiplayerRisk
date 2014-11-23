@@ -7,7 +7,7 @@ import networking.TimeoutException;
 /**
  * Created by Adam on 23/11/2014.
  */
-public class TestConnection implements IConnection {
+public class DummyConnection implements IConnection {
     boolean wasKilled;
     String lastSentMessage;
 

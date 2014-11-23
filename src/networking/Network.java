@@ -56,6 +56,7 @@ public class Network {
 			supportedFeatures = features_list.toArray(new String[features_list.size()]);
 		}
 		catch(ParserException e) {
+			//TODO CRASH. If an array of Strings is sent instead of array of Doubles. Not sure how to fix right now.
 			return null;
 		}
 

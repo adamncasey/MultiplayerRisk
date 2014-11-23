@@ -11,14 +11,12 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class GetLobbyClientTest extends TestCase {
-    private TestConnection conn;
+    private DummyConnection conn;
 
     @Before
     public void setup() {
-        this.conn = new TestConnection();
+        this.conn = new DummyConnection();
     }
-
-    // Test when correct join message is there
 
     // Test when another message is there
 

@@ -44,7 +44,7 @@ public class LocalGameLobby extends GameLobby {
 		String address = "Unknown";
 		
 		try {
-			address = Inet4Address.getLocalHost().getHostAddress().toString();
+			address = Inet4Address.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

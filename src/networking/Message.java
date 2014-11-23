@@ -10,7 +10,13 @@ public class Message {
 		this.signed = signed;
 		this.playerId = playerId;
 	}
-	
+	public Message(Command command, long playerId, Object payload) {
+		this.command = command;
+		this.payload = payload;
+		this.signed = true;
+		this.playerId = playerId;
+	}
+
 	public final Command command;
 	
 	public final Object payload;
@@ -18,4 +24,9 @@ public class Message {
 	public final boolean signed; // Not filled in at the moment.
 	
 	public final long playerId;
+
+	public String toString() {
+		// TODO Write this
+		return null;
+	}
 }

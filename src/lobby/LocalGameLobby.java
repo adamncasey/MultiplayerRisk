@@ -87,7 +87,7 @@ public class LocalGameLobby extends GameLobby {
 				newClient = server.accept();
 				lobbyClient = Network.getLobbyClient(new Connection(newClient));
 				
-				if(lobbyClient.accept()) {
+				if(lobbyClient.accept(players.size() + 1)) {
 					players.add(lobbyClient);
 				}
 			}

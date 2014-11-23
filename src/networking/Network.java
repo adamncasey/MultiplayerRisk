@@ -70,6 +70,7 @@ public class Network {
 
 	static Message readMessage(IConnection conn) {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on representatives to formally agree on this
+		// TODO Write this
 		return null;
 	}
 }

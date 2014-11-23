@@ -31,6 +31,7 @@ public class GetLobbyClientTest extends TestCase {
     // Test when socket is closed?
     @Test
     public void testGetLobbyClient() throws Exception {
+        System.out.println("testGetLobbyClient 0");
         String message = "{\n" +
                 "    \"command\":\"join_game\",\n" +
                 "    \"payload\":{\n" +
@@ -41,8 +42,11 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;
+        System.out.println("testGetLobbyClient 1");
         LobbyClient client = Network.getLobbyClient(conn);
+        System.out.println("testGetLobbyClient 2");
         assertNotNull(client);
+        System.out.println("testGetLobbyClient ");
 
         Assert.assertArrayEquals("Supported Features Equality", client.supportedFeatures, new String[]{"secure", "defaultmap"});
     }

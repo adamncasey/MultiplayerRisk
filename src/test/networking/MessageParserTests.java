@@ -218,26 +218,55 @@ public class MessageParserTests {
 		
 		Parser.parseMessage(message);
 	}
-
 	@Test(expected=ParserException.class)
 	public void testInvalidCommand() throws ParserException {
-		String message = "{\r\n" + 
-			    "    \"command\": \"Thisisinvalid\"," +
-				"    \"ack_id\": 4556554,\r\n" + 
-				"    \"player_id\": 2\r\n" + 
-				"    \"payload\": [19, 18, 4],\r\n" + 
-				"	 \"signature\": \"TBD\"\r\n" + 
-				"}\r\n" + 
+		String message = "{\r\n" +
+				"    \"command\": \"Thisisinvalid\"," +
+				"    \"ack_id\": 4556554,\r\n" +
+				"    \"player_id\": 2\r\n" +
+				"    \"payload\": [19, 18, 4],\r\n" +
+				"	 \"signature\": \"TBD\"\r\n" +
+				"}\r\n" +
 				"";
-		
+
+		Parser.parseMessage(message);
+	}
+
+	@Test(expected=ParserException.class)
+	public void testInvalidJSON() throws ParserException {
+		String message = "{\r\n" +
+				"    \"command\": \"Thisisinvalid\"," +
+				"    \"ack_id\": 4556554,\r\n" +
+				"    \"player\r\n" +
+				"";
+
+		Parser.parseMessage(message);
+	}
+
+	@Test(expected=ParserException.class)
+	public void testNotYetSupportedCommand() throws ParserException {
+		String message = "{\r\n" +
+				"    \"command\": \"roll_number\"," +
+				"    \"ack_id\": 4556554,\r\n" +
+				"    \"player_id\": 2\r\n" +
+				"    \"payload\": [19, 18, 4],\r\n" +
+				"	 \"signature\": \"TBD\"\r\n" +
+				"}\r\n" +
+				"";
+
 		Parser.parseMessage(message);
 	}
 
 	@Test(expected=ParserException.class)
 	public void testJsonMustBeObject() throws ParserException {
 		String message = "[]";
-		
+
 		Parser.parseMessage(message);
+	}
+
+	@Test(expected=ParserException.class)
+	public void test100PercentCoverage() throws ParserException {
+		new Parser();
 	}
 
 }

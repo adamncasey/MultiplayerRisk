@@ -18,7 +18,6 @@ public class GetLobbyClientTest extends TestCase {
     @Before
     public void setup() {
         this.conn = new DummyConnection();
-        System.out.println("@Before annotation success");
     }
 
     // Test when another message is there
@@ -31,7 +30,7 @@ public class GetLobbyClientTest extends TestCase {
     // Test when socket is closed?
     @Test
     public void testGetLobbyClient() throws Exception {
-        System.out.println("testGetLobbyClient 0");
+        setup(); // Teamcity build server doesn't want to run using JUnit4, our setup function is being ignored.
         String message = "{\n" +
                 "    \"command\":\"join_game\",\n" +
                 "    \"payload\":{\n" +
@@ -42,11 +41,8 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;
-        System.out.println("testGetLobbyClient 1");
         LobbyClient client = Network.getLobbyClient(conn);
-        System.out.println("testGetLobbyClient 2");
         assertNotNull(client);
-        System.out.println("testGetLobbyClient ");
 
         Assert.assertArrayEquals("Supported Features Equality", client.supportedFeatures, new String[]{"secure", "defaultmap"});
     }

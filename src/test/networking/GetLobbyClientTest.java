@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.util.prefs.Preferences;
+
 @RunWith(JUnit4.class)
 public class GetLobbyClientTest extends TestCase {
     private DummyConnection conn;
@@ -16,6 +18,7 @@ public class GetLobbyClientTest extends TestCase {
     @Before
     public void setup() {
         this.conn = new DummyConnection();
+        System.out.println("@Before annotation success");
     }
 
     // Test when another message is there

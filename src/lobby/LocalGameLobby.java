@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import networking.Connection;
 import networking.LobbyClient;
 import networking.Network;
 
@@ -84,7 +85,7 @@ public class LocalGameLobby extends GameLobby {
 
 			while (lobbyOpen && players.size() < maxPlayers) {
 				newClient = server.accept();
-				lobbyClient = Network.getLobbyClient(newClient);
+				lobbyClient = Network.getLobbyClient(new Connection(newClient));
 				
 				if(lobbyClient.accept()) {
 					players.add(lobbyClient);

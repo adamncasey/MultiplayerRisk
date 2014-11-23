@@ -264,7 +264,7 @@ public class MessageParserTests {
 		Parser.parseMessage(message);
 	}
 
-	@Test(expected=ParserException.class)
+	@Test
 	public void test100PercentCoverage() throws ParserException {
 		new Parser();
 	}

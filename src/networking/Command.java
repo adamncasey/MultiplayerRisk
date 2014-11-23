@@ -3,7 +3,7 @@ package networking;
 import networking.parser.ParserException;
 
 public enum Command {
-	JOIN("join"),
+	JOIN("join_game"),
 	JOIN_ACCEPT("accept_join_game"),
 	JOIN_REJECT("reject_join_game"),
 	ACKNOWLEDGEMENT("acknowledgement"),

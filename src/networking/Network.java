@@ -33,7 +33,7 @@ public class Network {
 			return null;
 		}
 
-		float[] supportedVersions;
+		double[] supportedVersions;
 		String[] supportedFeatures;
 
 		if(!(message.payload instanceof JSONObject)) {
@@ -44,13 +44,16 @@ public class Network {
 
 		try {
 			Parser.validateType(payload, "supported_versions", JSONArray.class);
-			List payload_list = (List)payload.get("supported_versions");
 
-			supportedVersions = ArrayUtils.toPrimitive(Arrays.asList(payload_list).toArray(new Float[payload_list.size()]));
+			List<Double> versions_list = (List)payload.get("supported_versions");
+			Double[] middle = versions_list.toArray(new Double[versions_list.size()]);
+			supportedVersions = ArrayUtils.toPrimitive(middle);
+
 
 			Parser.validateType(payload, "supported_features", JSONArray.class);
-			payload_list = (List)payload.get("supported_features");
-			supportedFeatures = Arrays.asList(payload_list).toArray(new String[payload_list.size()]);
+
+			List<String> features_list = (List)payload.get("supported_features");
+			supportedFeatures = features_list.toArray(new String[features_list.size()]);
 		}
 		catch(ParserException e) {
 			return null;

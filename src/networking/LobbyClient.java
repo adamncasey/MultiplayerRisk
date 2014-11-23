@@ -19,12 +19,12 @@ public class LobbyClient {
 	// TODO A better way of handling this value.
 	private static final int OUR_PLAYER_ID = 0;
 
-	protected LobbyClient(float[] supportedVersions, String[] supportedFeatures) {
+	protected LobbyClient(double[] supportedVersions, String[] supportedFeatures) {
 		this.supportedVersions = supportedVersions;
 		this.supportedFeatures = supportedFeatures;
 	}
 
-	public final float[] supportedVersions;
+	public final double[] supportedVersions;
 	public final String[] supportedFeatures;
 	
 	public boolean accept(int playerId) {

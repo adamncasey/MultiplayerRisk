@@ -1,7 +1,7 @@
 package logic;
 
 /**
- * GameMove --- Stores information a game move.
+ * GameMove --- Stores information about a game move.
  */
 public class GameMove {
 

@@ -1,16 +1,15 @@
 package logic;
 
 import java.io.*;
+import java.util.*;
 
 /**
  * Board --- Stores information about the game board.
  */
 public class Board {
 
-    // t[n][0] = territory number
-    // t[n][1] = player id
-    // t[n][2] = number of armies // not sure if its important to remember what cards make up the army (or if it was an initial army)
-//    public int[42][3] territories;
+    private ArrayList<Integer> territories;
+
 
     // TODO - way to store links between territories.
 
@@ -19,16 +18,38 @@ public class Board {
     */
     public void loadBoard(String filename){
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
-            while((line = reader.readLine()) != null){
-                System.out.println(line);
+            int control = 0;
+            while((line = br.readLine()) != null){
+                line = line.trim();
+                String[] parts = line.split(":");
+                if(parts[0].equals("\"continents\"")){
+                    control = 1;
+                    continue;
+                } else if(parts[0].equals("\"connections\"")){
+                    control = 2;
+                    continue;
+                } else if(parts[0].equals("\"continent_values\"")){
+                    control = 3;
+                    continue;
+                } else if((parts.length == 1) && !(parts[0].charAt(0) == '[')){
+                    continue;
+                }
+
+                if(control == 1){
+                    System.out.println(line);
+                } else if(control == 2){
+                    System.out.println(line);
+                } else if(control == 3){
+                    System.out.println(line);
+                } 
             }
-        } catch(IOException e){
-            e.printStackTrace();
+            br.close();
+        } catch (Exception e) {
+             // oh well
         }
     }
-
 
     // add one Infantry to any unclaimed territory on the board
     public void setup2ClaimTerritory(GameMove move) throws InvalidTerritoryException {

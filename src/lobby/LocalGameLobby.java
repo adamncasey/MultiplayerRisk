@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import lobby.handler.HostLobbyEventHandler;
 import networking.Connection;
 import networking.LobbyClient;
 import networking.Network;
@@ -29,9 +30,12 @@ public class LocalGameLobby extends GameLobby {
 	ArrayList<LobbyClient> players = new ArrayList<LobbyClient>();
 	
 	boolean lobbyOpen = true;
+
+    private HostLobbyEventHandler handler;
 	
 	
-	public LocalGameLobby(String friendlyName) {
+	public LocalGameLobby(String friendlyName, HostLobbyEventHandler handler) {
+        this.handler = handler;
 		this.friendlyName = friendlyName;
 	}
 
@@ -46,8 +50,7 @@ public class LocalGameLobby extends GameLobby {
 		try {
 			address = Inet4Address.getLocalHost().getHostAddress();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RuntimeException("Unexpected Error: UnknownHostException thrown.");
 		}
 		
 		return address;
@@ -76,29 +79,40 @@ public class LocalGameLobby extends GameLobby {
 		LobbyClient lobbyClient;
 
 		// Start broadcasting the lobby.
-		LobbyMulticastThread t = new LobbyMulticastThread(friendlyName);
-		t.start();
+		LobbyMulticastThread multicastThread = new LobbyMulticastThread(friendlyName);
+        multicastThread.start();
 
 		// Listen for new clients.
 		try {
 			server = new ServerSocket(DEFAULT_GAME_PORT);
 
-			while (lobbyOpen && players.size() < maxPlayers) {
+			while (lobbyOpen) {
 				newClient = server.accept();
 				lobbyClient = Network.getLobbyClient(new Connection(newClient));
-				
-				if(lobbyClient.accept(players.size() + 1)) {
-					players.add(lobbyClient);
-				}
+
+                String result = handler.onPlayerJoinRequest(lobbyClient);
+
+                if(result == null) {
+                    // accept client
+                    int playerid = players.size() + 1;
+                    if(lobbyClient.accept(playerid)) {
+                        players.add(lobbyClient);
+
+                        handler.onPlayerJoin(playerid);
+                    }
+                }
+                else {
+                    lobbyClient.reject(result);
+                }
 			}
 			
 			server.close();
-			
-			t.setLobbyOpen(false);
+
+            multicastThread.setLobbyOpen(false);
 			
 		} catch (Exception e) {
 			// TODO: Log exception.
-			e.printStackTrace();
+            throw new RuntimeException("Exception occured in Host Lobby loop.");
 		}
 	}
 	

@@ -14,11 +14,6 @@ import org.apache.commons.lang3.ArrayUtils;
 
 // Interface used by GameManager / NetworkPlayer?
 public class Network {
-	// Create Lobby
-	// Join Lobby
-	
-	// ...
-
 	/**
 	 * Gets a risk player connection from the socket
 	 * @param socket
@@ -68,7 +63,12 @@ public class Network {
 	 * @param
 	 * @return
 	 */
-	public static LobbyServer getLobbyServer(String ipAddress, int port) {
+	public static LobbyServer joinLobby(String ipAddress, int port) {
+		// Connect to IP address:port (TCP)
+
+		// Send Join Message
+
+		// Receive Accept (or reject) message
 		return null;
 	}
 

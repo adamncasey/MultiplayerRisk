@@ -11,6 +11,10 @@ import networking.LobbyClient;
  */
 public class RemoteGameLobby extends GameLobby {
 
+    public void run() {
+
+    }
+
 	@Override
 	public String getHostIPAddress() {
 		// TODO Auto-generated method stub

@@ -10,6 +10,7 @@ public class LobbyServer {
 	}
 	
 	public boolean join() {
+		// Create Connection
 		return false;
 	}
 

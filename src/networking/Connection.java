@@ -32,6 +32,9 @@ public class Connection implements IConnection {
 
 	public Connection(Socket socket) {
 		this.socket = socket;
+
+		//TODO The error message is currently ignored, I don't know how important this is
+		establishConnection();
 	}
 
 	// ================================================================================

@@ -1,10 +1,9 @@
 package lobby;
 
-import java.net.Inet4Address;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import lobby.handler.HostLobbyEventHandler;
 import networking.Connection;
@@ -12,48 +11,26 @@ import networking.LobbyClient;
 import networking.Network;
 
 /**
- * ILocalGameLobby: A locally hosted game lobby to which network players can
- * join.
- * 
- * @author James
- *
+ * LocalGameLobby: A hosted game lobby to which network players can join.
  */
 public class LocalGameLobby extends GameLobby {
-
-	// ================================================================================
-	// Properties
-	// ================================================================================
-
-	private String friendlyName;
-	private int maxPlayers = 1;
 
 	ArrayList<LobbyClient> players = new ArrayList<LobbyClient>();
 	
 	boolean lobbyOpen = true;
 
     private HostLobbyEventHandler handler;
-	
-	
-	public LocalGameLobby(String friendlyName, HostLobbyEventHandler handler) {
+    private InetAddress listenAddress;
+    private int port;
+
+    public LocalGameLobby(HostLobbyEventHandler handler, int port) {
+        this(handler, port, null);
+    }
+
+	public LocalGameLobby(HostLobbyEventHandler handler, int port, InetAddress listenAddress) {
         this.handler = handler;
-		this.friendlyName = friendlyName;
-	}
-
-	// ================================================================================
-	// Override
-	// ================================================================================
-
-	@Override
-	public String getHostIPAddress() {
-		String address = "Unknown";
-		
-		try {
-			address = Inet4Address.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			throw new RuntimeException("Unexpected Error: UnknownHostException thrown.");
-		}
-		
-		return address;
+        this.listenAddress = listenAddress;
+        this.port = port;
 	}
 
 	@Override
@@ -61,78 +38,112 @@ public class LocalGameLobby extends GameLobby {
 		return players;
 	}
 
-	@Override
-	public String getFriendlyName() {
-		return this.friendlyName;
-	}
-
-	// ================================================================================
-	// Functions
-	// ================================================================================
-
 	/**
-	 * Open the lobby to network players.
+	 * Background thread for the Lobby.
 	 */
 	public void run() {
-		ServerSocket server;
-		Socket newClient;
-		LobbyClient lobbyClient;
+        // Get Clients
+        try {
+            ServerSocket server = new ServerSocket(port, 0, listenAddress);
 
-		// Start broadcasting the lobby.
-		LobbyMulticastThread multicastThread = new LobbyMulticastThread(friendlyName);
+            while (isLobbyOpen()) {
+                LobbyClient client = getClient(server);
+
+                if(client != null) {
+                    players.add(client);
+                }
+            }
+
+            server.close();
+        } catch (Exception e) {
+            // TODO: Log/handle exception properly.
+            throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop.");
+        }
+
+        pingClients();
+
+        readyMessage();
+
+        decidePlayerOrder();
+
+        shuffleCards();
+	}
+
+    private void pingClients() {
+        // send to all Ping Message
+
+        handler.onPingStart();
+
+        // receive from all ping reply
+            handler.onPingReceive(0);
+    }
+    private void readyMessage() {
+        // send Ready message
+
+        handler.onReady();
+
+        // Receive from all ready acknowledgement
+            handler.onReadyAcknowledge(0);
+    }
+    private void decidePlayerOrder() {
+        // Roll Dice.
+
+        // Number retrieved determines order
+        int firstplayer = 0; // rand from dice
+
+        // Re-arrange for the correct play order
+        Collections.rotate(players, firstplayer);
+    }
+    private void shuffleCards() {
+        // Roll Dice
+
+        // for 0 <= i < decksize
+            // swap(card[i], card[rand from dice]);
+    }
+
+    private LobbyClient getClient(ServerSocket server) throws IOException {
+        Socket newClient = server.accept();
+        LobbyClient lobbyClient = Network.getLobbyClient(new Connection(newClient));
+
+        String result = handler.onPlayerJoinRequest(lobbyClient);
+
+        if(result == null) {
+            // accept client
+            int playerid = players.size() + 1;
+            if(lobbyClient.accept(playerid)) {
+
+                handler.onPlayerJoin(playerid);
+                return lobbyClient;
+            }
+        }
+
+        lobbyClient.reject(result);
+        return null;
+    }
+
+    private LobbyMulticastThread startMulticastThread() {
+        // TODO: This is not spec'ed, not used at the moment
+        // Start broadcasting the lobby.
+
+        LobbyMulticastThread multicastThread = new LobbyMulticastThread("" /*friendlyName*/);
         multicastThread.start();
 
-		// Listen for new clients.
-		try {
-			server = new ServerSocket(DEFAULT_GAME_PORT);
+        return multicastThread;
+        // TODO: Also needs stopMulticastThread
+    }
 
-			while (lobbyOpen) {
-				newClient = server.accept();
-				lobbyClient = Network.getLobbyClient(new Connection(newClient));
+    /**
+     * Checks the lobbyOpen value in a thread-safe manner.
+     * @return lobbyOpen
+     */
+    private synchronized boolean isLobbyOpen() {
+        return lobbyOpen;
+    }
 
-                String result = handler.onPlayerJoinRequest(lobbyClient);
-
-                if(result == null) {
-                    // accept client
-                    int playerid = players.size() + 1;
-                    if(lobbyClient.accept(playerid)) {
-                        players.add(lobbyClient);
-
-                        handler.onPlayerJoin(playerid);
-                    }
-                }
-                else {
-                    lobbyClient.reject(result);
-                }
-			}
-			
-			server.close();
-
-            multicastThread.setLobbyOpen(false);
-			
-		} catch (Exception e) {
-			// TODO: Log exception.
-            throw new RuntimeException("Exception occured in Host Lobby loop.");
-		}
-	}
-	
 	/**
-	 * Close the lobby.
+	 * Stops accepting new clients and begins the game
 	 */
-	public void close() {
+	public synchronized void startGame() {
 		this.lobbyOpen = false;
-	}
-
-	
-	// ================================================================================
-	// Accessors
-	// ================================================================================
-
-	public int getMaxPlayers() {
-		return maxPlayers;
-	}
-
-	public void setMaxPlayers(int maxPlayers) {
-		this.maxPlayers = maxPlayers;
 	}
 }

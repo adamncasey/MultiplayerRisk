@@ -1,13 +1,12 @@
 package networking;
 
+import networking.message.JoinGamePayload;
+import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import player.IPlayer;
 
-import java.net.Socket;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,34 +27,9 @@ public class Network {
 			return null;
 		}
 
-		double[] supportedVersions;
-		String[] supportedFeatures;
+        JoinGamePayload payload = (JoinGamePayload)message.payload;
 
-		if(!(message.payload instanceof JSONObject)) {
-			return null;
-		}
-
-		JSONObject payload = (JSONObject) message.payload;
-
-		try {
-			Parser.validateType(payload, "supported_versions", JSONArray.class);
-
-			List<Double> versions_list = (List)payload.get("supported_versions");
-			Double[] middle = versions_list.toArray(new Double[versions_list.size()]);
-			supportedVersions = ArrayUtils.toPrimitive(middle);
-
-
-			Parser.validateType(payload, "supported_features", JSONArray.class);
-
-			List<String> features_list = (List)payload.get("supported_features");
-			supportedFeatures = features_list.toArray(new String[features_list.size()]);
-		}
-		catch(ParserException e) {
-			//TODO CRASH. If an array of Strings is sent instead of array of Doubles. Not sure how to fix right now.
-			return null;
-		}
-
-		return new LobbyClient(supportedVersions, supportedFeatures);
+		return new LobbyClient(payload.supported_versions, payload.supported_features);
 	}
 
 	/**

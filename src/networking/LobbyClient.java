@@ -1,5 +1,9 @@
 package networking;
 
+import networking.message.AcceptJoinGamePayload;
+import networking.message.Message;
+import networking.message.RejectJoinGamePayload;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,14 +31,10 @@ public class LobbyClient {
 	public final double[] supportedVersions;
 	public final String[] supportedFeatures;
 	
-	public boolean accept(int playerId) {
+	public boolean accept(int playerid) {
 		// send message JOIN_ACCEPT (player_id, ack timeout, move timeout)
-		Map<String, Integer> payload = new HashMap<>();
 
-		payload.put("player_id", playerId);
-		// TODO These should be different values in future.
-		payload.put("acknowledgement_timeout", conn.getTimeout());
-		payload.put("move_timeout", conn.getTimeout());
+        AcceptJoinGamePayload payload = new AcceptJoinGamePayload(playerid, conn.getTimeout(), conn.getTimeout());
 
 		Message msg = new Message(Command.JOIN_ACCEPT, OUR_PLAYER_ID, payload);
 		try {
@@ -49,7 +49,7 @@ public class LobbyClient {
 	
 	public void reject(String rejectMessage) {
 		// send message JOIN_REJECT (player_id, ack timeout, move timeout)
-		Message msg = new Message(Command.JOIN_REJECT, OUR_PLAYER_ID, rejectMessage);
+		Message msg = new Message(Command.JOIN_REJECT, OUR_PLAYER_ID, new RejectJoinGamePayload(rejectMessage));
 		try {
 			conn.send(msg.toString());
 		}

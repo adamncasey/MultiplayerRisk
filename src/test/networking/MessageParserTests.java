@@ -2,7 +2,7 @@ package test.networking;
 
 import static org.junit.Assert.*;
 import networking.Command;
-import networking.Message;
+import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 

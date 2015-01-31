@@ -7,6 +7,10 @@ import java.util.*;
 
 import lobby.handler.JoinLobbyEventHandler;
 import networking.*;
+import networking.message.AcceptJoinGamePayload;
+import networking.message.JoinGamePayload;
+import networking.message.Message;
+import networking.message.RejectJoinGamePayload;
 import org.json.simple.JSONObject;
 
 /**
@@ -46,15 +50,19 @@ public class RemoteGameLobby extends GameLobby {
 
         sendJoinGame(conn);
 
-        handleJoinGameResponse(conn); // callbacks: onJoinAccepted or onJoinRejected
+        if(!handleJoinGameResponse(conn)) { // callbacks: onJoinAccepted or onJoinRejected
+            return;
+        }
 
-        handlePings(); // callbacks: onPingStart + onPingReceive
+        //TODO Implement these steps of handshake
 
-        handleReady(); // callbacks: onReady + onReadyAcknowledge
+        //handlePings(); // callbacks: onPingStart + onPingReceive
 
-        decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+        //handleReady(); // callbacks: onReady + onReadyAcknowledge
 
-        shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+        //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+
+        //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
     }
 
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
@@ -62,10 +70,8 @@ public class RemoteGameLobby extends GameLobby {
     }
 
     private void sendJoinGame(IConnection conn) throws ConnectionLostException {
-        Map<String, List<Object>> payload = new HashMap<>();
 
-        payload.put("supported_versions", Arrays.asList((Object)0.1f));
-        payload.put("supported_features", new ArrayList<>());
+        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1f }, new String[] {});
 
         Message msg = new Message(Command.JOIN, payload);
 
@@ -80,28 +86,21 @@ public class RemoteGameLobby extends GameLobby {
         }
 
         if(msg.command == Command.JOIN_ACCEPT) {
-            if(!(msg.payload instanceof JSONObject)) {
-                throw new IOException("Packet received does not match specification");
-            }
+            AcceptJoinGamePayload payload = (AcceptJoinGamePayload)msg.payload;
 
-            JSONObject payload = (JSONObject) msg.payload;
-
-            if(!(payload.get("player_id") instanceof Integer)) {
-                throw new IOException("Packet received does not match specification");
-            }
-
-            this.playerid = (Integer)payload.get("player_id");
+            this.playerid = payload.playerid;
 
             handler.onJoinAccepted(this.playerid);
+
+            return true;
         }
         else if(msg.command == Command.JOIN_REJECT) {
-            // TODO Reject message get it from payload.
-            handler.onJoinRejected(result);
+            RejectJoinGamePayload payload = (RejectJoinGamePayload)msg.payload;
+            handler.onJoinRejected(payload.message);
             return false;
         } else {
-            throw new IOException("Incorrect message received. Expected accept/reject_join_game. Received: " msg.command.toString());
+            throw new IOException("Incorrect message received. Expected accept/reject_join_game. Received: " + msg.command.toString());
         }
-
     }
 
 	@Override

@@ -44,7 +44,7 @@ public class LocalGameLobby extends GameLobby {
 	public void run() {
         // Get Clients
         try {
-            ServerSocket server = new ServerSocket(port, 0, listenAddress);
+            ServerSocket server = createServerSocket();
 
             while (isLobbyOpen()) {
                 LobbyClient client = getClient(server);
@@ -68,6 +68,14 @@ public class LocalGameLobby extends GameLobby {
 
         shuffleCards();
 	}
+
+    private ServerSocket createServerSocket() throws IOException {
+        if(listenAddress != null) {
+            return new ServerSocket(port, 0, listenAddress);
+        }
+
+        return new ServerSocket(port);
+    }
 
     private void pingClients() {
         // send to all Ping Message

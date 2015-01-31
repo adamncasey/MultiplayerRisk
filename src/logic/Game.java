@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import player.*;
-import networking.Message;
 
 /**
  * TODO - Decide how this should all work, what is here now doesnt make sense because it assumes a p2p game rather than a central server

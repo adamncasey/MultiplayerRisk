@@ -19,7 +19,7 @@ public interface JoinLobbyEventHandler extends LobbyEventHandler {
         Sent after receiving accept_join_game or reject_join_game
      */
     public void onJoinAccepted(int playerid);
-    public void onJoinRejected();
+    public void onJoinRejected(String message);
 
 
 }

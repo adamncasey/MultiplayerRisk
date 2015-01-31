@@ -1,9 +1,6 @@
 package logic;
 
 
-import networking.Message;
-
-
 /**
  * GameState --- Stores and updates the game board, can be queried to check if a move is valid.
  */

@@ -1,12 +1,11 @@
 package networking.parser;
 
-import org.json.simple.JSONArray;
+import networking.message.*;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 import networking.Command;
-import networking.Message;
 
 public class Parser {
 	/**
@@ -45,40 +44,15 @@ public class Parser {
 		
 		Command command = Command.parse((String) message.get("command"));
 		
-		// TODO: Perhaps this switch statement could process payload, and be in function rather than here.
-		switch(command) {
-		
-		case ACKNOWLEDGEMENT:
-		case JOIN:
-			// payload = Object.
-				// supported_versions
-				// supported_features
-		case JOIN_ACCEPT:
-			// payload = Object
-				// player_id
-				// acknowledgement_timeout
-				// move_timeout
-		case DEPLOY:
-		case ATTACK:
-		case CAPTURE:
-		case FORTIFY:
-			// payload can be null.
-			
-		case TRADE_IN_CARDS:
-			// payload can be null.
-			break;
-			
-		default:
-			throw new ParserException("Unsupported Message type. " + command);
-		}
+        Payload payload = parsePayload(command, message.get("payload"));
 		
 		// TODO Signature check + ack ID
 		
-		return new Message(command, false, (Long) message.get("player_id"), message.get("payload"), null);
+		return new Message(command, false, (Integer) message.get("player_id"), payload, null);
 	}
 	
 	/**
-	 * Checks the JSONObject conforms at a basic level to 2. Json communication structure
+	 * Checks the JSONObject conforms at a basic level to "2. Json communication structure"
 	 * Ensures existance of fields and correct type of fields
 	 * 
 	 * TODO: Here might be a good time to verify signatures
@@ -103,4 +77,40 @@ public class Parser {
 		
 		throw new ParserException("Cannot parse message. " + key + " must be present and of correct type (" + class1.toString() + ").");
 	}
+
+    private static Payload parsePayload(Command command, Object payloadObj) throws ParserException {
+        switch(command) {
+
+            case JOIN:
+                if(!(payloadObj instanceof JSONObject)) {
+                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
+                }
+                return new JoinGamePayload((JSONObject)payloadObj);
+
+            case JOIN_ACCEPT:
+                if(!(payloadObj instanceof JSONObject)) {
+                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
+                }
+                return new AcceptJoinGamePayload((JSONObject)payloadObj);
+
+            case JOIN_REJECT:
+                if(!(payloadObj instanceof JSONObject)) {
+                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
+                }
+                return new RejectJoinGamePayload((JSONObject)payloadObj);
+
+            case ACKNOWLEDGEMENT:
+            case DEPLOY:
+            case ATTACK:
+            case CAPTURE:
+            case FORTIFY:
+                // payload can be null.
+
+            case TRADE_IN_CARDS:
+                // payload can be null.
+
+            default:
+                throw new ParserException("Unsupported Message type. " + command);
+        }
+    }
 }

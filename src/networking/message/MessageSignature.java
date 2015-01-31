@@ -1,4 +1,4 @@
-package networking;
+package networking.message;
 
 /**
  * Created by Adam on 23/11/2014.

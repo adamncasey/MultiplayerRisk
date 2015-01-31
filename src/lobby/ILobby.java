@@ -2,13 +2,14 @@ package lobby;
 
 import java.util.ArrayList;
 
+import lobby.handler.HostLobbyEventHandler;
 import networking.LobbyServer;
 import networking.PortInUseException;
 
 /**
  * Interface through which UI performs lobby related actions.
  * @author James
- *
+ * TODO: Is this interface necessary?
  */
 public interface ILobby {
 
@@ -40,5 +41,5 @@ public interface ILobby {
 	 * @return The game lobby created.
 	 * @throws networking.PortInUseException If the port is already in use.
 	 */
-	LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers) throws PortInUseException;
+	LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers, HostLobbyEventHandler handler) throws PortInUseException;
 }

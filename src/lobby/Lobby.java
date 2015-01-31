@@ -2,8 +2,10 @@ package lobby;
 
 import java.util.ArrayList;
 
+import lobby.handler.HostLobbyEventHandler;
 import networking.LobbyServer;
 import networking.PortInUseException;
+import settings.Settings;
 
 public class Lobby implements ILobby {
 	
@@ -31,10 +33,10 @@ public class Lobby implements ILobby {
 	}
 
 	@Override
-	public LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers)
+	public LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers, HostLobbyEventHandler handler)
 			throws PortInUseException {
 		
-		LocalGameLobby lobby = new LocalGameLobby(friendlyName);
+		LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port);
 		lobby.start();
 		
 		return lobby;

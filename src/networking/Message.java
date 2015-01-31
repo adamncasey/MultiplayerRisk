@@ -13,13 +13,21 @@ public class Message {
 		this.command = command;
 		this.payload = payload;
 		this.signed = signed;
-		this.playerId = playerId;
+		this.playerid = playerId;
 
 		this.ackId = ackId;
 	}
 	public Message(Command command, long playerId, Object payload) {
 		this(command, true, playerId, payload, null);
 	}
+
+    /**
+     * Join game message, before we know our playerid
+     */
+    public Message(Command command, Object payload) {
+        this(command, true, -1, payload, null);
+    }
+
 	public Message(Command command, long playerId, Object payload, long ackId) {
 		this(command, true, playerId, payload, ackId);
 	}
@@ -30,7 +38,7 @@ public class Message {
 	
 	public final boolean signed; // Not filled in at the moment.
 	
-	public final long playerId;
+	public final long playerid;
 
 	public final Long ackId;
 
@@ -43,7 +51,9 @@ public class Message {
 			//TODO Signing
 			jsonObject.put("signature", "TBA");
 		}
-		jsonObject.put("player_id", playerId);
+        if(playerid == -1) {
+            jsonObject.put("player_id", playerid);
+        }
 
 		return JSONValue.toJSONString(jsonObject);
 	}

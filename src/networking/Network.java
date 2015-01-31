@@ -79,7 +79,7 @@ public class Network {
 	 * @return null on failure.
 	 * TODO: Decide if this is enough detail. Could be useful to provide different exceptions for IOError vs Bad Packet
 	 */
-	static Message readMessage(IConnection conn) {
+	public static Message readMessage(IConnection conn) {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on representatives to formally agree on this
 		Message message;
 		try {

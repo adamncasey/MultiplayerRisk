@@ -16,7 +16,7 @@ public interface LobbyEventHandler {
     /*
         Indicate progress of ping messages, could be used to show in UI who is holding up the game.
      */
-    public void onPingStart();
+    public void onPingStart(); /* indicates host has started game */
     public void onPingReceive(int playerid);
 
     /*
@@ -24,7 +24,7 @@ public interface LobbyEventHandler {
 
         TODO: Could have a more generic system for acknowledgment callbacks.
      */
-    public void onReceiveReady();
+    public void onReady();
     public void onReadyAcknowledge(int playerid);
 
     /*
@@ -51,4 +51,12 @@ public interface LobbyEventHandler {
      * @param board - Some board format. TODO: Look at logic.Board
      */
     public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board);
+
+    /**
+     * Called on Error / Exception which causes joining or hosting the lobby to fail.
+     * @param e - Exception / Error / general throwable
+     *
+     * @note thread will exit after this has occured.
+     */
+    public void onFailure(Throwable e);
 }

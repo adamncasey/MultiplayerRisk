@@ -20,6 +20,4 @@ public interface JoinLobbyEventHandler extends LobbyEventHandler {
      */
     public void onJoinAccepted(int playerid);
     public void onJoinRejected(String message);
-
-
 }

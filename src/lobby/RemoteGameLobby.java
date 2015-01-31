@@ -11,7 +11,7 @@ import networking.message.AcceptJoinGamePayload;
 import networking.message.JoinGamePayload;
 import networking.message.Message;
 import networking.message.RejectJoinGamePayload;
-import org.json.simple.JSONObject;
+import networking.parser.ParserException;
 
 /**
  * IRemoteGameLobby: A remote network game lobby which could be joined.
@@ -71,15 +71,23 @@ public class RemoteGameLobby extends GameLobby {
 
     private void sendJoinGame(IConnection conn) throws ConnectionLostException {
 
-        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1f }, new String[] {});
+        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1 }, new String[] {});
 
-        Message msg = new Message(Command.JOIN, payload);
+        Message msg = new Message(Command.JOIN_GAME, payload);
 
         conn.send(msg.toString());
     }
 
     private boolean handleJoinGameResponse(IConnection conn) throws IOException {
-        Message msg = Network.readMessage(conn);
+        Message msg;
+        try {
+            msg = Network.readMessage(conn);
+        } catch(ParserException e) {
+            e.printStackTrace();
+            // TODO we shouldn't be printing here
+            System.out.println(e.getMessage() + " cannot handle response");
+            return false;
+        }
 
         if(msg == null) {
             throw new IOException("Network error: Invalid or no message received from host.");

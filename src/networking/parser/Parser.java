@@ -45,10 +45,18 @@ public class Parser {
 		Command command = Command.parse((String) message.get("command"));
 		
         Payload payload = parsePayload(command, message.get("payload"));
-		
-		// TODO Signature check + ack ID
-		
-		return new Message(command, false, (Integer) message.get("player_id"), payload, null);
+
+        int playerid = -1;
+
+        // playerid is required on all messages except join_game
+        if(command != Command.JOIN_GAME) {
+            validateType(message, "player_id", Number.class);
+            playerid = ((Long) message.get("player_id")).intValue();
+        }
+
+        // TODO Signature check + ack ID
+
+		return new Message(command, false, playerid, payload, null);
 	}
 	
 	/**
@@ -63,8 +71,7 @@ public class Parser {
 	private static void validateObjectField(JSONObject object) throws ParserException {
 		validateType(object, "command", String.class);
 		validateType(object, "signature", String.class);
-		validateType(object, "player_id", Number.class);
-		
+
 		if(object.get("ack_id") != null) {
 			validateType(object, "ack_id", Number.class);
 		}
@@ -81,7 +88,7 @@ public class Parser {
     private static Payload parsePayload(Command command, Object payloadObj) throws ParserException {
         switch(command) {
 
-            case JOIN:
+            case JOIN_GAME:
                 if(!(payloadObj instanceof JSONObject)) {
                     throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
                 }

@@ -23,8 +23,9 @@ public class LobbyClient {
 	// TODO A better way of handling this value.
 	private static final int OUR_PLAYER_ID = 0;
 
-	protected LobbyClient(double[] supportedVersions, String[] supportedFeatures) {
-		this.supportedVersions = supportedVersions;
+	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures) {
+        this.conn = conn;
+        this.supportedVersions = supportedVersions;
 		this.supportedFeatures = supportedFeatures;
 	}
 

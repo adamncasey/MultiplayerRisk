@@ -4,12 +4,6 @@ import networking.message.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
-import java.util.List;
-
-import org.apache.commons.lang3.ArrayUtils;
 
 // Interface used by GameManager / NetworkPlayer?
 public class Network {
@@ -21,15 +15,21 @@ public class Network {
 	 */
 	public static LobbyClient getLobbyClient(IConnection socket) {
 
-		Message message = Network.readMessage(socket);
+        Message message;
+        try {
+            message = Network.readMessage(socket);
+        } catch(ParserException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
 
-		if(message == null || message.command != Command.JOIN) {
+		if(message == null || message.command != Command.JOIN_GAME) {
 			return null;
 		}
 
         JoinGamePayload payload = (JoinGamePayload)message.payload;
 
-		return new LobbyClient(payload.supported_versions, payload.supported_features);
+		return new LobbyClient(socket, payload.supported_versions, payload.supported_features);
 	}
 
 	/**
@@ -50,10 +50,10 @@ public class Network {
 	 * Reads a line from conn, and parses it as a JSON Object in the protocol format.
 	 * @param conn - Connection to read from
 	 * @return Message on success
-	 * @return null on failure.
+     * @return null on socket failure
 	 * TODO: Decide if this is enough detail. Could be useful to provide different exceptions for IOError vs Bad Packet
 	 */
-	public static Message readMessage(IConnection conn) {
+	public static Message readMessage(IConnection conn) throws ParserException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on representatives to formally agree on this
 		Message message;
 		try {
@@ -63,8 +63,6 @@ public class Network {
 		} catch (ConnectionLostException e) {
 			return null;
 		} catch (TimeoutException e) {
-			return null;
-		} catch (ParserException e) {
 			return null;
 		}
 

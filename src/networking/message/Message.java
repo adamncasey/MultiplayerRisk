@@ -45,15 +45,15 @@ public class Message {
 		Map<String, Object> jsonObject = new HashMap<>();
 
 		jsonObject.put("command", command.name);
-		jsonObject.put("payload", payload);
+		jsonObject.put("payload", payload.getJSONValue());
 		if(signed) {
 			//TODO Signing
 			jsonObject.put("signature", "TBA");
 		}
-        if(playerid == -1) {
+        if(playerid != -1) {
             jsonObject.put("player_id", playerid);
         }
 
-		return JSONValue.toJSONString(jsonObject);
+		return JSONValue.toJSONString(jsonObject) + "\n";
 	}
 }

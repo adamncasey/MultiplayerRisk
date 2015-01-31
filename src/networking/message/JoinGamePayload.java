@@ -7,7 +7,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class JoinGamePayload extends Payload {
@@ -35,7 +38,17 @@ public class JoinGamePayload extends Payload {
     }
 
     @Override
-    public JSONValue getJSONValue() {
-        return null;
+    public Map getJSONValue() {
+        // JSONObject: "supported_versions": [float, float]
+        //             "supported_features": [string, string]
+
+        Map<String, Object> map = new HashMap<>();
+
+        // Needs to be reformatted for JSON simple library
+        List<Double> versions = Arrays.asList(ArrayUtils.toObject(supported_versions));
+        map.put("supported_versions", versions);
+        map.put("supported_features", Arrays.asList(supported_features));
+
+        return map;
     }
 }

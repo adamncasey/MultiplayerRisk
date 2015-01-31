@@ -7,5 +7,10 @@ import org.json.simple.JSONValue;
  */
 public abstract class Payload {
 
-    public abstract JSONValue getJSONValue();
+    /**
+     * Formats the Payload into a structure which is passed to the JSON Encoder.
+     * If payload is a JSONObject, this should return a Map for example.
+     * @return Map / List / String / Number / null
+     */
+    public abstract Object getJSONValue();
 }

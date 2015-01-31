@@ -57,7 +57,8 @@ public class LocalGameLobby extends GameLobby {
             server.close();
         } catch (Exception e) {
             // TODO: Log/handle exception properly.
-            throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop.");
+            e.printStackTrace();
+            throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
         }
 
         pingClients();

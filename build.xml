@@ -32,6 +32,12 @@
 		<javac srcdir="${src}" destdir="${build}" includeantruntime="false">
 			<classpath refid="junit.class.path" />
 		</javac>
+
+		<!-- Include resources such as FXML and CSS files in output -->
+		<copy todir="${build}">
+			<fileset dir="${src}"
+				includes="**/*.fxml,**/*.css,**/*.png" />
+		</copy>
 	</target>
 
 	<target name="dist" depends="compile" description="Copy built artifact into output location">

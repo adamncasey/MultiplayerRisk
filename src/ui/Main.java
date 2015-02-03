@@ -1,8 +1,9 @@
-package ui.menu;
+package ui;
 
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -10,6 +11,8 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import ui.directconnect.DirectConnectController;
+import ui.menu.*;
 
 public class Main extends Application {
 
@@ -38,7 +41,7 @@ public class Main extends Application {
 
     public void gotoMenu() {
         try {
-            MenuController menu = (MenuController) replaceSceneContent("menu.fxml");
+            MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml");
             menu.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,8 +59,8 @@ public class Main extends Application {
     
     public void gotoDirectConnect() {
         try {
-//            LobbyFinderController lobby = (LobbyFinderController) replaceSceneContent("lobbyfinder.fxml");
-//            lobby.setApp(this);
+        	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml");
+            lobby.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

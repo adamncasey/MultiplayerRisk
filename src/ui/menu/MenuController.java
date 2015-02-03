@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
+import ui.*;
 
 public class MenuController extends AnchorPane implements Initializable {
 	
@@ -33,6 +34,7 @@ public class MenuController extends AnchorPane implements Initializable {
     
     public void directConnect(ActionEvent event) {
         if (application != null) {
+        	application.gotoDirectConnect();
         }
     }
 

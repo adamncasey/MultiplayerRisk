@@ -36,7 +36,7 @@
 		<!-- Include resources such as FXML and CSS files in output -->
 		<copy todir="${build}">
 			<fileset dir="${src}"
-				includes="**/*.fxml,**/*.css,**/*.png" />
+				includes="**/*.fxml,**/*.css,**/*.png,**/*.jpg" />
 		</copy>
 	</target>
 

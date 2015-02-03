@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import java.util.*?>
@@ -8,25 +9,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="500" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.menu.MenuController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="500.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.menu.MenuController">
     <children>
-        <VBox id="VBox" alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0">
-            <children>
-                <AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="430.0">
-                    <children>
-                        <ImageView id="app-login-logo" layoutX="5.0" layoutY="-1.0" y="40.0">
-                            <image>
-                                <Image preserveRatio="true" smooth="true" url="@risk_logo.png" />
-                            </image>
-                        </ImageView>
-                        <Button onAction="#createGame" prefHeight="70.0" prefWidth="400.0" text="Create game" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                        <Button onAction="#findGame" prefHeight="70.0" prefWidth="400.0" text="Find game" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                        <Button onAction="#directConnect" prefHeight="70.0" prefWidth="400.0" text="Direct connect" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                        <Button onAction="#quit" prefHeight="70.0" prefWidth="400.0" text="Quit" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                    </children>
-                </AnchorPane>
-            </children>
-        </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane prefHeight="150.0">
+               <center>
+                      <ImageView id="app-login-logo" y="40.0" BorderPane.alignment="CENTER">
+                          <image>
+                              <Image preserveRatio="true" smooth="true" url="@../risk_logo.png" />
+                          </image>
+                      </ImageView>
+               </center>
+            </BorderPane>
+              <VBox id="VBox" alignment="CENTER" spacing="30.0">
+                  <children>
+                      <Button onAction="#createGame" prefHeight="70.0" prefWidth="400.0" text="Create game" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button onAction="#findGame" prefHeight="70.0" prefWidth="400.0" text="Find game" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button onAction="#directConnect" prefHeight="70.0" prefWidth="400.0" text="Direct connect" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button onAction="#quit" prefHeight="70.0" prefWidth="400.0" text="Quit" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                  </children>
+              </VBox>
+         </children>
+      </VBox>
     </children>
     <stylesheets>
         <URL value="@Menu.css" />

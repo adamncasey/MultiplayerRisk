@@ -47,7 +47,7 @@
 		<!-- Put the final JAR file in the output directory -->
 		<jar jarfile="${out.jarname}" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="ui.menu.Main" />
+				<attribute name="Main-Class" value="ui.Main" />
 			</manifest>
 		</jar>
 	</target>

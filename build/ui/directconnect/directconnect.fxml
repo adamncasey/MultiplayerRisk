@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="500" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.directconnect.DirectConnectController">
+    <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane prefHeight="100.0">
+               <center>
+                  <Label styleClass="title" text="Direct Connect" BorderPane.alignment="CENTER" />
+               </center>
+               <top>
+                  <Button focusTraversable="false" onAction="#backButtonAction" styleClass="button-nav" text="Back" BorderPane.alignment="TOP_LEFT">
+                     <BorderPane.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </BorderPane.margin>
+                  </Button>
+               </top>
+            </BorderPane>
+              <GridPane alignment="center" hgap="10" vgap="10">
+                 <children>
+                                 <Label text="Nickname" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                 <Label text="IP Address" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+
+                                 <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                 <Label text="Port" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+
+                                 <TextField maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                 <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <children>
+                                <Button focusTraversable="false" onAction="#handleSubmitButtonAction" text="Connect" />
+            </children>
+                     </HBox>
+
+                                 <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                 </children>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+
+                          </GridPane>
+         </children>
+      </VBox>
+    </children>
+    <stylesheets>
+        <URL value="@DirectConnect.css" />
+    </stylesheets>
+</AnchorPane>

@@ -1,12 +1,7 @@
 
 .background {
     -fx-background-image: url("../black_minimalistic.jpg");
-    -fx-background-repeat: repeat;
-    -fx-background-color:
-        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
-        linear-gradient(#20262b, #191d22),
-        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
-}
+    -fx-background-repeat: repeat;}
 
 .label {
     -fx-font-family: "Arial";
@@ -18,7 +13,7 @@
 
 .title {
     -fx-font-size: 28;
-    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
 }
 
@@ -80,10 +75,10 @@
 
 .text-field, .text-area {
     -fx-font-size: 18;
-    -fx-background-color:rgba(255, 255, 255, 0.5);
+    -fx-background-color:rgba(255, 255, 255, 0.8);
     -fx-background-insets: 0 0 -1 0, 0, 1.5;
     -fx-padding: 6 10 4 10;
-    -fx-effect: innershadow( gaussian, rgba(0, 0, 0, 0.8), 5, 0, 0, 2 );
+    -fx-effect: innershadow( gaussian, rgba(0, 0, 0, 0.5), 5, 0, 0, 2 );
     -fx-font-family: "Arial";
 }
 
@@ -93,5 +88,5 @@
 
 .text-field:focused, .text-area:focused {
     -fx-prompt-text-fill:rgb(128,128,128);
-    -fx-background-color:rgba(255, 255, 255, 0.8);
+    -fx-background-color:rgba(255, 255, 255, 0.9);
 }

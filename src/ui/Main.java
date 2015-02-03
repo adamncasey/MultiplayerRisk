@@ -42,6 +42,7 @@ public class Main extends Application {
     public void gotoMenu() {
         try {
             MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml");
+            stage.setResizable(false);
             menu.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -60,6 +61,7 @@ public class Main extends Application {
     public void gotoDirectConnect() {
         try {
         	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml");
+        	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,7 +79,7 @@ public class Main extends Application {
         } finally {
             in.close();
         } 
-        Scene scene = new Scene(page, 800, 600);
+        Scene scene = new Scene(page, 500, 600);
         stage.setScene(scene);
         stage.sizeToScene();
         return (Initializable) loader.getController();

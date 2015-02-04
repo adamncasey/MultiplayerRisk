@@ -109,7 +109,7 @@ public class Parser {
             case ACKNOWLEDGEMENT:
             case DEPLOY:
             case ATTACK:
-            case CAPTURE:
+            case ATTACK_CAPTURE:
             case FORTIFY:
                 // payload can be null.
 

@@ -38,11 +38,6 @@ public class DummyConnection implements IConnection {
     }
 
     @Override
-    public FutureTask<String> receiveLine() {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    @Override
     public void setTimeout(int milliseconds) {
         this.milliseconds = milliseconds;
     }

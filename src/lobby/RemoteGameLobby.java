@@ -56,11 +56,11 @@ public class RemoteGameLobby extends GameLobby {
 
         handlePings(); // callbacks: onPingStart + onPingReceive
 
-        handleReady(); // callbacks: onReady + onReadyAcknowledge
+        //handleReady(); // callbacks: onReady + onReadyAcknowledge
 
-        decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+        //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
-        shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+        //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
     }
 
     private void handlePings() {

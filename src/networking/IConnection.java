@@ -43,7 +43,8 @@ public interface IConnection {
      *      - ConnectionLostException
      *      - TimeoutException
      */
-    public FutureTask<String> receiveLine();
+    //TODO re-evaluate the need for this
+    //public FutureTask<String> receiveLine();
 	
 	/**
 	 * Sets the message timeout.

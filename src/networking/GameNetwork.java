@@ -1,7 +1,6 @@
 package networking;
 
 import networking.message.Message;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 import java.util.concurrent.ExecutorCompletionService;
@@ -30,11 +29,11 @@ public class GameNetwork {
 
     // receiveFromPlayer
     public Message receiveFromPlayerBlocking(int playerid) {
-
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     // receiveFromMultiple
-    public ExecutorCompletionService<Message> receiveFromMultiplePlayers(List<Integer> players) {
-
+    public ExecutorCompletionService<Message> receiveFromMultiplePlayers(List<GameClient> players) {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }

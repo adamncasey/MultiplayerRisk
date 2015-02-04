@@ -170,7 +170,7 @@ public class MessageParserTests {
 		Message msg = Parser.parseMessage(message);
 		
 		assertNotNull(msg);
-		assertEquals(msg.command, Command.CAPTURE);
+		assertEquals(msg.command, Command.ATTACK_CAPTURE);
 	}
 	//@Test
 	public void testFortify() throws ParserException {

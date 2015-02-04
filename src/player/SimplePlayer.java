@@ -10,7 +10,7 @@ public class SimplePlayer implements IPlayer {
 
     private String id;
     private GameState state; // SimplePlayer keeps a reference to the game state so that it can confirm moves.
-    private ArrayList<Card> hand;
+    private ArrayList<Cards> hand;
 
     public SimplePlayer(String id, GameState state){
         this.id = id;
@@ -21,8 +21,8 @@ public class SimplePlayer implements IPlayer {
         return id;
     }
 
-    public void addCard(Card card){
-        hand.add(card);
+    public void addCard(Cards cards){
+        hand.add(cards);
     }
 
     public GameMove getMove(int stage){

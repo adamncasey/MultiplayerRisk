@@ -17,7 +17,7 @@ public interface IPlayer {
    /**
     * The Game / Central server will provide a card, the player should keep track of it.
     */
-    public void addCard(Card card);
+    public void addCard(Cards cards);
 
    /**
     * Get a move from the player.

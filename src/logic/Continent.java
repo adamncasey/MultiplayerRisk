@@ -12,18 +12,23 @@ public class Continent {
     // Stores the IDs of the territories in the continent
     private ArrayList<Integer> territories = new ArrayList<Integer>();
 
-    private int continentValue = 0;
+    private int value = 0;
+    private String name = "";
 
     public Continent(Integer id){
         ID = id;
     } 
 
-    public void addTerritory(Integer id) {
+    public void addTerritory(Integer id){
         territories.add(id);
     }
 
-    public void setValue(int value) {
-        continentValue = value;
+    public void setValue(int value){
+        this.value = value;
+    }
+
+    public void setName(String name){
+        this.name = name;
     }
 }
 

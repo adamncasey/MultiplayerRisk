@@ -30,6 +30,14 @@ public class Territory {
     public void setCard(Integer card){
         this.card = card;
     }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public Integer getCard(){
+        return this.card;
+    }
 }
 
 

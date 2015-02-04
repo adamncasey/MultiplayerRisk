@@ -7,12 +7,13 @@ package logic;
 public class GameState {
 
     private Board board;
-    private Cards cards;
+    private Deck deck;
     
     public GameState(String boardFilename){
         board = new Board(boardFilename);
-        cards = new Cards();
+        deck = board.getDeck();
         board.printBoard();
+        deck.printDeck();
     } 
 
     public boolean isMoveValid(GameMove move){

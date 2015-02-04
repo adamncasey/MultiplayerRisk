@@ -10,15 +10,33 @@ public class Board {
 
     private Map<Integer, Territory> territories = new HashMap<Integer, Territory>();
     private Map<Integer, Continent> continents = new HashMap<Integer, Continent>();
+    private Integer wildcards = 0;
 
-    // continents 1 - 123456
-    // connections territory - territory
-    // continent_values - values
+    public Deck getDeck(){
+        Deck deck = new Deck();
+   
+        Iterator it = territories.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry pairs = (Map.Entry)it.next();
+            Integer TID = (Integer)pairs.getKey();
+            Territory T = (Territory)pairs.getValue();
+
+            for(int i = 0; i != T.getCard(); ++i){
+                Card card = new Card(TID, 1, T.getName()); // Still need a way for card values (the 1) to be stored withtin the map.
+                deck.addCard(card);
+            }
+        }
+        for(int i = 0; i != wildcards; ++i){
+            Card card = new Card(0, 0, "Wildcard");
+            deck.addCard(card);
+        }
+        return deck;
+    }
 
    /**
     * Take a board file and initiate this object.
     */
-    public void loadBoard(String filename) {
+    public void loadBoard(String filename){
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
@@ -117,7 +135,7 @@ public class Board {
     private void processCountryNames(String[] parts){
         Integer TID = Integer.valueOf(parts[0].replace("\"", ""));
         Territory T = territories.get(TID);
-        String name = parts[1].replace(",", "");
+        String name = parts[1].replace(",", "").replace("\"", "");
         T.setName(name);
     }
 
@@ -129,11 +147,18 @@ public class Board {
     }
 
     private void processWildcards(String[] parts){
-        Integer wildcards = Integer.valueOf(parts[1].trim());
-        // Do something with wildcards
+        this.wildcards =  Integer.valueOf(parts[1].trim());
     }
 
     public void printBoard() {
+        System.out.println("Printing current board:");
+        Iterator it = territories.entrySet().iterator();
+        while(it.hasNext()){ 
+            Map.Entry pairs = (Map.Entry)it.next();
+            Integer TID = (Integer)pairs.getKey();
+            Territory T = (Territory)pairs.getValue();
+            System.out.format("    %d - %s\n", TID, T.getName());
+        }
     }
 
     public Board(String filename){

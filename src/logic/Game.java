@@ -16,6 +16,11 @@ public class Game {
     private ArrayList<IPlayer> players;
 
    /**
+    * The player whose turn it currently is.
+    */
+    private int currentPlayer;
+
+   /**
     * The current game state, it is updated by Game after each player confirms the move.
     */
     private GameState state;
@@ -25,8 +30,9 @@ public class Game {
     * @param players The list of IPlayers that will play the game
     * @param state A GameState object already initialised 
     */
-    public Game(ArrayList<IPlayer> players, GameState state){
+    public Game(ArrayList<IPlayer> players, int firstPlayer, GameState state){
         this.players = new ArrayList<IPlayer>(players);
+        this.currentPlayer = firstPlayer;
         this.state = state;
     }
 

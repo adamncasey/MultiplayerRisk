@@ -31,7 +31,3 @@ public class Continent {
         this.name = name;
     }
 }
-
-
-
-

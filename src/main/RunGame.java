@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
 
 import logic.*;
 import player.*;
@@ -14,10 +15,13 @@ public class RunGame {
     public static void main(String[] args){ 
         System.out.println("Begin");
 
-//        String boardFilename = "resources/testBoard.json";
-        String boardFilename = "resources/risk_map.json";
+        String boardFilename = "resources/risk_map.json"; // Should be passed in from lobby
 
         System.out.format("Using board : %s\n", boardFilename);
+
+        Random random = new Random();
+        int seed = random.nextInt(); // Should be chosen by dice roll and agreed upon by all players (seed is a 32 bit int for the mersenne twister)
+
 
         System.out.println("Creating the GameState");
         GameState state = new GameState(boardFilename);
@@ -35,14 +39,17 @@ public class RunGame {
         players.add(player3);
 
 
-        System.out.println("End");
-//        System.out.println("Setting up the game");
-//        Game game = new Game(players, state);
-//        game.setupGame();
+        System.out.println("Creating Game");
+        Game game = new Game(players, 0, state);
 
-//        System.out.println("Running Game - Control transferred to Game");
-//        game.playGame();
+        System.out.println("Setting up game - Control transferred to Game");
+        game.setupGame();
+        System.out.println("Setup finished");
+
+        System.out.println("Playing game - Control transferred to Game");
+        game.playGame();
+        System.out.println("Game finished");
     
-//        System.out.println("Game ended");
+        System.out.println("End");
     }
 }

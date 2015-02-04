@@ -7,16 +7,18 @@ package logic;
 public class GameState {
 
     private Board board;
+    private Deck deck;
     
-
-    public GameState(){
+    public GameState(String boardFilename){
+        board = new Board(boardFilename);
+        deck = board.getDeck();
+        board.printBoard();
+        deck.printDeck();
     } 
-
 
     public boolean isMoveValid(GameMove move){
         return true;
     }
-
 
     // GameMove should have some information about the type of move allowing GameState to update the board appropriately
     public void makeMove(GameMove move) {

@@ -10,15 +10,33 @@ public class Board {
 
     private Map<Integer, Territory> territories = new HashMap<Integer, Territory>();
     private Map<Integer, Continent> continents = new HashMap<Integer, Continent>();
+    private Integer wildcards = 0;
 
-    // continents 1 - 123456
-    // connections territory - territory
-    // continent_values - values
+    public Deck getDeck(){
+        Deck deck = new Deck();
+   
+        Iterator it = territories.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry pairs = (Map.Entry)it.next();
+            Integer TID = (Integer)pairs.getKey();
+            Territory T = (Territory)pairs.getValue();
+
+            for(int i = 0; i != T.getCard(); ++i){
+                Card card = new Card(TID, 1, T.getName()); // Still need a way for card values (the 1) to be stored withtin the map.
+                deck.addCard(card);
+            }
+        }
+        for(int i = 0; i != wildcards; ++i){
+            Card card = new Card(0, 0, "Wildcard");
+            deck.addCard(card);
+        }
+        return deck;
+    }
 
    /**
     * Take a board file and initiate this object.
     */
-    public void loadBoard(String filename) {
+    public void loadBoard(String filename){
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
@@ -35,36 +53,36 @@ public class Board {
                 } else if(parts[0].equals("\"continent_values\"")) {
                     control = 3;
                     continue;
-                } else if((parts.length == 1) && !(parts[0].charAt(0) == '[')) {
+                } else if(parts[0].equals("\"continent_names\"")) {
+                    control = 4;
+                    continue;
+                } else if(parts[0].equals("\"country_names\"")) {
+                    control = 5;
+                    continue;
+                } else if(parts[0].equals("\"country_card\"")) {
+                    control = 6;
+                    continue;
+                } else if(parts[0].equals("\"wildcards\"")) {
+                    processWildcards(parts);
+                    continue;
+                } else if(parts.length == 1){
+                    control = 0; // end current block 
                     continue;
                 }
 
                 if(control == 1) {
-                    Integer newCID = Integer.valueOf(parts[0].replace("\"", ""));
-                    Continent newContinent = new Continent(newCID);
-                    String[] newTerritories = parts[1].split(",");
-                    for(int i = 0; i != newTerritories.length; ++i){
-                        Integer newTID = Integer.valueOf(newTerritories[i].replace("[", "").replace("]", ""));
-                        Territory newTerritory = new Territory(newTID);
-                        territories.put(newTID, newTerritory);
-                        newContinent.addTerritory(newTID);
-                    }
-                    continents.put(newCID, newContinent);
-                } else if(control == 2) {
-                    line = line.replace("[","").replace("]","");
-                    String[] link = line.split(",");
-                    Integer TID1 = Integer.valueOf(link[0]);
-                    Integer TID2 = Integer.valueOf(link[1]);
-                    Territory T1 = territories.get(TID1);
-                    T1.addLink(TID2);
-                    Territory T2 = territories.get(TID2);
-                    T2.addLink(TID1);
-                } else if(control == 3) {
-                    Integer CID = Integer.valueOf(parts[0].replace("\"", ""));
-                    Continent C = continents.get(CID);
-                    Integer value = Integer.valueOf(parts[1].replace(",", ""));
-                    C.setValue(value);
-                } 
+                    processContinents(parts); 
+                } else if(control == 2){
+                    processConnections(parts); 
+                } else if(control == 3){
+                    processContinentValues(parts); 
+                } else if(control == 4){
+                    processContinentNames(parts); 
+                } else if(control == 5){
+                    processCountryNames(parts); 
+                } else if(control == 6){
+                    processCountryCard(parts); 
+                }
             }
             br.close();
         } catch (Exception e) {
@@ -72,32 +90,75 @@ public class Board {
         }
     }
 
+    private void processContinents(String[] parts){
+        Integer newCID = Integer.valueOf(parts[0].replace("\"", ""));
+        Continent newContinent = new Continent(newCID);
+        String[] newTerritories = parts[1].split(",");
+        for(int i = 0; i != newTerritories.length; ++i){
+            Integer newTID = Integer.valueOf(newTerritories[i].replace("[", "").replace("]", "").trim());
+            Territory newTerritory = new Territory(newTID);
+            territories.put(newTID, newTerritory);
+            newContinent.addTerritory(newTID);
+        }
+        continents.put(newCID, newContinent);
+    }
+
+    private void processConnections(String[] parts){
+        Integer TID1 = Integer.valueOf(parts[0].replace("\"", ""));
+        Territory T1 = territories.get(TID1);
+        String[] newLinks = parts[1].split(",");
+        for(int i = 0; i != newLinks.length; ++i){
+            if(newLinks[i].equals("[]")){
+                continue;
+            }
+            Integer TID2 = Integer.valueOf(newLinks[i].replace("[", "").replace("]", "").trim());
+            Territory T2 = territories.get(TID2);
+            T1.addLink(TID2);
+            T2.addLink(TID1);
+        }
+    }
+
+    private void processContinentValues(String[] parts){
+        Integer CID = Integer.valueOf(parts[0].replace("\"", ""));
+        Continent C = continents.get(CID);
+        Integer value = Integer.valueOf(parts[1].replace(",", ""));
+        C.setValue(value);
+    }
+
+    private void processContinentNames(String[] parts){
+        Integer CID = Integer.valueOf(parts[0].replace("\"", ""));
+        Continent C = continents.get(CID);
+        String name = parts[1].replace(",", "");
+        C.setName(name);
+    }
+
+    private void processCountryNames(String[] parts){
+        Integer TID = Integer.valueOf(parts[0].replace("\"", ""));
+        Territory T = territories.get(TID);
+        String name = parts[1].replace(",", "").replace("\"", "");
+        T.setName(name);
+    }
+
+    private void processCountryCard(String[] parts){
+        Integer TID = Integer.valueOf(parts[0].replace("\"", ""));
+        Territory T = territories.get(TID);
+        Integer card = Integer.valueOf(parts[1].replace(",", ""));
+        T.setCard(card);
+    }
+
+    private void processWildcards(String[] parts){
+        this.wildcards =  Integer.valueOf(parts[1].trim());
+    }
+
     public void printBoard() {
-
-    }
-
-    // add one Infantry to any unclaimed territory on the board
-    public void setup2ClaimTerritory(GameMove move) throws InvalidTerritoryException {
-    }
-
-    // add one Army to any unoccupied territory
-    public void setup3OccupyTerritory(GameMove move) throws InvalidTerritoryException {
-    }
-
-    // place one additional army onto any territory claimed by that player)
-    public void setup4AddOneArmy(GameMove move) throws InvalidTerritoryException {
-    }
-
-    // add armies to the board as per rules
-    public void game1AddArmies(GameMove move) throws InvalidTerritoryException {
-    }
-
-    // attack
-    public void game2Attack(GameMove move) throws InvalidTerritoryException {
-    }
-
-    // fortify
-    public void game3Fortify(GameMove move) throws InvalidTerritoryException {
+        System.out.println("Printing current board:");
+        Iterator it = territories.entrySet().iterator();
+        while(it.hasNext()){ 
+            Map.Entry pairs = (Map.Entry)it.next();
+            Integer TID = (Integer)pairs.getKey();
+            Territory T = (Territory)pairs.getValue();
+            System.out.format("    %d - %s\n", TID, T.getName());
+        }
     }
 
     public Board(String filename){

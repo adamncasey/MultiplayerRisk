@@ -12,12 +12,31 @@ public class Territory {
     // Stores the IDs of the territories linked to this territory
     private ArrayList<Integer> links = new ArrayList<Integer>();
 
-    public Territory(Integer id) {
+    private String name = "";
+    private Integer card;
+
+    public Territory(Integer id){
         ID = id;
     }
 
-    public void addLink(Integer id) {
+    public void addLink(Integer id){
         links.add(new Integer(id));
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setCard(Integer card){
+        this.card = card;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public Integer getCard(){
+        return this.card;
     }
 }
 

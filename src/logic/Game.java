@@ -6,7 +6,6 @@ import java.util.Random;
 import player.*;
 
 /**
- * TODO - Decide how this should all work, what is here now doesnt make sense because it assumes a p2p game rather than a central server
  * game --- the main game loop that lets each player take their turn, it links player moves to the gamestate.
  */
 public class Game {
@@ -17,6 +16,11 @@ public class Game {
     private ArrayList<IPlayer> players;
 
    /**
+    * The player whose turn it currently is.
+    */
+    private int currentPlayer;
+
+   /**
     * The current game state, it is updated by Game after each player confirms the move.
     */
     private GameState state;
@@ -24,9 +28,11 @@ public class Game {
    /**
     * Configure the game for a specific set of players and settings.
     * @param players The list of IPlayers that will play the game
+    * @param state A GameState object already initialised 
     */
-    public Game(ArrayList<IPlayer> players, GameState state){
+    public Game(ArrayList<IPlayer> players, int firstPlayer, GameState state){
         this.players = new ArrayList<IPlayer>(players);
+        this.currentPlayer = firstPlayer;
         this.state = state;
     }
 
@@ -43,30 +49,30 @@ public class Game {
     * @return No return value
     */
     public void playGame(){
-        Random random = new Random();
+ //       Random random = new Random();
 
-        int activePlayer = 0;
-        int numPlayers = players.size();
-        while(true){
+//        int activePlayer = 0;
+ //       int numPlayers = players.size();
+ //       while(true){
             // The activePlayer takes their turn
-       	    turn(players.get(activePlayer));
+ //      	    turn(players.get(activePlayer));
 
-            // Code to remove eliminated players goes here
-            // Here is an example, this game randomly removes the active player after their turn/
-            int randInt = random.nextInt(10);
-            if(randInt == 0){
-                players.remove(activePlayer);
-                numPlayers = players.size();
-            } 
+  //          // Code to remove eliminated players goes here
+  //          // Here is an example, this game randomly removes the active player after their turn/
+  //          int randInt = random.nextInt(10);
+  //          if(randInt == 0){
+  //              players.remove(activePlayer);
+  //              numPlayers = players.size();
+  //          } 
 
-            // End the game when there is 1 player left
-            if(numPlayers == 1){
-                break;
-            }
+  //          // End the game when there is 1 player left
+  //          if(numPlayers == 1){
+  //              break;
+  //          }
 
             // Increment activePlayer
-            activePlayer = (activePlayer + 1) % numPlayers;   
-        }
+  //          activePlayer = (activePlayer + 1) % numPlayers;   
+  //      }
     }
 
     private void turn(IPlayer activePlayer){

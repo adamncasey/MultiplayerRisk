@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import ui.*;
@@ -25,11 +27,15 @@ public class DirectConnectController extends AnchorPane implements
 	}
 
 	@FXML
-	private Text actiontarget;
+	private Label connectionStatus;
+	
+	@FXML
+	private ProgressIndicator progressRing;
 
 	@FXML
 	protected void handleSubmitButtonAction(ActionEvent event) {
-		actiontarget.setText("Sign in button pressed");
+		progressRing.setVisible(true);
+		connectionStatus.setText("connecting...");
 	}
 	
 	@FXML

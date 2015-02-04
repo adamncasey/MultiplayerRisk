@@ -19,15 +19,21 @@
                           <image>
                               <Image preserveRatio="true" smooth="true" url="@../risk_logo.png" />
                           </image>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
                       </ImageView>
                </center>
+               <VBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </VBox.margin>
             </BorderPane>
               <VBox id="VBox" alignment="CENTER" spacing="30.0">
                   <children>
-                      <Button onAction="#createGame" prefHeight="70.0" prefWidth="400.0" text="Create game" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button onAction="#findGame" prefHeight="70.0" prefWidth="400.0" text="Find game" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button onAction="#directConnect" prefHeight="70.0" prefWidth="400.0" text="Direct connect" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button onAction="#quit" prefHeight="70.0" prefWidth="400.0" text="Quit" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button focusTraversable="false" onAction="#createGame" prefHeight="70.0" prefWidth="400.0" text="Create game" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button focusTraversable="false" onAction="#findGame" prefHeight="70.0" prefWidth="400.0" text="Find game" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button focusTraversable="false" onAction="#directConnect" prefHeight="70.0" prefWidth="400.0" text="Direct connect" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+                      <Button focusTraversable="false" onAction="#quit" prefHeight="70.0" prefWidth="400.0" text="Quit" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
                   </children>
               </VBox>
          </children>

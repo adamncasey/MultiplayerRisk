@@ -2,10 +2,8 @@ package networking;
 
 import networking.message.AcceptJoinGamePayload;
 import networking.message.Message;
+import networking.message.PingPayload;
 import networking.message.RejectJoinGamePayload;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Stores Client state through the Lobby process
@@ -39,7 +37,7 @@ public class LobbyClient {
 
 		Message msg = new Message(Command.JOIN_ACCEPT, OUR_PLAYER_ID, payload);
 		try {
-			conn.send(msg.toString());
+			conn.sendBlocking(msg.toString());
 		}
 		catch(ConnectionLostException e) {
 			return false;
@@ -49,24 +47,25 @@ public class LobbyClient {
 	}
 	
 	public void reject(String rejectMessage) {
-		// send message JOIN_REJECT (player_id, ack timeout, move timeout)
-		Message msg = new Message(Command.JOIN_REJECT, OUR_PLAYER_ID, new RejectJoinGamePayload(rejectMessage));
-		try {
-			conn.send(msg.toString());
-		}
-		catch(ConnectionLostException e) {
-			return;
-		}
+        // send message JOIN_REJECT (player_id, ack timeout, move timeout)
+        Message msg = new Message(Command.JOIN_REJECT, OUR_PLAYER_ID, new RejectJoinGamePayload(rejectMessage));
+        try {
+            conn.sendBlocking(msg.toString());
+        } catch (ConnectionLostException e) {
+            return;
+        }
 
-		conn.kill();
+        conn.kill();
+    }
+
+	public void sendPing(int numPlayers) throws ConnectionLostException {
+        Message msg = new Message(Command.PING, OUR_PLAYER_ID, new PingPayload(numPlayers));
+
+        conn.sendBlocking(msg.toString());
 	}
-	
-	public void sendPing() {
-		
-	}
-	
-	public void receivePing() {
-		
+
+	public IConnection getConnection() {
+        return conn;
 	}
 
 	private IConnection conn;

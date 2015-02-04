@@ -1,8 +1,5 @@
 package lobby.handler;
 
-import player.IPlayer;
-
-import java.util.List;
 
 /**
  * Event Handler for Joining a remote game.

@@ -4,11 +4,15 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.stream.Collectors;
 
 import lobby.handler.HostLobbyEventHandler;
-import networking.Connection;
-import networking.LobbyClient;
-import networking.Network;
+import lobby.handler.LobbyEventHandler;
+import networking.*;
+import networking.message.Message;
 
 /**
  * LocalGameLobby: A hosted game lobby to which network players can join.
@@ -38,6 +42,13 @@ public class LocalGameLobby extends GameLobby {
 		return players;
 	}
 
+    /**
+     * Call this to stop accepting new clients and begin the game.
+     */
+    public synchronized void startGame() {
+        this.lobbyOpen = false;
+    }
+
 	/**
 	 * Background thread for the Lobby.
 	 */
@@ -57,17 +68,24 @@ public class LocalGameLobby extends GameLobby {
             server.close();
         } catch (Exception e) {
             // TODO: Log/handle exception properly.
-            e.printStackTrace();
+            handler.onFailure(e);
             throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
         }
+        // At this point it makes sense to promote people to NetworkPlayers
+        // Only sendToAll, receiveFrom, receiveFromMultiple from now on.
 
-        pingClients();
+        try {
+            pingMessage();
 
-        readyMessage();
+            readyMessage();
 
-        decidePlayerOrder();
+            decidePlayerOrder();
 
-        shuffleCards();
+            shuffleCards();
+        } catch(InterruptedException e) {
+            // TODO Log exception?
+            handler.onFailure(e);
+        }
 	}
 
     private ServerSocket createServerSocket() throws IOException {
@@ -78,20 +96,73 @@ public class LocalGameLobby extends GameLobby {
         return new ServerSocket(port);
     }
 
-    private void pingClients() {
-        // send to all Ping Message
+    private void pingMessage() throws InterruptedException {
+        sendPingToAll(this.players, handler);
 
         handler.onPingStart();
 
-        // receive from all ping reply
-            handler.onPingReceive(0);
+        receivePingFromAll(this.players, handler);
     }
+
+    private static void sendPingToAll(List<LobbyClient> players, LobbyEventHandler handler) {
+        int numPlayers = players.size();
+
+        for(LobbyClient client : players) {
+            try {
+                client.sendPing(numPlayers);
+            } catch(ConnectionLostException e) {
+                //TODO Spec currently has no real way of handling this problem
+                handler.onFailure(e);
+            }
+        }
+    }
+
+    private static boolean receivePingFromAll(List<LobbyClient> players, LobbyEventHandler handler) throws InterruptedException {
+
+        ExecutorCompletionService<Message> executor = readMessageFromClients(players);
+
+        boolean success = true;
+
+        for(int i=0; i<players.size(); i++) {
+            Message value = null;
+            try {
+                value = executor.take().get();
+
+                if(value.command != Command.PING) {
+                    //TODO Handle receive invalid message from client
+                    throw new RuntimeException("Unhandled Invalid message received from client");
+                }
+
+                // TODO: Currently trusting the playerid received in the message. Possibly fine, probably bad.
+                handler.onPingReceive(value.playerid);
+
+                // TODO Forward message to other users.
+                        // This functionality should probably be lower level
+                System.out.println("Should be forwarding all received messages to other users");
+
+            } catch (ExecutionException e) {
+                Throwable ex = e.getCause();
+
+                handler.onFailure(ex);
+                // TODO tidy this up when onFailure is confirmed to be a working error handler.
+                // TODO Should we also log this?
+                e.printStackTrace();
+                ex.printStackTrace();
+
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
     private void readyMessage() {
-        // send Ready message
+        // sendBlocking Ready message
 
         handler.onReady();
 
         // Receive from all ready acknowledgement
+            // Check acknowledgement error is zero
             handler.onReadyAcknowledge(0);
     }
     private void decidePlayerOrder() {
@@ -112,7 +183,7 @@ public class LocalGameLobby extends GameLobby {
 
     private LobbyClient getClient(ServerSocket server) throws IOException {
         Socket newClient = server.accept();
-        LobbyClient lobbyClient = Network.getLobbyClient(new Connection(newClient));
+        LobbyClient lobbyClient = Networking.getLobbyClient(new Connection(newClient));
 
         String result = handler.onPlayerJoinRequest(lobbyClient);
 
@@ -128,6 +199,14 @@ public class LocalGameLobby extends GameLobby {
 
         lobbyClient.reject(result);
         return null;
+    }
+
+    private static ExecutorCompletionService<Message> readMessageFromClients(List<LobbyClient> clients) {
+        List<IConnection> connections = clients.stream()
+                .map( LobbyClient::getConnection )
+                .collect(Collectors.toList());
+
+        return Networking.readMessageFromConnections(connections);
     }
 
     private LobbyMulticastThread startMulticastThread() {
@@ -148,11 +227,4 @@ public class LocalGameLobby extends GameLobby {
     private synchronized boolean isLobbyOpen() {
         return lobbyOpen;
     }
-
-	/**
-	 * Stops accepting new clients and begins the game
-	 */
-	public synchronized void startGame() {
-		this.lobbyOpen = false;
-	}
 }

@@ -41,7 +41,7 @@ public class Connection implements IConnection {
 	// Functions
 	// ================================================================================
 	@Override
-	public void send(String message) throws ConnectionLostException {
+	public void sendBlocking(String message) throws ConnectionLostException {
 		out.write(message);
 
 		if (out.checkError())
@@ -49,7 +49,7 @@ public class Connection implements IConnection {
 	}
 
 	@Override
-	public String receiveLine() throws ConnectionLostException, TimeoutException {
+	public String receiveLineBlocking() throws ConnectionLostException, TimeoutException {
 		try {
 			return in.readLine();
 		} catch (IOException e) {

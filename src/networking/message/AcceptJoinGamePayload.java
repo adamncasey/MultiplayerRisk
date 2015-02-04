@@ -2,9 +2,7 @@ package networking.message;
 
 import networking.parser.Parser;
 import networking.parser.ParserException;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import java.util.HashMap;
 import java.util.Map;

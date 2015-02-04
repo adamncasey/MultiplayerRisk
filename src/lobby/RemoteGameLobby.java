@@ -54,15 +54,21 @@ public class RemoteGameLobby extends GameLobby {
             return;
         }
 
-        //TODO Implement these steps of handshake
+        handlePings(); // callbacks: onPingStart + onPingReceive
 
-        //handlePings(); // callbacks: onPingStart + onPingReceive
+        handleReady(); // callbacks: onReady + onReadyAcknowledge
 
-        //handleReady(); // callbacks: onReady + onReadyAcknowledge
+        decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
-        //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+        shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+    }
 
-        //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+    private void handlePings() {
+        // Receive ping from host.
+
+        // Send ping to all other players
+
+        // Receive ping from all other players
     }
 
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
@@ -75,13 +81,13 @@ public class RemoteGameLobby extends GameLobby {
 
         Message msg = new Message(Command.JOIN_GAME, payload);
 
-        conn.send(msg.toString());
+        conn.sendBlocking(msg.toString());
     }
 
     private boolean handleJoinGameResponse(IConnection conn) throws IOException {
         Message msg;
         try {
-            msg = Network.readMessage(conn);
+            msg = Networking.readMessage(conn);
         } catch(ParserException e) {
             e.printStackTrace();
             // TODO we shouldn't be printing here
@@ -93,7 +99,7 @@ public class RemoteGameLobby extends GameLobby {
 		}
 
         if(msg == null) {
-            throw new IOException("Network error: Invalid or no message received from host.");
+            throw new IOException("Networking error: Invalid or no message received from host.");
         }
 
         if(msg.command == Command.JOIN_ACCEPT) {

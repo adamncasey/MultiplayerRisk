@@ -2,14 +2,12 @@ package test.networking;
 
 import junit.framework.TestCase;
 import networking.LobbyClient;
-import networking.Network;
+import networking.Networking;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.prefs.Preferences;
 
 @RunWith(JUnit4.class)
 public class GetLobbyClientTest extends TestCase {
@@ -41,7 +39,7 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;
-        LobbyClient client = Network.getLobbyClient(conn);
+        LobbyClient client = Networking.getLobbyClient(conn);
         assertNotNull(client);
 
         Assert.assertArrayEquals("Supported Features Equality", client.supportedFeatures, new String[]{"secure", "defaultmap"});

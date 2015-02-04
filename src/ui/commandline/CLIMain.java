@@ -116,6 +116,8 @@ public class CLIMain {
             System.out.println("\tplayers: " + players.toString());
             System.out.println("\tcards: " + cards.toString());
             System.out.println("\tboard: " + board.toString());
+
+            System.out.println("At this point, we should pass this data off to the Game Loop");
         }
 
         @Override

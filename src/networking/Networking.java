@@ -5,8 +5,11 @@ import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
+import java.util.List;
+import java.util.concurrent.ExecutorCompletionService;
+
 // Interface used by GameManager / NetworkPlayer?
-public class Network {
+public class Networking {
 	/**
 	 * Gets a risk player connection from the socket
 	 * 
@@ -19,7 +22,7 @@ public class Network {
 
 		Message message;
 		try {
-			message = Network.readMessage(socket);
+			message = Networking.readMessage(socket);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;
@@ -64,7 +67,16 @@ public class Network {
 			ConnectionLostException, TimeoutException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this
-		String msgString = conn.receiveLine();
+		String msgString = conn.receiveLineBlocking();
 		return Parser.parseMessage(msgString);
 	}
+
+    /**
+     * Read a message from every connection given.
+     * @param connections - Connections to read from
+     * @return An ExecutorCompletionService object. Can be used to retrieve Messages as they arrive.
+     */
+    public static ExecutorCompletionService<Message> readMessageFromConnections(List<IConnection> connections) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

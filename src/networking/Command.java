@@ -10,11 +10,12 @@ public enum Command {
 	TRADE_IN_CARDS("trade_in_cards"),
 	DEPLOY("deploy"),
 	ATTACK("attack"),
-	CAPTURE("attack_capture"),
+	ATTACK_CAPTURE("attack_capture"),
 	FORTIFY("fortify"),
-	DICE_ROLL("roll"),
+    DICE_ROLL("roll"),
 	DICE_HASH("roll_hash"),
-	DICE_ROLL_NUM("roll_number");
+	DICE_ROLL_NUM("roll_number"),
+    PING("ping");
 	
 	
 	Command(String name) {

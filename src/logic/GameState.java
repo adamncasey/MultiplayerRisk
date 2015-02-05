@@ -9,9 +9,10 @@ public class GameState {
     private Board board;
     private Deck deck;
     
-    public GameState(String boardFilename){
+    public GameState(String boardFilename, int seed){
         board = new Board(boardFilename);
         deck = board.getDeck();
+        deck.shuffle(seed);
         board.printBoard();
         deck.printDeck();
     } 

@@ -12,12 +12,10 @@
 	<property name="out.jarname" location="${out.dir}/RiskyBusiness.jar" />
 
 	<!-- Class path for libraries + non-test files -->
-	<path id="junit.class.path">
-		<pathelement location="${lib}/junit-4.11.jar" />
-		<pathelement location="${lib}/hamcrest-core-1.2.1.jar" />
-
-		<pathelement location="${lib}/json-simple-1.1.1.jar" />
-		<pathelement location="${lib}/commons-lang3-3.3.2.jar" />
+	<path id="3rd-party-classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+		</fileset>
 
 		<pathelement path="${build}" />
 	</path>
@@ -30,7 +28,7 @@
 	<target name="compile" depends="init" description="Compile main program source">
 		<!-- Compile the java code from ${src} into ${build} -->
 		<javac target="1.8" srcdir="${src}" destdir="${build}" includeantruntime="false">
-			<classpath refid="junit.class.path" />
+			<classpath refid="3rd-party-classpath" />
 		</javac>
 
 		<!-- Include resources such as FXML and CSS files in output -->
@@ -62,13 +60,13 @@
 
 		<!-- Compile the test code java source from ${src} into ${build} -->
 		<javac srcdir="${src}" destdir="${build}" includeantruntime="false">
-			<classpath refid="junit.class.path" />
+			<classpath refid="3rd-party-classpath" />
 		</javac>
 	</target>
 
 	<target name="test" depends="compile-test" description="Run unit tests">
 		<junit printsummary="yes" showoutput="yes" fork="true">
-			<classpath refid="junit.class.path" />
+			<classpath refid="3rd-party-classpath" />
 			<batchtest>
 				<fileset dir="${src}">
 					<include name="**/test/**/*Test*" />

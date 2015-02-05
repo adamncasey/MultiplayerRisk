@@ -18,9 +18,13 @@ ant test
 How to run the program:
 
 - main
-java -classpath bin/RiskyBusiness.jar main.Main 
+java -cp "bin/RiskyBusiness.jar:lib/*" main.Main 
 or
 ./bin/RiskyBusiness.jar
 
+- ui test
+java -cp "bin/RiskyBusiness.jar:lib/*" ui.Main
+
 - rungame
-java -classpath bin/RiskyBusiness.jar main.RunGame
+java -cp "bin/RiskyBusiness.jar:lib/*" main.RunGame (On Linux)
+java -cp "bin/RiskyBusiness.jar;lib/*" main.RunGame (On Windows)

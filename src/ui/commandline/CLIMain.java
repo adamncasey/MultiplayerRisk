@@ -128,7 +128,7 @@ public class CLIMain {
 
     public static void joinLobby() {
         try {
-            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port);
+            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler);
 
             lobby.start();
 
@@ -142,94 +142,94 @@ public class CLIMain {
         }
     }
 
-//    public static JoinLobbyEventHandler joinHandler = new JoinLobbyEventHandler() {
-//
-//        @Override
-//        public void onTCPConnect() {
-//            System.out.println("onTCPConnect ");
-//        }
-//
-//        @Override
-//        public void onJoinAccepted(int playerid) {
-//            System.out.println("onJoinAccepted " + playerid);
-//        }
-//
-//        @Override
-//        public void onJoinRejected(String message) {
-//            System.out.println("onJoinRejected " + message);
-//        }
-//
-//        @Override
-//        public void onPlayerJoin(int playerid) {
-//            System.out.println("onPlayerJoin " + playerid);
-//        }
-//
-//        @Override
-//        public void onPlayerLeave(int playerid) {
-//            System.out.println("onPlayerLeave " + playerid);
-//        }
-//
-//        @Override
-//        public void onPingStart() {
-//
-//            System.out.println("onPingStart ");
-//        }
-//
-//        @Override
-//        public void onPingReceive(int playerid) {
-//            System.out.println("onPingReceive " + playerid);
-//
-//        }
-//
-//        @Override
-//        public void onReady() {
-//            System.out.println("onReady ");
-//
-//        }
-//
-//        @Override
-//        public void onReadyAcknowledge(int playerid) {
-//            System.out.println("onReadyAcknowledge " + playerid);
-//
-//        }
-//
-//        @Override
-//        public void onDicePlayerOrder() {
-//            System.out.println("onDicePlayerOrder ");
-//
-//        }
-//
-//        @Override
-//        public void onDiceHash(int playerid) {
-//            System.out.println("onDiceHash " + playerid);
-//
-//        }
-//
-//        @Override
-//        public void onDiceNumber(int playerid) {
-//            System.out.println("onDiceNumber " + playerid);
-//
-//        }
-//
-//        @Override
-//        public void onDiceCardShuffle() {
-//            System.out.println("onDiceCardShuffle ");
-//
-//        }
-//
-//        @Override
-//        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
-//            System.out.println("onLobbyComplete: ");
-//            System.out.println("\tplayers: " + players.toString());
-//            System.out.println("\tcards: " + cards.toString());
-//            System.out.println("\tboard: " + board.toString());
-//        }
-//
-//        @Override
-//        public void onFailure(Throwable e) {
-//            System.out.println("onFailure: " + e.getMessage());
-//
-//            e.printStackTrace();
-//        }
-//    };
+    public static JoinLobbyEventHandler joinHandler = new JoinLobbyEventHandler() {
+
+        @Override
+        public void onTCPConnect() {
+            System.out.println("onTCPConnect ");
+        }
+
+        @Override
+        public void onJoinAccepted(int playerid) {
+            System.out.println("onJoinAccepted " + playerid);
+        }
+
+        @Override
+        public void onJoinRejected(String message) {
+            System.out.println("onJoinRejected " + message);
+        }
+
+        @Override
+        public void onPlayerJoin(int playerid) {
+            System.out.println("onPlayerJoin " + playerid);
+        }
+
+        @Override
+        public void onPlayerLeave(int playerid) {
+            System.out.println("onPlayerLeave " + playerid);
+        }
+
+        @Override
+        public void onPingStart() {
+
+            System.out.println("onPingStart ");
+        }
+
+        @Override
+        public void onPingReceive(int playerid) {
+            System.out.println("onPingReceive " + playerid);
+
+        }
+
+        @Override
+        public void onReady() {
+            System.out.println("onReady ");
+
+        }
+
+        @Override
+        public void onReadyAcknowledge(int playerid) {
+            System.out.println("onReadyAcknowledge " + playerid);
+
+        }
+
+        @Override
+        public void onDicePlayerOrder() {
+            System.out.println("onDicePlayerOrder ");
+
+        }
+
+        @Override
+        public void onDiceHash(int playerid) {
+            System.out.println("onDiceHash " + playerid);
+
+        }
+
+        @Override
+        public void onDiceNumber(int playerid) {
+            System.out.println("onDiceNumber " + playerid);
+
+        }
+
+        @Override
+        public void onDiceCardShuffle() {
+            System.out.println("onDiceCardShuffle ");
+
+        }
+
+        @Override
+        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
+            System.out.println("onLobbyComplete: ");
+            System.out.println("\tplayers: " + players.toString());
+            System.out.println("\tcards: " + cards.toString());
+            System.out.println("\tboard: " + board.toString());
+        }
+
+        @Override
+        public void onFailure(Throwable e) {
+            System.out.println("onFailure: " + e.getMessage());
+
+            e.printStackTrace();
+        }
+    };
 }

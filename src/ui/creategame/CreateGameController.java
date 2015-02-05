@@ -6,8 +6,12 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import player.IPlayer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +28,9 @@ import ui.*;
 public class CreateGameController extends AnchorPane implements Initializable {
 
 	private Main application;
+	
+	@FXML
+	private Label connectionStatus;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -36,6 +43,49 @@ public class CreateGameController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
+		final ScheduledExecutorService scheduler 
+        = Executors.newScheduledThreadPool(1);
+
+    scheduler.scheduleAtFixedRate(
+            new Runnable(){
+                  
+                int counter = 0;
+                  
+                @Override
+                public void run() {
+                    counter++;
+                    if(counter<=10){
+                         
+                        Platform.runLater(new Runnable(){
+                            @Override
+                            public void run() {
+                            	connectionStatus.setText(
+                                "isFxApplicationThread: "
+                                + Platform.isFxApplicationThread() + "\n"
+                                + "Counting: "
+                                + String.valueOf(counter));
+                            }
+                        });
+                         
+                         
+                    }else{
+                        scheduler.shutdown();
+                        Platform.runLater(new Runnable(){
+                            @Override
+                            public void run() {
+                            	connectionStatus.setText(
+                                "isFxApplicationThread: "
+                                + Platform.isFxApplicationThread() + "\n"
+                                + "-Finished-");
+                            }
+                        });
+                    }
+                      
+                }
+            }, 
+            1, 
+            1, 
+            TimeUnit.SECONDS);
 	}
 
 	@Override

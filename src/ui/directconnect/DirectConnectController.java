@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import player.IPlayer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,28 +82,123 @@ public class DirectConnectController extends AnchorPane implements Initializable
 			return;
 
 		connectionStatus.setText("connecting...");
-
+		
 		try {
-			RemoteGameLobby lobby = new RemoteGameLobby(
-					InetAddress.getByName(ip.getText()), Integer.parseInt(port
-							.getText()));
-			if(lobby.joinLobby()) {
-				status("Connected successfully!");
-			}
-			else
-			{
-				status("Error: " + lobby.getError());
-			}
-			
-		} catch (NumberFormatException | UnknownHostException e) {
-			status("Error: Invalid connection settings");
-		}
+            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler);
+
+            lobby.start();
+
+            synchronized (lobby) {
+                lobby.wait();
+            }
+        } catch(UnknownHostException e) {
+            status("Unknown host: " + e.getMessage());
+        } catch(InterruptedException e) {
+        	status("Interrupted Exception: " + e.getMessage());
+        }
 	}
 
 	private void status(String message) {
-		connectionStatus.setText(message);
+		Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+            	connectionStatus.setText(message);
+            }
+        });
 	}
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {	}
+	
+
+    public JoinLobbyEventHandler joinHandler = new JoinLobbyEventHandler() {
+
+        @Override
+        public void onTCPConnect() {
+            status("onTCPConnect ");
+        }
+
+        @Override
+        public void onJoinAccepted(int playerid) {
+            status("onJoinAccepted " + playerid);
+        }
+
+        @Override
+        public void onJoinRejected(String message) {
+            status("onJoinRejected " + message);
+        }
+
+        @Override
+        public void onPlayerJoin(int playerid) {
+            status("onPlayerJoin " + playerid);
+        }
+
+        @Override
+        public void onPlayerLeave(int playerid) {
+            status("onPlayerLeave " + playerid);
+        }
+
+        @Override
+        public void onPingStart() {
+
+            status("onPingStart ");
+        }
+
+        @Override
+        public void onPingReceive(int playerid) {
+            status("onPingReceive " + playerid);
+
+        }
+
+        @Override
+        public void onReady() {
+            status("onReady ");
+
+        }
+
+        @Override
+        public void onReadyAcknowledge(int playerid) {
+            status("onReadyAcknowledge " + playerid);
+
+        }
+
+        @Override
+        public void onDicePlayerOrder() {
+            status("onDicePlayerOrder ");
+
+        }
+
+        @Override
+        public void onDiceHash(int playerid) {
+            status("onDiceHash " + playerid);
+
+        }
+
+        @Override
+        public void onDiceNumber(int playerid) {
+            status("onDiceNumber " + playerid);
+
+        }
+
+        @Override
+        public void onDiceCardShuffle() {
+            status("onDiceCardShuffle ");
+
+        }
+
+        @Override
+        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
+            status("onLobbyComplete: ");
+            status("\tplayers: " + players.toString());
+            status("\tcards: " + cards.toString());
+            status("\tboard: " + board.toString());
+        }
+
+        @Override
+        public void onFailure(Throwable e) {
+            status("onFailure: " + e.getMessage());
+
+            e.printStackTrace();
+        }
+    };
 }

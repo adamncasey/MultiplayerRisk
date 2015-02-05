@@ -22,6 +22,9 @@ java -cp "bin/RiskyBusiness.jar:lib/*" main.Main
 or
 ./bin/RiskyBusiness.jar
 
+- ui test
+java -cp "bin/RiskyBusiness.jar:lib/*" ui.Main
+
 - rungame
 java -cp "bin/RiskyBusiness.jar:lib/*" main.RunGame (On Linux)
 java -cp "bin/RiskyBusiness.jar;lib/*" main.RunGame (On Windows)

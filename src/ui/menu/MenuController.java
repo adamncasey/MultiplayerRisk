@@ -23,6 +23,7 @@ public class MenuController extends AnchorPane implements Initializable {
 
     public void createGame(ActionEvent event) {
         if (application != null) {
+        	application.gotoCreateGame();
         }
     }
 

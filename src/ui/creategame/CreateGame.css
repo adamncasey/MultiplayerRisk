@@ -1,0 +1,92 @@
+
+.background {
+    -fx-background-image: url("../background.jpg");
+    -fx-background-repeat: repeat;}
+
+.label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
+    -fx-font-weight: bold;
+}
+
+.title {
+    -fx-font-size: 28;
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
+}
+
+.hyperlink {
+    -fx-font-family: "Arial";
+    -fx-font-size: 18;
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
+    -fx-border-width: 0;
+}
+
+.hyperlink:focused {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+}
+
+.check-box .box {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.1),
+        rgba(0, 0, 0, 1),
+        -fx-outer-border,
+        -fx-inner-border,
+        -fx-body-color;
+    -fx-background-insets: 0 -1.6 -2 -1.6, -1.4, 0, 1, 2;
+}
+
+.check-box:focused .box {
+    -fx-background-color:
+        rgba(255, 255, 255, 0.15),
+        rgba(0, 0, 0, 0.8),
+        -fx-outer-border,
+        -fx-inner-border,
+        white;
+}
+
+.button .text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
+}
+
+.button {
+    -fx-background-color:rgba(0, 0, 0, 0.3);
+    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
+    -fx-font-family: "Arial";
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:focused, .button:hover {
+    -fx-background-color:rgba(0, 0, 0, 0.5);
+}
+
+.button-nav {
+    -fx-background-color:rgba(255, 255, 255, 0.1);
+}
+
+.button-nav:focused, .button-nav:hover {
+    -fx-background-color:rgba(255, 255, 255, 0.2);
+}
+
+.text-field, .text-area {
+    -fx-font-size: 18;
+    -fx-background-color:rgba(255, 255, 255, 0.9);
+    -fx-background-insets: 0 0 -1 0, 0, 1.5;
+    -fx-padding: 6 10 4 10;
+    -fx-effect: innershadow( gaussian, rgba(0, 0, 0, 0.5), 5, 0, 0, 2 );
+    -fx-font-family: "Arial";
+}
+
+.text-area {
+    -fx-padding: 6 5 6 5;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-prompt-text-fill:rgb(128,128,128);
+    -fx-background-color:rgba(255, 255, 255, 1);
+}

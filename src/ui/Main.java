@@ -11,14 +11,15 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
 import ui.menu.*;
 
 public class Main extends Application {
 
 	private Stage stage;
-    private final double MINIMUM_WINDOW_WIDTH = 390.0;
-    private final double MINIMUM_WINDOW_HEIGHT = 500.0;
+    private final double MINIMUM_WINDOW_WIDTH = 500;
+    private final double MINIMUM_WINDOW_HEIGHT = 600;
 
 
     public static void main(String[] args) {
@@ -41,9 +42,19 @@ public class Main extends Application {
 
     public void gotoMenu() {
         try {
-            MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml");
+            MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml", 500, 600);
             stage.setResizable(false);
             menu.setApp(this);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void gotoCreateGame() {
+        try {
+        	CreateGameController lobby = (CreateGameController) replaceSceneContent("creategame/creategame.fxml", 500, 600);
+        	stage.setResizable(true);
+            lobby.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -60,7 +71,7 @@ public class Main extends Application {
     
     public void gotoDirectConnect() {
         try {
-        	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml");
+        	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml", 500, 600);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {
@@ -68,7 +79,7 @@ public class Main extends Application {
         }
     }
 
-    private Initializable replaceSceneContent(String fxml) throws Exception {
+    private Initializable replaceSceneContent(String fxml, double width, double height) throws Exception {
         FXMLLoader loader = new FXMLLoader();
         InputStream in = Main.class.getResourceAsStream(fxml);
         loader.setBuilderFactory(new JavaFXBuilderFactory());
@@ -79,9 +90,10 @@ public class Main extends Application {
         } finally {
             in.close();
         } 
-        Scene scene = new Scene(page, 500, 600);
+        Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
         stage.sizeToScene();
+        stage.centerOnScreen();
         return (Initializable) loader.getController();
     }
 }

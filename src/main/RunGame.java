@@ -24,7 +24,7 @@ public class RunGame {
 
 
         System.out.println("Creating the GameState");
-        GameState state = new GameState(boardFilename);
+        GameState state = new GameState(boardFilename, seed);
 
         System.out.println("Creating player list");
         ArrayList<IPlayer> players = new ArrayList<IPlayer>(); 

@@ -1,6 +1,7 @@
 package logic;
 
 import java.util.ArrayList;
+import org.apache.commons.math3.random.MersenneTwister;
 
 /**
  * Deck --- Stores information about the deck of RISK cards.
@@ -14,6 +15,13 @@ public class Deck {
 
     public void addCard(Card card){
         cards.add(card);
+    }
+
+    public void shuffle(int seed){
+        MersenneTwister twister = new MersenneTwister();
+        for(int i = 0; i != 10; ++i){
+            System.out.println(twister.nextDouble());
+        }
     }
 
     public void printDeck(){

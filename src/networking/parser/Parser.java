@@ -78,35 +78,55 @@ public class Parser {
 	}
 
 	public static void validateType(JSONObject object, String key, Class<?> class1) throws ParserException {
-		if(object.get(key) != null && class1.isAssignableFrom(object.get(key).getClass())) {
+		if(object.get(key) != null && validateType(object.get(key), class1)) {
 			return;
 		}
 		
 		throw new ParserException("Cannot parse message. " + key + " must be present and of correct type (" + class1.toString() + ").");
 	}
 
+    private static void validatePayloadType(Object obj, Class<?> class1) throws ParserException {
+        if(validateType(obj, class1)) {
+            return;
+        }
+
+        throw new ParserException("Invalid packet format. Expected 'payload' to be " + class1.toString() + ". Is actually" + obj.getClass().toString());
+    }
+
+    private static boolean validateType(Object obj, Class<?> class1) {
+        if(class1.isAssignableFrom(obj.getClass())) {
+            return true;
+        }
+
+        return false;
+    }
+
     private static Payload parsePayload(Command command, Object payloadObj) throws ParserException {
         switch(command) {
 
             case JOIN_GAME:
-                if(!(payloadObj instanceof JSONObject)) {
-                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
-                }
+                validatePayloadType(payloadObj, JSONObject.class);
                 return new JoinGamePayload((JSONObject)payloadObj);
 
             case JOIN_ACCEPT:
-                if(!(payloadObj instanceof JSONObject)) {
-                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
-                }
+                validatePayloadType(payloadObj, JSONObject.class);
                 return new AcceptJoinGamePayload((JSONObject)payloadObj);
 
             case JOIN_REJECT:
-                if(!(payloadObj instanceof JSONObject)) {
-                    throw new ParserException("Invalid packet format. Expected 'payload' to be JSON Object");
-                }
+                validatePayloadType(payloadObj, JSONObject.class);
                 return new RejectJoinGamePayload((JSONObject)payloadObj);
 
+            case PING:
+                validatePayloadType(payloadObj, JSONValue.class);
+                return new PingPayload((JSONValue)payloadObj);
+
             case ACKNOWLEDGEMENT:
+                validatePayloadType(payloadObj, JSONObject.class);
+                return new AcknowledgementPayload((JSONObject)payloadObj);
+
+            case READY:
+                return null;
+
             case DEPLOY:
             case ATTACK:
             case ATTACK_CAPTURE:

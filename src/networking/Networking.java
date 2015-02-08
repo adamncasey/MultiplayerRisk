@@ -6,7 +6,7 @@ import networking.parser.Parser;
 import networking.parser.ParserException;
 
 import java.util.List;
-import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.*;
 
 // Interface used by GameManager / NetworkPlayer?
 public class Networking {
@@ -18,7 +18,7 @@ public class Networking {
 	 *         join request.
 	 * @return null if an error occurs during the initial connection
 	 */
-	public static LobbyClient getLobbyClient(IConnection socket) {
+	public static LobbyClient getLobbyClient(IConnection socket, int hostPlayerid) {
 
 		Message message;
 		try {
@@ -35,7 +35,7 @@ public class Networking {
 		JoinGamePayload payload = (JoinGamePayload) message.payload;
 
 		return new LobbyClient(socket, payload.supported_versions,
-				payload.supported_features);
+				payload.supported_features, hostPlayerid);
 	}
 
 	/**
@@ -59,17 +59,26 @@ public class Networking {
 	 * @param conn
 	 *            - Connection to read from
 	 * @return Message on success
-	 * @return null on socket failure TODO: Decide if this is enough detail.
-	 *         Could be useful to provide different exceptions for IOError vs
-	 *         Bad Packet
+     * @throws Exception on error. ParserException for invalid packet.
+     * ConnectionLostException or TimeoutException for network related errors
 	 */
 	public static Message readMessage(IConnection conn) throws ParserException,
 			ConnectionLostException, TimeoutException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this
-		String msgString = conn.receiveLineBlocking();
+		String msgString = conn.receiveLine();
 		return Parser.parseMessage(msgString);
 	}
+
+    public static Callable<Message> readMessageAsync(IConnection conn) {
+        return new Callable<Message>() {
+
+            @Override
+            public Message call() throws Exception {
+                return readMessage(conn);
+            }
+        };
+    }
 
     /**
      * Read a message from every connection given.
@@ -77,6 +86,23 @@ public class Networking {
      * @return An ExecutorCompletionService object. Can be used to retrieve Messages as they arrive.
      */
     public static ExecutorCompletionService<Message> readMessageFromConnections(List<IConnection> connections) {
-        throw new UnsupportedOperationException("Not implemented");
+        //TODO: This will create a new thread pool every call. We should be able to cache this.
+        Executor executor = Executors.newFixedThreadPool(connections.size());
+
+        ExecutorCompletionService<Message> ecs = new ExecutorCompletionService<>(executor);
+        for(IConnection conn: connections) {
+            ecs.submit(Networking.readMessageAsync(conn));
+        }
+
+        return ecs;
+    }
+
+    public static ExecutorCompletionService<Message> readAcknowledgementsForMessage(GameRouter router, Message msg) {
+        // Read message from every player.
+
+        // Check message type is acknowledgement
+
+        // Check ack_id is msg.payload.ack_id
+        throw new RuntimeException("Not implemented");
     }
 }

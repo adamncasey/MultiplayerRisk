@@ -1,5 +1,6 @@
 package networking;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 /**
@@ -33,11 +34,11 @@ public interface IConnection {
 	 * @throws ConnectionLostException If the connection is lost.
 	 * @throws TimeoutException If response times-out.
 	 */
-	public String receiveLineBlocking() throws ConnectionLostException, TimeoutException;
+	public String receiveLine() throws ConnectionLostException, TimeoutException;
 
     /**
      * Can be used to receive a message from the socket in an asynchronous manner.
-     * @return FutureTask which can be executed to perform receiveLineBlocking
+     * @return FutureTask which can be executed to perform receiveLine
      *
      * Calling get() may throw an exception, which when calling getCause(), may be of type:
      *      - ConnectionLostException

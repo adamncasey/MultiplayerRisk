@@ -54,22 +54,53 @@ public class RemoteGameLobby extends GameLobby {
             return;
         }
 
-        handlePings(); // callbacks: onPingStart + onPingReceive
+        //try {
 
-        //handleReady(); // callbacks: onReady + onReadyAcknowledge
+            handlePings(conn); // callbacks: onPingStart + onPingReceive
 
-        //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            //handleReady(); // callbacks: onReady + onReadyAcknowledge
 
-        //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+            //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+
+            //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+        /*} catch(InterruptedException e) {
+            // TODO Log exception?
+            handler.onFailure(e);
+        }*/
     }
 
-    private void handlePings() {
+    private void handlePings(IConnection conn) {
         // Receive ping from host.
+        conn.setTimeout(100000);
+        Message msg;
+        try {
+            msg = Networking.readMessage(conn);
+        } catch(ParserException e) {
+            e.printStackTrace();
+            // TODO we shouldn't be printing here
+            System.out.println(e.getMessage() + " cannot handle response");
+            throw new RuntimeException("Invalid message");
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Timeout");
+
+        } catch (ConnectionLostException e) {
+            e.printStackTrace();
+
+            throw new RuntimeException("Connection lost");
+        }
+
+        if(msg.command != Command.PING) {
+            throw new RuntimeException("Invalid message");
+        }
+        // Received Ping.
 
         // Send ping to all other players
 
         // Receive ping from all other players
     }
+
+
 
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
         return new Connection(new Socket(address, port));

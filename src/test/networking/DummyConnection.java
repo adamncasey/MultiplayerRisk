@@ -24,7 +24,7 @@ public class DummyConnection implements IConnection {
     }
 
     @Override
-    public String receiveLineBlocking() throws ConnectionLostException, TimeoutException {
+    public String receiveLine() throws ConnectionLostException, TimeoutException {
         if(wasKilled) {
             throw new ConnectionLostException();
         }

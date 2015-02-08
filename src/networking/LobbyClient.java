@@ -6,7 +6,7 @@ import networking.message.PingPayload;
 import networking.message.RejectJoinGamePayload;
 
 /**
- * Stores Client state through the Lobby process
+ * Stores client information through the lobby stage up until the host sends "ping".
  */
 public class LobbyClient {
 
@@ -18,24 +18,34 @@ public class LobbyClient {
 	 *
 	 */
 
-	// TODO A better way of handling this value.
-	private static final int OUR_PLAYER_ID = 0;
-
-	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures) {
+	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures, int hostPlayerid) {
         this.conn = conn;
         this.supportedVersions = supportedVersions;
 		this.supportedFeatures = supportedFeatures;
+        this.hostPlayerid = hostPlayerid;
 	}
 
 	public final double[] supportedVersions;
 	public final String[] supportedFeatures;
+    public final int hostPlayerid;
+
+    private int playerid;
+    private IConnection conn;
+
+    public IConnection getConnection() {
+        return conn;
+    }
+
+    public int getPlayerid() {
+        return playerid;
+    }
 	
 	public boolean accept(int playerid) {
 		// send message JOIN_ACCEPT (player_id, ack timeout, move timeout)
 
         AcceptJoinGamePayload payload = new AcceptJoinGamePayload(playerid, conn.getTimeout(), conn.getTimeout());
 
-		Message msg = new Message(Command.JOIN_ACCEPT, OUR_PLAYER_ID, payload);
+		Message msg = new Message(Command.JOIN_ACCEPT, hostPlayerid, payload);
 		try {
 			conn.sendBlocking(msg.toString());
 		}
@@ -43,12 +53,14 @@ public class LobbyClient {
 			return false;
 		}
 
+        this.playerid = playerid;
+
 		return true;
 	}
 	
 	public void reject(String rejectMessage) {
         // send message JOIN_REJECT (player_id, ack timeout, move timeout)
-        Message msg = new Message(Command.JOIN_REJECT, OUR_PLAYER_ID, new RejectJoinGamePayload(rejectMessage));
+        Message msg = new Message(Command.JOIN_REJECT, hostPlayerid, new RejectJoinGamePayload(rejectMessage));
         try {
             conn.sendBlocking(msg.toString());
         } catch (ConnectionLostException e) {
@@ -57,16 +69,4 @@ public class LobbyClient {
 
         conn.kill();
     }
-
-	public void sendPing(int numPlayers) throws ConnectionLostException {
-        Message msg = new Message(Command.PING, OUR_PLAYER_ID, new PingPayload(numPlayers));
-
-        conn.sendBlocking(msg.toString());
-	}
-
-	public IConnection getConnection() {
-        return conn;
-	}
-
-	private IConnection conn;
 }

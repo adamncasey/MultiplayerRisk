@@ -3,6 +3,8 @@ package lobby;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 
@@ -78,6 +80,8 @@ public class LocalGameLobby extends Thread {
             throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
         }
 
+        setupRouterForwarding(router, lobbyClients);
+
         // At this point the router should have all knowledge required to send messages to appropriate users.
         // lobbyClients is a weird mix (needs refactoring). Will only contain lobby-specific information
 
@@ -98,6 +102,17 @@ public class LocalGameLobby extends Thread {
             handler.onFailure(e);
         }
 	}
+
+    private void setupRouterForwarding(GameRouter router, List<LobbyClient> clients) {
+        // Tells the GameRouter to forward messages received from clients to every other client
+        for(LobbyClient client : clients) {
+            for(LobbyClient client2 : clients) {
+                if(client2 != client) {
+                    router.addBridge(client.getConnection(), client2.getConnection());
+                }
+            }
+        }
+    }
 
     private void closeSocket(ServerSocket socket) {
         if(!socket.isClosed()) {

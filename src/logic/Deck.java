@@ -1,5 +1,6 @@
 package logic;
 
+import java.util.Collections;
 import java.util.ArrayList;
 import org.apache.commons.math3.random.MersenneTwister;
 
@@ -19,8 +20,10 @@ public class Deck {
 
     public void shuffle(int seed){
         MersenneTwister twister = new MersenneTwister();
-        for(int i = 0; i != 10; ++i){
-            System.out.println(twister.nextDouble());
+        int size = cards.size();
+        for(int i = 0; i != size; ++i){
+            int j = twister.nextInt(size);
+            Collections.swap(cards, i, j);
         }
     }
 

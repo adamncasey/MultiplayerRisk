@@ -5,6 +5,7 @@ import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -62,7 +63,7 @@ public class Networking {
      * @throws Exception on error. ParserException for invalid packet.
      * ConnectionLostException or TimeoutException for network related errors
 	 */
-	public static Message readMessage(IConnection conn) throws ParserException,
+	protected static Message readMessage(IConnection conn) throws ParserException,
 			ConnectionLostException, TimeoutException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this
@@ -70,39 +71,34 @@ public class Networking {
 		return Parser.parseMessage(msgString);
 	}
 
-    public static Callable<Message> readMessageAsync(IConnection conn) {
+    private static Callable<Message> readMessageAsync(NetworkClient client) {
         return new Callable<Message>() {
 
             @Override
             public Message call() throws Exception {
-                return readMessage(conn);
+                return client.readMessage();
             }
         };
     }
 
     /**
      * Read a message from every connection given.
-     * @param connections - Connections to read from
+     * @param clients - Clients to read from
      * @return An ExecutorCompletionService object. Can be used to retrieve Messages as they arrive.
      */
-    public static ExecutorCompletionService<Message> readMessageFromConnections(List<IConnection> connections) {
+    public static ExecutorCompletionService<Message> readMessageFromConnections(Collection<NetworkClient> clients) {
+        if(clients.size() == 0) {
+            throw new IllegalArgumentException("Cannot readMessage from empty collection of clients");
+        }
+
         //TODO: This will create a new thread pool every call. We should be able to cache this.
-        Executor executor = Executors.newFixedThreadPool(connections.size());
+        Executor executor = Executors.newFixedThreadPool(clients.size());
 
         ExecutorCompletionService<Message> ecs = new ExecutorCompletionService<>(executor);
-        for(IConnection conn: connections) {
-            ecs.submit(Networking.readMessageAsync(conn));
+        for(NetworkClient client : clients) {
+            ecs.submit(Networking.readMessageAsync(client));
         }
 
         return ecs;
-    }
-
-    public static ExecutorCompletionService<Message> readAcknowledgementsForMessage(GameRouter router, Message msg) {
-        // Read message from every player.
-
-        // Check message type is acknowledgement
-
-        // Check ack_id is msg.payload.ack_id
-        throw new RuntimeException("Not implemented");
     }
 }

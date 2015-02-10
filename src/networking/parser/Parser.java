@@ -54,9 +54,18 @@ public class Parser {
             playerid = ((Long) message.get("player_id")).intValue();
         }
 
-        // TODO Signature check + ack ID
+        Long ackId = null;
 
-		return new Message(command, false, playerid, payload, null);
+        if(message.get("ack_id") != null) {
+            validateType(message, "ack_id", Long.class);
+
+            ackId = (Long)message.get("ack_id");
+        }
+
+
+        // TODO Signature check
+
+		return new Message(command, false, playerid, payload, ackId);
 	}
 	
 	/**
@@ -117,8 +126,12 @@ public class Parser {
                 return new RejectJoinGamePayload((JSONObject)payloadObj);
 
             case PING:
-                validatePayloadType(payloadObj, JSONValue.class);
-                return new PingPayload((JSONValue)payloadObj);
+                if(payloadObj != null) {
+                    validatePayloadType(payloadObj, Long.class);
+                    return new PingPayload(((Long) payloadObj).intValue());
+                }
+                // Payload can be null
+                return null;
 
             case ACKNOWLEDGEMENT:
                 validatePayloadType(payloadObj, JSONObject.class);

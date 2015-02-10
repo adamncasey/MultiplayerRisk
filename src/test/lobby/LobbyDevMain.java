@@ -30,9 +30,6 @@ public class LobbyDevMain {
                 
                 try {
                     Thread.sleep(3000);
-                    players = localLobby.getPlayers();
-                    System.out.print("Local lobby players: " + players.size());
-                    System.out.println(players.toString());
                 } 
                 catch (InterruptedException e) { }
             }

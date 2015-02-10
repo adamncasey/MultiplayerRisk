@@ -3,25 +3,20 @@ package lobby;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
-import java.util.stream.Collectors;
 
 import lobby.handler.HostLobbyEventHandler;
-import lobby.handler.LobbyEventHandler;
 import networking.*;
-import networking.message.AcknowledgementPayload;
 import networking.message.Message;
 import networking.message.PingPayload;
 
 /**
  * LocalGameLobby: A hosted game lobby to which network players can join.
  */
-public class LocalGameLobby extends GameLobby {
+public class LocalGameLobby extends Thread {
 
-    private static final int HOST_PLAYERID = 0;
+    protected static final int HOST_PLAYERID = 0;
 
 	boolean lobbyOpen = true;
     ServerSocket server;
@@ -40,11 +35,6 @@ public class LocalGameLobby extends GameLobby {
         this.port = port;
 	}
 
-	@Override
-	public ArrayList<LobbyClient> getPlayers() {
-		throw new RuntimeException("Not implemented");
-	}
-
     /**
      * Call this to stop accepting new clients and begin the game.
      */
@@ -58,18 +48,26 @@ public class LocalGameLobby extends GameLobby {
 	 * Background thread for the Lobby.
 	 */
 	public void run() {
-
-        ArrayList<LobbyClient> lobbyClients = new ArrayList<LobbyClient>();
+        GameRouter router = new GameRouter();
+        ArrayList<LobbyClient> lobbyClients = new ArrayList<>();
 
         // Get Clients
         try {
+
             server = createServerSocket();
 
             while (isLobbyOpen()) {
-                LobbyClient client = getClient(server, lobbyClients);
+                int newplayerid = lobbyClients.size() + 1;
+
+                LobbyClient client = getClient(server, newplayerid);
 
                 if(client != null) {
                     lobbyClients.add(client);
+
+                    NetworkClient newPlayer = new NetworkClient(router, newplayerid);
+                    router.addRoute(newPlayer, client.getConnection());
+
+                    //TODO Should also set up message mirroring connections
                 }
             }
 
@@ -79,8 +77,9 @@ public class LocalGameLobby extends GameLobby {
             handler.onFailure(e);
             throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
         }
-        // Handles all network traffic for routing purposes (messages received should be re-broadcast etc)
-        GameRouter router = setupGameRouter(lobbyClients);
+
+        // At this point the router should have all knowledge required to send messages to appropriate users.
+        // lobbyClients is a weird mix (needs refactoring). Will only contain lobby-specific information
 
         try {
             pingMessage(router);
@@ -95,16 +94,6 @@ public class LocalGameLobby extends GameLobby {
             handler.onFailure(e);
         }
 	}
-
-    private GameRouter setupGameRouter(List<LobbyClient> clients) {
-        GameRouter router = new GameRouter();
-
-        for(LobbyClient client : clients) {
-            router.addRoute(new NetworkClient(router, client.getPlayerid()), client.getConnection());
-        }
-
-        return router;
-    }
 
     private void closeSocket(ServerSocket socket) {
         if(!socket.isClosed()) {
@@ -131,7 +120,7 @@ public class LocalGameLobby extends GameLobby {
     }
 
     private boolean sendPingToAll(GameRouter router) {
-        int numPlayers = router.getNumPlayers();
+        int numPlayers = router.getNumPlayers() + 1;
 
         PingPayload payload = new PingPayload(numPlayers);
 
@@ -145,7 +134,7 @@ public class LocalGameLobby extends GameLobby {
 
     private boolean receivePingFromAll(GameRouter router) throws InterruptedException {
 
-        ExecutorCompletionService<Message> executor = router.receiveFromAllPlayers();
+        ExecutorCompletionService<Message> executor = Networking.readMessageFromConnections(router.getAllPlayers());
 
         boolean success = true;
 
@@ -198,32 +187,13 @@ public class LocalGameLobby extends GameLobby {
     private boolean receiveReadyFromAll(GameRouter router, Message msg) throws InterruptedException {
         // Ensure we receive an acknowledgement from all players for that ready message
 
-        ExecutorCompletionService<Message> executor = Networking.readAcknowledgementsForMessage(router, msg);
+        RemoteGameLobby.readAcknowledgementsForMessageFromPlayers(router, msg, router.getAllPlayers(), handler);
 
-        boolean success = true;
-
-        for(int i=0; i<router.getNumPlayers(); i++) {
-            try {
-                // Verifies that each acknowledgement was received without error/exception.
-                executor.take().get();
-            } catch (ExecutionException e) {
-                Throwable ex = e.getCause();
-
-                handler.onFailure(ex);
-                // TODO tidy this up when onFailure is confirmed to be a working error handler.
-                // TODO Should we also log this?
-                e.printStackTrace();
-                ex.printStackTrace();
-
-                success = false;
-            }
-        }
-
-        return success;
+        return true;
     }
 
     private Message sendReadyToAll(GameRouter router) {
-        Message msg = new Message(Command.READY, 0, null);
+        Message msg = new Message(Command.READY, 0, null, true);
 
         router.sendToAllPlayers(msg);
         handler.onReady();
@@ -247,7 +217,7 @@ public class LocalGameLobby extends GameLobby {
             // swap(card[i], card[rand from dice]);
     }
 
-    private LobbyClient getClient(ServerSocket server, List<LobbyClient> players) throws IOException {
+    private LobbyClient getClient(ServerSocket server, int newplayerid) throws IOException {
         Socket newClient;
         try {
             newClient = server.accept();
@@ -261,25 +231,15 @@ public class LocalGameLobby extends GameLobby {
         String result = handler.onPlayerJoinRequest(lobbyClient);
 
         if(result == null) {
-            // accept client
-            int playerid = players.size() + 1;
-            if(lobbyClient.accept(playerid)) {
+            if(lobbyClient.accept(newplayerid)) {
 
-                handler.onPlayerJoin(playerid);
+                handler.onPlayerJoin(newplayerid);
                 return lobbyClient;
             }
         }
 
         lobbyClient.reject(result);
         return null;
-    }
-
-    private static ExecutorCompletionService<Message> readMessageFromClients(List<LobbyClient> clients) {
-        List<IConnection> connections = clients.stream()
-                .map( LobbyClient::getConnection )
-                .collect(Collectors.toList());
-
-        return Networking.readMessageFromConnections(connections);
     }
 
     private LobbyMulticastThread startMulticastThread() {

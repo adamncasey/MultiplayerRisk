@@ -51,7 +51,14 @@ public class Message {
 		Map<String, Object> jsonObject = new HashMap<>();
 
 		jsonObject.put("command", command.name);
-		jsonObject.put("payload", payload.getJSONValue());
+
+        if(payload != null) {
+            jsonObject.put("payload", payload.getJSONValue());
+        }
+        else {
+            jsonObject.put("payload", null);
+        }
+
 		if(signed) {
 			//TODO Signing
 			jsonObject.put("signature", "TBA");

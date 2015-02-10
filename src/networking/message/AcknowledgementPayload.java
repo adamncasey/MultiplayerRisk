@@ -1,5 +1,6 @@
 package networking.message;
 
+import networking.Command;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import org.json.simple.JSONObject;
@@ -39,6 +40,7 @@ public class AcknowledgementPayload extends Payload {
 
         map.put("ack_id", ack_id);
         map.put("response_code", response_code);
+        assert data == null; // TODO if data isn't null
         map.put("data", data);
 
         return map;

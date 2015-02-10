@@ -6,17 +6,12 @@ import networking.message.PingPayload;
 import networking.message.RejectJoinGamePayload;
 
 /**
- * Stores client information through the lobby stage up until the host sends "ping".
+ * Handles acception / rejection process.
+ *
+ * On accepting LobbyClient, a NetworkClient object is generated.
+ * This is to be used for all future communication with this player.
  */
 public class LobbyClient {
-
-	/**
-	 * States:  Connected
-	 *          Accepted (Rejected clients are not tracked after disconnection)
-	 *          Waiting for PING
-	 *          Received PING
-	 *
-	 */
 
 	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures, int hostPlayerid) {
         this.conn = conn;

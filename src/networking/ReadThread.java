@@ -51,8 +51,10 @@ public class ReadThread {
                 }
 
                 if(msg != null) {
+                    System.out.println("Received message from playerid " + msg.playerid);
                     router.handleMessage(conn, msg);
                 }
+                System.out.println("null message");
             }
         }
     };

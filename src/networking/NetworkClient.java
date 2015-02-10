@@ -25,6 +25,7 @@ public class NetworkClient {
 
     public Message readMessage() throws TimeoutException, ConnectionLostException, ParserException {
 
+        System.out.println("readMessage NetworkClient playerid: " + playerid);
         Object obj;
         try {
             // TODO: Timeout?
@@ -71,5 +72,6 @@ public class NetworkClient {
 
     private void addToQueue(Object obj) {
         messageQueue.add(obj);
+        System.out.println("Added object to queue playerid: " + playerid);
     }
 }

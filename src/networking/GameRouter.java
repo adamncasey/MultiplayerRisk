@@ -119,6 +119,7 @@ public class GameRouter {
         dispatchMessageToNetworkClient(msg);
     }
 
+    // TODO This doesn't seem to put the exception in the message queue of every client on the connection
     protected void handleException(IConnection conn, Exception ex) {
         Set<NetworkClient> clients = connections.get(conn);
 
@@ -135,6 +136,10 @@ public class GameRouter {
         // Do messages on this connection need to be resent to other connections?
         Collection<IConnection> destinations = connectionBridges.get(conn);
 
+        if(destinations == null) {
+            return;
+        }
+
         for(IConnection dest : destinations) {
 
             System.out.println("Forwarded message from " + conn.getPort() + " to " + dest.getPort());
@@ -148,6 +153,7 @@ public class GameRouter {
 
         if(client == null) {
             //Log received message with playerid for which we have no client registered in the router
+            System.out.println("Cannot route message to NetworkClient: Received msg.playerid=" + msg.playerid);
         }
 
         client.addMessageToQueue(msg);

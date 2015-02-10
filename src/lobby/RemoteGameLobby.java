@@ -184,6 +184,7 @@ public class RemoteGameLobby extends Thread {
     }
 
     private void receivePingResponseFromConnections(Collection<NetworkClient> connections) throws InterruptedException {
+        System.out.println("receivePingResponseFromConnections " + connections.size());
         if(connections.size() == 0) {
             return;
         }

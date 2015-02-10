@@ -15,8 +15,8 @@ public class Parser {
 	 * @throws ParserException - Thrown if there is an error parsing
 	 */
 	public static Message parseMessage(String jsonMessage) throws ParserException {
-
-		Object parsed;
+        System.out.println("parseMessage '" + jsonMessage +"'");
+        Object parsed;
 
 		try {
 			parsed = JSONValue.parseWithException(jsonMessage);
@@ -62,10 +62,11 @@ public class Parser {
             ackId = (Long)message.get("ack_id");
         }
 
-
         // TODO Signature check
+        boolean signed = message.get("signature") != null;
+        // Forwarding messages will require storing signature in Message object.
 
-		return new Message(command, false, playerid, payload, ackId);
+		return new Message(command, signed, playerid, payload, ackId);
 	}
 	
 	/**

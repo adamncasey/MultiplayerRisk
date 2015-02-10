@@ -89,6 +89,10 @@ public class LocalGameLobby extends Thread {
             decidePlayerOrder(router);
 
             shuffleCards(router);
+
+            // Pick version & features compatible with players.
+
+            // initialise game.
         } catch(InterruptedException e) {
             // TODO Log exception?
             handler.onFailure(e);

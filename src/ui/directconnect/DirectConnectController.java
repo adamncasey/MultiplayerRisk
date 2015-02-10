@@ -88,13 +88,8 @@ public class DirectConnectController extends AnchorPane implements Initializable
 
             lobby.start();
 
-            synchronized (lobby) {
-                lobby.wait();
-            }
         } catch(UnknownHostException e) {
             status("Unknown host: " + e.getMessage());
-        } catch(InterruptedException e) {
-        	status("Interrupted Exception: " + e.getMessage());
         }
 	}
 

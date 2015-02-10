@@ -23,6 +23,10 @@ public class GameState {
 
     // GameMove should have some information about the type of move allowing GameState to update the board appropriately
     public void makeMove(GameMove move) {
-
+ //        if(move.stage == 1){
+             
+   //      }
     } 
+
+   
 }

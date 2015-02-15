@@ -5,6 +5,7 @@ import org.json.simple.JSONValue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * The format network messages are parsed into/serialised from.
@@ -25,8 +26,13 @@ public class Message {
 
 		this.ackId = ackId;
 	}
+
+    public Message(Command command, int playerid, Payload payload, boolean ack) {
+        this(command, true, playerid, payload, ack ? generateAcknowledgementID() : null);
+    }
+
 	public Message(Command command, int playerid, Payload payload) {
-		this(command, true, playerid, payload, null);
+		this(command, playerid, payload, false);
 	}
 
     /**
@@ -37,21 +43,32 @@ public class Message {
         this(command, true, -1 /*unknown playerid*/, payload, null);
     }
 
-	public Message(Command command, int playerid, Payload payload, long ackId) {
-		this(command, true, playerid, payload, ackId);
-	}
+    private static long generateAcknowledgementID() {
+        return new Random().nextLong();
+    }
 
 	public String toString() {
 		Map<String, Object> jsonObject = new HashMap<>();
 
 		jsonObject.put("command", command.name);
-		jsonObject.put("payload", payload.getJSONValue());
+
+        if(payload != null) {
+            jsonObject.put("payload", payload.getJSONValue());
+        }
+        else {
+            jsonObject.put("payload", null);
+        }
+
 		if(signed) {
 			//TODO Signing
 			jsonObject.put("signature", "TBA");
 		}
         if(playerid != -1) {
             jsonObject.put("player_id", playerid);
+        }
+
+        if(ackId != null) {
+            jsonObject.put("ack_id", ackId);
         }
 
 		return JSONValue.toJSONString(jsonObject) + "\n";

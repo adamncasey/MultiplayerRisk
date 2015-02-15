@@ -5,8 +5,9 @@ import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.*;
 
 // Interface used by GameManager / NetworkPlayer?
 public class Networking {
@@ -18,7 +19,7 @@ public class Networking {
 	 *         join request.
 	 * @return null if an error occurs during the initial connection
 	 */
-	public static LobbyClient getLobbyClient(IConnection socket) {
+	public static LobbyClient getLobbyClient(IConnection socket, int hostPlayerid) {
 
 		Message message;
 		try {
@@ -35,7 +36,7 @@ public class Networking {
 		JoinGamePayload payload = (JoinGamePayload) message.payload;
 
 		return new LobbyClient(socket, payload.supported_versions,
-				payload.supported_features);
+				payload.supported_features, hostPlayerid);
 	}
 
 	/**
@@ -59,24 +60,45 @@ public class Networking {
 	 * @param conn
 	 *            - Connection to read from
 	 * @return Message on success
-	 * @return null on socket failure TODO: Decide if this is enough detail.
-	 *         Could be useful to provide different exceptions for IOError vs
-	 *         Bad Packet
+     * @throws Exception on error. ParserException for invalid packet.
+     * ConnectionLostException or TimeoutException for network related errors
 	 */
-	public static Message readMessage(IConnection conn) throws ParserException,
+	protected static Message readMessage(IConnection conn) throws ParserException,
 			ConnectionLostException, TimeoutException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this
-		String msgString = conn.receiveLineBlocking();
+		String msgString = conn.receiveLine();
 		return Parser.parseMessage(msgString);
 	}
 
+    private static Callable<Message> readMessageAsync(NetworkClient client) {
+        return new Callable<Message>() {
+
+            @Override
+            public Message call() throws Exception {
+                return client.readMessage();
+            }
+        };
+    }
+
     /**
      * Read a message from every connection given.
-     * @param connections - Connections to read from
+     * @param clients - Clients to read from
      * @return An ExecutorCompletionService object. Can be used to retrieve Messages as they arrive.
      */
-    public static ExecutorCompletionService<Message> readMessageFromConnections(List<IConnection> connections) {
-        throw new UnsupportedOperationException("Not implemented");
+    public static ExecutorCompletionService<Message> readMessageFromConnections(Collection<NetworkClient> clients) {
+        if(clients.size() == 0) {
+            throw new IllegalArgumentException("Cannot readMessage from empty collection of clients");
+        }
+
+        //TODO: This will create a new thread pool every call. We should be able to cache this.
+        Executor executor = Executors.newFixedThreadPool(clients.size());
+
+        ExecutorCompletionService<Message> ecs = new ExecutorCompletionService<>(executor);
+        for(NetworkClient client : clients) {
+            ecs.submit(Networking.readMessageAsync(client));
+        }
+
+        return ecs;
     }
 }

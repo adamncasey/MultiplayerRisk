@@ -39,7 +39,7 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;
-        LobbyClient client = Networking.getLobbyClient(conn);
+        LobbyClient client = Networking.getLobbyClient(conn, 0);
         assertNotNull(client);
 
         Assert.assertArrayEquals("Supported Features Equality", client.supportedFeatures, new String[]{"secure", "defaultmap"});

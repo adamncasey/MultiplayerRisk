@@ -15,7 +15,10 @@ public enum Command {
     DICE_ROLL("roll"),
 	DICE_HASH("roll_hash"),
 	DICE_ROLL_NUM("roll_number"),
-    PING("ping");
+    PING("ping"),
+    READY("ready"),
+    KILL_GAME("kill_game"),
+    INITIALISE_GAME("initialise_game");
 	
 	
 	Command(String name) {

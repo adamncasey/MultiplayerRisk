@@ -11,6 +11,10 @@ public class RandomPlayer implements IPlayer {
     private static Random random = new Random();
     private int uid = 0; // Set and used by Game
 
+    // Don't change board or hand
+    private Board board;
+    private ArrayList<Card> hand;
+
     public RandomPlayer(){
     }
 
@@ -22,7 +26,12 @@ public class RandomPlayer implements IPlayer {
         this.uid = uid;
     }
 
-    public ArrayList<Card> tradeInCards(ArrayList<Card> hand, String requestMessage){ 
+    public void updatePlayer(Board board, ArrayList<Card> hand){
+        this.board = board;
+        this.hand = hand;
+    }
+
+    public ArrayList<Card> tradeInCards(String requestMessage){ 
         ArrayList<Card> toTradeIn = new ArrayList<Card>();
         int handSize = hand.size();
         if(handSize >= 5){
@@ -34,6 +43,11 @@ public class RandomPlayer implements IPlayer {
             } 
         }
         return toTradeIn;
+    }
+
+    public ArrayList<Integer> placeArmies(String requestMessage, int armiesToPlace){
+        ArrayList<Integer> move = new ArrayList<Integer>();
+        return move;
     }
 
 }

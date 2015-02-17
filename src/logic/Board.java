@@ -12,7 +12,17 @@ public class Board {
     private Map<Integer, Continent> continents = new HashMap<Integer, Continent>();
     private Integer wildcards = 0;
 
-    public Deck getDeck(){
+    // Don't change territories using this
+    public Map<Integer, Territory> getTerritories(){
+        return territories;
+    }
+
+    // Don't change continents using this
+    public Map<Integer, Continent> getContinents(){
+        return continents;
+    }
+
+    protected Deck getDeck(){
         Deck deck = new Deck();
    
         Iterator it = territories.entrySet().iterator();
@@ -36,7 +46,7 @@ public class Board {
    /**
     * Take a board file and initiate this object.
     */
-    public void loadBoard(String filename){
+    private void loadBoard(String filename){
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
@@ -163,7 +173,44 @@ public class Board {
 
     public Board(String filename){
         loadBoard(filename);
-    } 
+    }
+
+    protected int calculatePlayerTerritoryArmies(int uid){
+        int territoryCounter = 0;
+        for(Territory t : territories.values()){
+            if(t.getOwner() == uid){
+                territoryCounter++;
+            }
+        }
+        int armies = territoryCounter/3;
+        if(armies < 3){
+            return 3;
+        }
+        return armies;
+    }
+
+    protected int calculatePlayerContinentArmies(int uid){
+        int armies = 0;
+        for(Continent c : continents.values()){
+            boolean owned = true;
+            for(Integer TID : c.getTerritories()){
+                Territory t = territories.get(TID);
+                if(t.getOwner() != uid){
+                    owned = false;
+                }
+            }
+            if(owned){
+                armies += c.getValue();
+            }
+        }
+        return armies;
+    }
+
+    protected boolean checkTerritoryOwner(int uid, int id){
+        Territory t = territories.get(id);
+        if(t.getOwner() == uid){
+            return true;
+        }
+        return false;
+    }
 }
-
-

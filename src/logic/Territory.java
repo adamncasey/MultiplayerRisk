@@ -15,6 +15,8 @@ public class Territory {
     private String name = "";
     private Integer card;
 
+    private int owner = 0;
+
     public Territory(Integer id){
         ID = id;
     }
@@ -27,16 +29,24 @@ public class Territory {
         this.name = name;
     }
 
-    public void setCard(Integer card){
-        this.card = card;
-    }
-
     public String getName(){
         return this.name;
     }
 
+    public void setCard(Integer card){
+        this.card = card;
+    }
+
     public Integer getCard(){
         return this.card;
+    }
+
+    public void setOwner(int uid){
+        this.owner = uid;
+    }
+
+    public int getOwner(){
+        return this.owner;
     }
 }
 

@@ -23,8 +23,16 @@ public class Continent {
         territories.add(id);
     }
 
+    public ArrayList<Integer> getTerritories(){
+        return territories;
+    }
+
     public void setValue(int value){
         this.value = value;
+    }
+
+    public int getValue(){
+        return this.value;
     }
 
     public void setName(String name){

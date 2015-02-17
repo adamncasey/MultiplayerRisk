@@ -14,11 +14,21 @@ public interface IPlayer {
     // Draw Card
     // IPlayers must also be able to respond appropriately if an opposing player attacks them (A Defend request will be called).
 
+
+    // For move functions, i.e. tradeInCards, placeArmies etc. Game will check if a move is valid and not allow it otherwise.
+
     public int getUID();
     public void setUID(int uid);
 
-    public ArrayList<Card> tradeInCards(ArrayList<Card> hand, String requestMessage);
+    // updatePlayer -- need a method to give player info about their hand and the board
 
+    public void updatePlayer(Board board, ArrayList<Card> hand);
+
+    public ArrayList<Card> tradeInCards(String requestMessage);
+
+    // return value should be a list of 2 ints, the first int should be the ID of the territory, the second should be the number of armies to be placed
+    // this will be requested until all armies have been placed
+    public ArrayList<Integer> placeArmies(String requestMessage, int armiesToPlace);
 //    public GameMove get2DeployNewArmies(){
 
 //    public GameMove get3Attack(){

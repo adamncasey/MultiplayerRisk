@@ -14,17 +14,20 @@ public class Game {
 
     private Board board;
     private Deck deck;
-    private ArrayList<PlayerState> playerStates;
+    private ArrayList<ArrayList<Card>> playerHands;
 
+    int setCounter = 0;
+    int armyReward = 4;
+    int setValues[] = {4, 6, 8, 10, 12, 15};
 
     public Game(ArrayList<IPlayer> playerInterfaces, int seed, String boardFilename){
         this.playerInterfaces = new ArrayList<IPlayer>();
-        this.playerStates = new ArrayList<PlayerState>();
+        this.playerHands = new ArrayList<ArrayList<Card>>();
         for(int i = 0; i != playerInterfaces.size(); ++i){
             IPlayer pi = playerInterfaces.get(i);
             pi.setUID(i);
             this.playerInterfaces.add(pi);
-            this.playerStates.add(new PlayerState(i));
+            this.playerHands.add(new ArrayList<Card>());
         }
         this.board = new Board(boardFilename);
         this.deck = board.getDeck();
@@ -40,18 +43,31 @@ public class Game {
     * @return No return value
     */
     public void playGame(){
+
         playerTurn(0);
     }
 
-    private void playerTurn(int uid){
-        IPlayer playerInterface = playerInterfaces.get(uid);
-        PlayerState playerState = playerStates.get(uid);
-        ArrayList<Card> hand = playerState.getHand();
-        ArrayList<Card> toTradeIn = playerInterface.tradeInCards(hand, "Trade in cards");
-        while(!checkTradeInCards(hand, toTradeIn)){
-            toTradeIn = playerInterface.tradeInCards(hand, "Invalid selection");
+    private void updatePlayers(){
+        for(IPlayer p : playerInterfaces){
+            p.updatePlayer(board, playerHands.get(p.getUID()));
         }
-        makeTradeInCards(uid, toTradeIn); 
+    }
+
+    private void playerTurn(int uid){
+        // Whenever the game state changes, update all players.
+        updatePlayers();
+
+        IPlayer playerInterface = playerInterfaces.get(uid);
+        ArrayList<Card> hand = new ArrayList<Card>(playerHands.get(uid)); // create a copy because hand may be edited by the check function
+        ArrayList<Card> toTradeIn = playerInterface.tradeInCards("Trade in cards");
+        while(!checkTradeInCards(hand, toTradeIn)){
+            toTradeIn = playerInterface.tradeInCards("Invalid selection");
+        }
+        boolean traded = tradeInCards(uid, toTradeIn); 
+
+        updatePlayers();
+
+        int armies = calculatePlayerArmies(uid, traded, toTradeIn);
     }
 
     public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
@@ -66,7 +82,47 @@ public class Game {
         return false;
     }
 
-    public static void makeTradeInCards(int uid, ArrayList<Card> toTradeIn){
-     
+    public boolean tradeInCards(int uid, ArrayList<Card> toTradeIn){
+        ArrayList<Card> hand = playerHands.get(uid);
+        for(Card c: toTradeIn){
+            hand.remove(c);
+        }
+        if(toTradeIn.size() == 3){
+            return true;
+        }
+        return false;
+    }
+
+    public int calculatePlayerArmies(int uid, boolean traded, ArrayList<Card> toTradeIn){
+        int armies = 0;
+
+        armies += board.calculatePlayerTerritoryArmies(uid);
+        armies += board.calculatePlayerContinentArmies(uid);
+
+        if(traded){
+            armies += incrementSetCounter();
+        }
+
+        int extraArmies = 0;
+        for(Card card : toTradeIn){
+            if(board.checkTerritoryOwner(uid, card.getID())){
+                extraArmies = 2;
+            }
+        }
+        armies += extraArmies;
+
+        return armies;
+    }
+
+    // returns the number of armies rewarded for trading in the set
+    public int incrementSetCounter(){
+        int reward = armyReward;
+        setCounter++;
+        if(setCounter > setValues.length-1){
+            armyReward = setValues[setValues.length-1] + (5 * (setCounter - (setValues.length-1)));
+        } else {
+            armyReward = setValues[setCounter];
+        }
+        return reward; 
     }
 }

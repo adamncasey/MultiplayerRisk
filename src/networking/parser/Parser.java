@@ -15,7 +15,6 @@ public class Parser {
 	 * @throws ParserException - Thrown if there is an error parsing
 	 */
 	public static Message parseMessage(String jsonMessage) throws ParserException {
-        System.out.println("parseMessage '" + jsonMessage +"'");
         Object parsed;
 
 		try {

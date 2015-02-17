@@ -7,7 +7,7 @@ public enum Command {
 	JOIN_ACCEPT("accept_join_game"),
 	JOIN_REJECT("reject_join_game"),
 	ACKNOWLEDGEMENT("acknowledgement"),
-	TRADE_IN_CARDS("trade_in_cards"),
+	PLAY_CARDS("play_cards"),
 	DEPLOY("deploy"),
 	ATTACK("attack"),
 	ATTACK_CAPTURE("attack_capture"),

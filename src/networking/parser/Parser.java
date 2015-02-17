@@ -147,7 +147,7 @@ public class Parser {
             case FORTIFY:
                 // payload can be null.
 
-            case TRADE_IN_CARDS:
+            case PLAY_CARDS:
                 // payload can be null.
 
             default:

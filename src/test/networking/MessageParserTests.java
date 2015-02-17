@@ -237,7 +237,7 @@ public class MessageParserTests {
         Message msg = Parser.parseMessage(message);
 
         assertNotNull(msg);
-        assertEquals(msg.command, Command.TRADE_IN_CARDS);
+        assertEquals(msg.command, Command.PLAY_CARDS);
     }
 	
 	//@Test

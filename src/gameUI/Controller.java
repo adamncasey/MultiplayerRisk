@@ -1,4 +1,4 @@
-package sample;
+package gameUI;
 
 import javafx.event.Event;
 import javafx.event.EventType;

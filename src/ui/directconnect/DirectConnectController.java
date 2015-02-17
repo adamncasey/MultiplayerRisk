@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import player.IPlayer;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,6 +40,9 @@ public class DirectConnectController extends AnchorPane implements Initializable
 	private TextField ip;
 	@FXML
 	private TextField port;
+	@FXML
+	private ProgressIndicator progressRing;
+
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
@@ -80,22 +84,42 @@ public class DirectConnectController extends AnchorPane implements Initializable
 	protected void joinButtonAction(ActionEvent event) {
 		if (!isFormValid())
 			return;
-
+		progressRing.setVisible(true);
 		connectionStatus.setText("connecting...");
 		
-		try {
-            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler);
+		Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+            	try {
+		            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName(ip.getText()), Settings.port, joinHandler);
 
-            lobby.start();
+		            lobby.start();
 
-            synchronized (lobby) {
-                lobby.wait();
+		            synchronized (lobby) {
+		                lobby.wait();
+		            }
+		        } catch(UnknownHostException e) {
+		            status("Unknown host: " + e.getMessage());
+		        } catch(InterruptedException e) {
+		        	status("Interrupted Exception: " + e.getMessage());
+		        }
             }
-        } catch(UnknownHostException e) {
-            status("Unknown host: " + e.getMessage());
-        } catch(InterruptedException e) {
-        	status("Interrupted Exception: " + e.getMessage());
-        }
+        });
+		
+//		Task task = new Task<Void>() {
+//			@Override
+//			public void run() {
+//				
+//			}
+//
+//			@Override
+//			protected Void call() throws Exception {
+//				// TODO Auto-generated method stub
+//				return null;
+//			}
+//		};
+//		
+//		new Thread(task).start();
 	}
 
 	private void status(String message) {
@@ -103,6 +127,7 @@ public class DirectConnectController extends AnchorPane implements Initializable
             @Override
             public void run() {
             	connectionStatus.setText(message);
+            	progressRing.setVisible(false);
             }
         });
 	}

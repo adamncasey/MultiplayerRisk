@@ -2,8 +2,12 @@ package test.networking;
 
 import static org.junit.Assert.*;
 import networking.Command;
+import networking.message.AcceptJoinGamePayload;
 import networking.message.AcknowledgementPayload;
+import networking.message.JoinGamePayload;
 import networking.message.Message;
+import networking.message.PingPayload;
+import networking.message.RejectJoinGamePayload;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
@@ -60,16 +64,15 @@ public class MessageParserTests {
 			 "signature": "TBD"
 		}
 		*/
-		String message = "		{\r\n" + 
-				"		 \"command\": \"acknowledgement\",\r\n" + 
+		String message = "		{" + 
+				"		 \"command\": \"acknowledgement\"," + 
 				"		 \"payload\":	{\r\n" + 
-				"		 				\"ack_id\": 67812687,\r\n" + 
-				"		 				\"response\": 0,\r\n" + 
-				"		 				\"data\": null\r\n" + 
-				"		 			}\r\n" + 
-				"		 			\r\n" + 
-				"		 \"player_id\": 1,\r\n" + 
-				"		 \"signature\": \"TBD\"\r\n" + 
+				"		 				\"ack_id\": 67812687," + 
+				"		 				\"response\": 0," + 
+				"		 				\"data\": null" + 
+				"		 			}," + 
+				"		 \"player_id\": 1," + 
+				"		 \"signature\": \"TBD\"" + 
 				"	}";
 		
 		Message msg = Parser.parseMessage(message);
@@ -78,6 +81,139 @@ public class MessageParserTests {
 		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
         assertTrue(msg.payload instanceof AcknowledgementPayload);
 	}
+	
+	@Test
+	public void testReady() throws ParserException {
+		/*
+		{
+			 "command": "ready",
+			 "payload":	null,			 			
+			 "player_id": 1,
+			 "ack_id": 541232121,
+			 "signature": "TBD"
+		}
+		*/
+		String message = "{" + 
+				"			 \"command\": \"ready\"," + 
+				"			 \"payload\":	null," + 
+				"			 \"player_id\": 1,\n" + 
+				"			 \"ack_id\": 541232121," + 
+				"			 \"signature\": \"TBD\"" + 
+				"		}";
+		
+		Message msg = Parser.parseMessage(message);
+		
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.READY);
+        assertNull(msg.payload);
+	}
+	@Test
+	public void testPing() throws ParserException {
+		/*
+		{
+			 "command": "ping",
+			 "payload":	5,
+			 "player_id": 1,
+			 "signature": "TBD"
+		}
+		*/
+		String message = "{" + 
+				"			 \"command\": \"ping\"," + 
+				"			 \"payload\":	5," + 
+				"			 \"player_id\": 1," + 
+				"			 \"signature\": \"TBD\"" + 
+				"		}";
+		
+		Message msg = Parser.parseMessage(message);
+		
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.PING);
+        assertTrue(msg.payload instanceof PingPayload);
+	}
+	@Test
+	public void testJoinGame() throws ParserException {
+		/*
+		{
+			 "command": "join_game",
+			 "payload":	{
+			        "supported_versions": [1],
+			        "supported_features": ["custom_map"]
+			    },
+			 "player_id": 1,
+			 "signature": "TBD"
+		}
+		*/
+		String message = "{" + 
+				"			 \"command\": \"join_game\"," + 
+				"			 \"payload\":	{" + 
+				"			        \"supported_versions\": [1]," + 
+				"			        \"supported_features\": [\"custom_map\"]" + 
+				"			    }," + 
+				"			 \"player_id\": 1," + 
+				"			 \"signature\": \"TBD\"" + 
+				"		}";
+		
+		Message msg = Parser.parseMessage(message);
+		
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.JOIN_GAME);
+        assertTrue(msg.payload instanceof JoinGamePayload);
+	}
+	@Test
+	public void testJoinAccept() throws ParserException {
+		/*
+		{
+			 "command": "accept_join_game",
+			 "payload":	{
+			        "player_id": 1,
+			        "acknowledgement_timeout": 2,
+			        "move_timeout": 30
+			    },
+			 "player_id": 1,
+			 "signature": "TBD"
+		}
+		*/
+		String message = "{" + 
+				"			 \"command\": \"accept_join_game\"," + 
+				"			 \"payload\":	{" + 
+				"			        \"player_id\": 1," + 
+				"			        \"acknowledgement_timeout\": 2," + 
+				"			        \"move_timeout\": 30" + 
+				"			    }," + 
+				"			 \"player_id\": 1," + 
+				"			 \"signature\": \"TBD\"" + 
+				"		}";
+		
+		Message msg = Parser.parseMessage(message);
+		
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.JOIN_ACCEPT);
+        assertTrue(msg.payload instanceof AcceptJoinGamePayload);
+	}
+	@Test
+	public void testJoinReject() throws ParserException {
+		/*
+		{
+			 "command": "reject_join_game",
+			 "payload":	"I hate you",
+			 "player_id": 1,
+			 "signature": "TBD"
+		}
+		*/
+		String message = "{" + 
+				"			 \"command\": \"reject_join_game\"," + 
+				"			 \"payload\":	\"I hate you\"," + 
+				"			 \"player_id\": 1," + 
+				"			 \"signature\": \"TBD\"" + 
+				"		}";
+		
+		Message msg = Parser.parseMessage(message);
+		
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.JOIN_REJECT);
+        assertTrue(msg.payload instanceof RejectJoinGamePayload);
+	}
+	
 
     //@Test
     public void testTradeInCards() throws ParserException {

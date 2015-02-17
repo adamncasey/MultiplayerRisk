@@ -2,38 +2,37 @@ package networking.message;
 
 import networking.parser.Parser;
 import networking.parser.ParserException;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 
 public class JoinGamePayload extends Payload {
-    public final double[] supported_versions;
-    public final String[] supported_features;
+    public final double[] supportedVersions;
+    public final String[] supportedFeatures;
 
     public JoinGamePayload(double[] versions, String[] features) {
-        this.supported_features = features;
-        this.supported_versions = versions;
+        this.supportedFeatures = features;
+        this.supportedVersions = versions;
     }
 
     public JoinGamePayload(JSONObject payload) throws ParserException {
 
         Parser.validateType(payload, "supported_versions", JSONArray.class);
-
-        List<Double> versions_list = (List)payload.get("supported_versions");
-        Double[] middle = versions_list.toArray(new Double[versions_list.size()]);
-        supported_versions = ArrayUtils.toPrimitive(middle);
-
+        JSONArray versionsArray = (JSONArray)payload.get("supported_versions");
+        supportedVersions = convertJSONArrayToDoubleArray(versionsArray);
 
         Parser.validateType(payload, "supported_features", JSONArray.class);
+        JSONArray featuresArray = (JSONArray)payload.get("supported_features");
 
-        List<String> features_list = (List)payload.get("supported_features");
-        supported_features = features_list.toArray(new String[features_list.size()]);
+        supportedFeatures = convertJSONArrayToStringArray(featuresArray);
     }
 
     @Override
@@ -44,10 +43,42 @@ public class JoinGamePayload extends Payload {
         Map<String, Object> map = new HashMap<>();
 
         // Needs to be reformatted for JSON simple library
-        List<Double> versions = Arrays.asList(ArrayUtils.toObject(supported_versions));
+        List<Double> versions = Arrays.asList(ArrayUtils.toObject(supportedVersions));
         map.put("supported_versions", versions);
-        map.put("supported_features", Arrays.asList(supported_features));
+        map.put("supported_features", Arrays.asList(supportedFeatures));
 
         return map;
+    }
+    
+    private double[] convertJSONArrayToDoubleArray(JSONArray array) {
+    	double[] result = new double[array.size()];
+    	
+    	int i=0;
+    	for(Object obj : array) {
+    		if(obj != null) {
+    			Parser.validateType(obj, Number.class);
+    			
+    			Number value = (Number)obj;
+    			
+    			result[i++] = value.doubleValue();
+    		}
+    	}
+    	
+    	return result;
+    }
+    
+    private String[] convertJSONArrayToStringArray(JSONArray array) {
+    	String[] result = new String[array.size()];
+    	
+    	int i=0;
+    	for(Object obj : array) {
+    		if(obj != null) {
+    			Parser.validateType(obj, String.class);
+    			
+    			result[i++] = (String)obj;
+    		}
+    	}
+    	
+    	return result;
     }
 }

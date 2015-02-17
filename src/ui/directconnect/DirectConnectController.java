@@ -95,21 +95,6 @@ public class DirectConnectController extends AnchorPane implements
 		} catch (UnknownHostException e) {
 			status("Unknown host: " + e.getMessage());
 		}
-
-		// Task task = new Task<Void>() {
-		// @Override
-		// public void run() {
-		//
-		// }
-		//
-		// @Override
-		// protected Void call() throws Exception {
-		// // TODO Auto-generated method stub
-		// return null;
-		// }
-		// };
-		//
-		// new Thread(task).start();
 	}
 
 	private void status(String message) {

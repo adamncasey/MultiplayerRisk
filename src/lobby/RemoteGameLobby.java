@@ -2,6 +2,7 @@ package lobby;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -84,7 +85,8 @@ public class RemoteGameLobby extends Thread {
     }
 
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
-    	Socket soc = new Socket(address, port);
+    	Socket soc = new Socket();
+    	soc.connect(new InetSocketAddress(address, port), Settings.socketTimeout);
     	soc.setSoTimeout(Settings.socketTimeout);
         return new Connection(soc);
     }

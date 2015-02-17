@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import lobby.RemoteGameLobby;
+import lobby.Validator;
 import lobby.handler.JoinLobbyEventHandler;
 import settings.Settings;
 import ui.*;
@@ -30,11 +31,12 @@ public class DirectConnectController extends AnchorPane implements
 
 	public void setApp(Main application) {
 		this.application = application;
+		this.ip.setText("localhost");
+		this.port.setText(Settings.port + "");
 	}
 
 	@FXML
 	private Label connectionStatus;
-
 	@FXML
 	private TextField name;
 	@FXML
@@ -72,10 +74,12 @@ public class DirectConnectController extends AnchorPane implements
 	}
 
 	private boolean isValidPort() {
-		boolean valid = port.getText() != null && port.getText().length() > 0;
+		boolean valid = true;
 
-		if (!valid)
+		if (!Validator.isValidPort(port.getText())) {
 			status("Error: Invalid port");
+			valid = false;
+		}
 
 		return valid;
 	}

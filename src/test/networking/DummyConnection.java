@@ -4,7 +4,6 @@ import networking.ConnectionLostException;
 import networking.IConnection;
 import networking.TimeoutException;
 
-import java.util.concurrent.FutureTask;
 
 /**
  * Created by Adam on 23/11/2014.

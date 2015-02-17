@@ -2,7 +2,6 @@ package networking;
 
 import networking.message.AcceptJoinGamePayload;
 import networking.message.Message;
-import networking.message.PingPayload;
 import networking.message.RejectJoinGamePayload;
 
 /**

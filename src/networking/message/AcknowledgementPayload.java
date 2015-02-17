@@ -1,6 +1,5 @@
 package networking.message;
 
-import networking.Command;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import org.json.simple.JSONObject;

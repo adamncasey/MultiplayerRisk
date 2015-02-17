@@ -15,7 +15,6 @@ public class Parser {
 	 * @throws ParserException - Thrown if there is an error parsing
 	 */
 	public static Message parseMessage(String jsonMessage) throws ParserException {
-        System.out.println("parseMessage '" + jsonMessage +"'");
         Object parsed;
 
 		try {
@@ -49,6 +48,7 @@ public class Parser {
         int playerid = -1;
 
         // playerid is required on all messages except join_game
+        // TODO: Non-playable host was added ~12th Feb 2015 which breaks this assumption
         if(command != Command.JOIN_GAME) {
             validateType(message, "player_id", Number.class);
             playerid = ((Long) message.get("player_id")).intValue();
@@ -103,7 +103,7 @@ public class Parser {
         throw new ParserException("Invalid packet format. Expected 'payload' to be " + class1.toString() + ". Is actually" + obj.getClass().toString());
     }
 
-    private static boolean validateType(Object obj, Class<?> class1) {
+    public static boolean validateType(Object obj, Class<?> class1) {
         if(class1.isAssignableFrom(obj.getClass())) {
             return true;
         }
@@ -123,8 +123,8 @@ public class Parser {
                 return new AcceptJoinGamePayload((JSONObject)payloadObj);
 
             case JOIN_REJECT:
-                validatePayloadType(payloadObj, JSONObject.class);
-                return new RejectJoinGamePayload((JSONObject)payloadObj);
+                validatePayloadType(payloadObj, String.class);
+                return new RejectJoinGamePayload((String)payloadObj);
 
             case PING:
                 if(payloadObj != null) {
@@ -147,7 +147,7 @@ public class Parser {
             case FORTIFY:
                 // payload can be null.
 
-            case TRADE_IN_CARDS:
+            case PLAY_CARDS:
                 // payload can be null.
 
             default:

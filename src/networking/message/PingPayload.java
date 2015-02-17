@@ -1,6 +1,5 @@
 package networking.message;
 
-import org.json.simple.JSONValue;
 
 /**
  * Created by Adam on 04/02/2015.

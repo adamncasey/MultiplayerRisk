@@ -6,7 +6,6 @@ import networking.parser.Parser;
 import networking.parser.ParserException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.*;
 
 // Interface used by GameManager / NetworkPlayer?
@@ -35,8 +34,8 @@ public class Networking {
 
 		JoinGamePayload payload = (JoinGamePayload) message.payload;
 
-		return new LobbyClient(socket, payload.supported_versions,
-				payload.supported_features, hostPlayerid);
+		return new LobbyClient(socket, payload.supportedVersions,
+				payload.supportedFeatures, hostPlayerid);
 	}
 
 	/**

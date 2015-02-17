@@ -10,11 +10,6 @@ public class RejectJoinGamePayload extends Payload {
         this.message = message;
     }
 
-    public RejectJoinGamePayload(JSONObject payload) {
-
-        throw new UnsupportedOperationException ("Not implemented yet"); // TODO
-    }
-
     @Override
     public JSONValue getJSONValue() {
         return null;

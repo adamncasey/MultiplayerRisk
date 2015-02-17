@@ -1,4 +1,4 @@
-package ui.creategame;
+package ui.lobbyhost;
 
 import java.net.URL;
 import java.util.ResourceBundle;

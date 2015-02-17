@@ -1,16 +1,19 @@
 package gameUI;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-
 import javafx.event.Event.*;
 import javafx.event.EventHandler;
 
@@ -45,7 +48,48 @@ public class Controller implements Initializable{
     @FXML //Asia
     public ImageView AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11;
 
-
+    @FXML //
+    public Button addArmies;
+    
+    @FXML //
+    public Button removeArmies;
+    
+    @FXML //
+    public Button setArmies;
+    
+    Image infantryImage = new Image(getClass().getResourceAsStream("armies/infantry.gif"));
+    
+    // modes
+    public boolean setArmyMode, addArmyMode, removeArmyMode;
+    
+    public void setArmyMode(String s){
+    	if(s.equals("add")){
+    		setArmyMode=false;
+    		addArmyMode=true;
+    		removeArmyMode=false;
+    		printToConsole("In army adding mode.");
+    		return;
+    	}
+    	if(s.equals("set")){
+    		setArmyMode=true;
+    		addArmyMode=false;
+    		removeArmyMode=false;
+    		printToConsole("In army setting mode.");
+    		return;
+    	}
+    	if(s.equals("remove")){
+    		setArmyMode=false;
+    		addArmyMode=false;
+    		removeArmyMode=true;
+    		printToConsole("In army removing mode mode.");
+    		return;
+    	}
+    	setArmyMode=false;
+		addArmyMode=false;
+		removeArmyMode=false;
+		printToConsole("All army modes off.");
+    }
+    
     public void printToConsole(String message){
         console.appendText(message + "\n");
     }
@@ -113,7 +157,55 @@ public class Controller implements Initializable{
                     territory.setOpacity(0);
                 }
             });
+            
+            territory.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    
+                	double sizex = territory.getImage().getWidth();
+                    double sizey = territory.getImage().getHeight();
+                	
+                	double x = territory.getLayoutX() + sizex/8;
+                    double y = territory.getLayoutY() + sizey/8;
+                    
+                    printToConsole(territory.getId()+ " " + x + " " + y + " " + sizex + " " + sizey);
+                    
+                    if(addArmyMode) {
+                    	Label infantry = new Label();
+                    	infantry.setGraphic(new ImageView(infantryImage));
+                    	infantry.relocate(x, y);
+                    	gamePane.getChildren().add(infantry);
+                    }
+                }
+            });
         }
+        
+        addArmies.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				setArmyMode("add");
+			}
+        	
+        });
+        
+        removeArmies.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				setArmyMode("remove");
+			}
+        	
+        });
+        
+        setArmies.addEventFilter(ActionEvent.ACTION, new EventHandler<ActionEvent>(){
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				setArmyMode("set");
+			}
+        	
+        });
 
         gamePane.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override

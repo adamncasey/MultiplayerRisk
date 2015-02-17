@@ -22,9 +22,9 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
+                  <Button fx:id="addArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="AddArmies" />
+                  <Button fx:id="removeArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="RemoveArmies" />
+                  <Button fx:id="setArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="SetArmies" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">

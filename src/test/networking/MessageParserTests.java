@@ -2,6 +2,7 @@ package test.networking;
 
 import static org.junit.Assert.*;
 import networking.Command;
+import networking.message.AcknowledgementPayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
@@ -11,7 +12,7 @@ import org.junit.Test;
 public class MessageParserTests {
 
     // TODO: Reenable tests as parsing progresses
-	//@Test
+	@Test
 	public void testAcknowledgeMessage() throws ParserException {
 		/*
 		{
@@ -40,34 +41,11 @@ public class MessageParserTests {
 		
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
+
+        assertTrue(msg.payload instanceof AcknowledgementPayload);
 	}
 	
-	//@Test
-	public void testTradeInCards() throws ParserException {
-		/*
-		{
-			 "command": "trade_in_cards",
-			 "payload":	null,
-			 "player_id": "0",
-			 "signature": "TBD"
-			 "ack_id": 67812687
-		}
-		*/
-		String message = "	{\r\n" + 
-				"		 \"command\": \"trade_in_cards\",\r\n" + 
-				"		 \"payload\": null,\r\n" + 
-				"		 \"player_id\": 0,\r\n" + 
-				"		 \"signature\": \"TBD\"\r\n" + 
-				"		 \"ack_id\": 67812687\r\n" + 
-				"	}";
-		
-		Message msg = Parser.parseMessage(message);
-		
-		assertNotNull(msg);
-		assertEquals(msg.command, Command.TRADE_IN_CARDS);
-	}
-	
-	//@Test
+	@Test
 	public void testAcknowledge2() throws ParserException {
 		/*
 		{
@@ -98,7 +76,33 @@ public class MessageParserTests {
 		
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
+        assertTrue(msg.payload instanceof AcknowledgementPayload);
 	}
+
+    //@Test
+    public void testTradeInCards() throws ParserException {
+		/*
+		{
+			 "command": "trade_in_cards",
+			 "payload":	null,
+			 "player_id": "0",
+			 "signature": "TBD"
+			 "ack_id": 67812687
+		}
+		*/
+        String message = "	{\r\n" +
+                "		 \"command\": \"trade_in_cards\",\r\n" +
+                "		 \"payload\": null,\r\n" +
+                "		 \"player_id\": 0,\r\n" +
+                "		 \"signature\": \"TBD\"\r\n" +
+                "		 \"ack_id\": 67812687\r\n" +
+                "	}";
+
+        Message msg = Parser.parseMessage(message);
+
+        assertNotNull(msg);
+        assertEquals(msg.command, Command.TRADE_IN_CARDS);
+    }
 	
 	//@Test
 	public void testDeploy() throws ParserException {

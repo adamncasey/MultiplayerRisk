@@ -19,10 +19,10 @@ public class AcknowledgementPayload extends Payload {
 
     public AcknowledgementPayload(JSONObject object) throws ParserException {
         Parser.validateType(object, "ack_id", Number.class);
-        Parser.validateType(object, "response_code", Number.class);
+        Parser.validateType(object, "response", Number.class);
 
         this.ack_id = ((Number)object.get("ack_id")).longValue();
-        this.response_code = ((Number)object.get("response_code")).intValue();
+        this.response_code = ((Number)object.get("response")).intValue();
 
         // TODO Handle acknowledgement data when we need to (During attack turn?)
         this.data = null;
@@ -39,7 +39,7 @@ public class AcknowledgementPayload extends Payload {
         Map<String, Object> map = new HashMap<>();
 
         map.put("ack_id", ack_id);
-        map.put("response_code", response_code);
+        map.put("response", response_code);
         assert data == null; // TODO if data isn't null
         map.put("data", data);
 

@@ -54,11 +54,19 @@ public class Game {
         makeTradeInCards(uid, toTradeIn); 
     }
 
-    private boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
-        return true; 
+    public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
+        if(toTradeIn.size() == 0 && hand.size() < 5){
+            return true;
+        }
+        if(Card.containsSet(hand)){
+            if(toTradeIn.size() == 3 && Card.isSubset(toTradeIn, hand)){
+                return true;
+            }
+        }
+        return false;
     }
 
-    private void makeTradeInCards(int uid, ArrayList<Card> toTradeIn){
-
+    public static void makeTradeInCards(int uid, ArrayList<Card> toTradeIn){
+     
     }
 }

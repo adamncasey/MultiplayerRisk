@@ -1,7 +1,5 @@
 package networking;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 /**
  * IConnection: Low level interface for connection to network entities.

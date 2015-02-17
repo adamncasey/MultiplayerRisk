@@ -6,7 +6,6 @@ import networking.parser.Parser;
 import networking.parser.ParserException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.*;
 
 // Interface used by GameManager / NetworkPlayer?

@@ -2,7 +2,6 @@ package networking;
 
 import networking.message.Message;
 import networking.parser.ParserException;
-import org.junit.rules.Timeout;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

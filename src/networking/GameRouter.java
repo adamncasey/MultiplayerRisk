@@ -1,10 +1,8 @@
 package networking;
 
 import networking.message.Message;
-import networking.parser.ParserException;
 
 import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * Maps between Game Players and Network Sockets.

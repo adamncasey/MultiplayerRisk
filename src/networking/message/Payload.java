@@ -1,6 +1,5 @@
 package networking.message;
 
-import org.json.simple.JSONValue;
 
 /**
  * Parent class of all Payload Types.

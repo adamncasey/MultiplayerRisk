@@ -23,7 +23,8 @@ import lobby.handler.JoinLobbyEventHandler;
 import settings.Settings;
 import ui.*;
 
-public class DirectConnectController extends AnchorPane implements Initializable {
+public class DirectConnectController extends AnchorPane implements
+		Initializable {
 
 	private Main application;
 
@@ -42,7 +43,6 @@ public class DirectConnectController extends AnchorPane implements Initializable
 	private TextField port;
 	@FXML
 	private ProgressIndicator progressRing;
-
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
@@ -86,144 +86,135 @@ public class DirectConnectController extends AnchorPane implements Initializable
 			return;
 		progressRing.setVisible(true);
 		connectionStatus.setText("connecting...");
-		
-		Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-            	try {
-		            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName(ip.getText()), Settings.port, joinHandler);
 
-		            lobby.start();
+		try {
+			RemoteGameLobby lobby = new RemoteGameLobby(
+					InetAddress.getByName(ip.getText()), Settings.port,
+					joinHandler);
+			lobby.start();
+		} catch (UnknownHostException e) {
+			status("Unknown host: " + e.getMessage());
+		}
 
-		            synchronized (lobby) {
-		                lobby.wait();
-		            }
-		        } catch(UnknownHostException e) {
-		            status("Unknown host: " + e.getMessage());
-		        } catch(InterruptedException e) {
-		        	status("Interrupted Exception: " + e.getMessage());
-		        }
-            }
-        });
-		
-//		Task task = new Task<Void>() {
-//			@Override
-//			public void run() {
-//				
-//			}
-//
-//			@Override
-//			protected Void call() throws Exception {
-//				// TODO Auto-generated method stub
-//				return null;
-//			}
-//		};
-//		
-//		new Thread(task).start();
+		// Task task = new Task<Void>() {
+		// @Override
+		// public void run() {
+		//
+		// }
+		//
+		// @Override
+		// protected Void call() throws Exception {
+		// // TODO Auto-generated method stub
+		// return null;
+		// }
+		// };
+		//
+		// new Thread(task).start();
 	}
 
 	private void status(String message) {
-		Platform.runLater(new Runnable(){
-            @Override
-            public void run() {
-            	connectionStatus.setText(message);
-            	progressRing.setVisible(false);
-            }
-        });
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				connectionStatus.setText(message);
+				progressRing.setVisible(false);
+			}
+		});
 	}
 
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {	}
-	
+	public void initialize(URL arg0, ResourceBundle arg1) {
+	}
 
-    public JoinLobbyEventHandler joinHandler = new JoinLobbyEventHandler() {
+	public JoinLobbyEventHandler joinHandler = new JoinLobbyEventHandler() {
 
-        @Override
-        public void onTCPConnect() {
-            status("onTCPConnect ");
-        }
+		@Override
+		public void onTCPConnect() {
+			status("onTCPConnect ");
+		}
 
-        @Override
-        public void onJoinAccepted(int playerid) {
-            status("onJoinAccepted " + playerid);
-        }
+		@Override
+		public void onJoinAccepted(int playerid) {
+			status("onJoinAccepted " + playerid);
+		}
 
-        @Override
-        public void onJoinRejected(String message) {
-            status("onJoinRejected " + message);
-        }
+		@Override
+		public void onJoinRejected(String message) {
+			status("onJoinRejected " + message);
+		}
 
-        @Override
-        public void onPlayerJoin(int playerid) {
-            status("onPlayerJoin " + playerid);
-        }
+		@Override
+		public void onPlayerJoin(int playerid) {
+			status("onPlayerJoin " + playerid);
+		}
 
-        @Override
-        public void onPlayerLeave(int playerid) {
-            status("onPlayerLeave " + playerid);
-        }
+		@Override
+		public void onPlayerLeave(int playerid) {
+			status("onPlayerLeave " + playerid);
+		}
 
-        @Override
-        public void onPingStart() {
+		@Override
+		public void onPingStart() {
 
-            status("onPingStart ");
-        }
+			status("onPingStart ");
+		}
 
-        @Override
-        public void onPingReceive(int playerid) {
-            status("onPingReceive " + playerid);
+		@Override
+		public void onPingReceive(int playerid) {
+			status("onPingReceive " + playerid);
 
-        }
+		}
 
-        @Override
-        public void onReady() {
-            status("onReady ");
+		@Override
+		public void onReady() {
+			status("onReady ");
 
-        }
+		}
 
-        @Override
-        public void onReadyAcknowledge(int playerid) {
-            status("onReadyAcknowledge " + playerid);
+		@Override
+		public void onReadyAcknowledge(int playerid) {
+			status("onReadyAcknowledge " + playerid);
 
-        }
+		}
 
-        @Override
-        public void onDicePlayerOrder() {
-            status("onDicePlayerOrder ");
+		@Override
+		public void onDicePlayerOrder() {
+			status("onDicePlayerOrder ");
 
-        }
+		}
 
-        @Override
-        public void onDiceHash(int playerid) {
-            status("onDiceHash " + playerid);
+		@Override
+		public void onDiceHash(int playerid) {
+			status("onDiceHash " + playerid);
 
-        }
+		}
 
-        @Override
-        public void onDiceNumber(int playerid) {
-            status("onDiceNumber " + playerid);
+		@Override
+		public void onDiceNumber(int playerid) {
+			status("onDiceNumber " + playerid);
 
-        }
+		}
 
-        @Override
-        public void onDiceCardShuffle() {
-            status("onDiceCardShuffle ");
+		@Override
+		public void onDiceCardShuffle() {
+			status("onDiceCardShuffle ");
 
-        }
+		}
 
-        @Override
-        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
-            status("onLobbyComplete: ");
-            status("\tplayers: " + players.toString());
-            status("\tcards: " + cards.toString());
-            status("\tboard: " + board.toString());
-        }
+		@Override
+		public void onLobbyComplete(List<IPlayer> players, List<Object> cards,
+				Object board) {
+			status("onLobbyComplete: ");
+			status("\tplayers: " + players.toString());
+			status("\tcards: " + cards.toString());
+			status("\tboard: " + board.toString());
+		}
 
-        @Override
-        public void onFailure(Throwable e) {
-            status("onFailure: " + e.getMessage());
+		@Override
+		public void onFailure(Throwable e) {
+			status("onFailure: " + e.getMessage());
 
-            e.printStackTrace();
-        }
-    };
+			e.printStackTrace();
+		}
+	};
 }

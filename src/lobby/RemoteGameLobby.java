@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
+import settings.Settings;
 import lobby.handler.JoinLobbyEventHandler;
 import lobby.handler.LobbyEventHandler;
 import networking.*;
@@ -83,7 +84,9 @@ public class RemoteGameLobby extends Thread {
     }
 
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
-        return new Connection(new Socket(address, port));
+    	Socket soc = new Socket(address, port);
+    	soc.setSoTimeout(Settings.socketTimeout);
+        return new Connection(soc);
     }
 
     private void sendJoinGame(GameRouter router) throws ConnectionLostException {

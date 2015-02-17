@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * Concrete implementation of IConnection
@@ -41,7 +44,7 @@ public class Connection implements IConnection {
 	// Functions
 	// ================================================================================
 	@Override
-	public void send(String message) throws ConnectionLostException {
+	public void sendBlocking(String message) throws ConnectionLostException {
 		out.write(message);
 
 		if (out.checkError())
@@ -57,7 +60,7 @@ public class Connection implements IConnection {
 		}
 	}
 
-	@Override
+    @Override
 	public void kill() {
 		out.close();
 

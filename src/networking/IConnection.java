@@ -1,5 +1,8 @@
 package networking;
 
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+
 /**
  * IConnection: Low level interface for connection to network entities.
  * @author James
@@ -17,12 +20,13 @@ public interface IConnection {
 	public static final int DEFAULT_TIMEOUT = 1000;
 	
 	/**
-	 * Sends a message. 
-	 * @param message The message payload.
+	 * Sends a message.
+     *
+	 * @param message The message payload. Only the exact string is sent
 	 * @return Response code.
 	 * @throws ConnectionLostException If the connection is lost.
 	 */
-	public void send(String message) throws ConnectionLostException;
+	public void sendBlocking(String message) throws ConnectionLostException;
 	
 	/**
 	 * Receives a message.
@@ -31,6 +35,17 @@ public interface IConnection {
 	 * @throws TimeoutException If response times-out.
 	 */
 	public String receiveLine() throws ConnectionLostException, TimeoutException;
+
+    /**
+     * Can be used to receive a message from the socket in an asynchronous manner.
+     * @return FutureTask which can be executed to perform receiveLine
+     *
+     * Calling get() may throw an exception, which when calling getCause(), may be of type:
+     *      - ConnectionLostException
+     *      - TimeoutException
+     */
+    //TODO re-evaluate the need for this
+    //public FutureTask<String> receiveLine();
 	
 	/**
 	 * Sets the message timeout.

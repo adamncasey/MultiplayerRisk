@@ -10,36 +10,27 @@ import player.*;
  */
 public class Game {
 
-   /**
-    * The list of IPlayers currently playing the game.
-    */
-    private ArrayList<IPlayer> players;
+    private ArrayList<IPlayer> playerInterfaces;
 
-   /**
-    * The player whose turn it currently is.
-    */
-    private int currentPlayer;
+    private Board board;
+    private Deck deck;
+    private ArrayList<PlayerState> playerStates;
 
-   /**
-    * The current game state, it is updated by Game after each player confirms the move.
-    */
-    private GameState state;
 
-   /**
-    * Configure the game for a specific set of players and settings.
-    * @param players The list of IPlayers that will play the game
-    * @param state A GameState object already initialised 
-    */
-    public Game(ArrayList<IPlayer> players, int firstPlayer, GameState state){
-        this.players = new ArrayList<IPlayer>(players);
-        this.currentPlayer = firstPlayer;
-        this.state = state;
+    public Game(ArrayList<IPlayer> playerInterfaces, int seed, String boardFilename){
+        this.playerInterfaces = new ArrayList<IPlayer>();
+        this.playerStates = new ArrayList<PlayerState>();
+        for(int i = 0; i != playerInterfaces.size(); ++i){
+            IPlayer pi = playerInterfaces.get(i);
+            pi.setUID(i);
+            this.playerInterfaces.add(pi);
+            this.playerStates.add(new PlayerState(i));
+        }
+        this.board = new Board(boardFilename);
+        this.deck = board.getDeck();
+        this.deck.shuffle(seed);
     }
 
-    /**
-     * Setup the game, performing initial army placements (among other things)
-     * @return No return value
-     */
     public void setupGame(){
         // Setup here
     }
@@ -49,50 +40,25 @@ public class Game {
     * @return No return value
     */
     public void playGame(){
- //       Random random = new Random();
-
-//        int activePlayer = 0;
- //       int numPlayers = players.size();
- //       while(true){
-            // The activePlayer takes their turn
- //      	    turn(players.get(activePlayer));
-
-  //          // Code to remove eliminated players goes here
-  //          // Here is an example, this game randomly removes the active player after their turn/
-  //          int randInt = random.nextInt(10);
-  //          if(randInt == 0){
-  //              players.remove(activePlayer);
-  //              numPlayers = players.size();
-  //          } 
-
-  //          // End the game when there is 1 player left
-  //          if(numPlayers == 1){
-  //              break;
-  //          }
-
-            // Increment activePlayer
-  //          activePlayer = (activePlayer + 1) % numPlayers;   
-  //      }
+        playerTurn(0);
     }
 
-    private void turn(IPlayer activePlayer){
-        // Current protocol has 4 stages per turn
-        for(int i = 0; i != 4; ++i){
-            GameMove move = activePlayer.getMove(i);
-            boolean legal = true; // Is the move legal?
-            for(IPlayer p : players){
-                // Don't confirm with the player who made the move
-                if(p == activePlayer){ // Reference equality should work
-                    continue;
-                }
-                boolean confirmation = p.confirmMove(i, move);
-                legal = legal && confirmation;
-            }
-            if(legal){
-                state.makeMove(move);
-            } else {
-                // What do we do when a move isn't legal?
-            }
+    private void playerTurn(int uid){
+        IPlayer playerInterface = playerInterfaces.get(uid);
+        PlayerState playerState = playerStates.get(uid);
+        ArrayList<Card> hand = playerState.getHand();
+        ArrayList<Card> toTradeIn = playerInterface.tradeInCards(hand, "Trade in cards");
+        while(!checkTradeInCards(hand, toTradeIn)){
+            toTradeIn = playerInterface.tradeInCards(hand, "Invalid selection");
         }
+        makeTradeInCards(uid, toTradeIn); 
+    }
+
+    private boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
+        return true; 
+    }
+
+    private void makeTradeInCards(int uid, ArrayList<Card> toTradeIn){
+
     }
 }

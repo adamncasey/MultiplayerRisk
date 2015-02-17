@@ -1,36 +1,32 @@
 package player;
 
 import logic.*;
+import java.util.ArrayList;
 
 /**
  * IPlayer --- The common interface between players and game logic.
  */
 public interface IPlayer {
-    // This interface will change with the protocol nothing here is final
+    // IPlayer implementations must be able to respond to each of the following requests
+    // Trade In Cards
+    // Deploy New Armies
+    // Attack OR Fortify
+    // Draw Card
+    // IPlayers must also be able to respond appropriately if an opposing player attacks them (A Defend request will be called).
 
-   /**
-    * Get the player's unique identifier.
-    * @return The players identifier
-    */
-    public String getId(); 
+    public int getUID();
+    public void setUID(int uid);
 
-   /**
-    * The Game / Central server will provide a card, the player should keep track of it.
-    */
-//    public void addCard(Cards cards);
+    public ArrayList<Card> tradeInCards(ArrayList<Card> hand, String requestMessage);
 
-   /**
-    * Get a move from the player.
-    * @param stage The tye of move (current stage of the turn)
-    * @return The move in GameMove format
-    */
-    public GameMove getMove(int stage);
+//    public GameMove get2DeployNewArmies(){
 
-   /**
-    * Confirm that a move is legal.
-    * @param stage The type of move (current stage of the turn)
-    * @param move The move to be confirmed
-    * @return True when the move is legal, False otherwise
-    */
-    public boolean confirmMove(int stage, GameMove move);
+//    public GameMove get3Attack(){
+
+//    public GameMove get3Fortify(){
+
+//    public GameMove get4DrawCard(){
+
+//    public GameMove respond3Defend(){
+
 }

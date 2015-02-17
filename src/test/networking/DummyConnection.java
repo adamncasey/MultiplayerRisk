@@ -4,6 +4,8 @@ import networking.ConnectionLostException;
 import networking.IConnection;
 import networking.TimeoutException;
 
+import java.util.concurrent.FutureTask;
+
 /**
  * Created by Adam on 23/11/2014.
  */
@@ -15,7 +17,7 @@ public class DummyConnection implements IConnection {
 
     int milliseconds;
     @Override
-    public void send(String message) throws ConnectionLostException {
+    public void sendBlocking(String message) throws ConnectionLostException {
         if(wasKilled) {
             throw new ConnectionLostException();
         }

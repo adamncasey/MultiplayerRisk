@@ -25,24 +25,27 @@ public class CLIMain {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
+        LocalGameLobby lobby;
+
         String value = reader.readLine();
         if(value.equals("host")) {
-            hostLobby();
+            lobby = hostLobby();
+
+            value = reader.readLine();
+            if(value.equals("start")) {
+                System.out.println("Start game requested");
+                lobby.startGame();
+            }
+
         } else if(value.equals("join")) {
             joinLobby();
         }
     }
 
-    public static void hostLobby() {
+    public static LocalGameLobby hostLobby() {
         LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port);
         lobby.start();
-        try {
-            synchronized (lobby) {
-                lobby.wait();
-            }
-        } catch(InterruptedException e) {
-            System.out.println("Interrupted whilst waiting");
-        }
+        return lobby;
     }
 
     public static HostLobbyEventHandler handler = new HostLobbyEventHandler() {
@@ -116,6 +119,8 @@ public class CLIMain {
             System.out.println("\tplayers: " + players.toString());
             System.out.println("\tcards: " + cards.toString());
             System.out.println("\tboard: " + board.toString());
+
+            System.out.println("At this point, we should pass this data off to the Game Loop");
         }
 
         @Override

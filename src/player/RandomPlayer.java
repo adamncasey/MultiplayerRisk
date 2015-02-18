@@ -9,23 +9,28 @@ import java.util.Random;
  */
 public class RandomPlayer implements IPlayer {
     private static Random random = new Random();
-    private int uid = 0; // Set and used by Game
-
-    // Don't change board or hand
-    private Board board;
-    private ArrayList<Card> hand;
 
     public RandomPlayer(){
     }
 
+    private int uid = 0; // Set and used by Game
     public int getUID(){
         return this.uid;
     }
-
     public void setUID(int uid){
         this.uid = uid;
+
+    }
+    private boolean eliminated = false; // Set and used by Game
+    public boolean isEliminated(){
+        return eliminated;
+    }
+    public void eliminate(){
+        eliminated = true;
     }
 
+    private Board board;
+    private ArrayList<Card> hand;
     public void updatePlayer(Board board, ArrayList<Card> hand){
         this.board = board;
         this.hand = hand;
@@ -100,6 +105,25 @@ public class RandomPlayer implements IPlayer {
         return decision;
     }
 
+    public boolean decideFortify(String requestMessage){
+        return random.nextBoolean();
+    }
 
+    public ArrayList<Integer> startFortify(String requestMessage){
+        ArrayList<Integer> move = new ArrayList<Integer>();
+        int randomAlly = -1;
+        while(!board.checkTerritoryOwner(uid, randomAlly)){
+            randomAlly = random.nextInt(board.getTerritories().size());
+        }
+        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
+        int randomFortify = adjacents.get(random.nextInt(adjacents.size())); // Doesn't guarantee that an ally is chosen, Game can do that
+        move.add(randomAlly);
+        move.add(randomFortify);
+        return move;
+    }
+
+    public int chooseFortifyArmies(String requestMessage, int currentArmies){
+        return random.nextInt(currentArmies-1)+1;
+    }
 }
 

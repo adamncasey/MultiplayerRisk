@@ -60,14 +60,6 @@
 		"4":7,
 		"5":2
 	},
-	"continent_names":{
-		"0":"North America",
-		"1":"South America",
-		"2":"Europe",
-		"3":"Africa",
-		"4":"Asia",
-		"5":"Australia"
-	},
 	"country_names":{
 		"0":"Alaska",
 		"1":"Northwest territory",
@@ -111,6 +103,14 @@
 		"39":"New Guinea",
 		"40":"Western Australia",
 		"41":"Eastern Australia"
+	},
+	"continent_names":{
+		"0":"North Amercia",
+		"1":"South America",
+		"2":"Europe",
+		"3":"Africa",
+		"4":"Asia",
+		"5":"Australia"
 	},
 	"country_card":{
 		"0":2,

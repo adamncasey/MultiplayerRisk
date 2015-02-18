@@ -31,6 +31,9 @@ public class Controller implements Initializable{
     public TextArea console;
 
     @FXML //Australia
+    public ImageView worldmap;
+    
+    @FXML //Australia
     public ImageView AU0, AU1, AU2, AU3;
 
     @FXML //Africa
@@ -165,16 +168,16 @@ public class Controller implements Initializable{
                 	double sizex = territory.getImage().getWidth();
                     double sizey = territory.getImage().getHeight();
                 	
-                	double x = territory.getLayoutX() + sizex/8;
-                    double y = territory.getLayoutY() + sizey/8;
+                	double x = territory.getLayoutX() + sizex/4;
+                    double y = territory.getLayoutY() + sizey/10;
                     
                     printToConsole(territory.getId()+ " " + x + " " + y + " " + sizex + " " + sizey);
                     
                     if(addArmyMode) {
-                    	Label infantry = new Label();
-                    	infantry.setGraphic(new ImageView(infantryImage));
+                    	ImageView infantry = new ImageView(infantryImage);
                     	infantry.relocate(x, y);
                     	gamePane.getChildren().add(infantry);
+                    	
                     }
                 }
             });

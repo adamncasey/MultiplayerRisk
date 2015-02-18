@@ -3,15 +3,14 @@ package ui.lobbyhost;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import lobby.Validator;
-import settings.Settings;
 import ui.*;
 
 public class LobbyHostController extends AnchorPane implements Initializable {
@@ -19,42 +18,20 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	private Main application;
 
 	@FXML
-	private TextField port;
+	private ListView<String> players;
 	@FXML
-	private TextField players;
-	@FXML
-	private Label status;
+	private TextArea consoleWindow;
+	
 
 	public void setApp(Main application) {
 		this.application = application;
-		this.players.setText("4");
-		this.port.setText(Settings.port + "");
 	}
-
-	private boolean isFormValid() {
-		return isValidPort();
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		ObservableList<String> items = FXCollections.observableArrayList("You (Hosting)" , "Player2", "Player3", "Player4");
+		players.setItems(items);
 	}
-
-	private boolean isValidPort() {
-		boolean valid = true;
-
-		if (!Validator.isValidPort(port.getText())) {
-			status("Error: Invalid port");
-			valid = false;
-		}
-
-		return valid;
-	}
-
-	private void status(String message) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				status.setText(message);
-			}
-		});
-	}
-
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
@@ -63,11 +40,9 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
-		if(isFormValid()) {
-			application.gotoMenu();
-		}
 	}
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {	}
+	
+	@FXML
+	protected void kickPlayerButtonAction(ActionEvent event) {
+	}
 }

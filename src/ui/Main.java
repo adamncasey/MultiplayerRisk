@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
+import ui.lobbyhost.LobbyHostController;
 import ui.menu.*;
 
 public class Main extends Application {
@@ -56,6 +57,16 @@ public class Main extends Application {
     public void gotoCreateGame() {
         try {
         	CreateGameController lobby = (CreateGameController) replaceSceneContent("creategame/creategame.fxml", WIDTH, HEIGHT);
+        	stage.setResizable(true);
+            lobby.setApp(this);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void gotoLobbyHost() {
+        try {
+        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobbyhost/lobbyhost.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {

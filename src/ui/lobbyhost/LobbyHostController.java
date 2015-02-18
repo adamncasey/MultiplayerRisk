@@ -22,6 +22,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	@FXML
 	private TextArea consoleWindow;
 	
+	private ObservableList<String> playersList;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -30,7 +31,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		ObservableList<String> items = FXCollections.observableArrayList("You (Hosting)" , "Player2", "Player3", "Player4");
-		players.setItems(items);
+		playersList = items;
+		players.setItems(playersList);
 	}
 
 	@FXML
@@ -40,9 +42,12 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
+		playersList.add("Player #");
+		consoleWindow.appendText("-> You added player #\n");
 	}
 	
 	@FXML
 	protected void kickPlayerButtonAction(ActionEvent event) {
+		
 	}
 }

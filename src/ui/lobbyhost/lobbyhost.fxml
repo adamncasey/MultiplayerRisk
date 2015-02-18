@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.lobbyhost.LobbyHostController">
+<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="1000" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.lobbyhost.LobbyHostController">
   <children>
     <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
@@ -31,14 +31,14 @@
                   <ListView fx:id="players" GridPane.rowIndex="1" />
                   <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="6" GridPane.valignment="TOP" />
                   <Label text="Map" GridPane.columnIndex="1" />
-          <Button focusTraversable="false" onAction="#startButtonAction" text="Start Lobby" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+          <Button focusTraversable="false" onAction="#startButtonAction" text="Start Lobby" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM" />
                   <Label text="Tools" GridPane.rowIndex="2">
                      <padding>
                         <Insets top="20.0" />
                      </padding>
                   </Label>
                   <Button focusTraversable="false" onAction="#kickPlayerButtonAction" text="Kick Player" GridPane.rowIndex="3" />
-                  <TextArea fx:id="consoleWindow" GridPane.rowIndex="6" />
+                  <TextArea fx:id="consoleWindow" minHeight="100.0" GridPane.rowIndex="6" />
                   <Label text="Console" GridPane.rowIndex="5">
                      <padding>
                         <Insets top="20.0" />

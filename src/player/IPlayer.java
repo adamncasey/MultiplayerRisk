@@ -29,14 +29,21 @@ public interface IPlayer {
     // return value should be a list of 2 ints, the first int should be the ID of the territory, the second should be the number of armies to be placed
     // this will be requested until all armies have been placed
     public ArrayList<Integer> placeArmies(String requestMessage, int armiesToPlace);
-//    public GameMove get2DeployNewArmies(){
 
-//    public GameMove get3Attack(){
+    // true = yes this player wants to attack, false = do not attack
+    // after this request either an attack will commence, or the game will move on
+    // after the attack this will be requested again until the player no longer wants to attack
+    public boolean decideAttack(String requestMessage);
 
-//    public GameMove get3Fortify(){
+    // return valie should be a list of 2 ints, the first int should be the ID of the territory you are attacking from, the second should be the id of the territory being attacked
+    public ArrayList<Integer> startAttack(String requestMessage);
 
-//    public GameMove get4DrawCard(){
+    // 1, 2, or 3 dice
+    public int chooseAttackingDice(String requestMessage);
 
-//    public GameMove respond3Defend(){
+    // 1 or 2 dice
+    public int chooseDefendingDice(String requestMessage);
 
+    // return value should be an array list of ints, one int for each dice roll, each int should be between 1 and 6
+    public ArrayList<Integer> rollDice(String requestMessage, int numDice);
 }

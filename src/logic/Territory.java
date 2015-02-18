@@ -22,8 +22,16 @@ public class Territory {
         ID = id;
     }
 
+    public int getID(){
+        return this.ID;
+    }
+
     public void addLink(Integer id){
         links.add(new Integer(id));
+    }
+
+    public ArrayList<Integer> getLinks(){
+        return links;
     }
 
     public void setName(String name){

@@ -34,7 +34,7 @@ public class RandomPlayer implements IPlayer {
     public ArrayList<Card> tradeInCards(String requestMessage){ 
         ArrayList<Card> toTradeIn = new ArrayList<Card>();
         int handSize = hand.size();
-        if(handSize >= 5){
+        if(handSize >= 5){ // Doesn't guarantee that a set will be chosen, Game can do that.
             for(int i = 0; i != 3; ++i){
                 int randomCard = random.nextInt(hand.size());
                 Card c = hand.get(randomCard);
@@ -57,5 +57,39 @@ public class RandomPlayer implements IPlayer {
         return move;
     }
 
+    public boolean decideAttack(String requestMessage){
+        return random.nextBoolean();
+    }
+
+    public ArrayList<Integer> startAttack(String requestMessage){
+        ArrayList<Integer> move = new ArrayList<Integer>();
+        int randomAlly = -1;
+        while(!board.checkTerritoryOwner(uid, randomAlly)){
+            randomAlly = random.nextInt(board.getTerritories().size());
+        }
+        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
+        int randomEnemy = adjacents.get(random.nextInt(adjacents.size())); // Doesn't guarantee that an enemy is chosen, Game can do that
+        move.add(randomAlly);
+        move.add(randomEnemy);
+        return move;
+    }
+
+    // Game won't let it pick a wrong number
+    public int chooseAttackingDice(String requestMessage){
+        return random.nextInt(3)+1;
+    }
+
+    // Game won't let it pick a wrong number
+    public int chooseDefendingDice(String requestMessage){
+        return random.nextInt(2)+1;
+    }
+
+    public ArrayList<Integer> rollDice(String requestMessage, int numDice){
+        ArrayList<Integer> roll = new ArrayList<Integer>();
+        for(int i = 0; i != numDice; ++i){
+            roll.add(random.nextInt(6)+1);
+        }
+        return roll;
+    }
 }
 

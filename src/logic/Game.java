@@ -70,13 +70,48 @@ public class Game {
         int armies = calculatePlayerArmies(uid, traded, toTradeIn);
 
         while(armies != 0){
-            ArrayList<Integer> move = playerInterface.placeArmies("Place your armies", armies);
-            while(!checkPlaceArmies(uid, move, armies)){
-                move = playerInterface.placeArmies("Invalid selection", armies);
+            ArrayList<Integer> placeMove = playerInterface.placeArmies("Place your armies", armies);
+            while(!checkPlaceArmies(uid, placeMove, armies)){
+                placeMove = playerInterface.placeArmies("Invalid selection", armies);
             }
-            armies = placeArmies(uid, move, armies);
+            armies = placeArmies(uid, placeMove, armies);
             updatePlayers();
         }
+
+        while(playerInterface.decideAttack("Do you want to attack?")){
+            ArrayList<Integer> attackMove = playerInterface.startAttack("Which territory do you want to attack?");
+            while(!checkStartAttack(uid, attackMove)){
+                attackMove = playerInterface.startAttack("Invalid selection");
+            }
+
+            int attackingDice = playerInterface.chooseAttackingDice("Attack with 1, 2, or 3 dice?");
+            while(!checkAttackingDice(uid, attackingDice, attackMove.get(0))){
+                attackingDice = playerInterface.chooseAttackingDice("Invalid selection");
+            }
+
+            int enemyUID = board.getTerritories().get(attackMove.get(1)).getOwner();
+            int defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Defend with 1 or 2 dice?");
+            while(!checkDefendingDice(uid, defendingDice, attackMove.get(1))){
+                defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Invalid selection");
+            }
+
+            ArrayList<Integer> attackRoll = playerInterface.rollDice("Roll dice", attackingDice);
+            while(!checkDiceRoll(attackRoll, attackingDice)){
+                attackRoll = playerInterface.rollDice("Invalid roll", attackingDice);
+            }
+
+            ArrayList<Integer> defendRoll = playerInterfaces.get(enemyUID).rollDice("Roll dice", defendingDice);
+            while(!checkDiceRoll(defendRoll, defendingDice)){
+                defendRoll = playerInterfaces.get(enemyUID).rollDice("Invalid roll", defendingDice);
+            }
+
+            ArrayList<Integer> attackResult = decideAttackResult(attackRoll, defendRoll);
+
+
+            // result
+
+        }
+
     }
 
     public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
@@ -149,5 +184,99 @@ public class Game {
         Territory t = board.getTerritories().get(move.get(0));
         t.addArmies(move.get(1));
         return armies - move.get(1);
+    }
+
+    public boolean checkStartAttack(int uid, ArrayList<Integer> move){
+        Territory ally = board.getTerritories().get(move.get(0));
+        Territory enemy = board.getTerritories().get(move.get(1));
+
+        // Does this player own the territory to be attacked from?
+        if(ally.getOwner() != uid){
+            return false;
+        }
+
+        // Does this player not own the territory to be attacked?
+        if(enemy.getOwner() == uid){
+            return false;
+        }
+        
+        // Are the two territories adjacent?
+        boolean found = false;
+        for(Integer i : ally.getLinks()){
+            if(i == enemy.getID()){
+                found = true;
+            }
+        }
+        if(!found){
+            return false;
+        }
+
+        // Does ally have at least 2 territories?
+        if(ally.getArmies() < 2){
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean checkAttackingDice(int uid, int numDice, int TID){
+        int numArmies = board.getTerritories().get(TID).getArmies();
+        if(numArmies <= numDice){ // You must have one more armies than the number of dice you wish to roll.
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkDefendingDice(int uid, int numDice, int TID){
+        int numArmies = board.getTerritories().get(TID).getArmies();
+        if(numArmies < numDice){ // You must have 2 armies to roll 2 dice.
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkDiceRoll(ArrayList<Integer> roll, int numDice){
+        if(roll.size() != numDice){
+            return false;
+        }
+        for(int i : roll){
+            if(i < 1 || i > 6){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static ArrayList<Integer> decideAttackResult(ArrayList<Integer> attack, ArrayList<Integer> defend){
+        int attackerLosses = 0; int defenderLosses = 0;
+
+        while(attack.size() != 0 && defend.size() != 0){
+            int attackScore = 0; int defendScore = 0;
+            int attackIndex = -1; int defendIndex = -1;
+            for(int i = 0; i != attack.size(); ++i){
+                if(attack.get(i) > attackScore){
+                    attackScore = attack.get(i);
+                    attackIndex = i;
+                }
+            }
+            for(int i = 0; i != defend.size(); ++i){
+                if(defend.get(i) > defendScore){
+                    defendScore = defend.get(i);
+                    defendIndex = i;
+                }
+            }
+            if(attackScore > defendScore){
+                defenderLosses++;
+            } else {
+                attackerLosses++;
+            }
+            attack.remove(attackIndex);
+            defend.remove(defendIndex);
+        }
+
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        result.add(attackerLosses);
+        result.add(defenderLosses);
+        return result;
     }
 }

@@ -1,0 +1,59 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1233" measuredH="614" mockupW="1030" mockupH="608">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="203" y="6" w="1030" h="608" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Risk</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="203" y="28" w="1030" h="565" measuredW="1000" measuredH="625" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>../../Documents/dev/ecworkspace/RiskyBusiness/src/ui/background.jpg</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="218" y="38" w="86" h="47" measuredW="51" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>back</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Label" x="648" y="76" w="-1" h="-1" measuredW="195" measuredH="32" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>24</size>
+        <text>LAN%20Game%20Finder</text>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::List" x="247" y="157" w="940" h="253" measuredW="100" measuredH="126" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>12303802</color>
+        <text>1.%20James%27%20Game%09%09-----%092%20Players%09-----%09Standard%20Map%0A2.%20TooRiskyForYou%09-----%09FULL%09%09-----%09Custom%20Map%0A3.%20LonelyGame%09%09-----%091%20Player%09%09-----%09Standard%20Map</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Label" x="247" y="129" w="-1" h="-1" measuredW="52" measuredH="24" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Games</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Button" x="918" y="449" w="269" h="107" measuredW="142" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>0</color>
+        <text>Join%20Selected%20Game</text>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::List" x="247" y="449" w="629" h="107" measuredW="100" measuredH="126" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Join%20to%20%22James%27%20Game%22%20failed%0ANew%20game%20%22LonelyGame%22%20discovered</text>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Label" x="247" y="425" w="-1" h="-1" measuredW="59" measuredH="24" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Console</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

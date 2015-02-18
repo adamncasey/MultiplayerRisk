@@ -1,0 +1,73 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="955" measuredH="584" mockupW="461" mockupH="570">
+  <controls>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="503" y="44" w="86" h="47" measuredW="51" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>back</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Label" x="641" y="91" w="-1" h="-1" measuredW="177" measuredH="32" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>24</size>
+        <text>Host%20New%20Lobby</text>
+      </controlProperties>
+    </control>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Button" x="750" y="288" w="92" h="36" measuredW="92" measuredH="27" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>0</color>
+        <text>Start%20Lobby</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="__group__" x="494" y="14" w="461" h="570" measuredW="461" measuredH="570" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="0" y="0" w="461" h="570" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="15">
+          <controlProperties>
+            <text>Risk</text>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::Image" x="0" y="20" w="461" h="529" measuredW="1000" measuredH="625" zOrder="1" locked="false" isInGroup="15">
+          <controlProperties>
+            <src>../../Documents/dev/ecworkspace/RiskyBusiness/src/ui/background.jpg</src>
+            <text/>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+    <control controlID="23" controlTypeID="com.balsamiq.mockups::TextInput" x="715" y="156" w="127" h="-1" measuredW="92" measuredH="27" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>1</backgroundAlpha>
+        <text>MyRiskGame</text>
+      </controlProperties>
+    </control>
+    <control controlID="24" controlTypeID="com.balsamiq.mockups::Label" x="617" y="159" w="-1" h="-1" measuredW="74" measuredH="21" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>Lobby%20Name</text>
+      </controlProperties>
+    </control>
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::TextInput" x="715" y="192" w="59" h="-1" measuredW="23" measuredH="27" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>1</backgroundAlpha>
+        <text>4</text>
+      </controlProperties>
+    </control>
+    <control controlID="26" controlTypeID="com.balsamiq.mockups::Label" x="617" y="195" w="-1" h="-1" measuredW="72" measuredH="21" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>Max%20Players</text>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::TextInput" x="715" y="228" w="59" h="-1" measuredW="49" measuredH="27" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>1</backgroundAlpha>
+        <text>4444</text>
+      </controlProperties>
+    </control>
+    <control controlID="28" controlTypeID="com.balsamiq.mockups::Label" x="617" y="231" w="-1" h="-1" measuredW="24" measuredH="21" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>Port</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

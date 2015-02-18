@@ -77,7 +77,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				consoleWindow.appendText(message);
+				consoleWindow.appendText(message + "\n");
 			}
 		});
 
@@ -92,13 +92,13 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
         @Override
         public void onPlayerJoin(int playerid) {
-            writeToConsole("Player " + playerid + "joined the lobby");
+            writeToConsole("Player " + playerid + " joined the lobby");
             playersList.add("Player " + playerid);
         }
 
         @Override
         public void onPlayerLeave(int playerid) {
-        	writeToConsole("Player " + playerid + "left the lobby");
+        	writeToConsole("Player " + playerid + " left the lobby");
         }
 
         @Override

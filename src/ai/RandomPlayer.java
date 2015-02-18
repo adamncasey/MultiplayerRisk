@@ -80,7 +80,7 @@ public class RandomPlayer implements IPlayer {
     }
 
     public boolean decideAttack(String requestMessage){
-        return random.nextBoolean();
+        return true;
     }
 
     public ArrayList<Integer> startAttack(String requestMessage){
@@ -96,14 +96,20 @@ public class RandomPlayer implements IPlayer {
         return move;
     }
 
-    // Game won't let it pick a wrong number
-    public int chooseAttackingDice(String requestMessage){
-        return random.nextInt(3)+1;
+    public int chooseAttackingDice(String requestMessage, int numArmies){
+        if(numArmies > 4){
+            return 3;
+        }else if(numArmies > 3){
+            return 2;
+        }
+        return 1;
     }
 
-    // Game won't let it pick a wrong number
-    public int chooseDefendingDice(String requestMessage){
-        return random.nextInt(2)+1;
+    public int chooseDefendingDice(String requestMessage, int numArmies){
+        if(numArmies > 1){
+            return 2;
+        }
+        return 1;
     }
 
     public ArrayList<Integer> rollDice(String requestMessage, int numDice){
@@ -117,30 +123,61 @@ public class RandomPlayer implements IPlayer {
     public int occupyTerritory(String requestMessage, int currentArmies, int numDice){
         int decision = -1;
         while(decision < numDice){
-            decision = random.nextInt(currentArmies-1)+1;
+            decision = currentArmies-1;
         }
         return decision;
     }
 
+    // This AI only fortifies when one of it's territories has no adjacent enemies
     public boolean decideFortify(String requestMessage){
-        return random.nextBoolean();
+        for(Territory t : board.getTerritories().values()){
+            if(t.getOwner() != uid || t.getArmies() < 2){
+                continue;
+            }
+            ArrayList<Integer> adjacents = t.getLinks();
+            int enemyCounter = 0;
+            for(int i : adjacents){
+                if(!board.checkTerritoryOwner(uid, i)){
+                    enemyCounter++;
+                }
+            }
+            if(enemyCounter == 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public ArrayList<Integer> startFortify(String requestMessage){
-        ArrayList<Integer> move = new ArrayList<Integer>();
-        int randomAlly = random.nextInt(board.getTerritories().size());;
-        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
+        int randomAlly = 0;
+        ArrayList<Integer> adjacents = new ArrayList<Integer>();
+        int enemyCounter = -1;
+        while(enemyCounter != 0){
             randomAlly = random.nextInt(board.getTerritories().size());
+            while(!board.checkTerritoryOwner(uid, randomAlly)){
+                randomAlly = random.nextInt(board.getTerritories().size());
+            }
+            adjacents = board.getTerritories().get(randomAlly).getLinks();
+            enemyCounter = 0;
+            for(int i : adjacents){
+                if(!board.checkTerritoryOwner(uid, i)){
+                    enemyCounter++;
+                }
+            }
         }
-        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
-        int randomFortify = adjacents.get(random.nextInt(adjacents.size())); // Doesn't guarantee that an ally is chosen, Game can do that
+        int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
+        while(!board.checkTerritoryOwner(uid, randomFortify)){
+            randomFortify = adjacents.get(random.nextInt(adjacents.size()));
+        }
+
+        ArrayList<Integer> move = new ArrayList<Integer>();
         move.add(randomAlly);
         move.add(randomFortify);
         return move;
     }
 
     public int chooseFortifyArmies(String requestMessage, int currentArmies){
-        return random.nextInt(currentArmies-1)+1;
+        return currentArmies-1;
     }
 }
 

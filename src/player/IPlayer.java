@@ -48,10 +48,10 @@ public interface IPlayer {
     public ArrayList<Integer> startAttack(String requestMessage);
 
     // 1, 2, or 3 dice
-    public int chooseAttackingDice(String requestMessage);
+    public int chooseAttackingDice(String requestMessage, int numArmies);
 
     // 1 or 2 dice
-    public int chooseDefendingDice(String requestMessage);
+    public int chooseDefendingDice(String requestMessage, int numArmies);
 
     // return value should be an array list of ints, one int for each dice roll, each int should be between 1 and 6
     public ArrayList<Integer> rollDice(String requestMessage, int numDice);

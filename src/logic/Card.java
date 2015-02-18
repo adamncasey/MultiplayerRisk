@@ -1,6 +1,7 @@
 package logic;
 
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
 /**
  * Card --- Stores information about one of the RISK CARDS
@@ -75,6 +76,8 @@ public class Card {
 
     // Check that toTradeIn is a subset of hand
     public static boolean isSubset(ArrayList<Card> toTradeIn, ArrayList<Card> hand){
+        toTradeIn = new ArrayList<Card>(toTradeIn);
+        hand = new ArrayList<Card>(hand);
         // Loop until either all cards in toTradeIn are found, or a card is not found
         // If a card in toTradeIn is found in hand, remove it from hand
         for(Card c1: toTradeIn){
@@ -91,6 +94,22 @@ public class Card {
             hand.remove(found);
         }
         return true;
+    }
+
+    public static void printHand(PrintWriter writer, ArrayList<Card> hand){
+        for(Card c : hand){
+            String type = "";
+            if(c.getType() == 1){
+                type = "infantry";
+            }else if(c.getType() == 5){
+                type = "cavalry";
+            }else if(c.getType() == 10){
+                type = "artillery";
+            }
+            writer.format("[%s-%s]", c.getName(), type);
+        }
+        writer.format("\n");
+        writer.flush();
     }
 }
 

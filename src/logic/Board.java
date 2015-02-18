@@ -25,6 +25,11 @@ public class Board {
     protected Deck getDeck(){
         Deck deck = new Deck();
    
+        //TEMP HACK TO MAKE GAME MORE INTERESTING
+        //Rather than just cycling through 1, 5, 10, this should be stored in the map format.
+        int counter = 0;
+        int values[] = {1, 5, 10};
+
         Iterator it = territories.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pairs = (Map.Entry)it.next();
@@ -32,8 +37,13 @@ public class Board {
             Territory T = (Territory)pairs.getValue();
 
             for(int i = 0; i != T.getCard(); ++i){
-                Card card = new Card(TID, 1, T.getName()); // Still need a way for card values (the 1) to be stored withtin the map.
+                Card card = new Card(TID, values[counter], T.getName()); // Still need a way for card values (the 1) to be stored withtin the map.
                 deck.addCard(card);
+            }
+
+            counter++;
+            if(counter == 3){
+                counter = 0;
             }
         }
         for(int i = 0; i != wildcards; ++i){
@@ -160,17 +170,6 @@ public class Board {
         this.wildcards =  Integer.valueOf(parts[1].trim());
     }
 
-    public void printBoard() {
-        System.out.println("Printing current board:");
-        Iterator it = territories.entrySet().iterator();
-        while(it.hasNext()){ 
-            Map.Entry pairs = (Map.Entry)it.next();
-            Integer TID = (Integer)pairs.getKey();
-            Territory T = (Territory)pairs.getValue();
-            System.out.format("    %d - %s\n", TID, T.getName());
-        }
-    }
-
     public Board(String filename){
         loadBoard(filename);
     }
@@ -212,5 +211,13 @@ public class Board {
             return true;
         }
         return false;
+    }
+
+    public void printBoard(PrintWriter writer){
+        for(Territory t : territories.values()){
+            writer.format("[%d-%s-%d-%d]", t.getID(), t.getName(), t.getOwner(), t.getArmies());
+        }
+        writer.format("\n");
+        writer.flush();
     }
 }

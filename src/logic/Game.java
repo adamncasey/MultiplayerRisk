@@ -112,30 +112,31 @@ public class Game {
         territory.addArmies(1);
     }
 
-    public void playGame(){
+    public int playGame(){
         if(totalPlayerCount < 3 || totalPlayerCount > 6){
-            return;
+            return 0;
         }
 
+        int turnCounter = 0;
         int currentPlayer = firstPlayer;
         while(activePlayerCount != 1){
             IPlayer playerInterface = playerInterfaces.get(currentPlayer);
             if(!playerInterface.isEliminated()){
                 playerTurn(currentPlayer);
+                turnCounter++;
             }
             currentPlayer++;
             if(currentPlayer == totalPlayerCount){
                 currentPlayer = 0;
             }
         }
-        return;
+        return turnCounter;
     }
 
     private void playerTurn(int uid){
-        updatePlayers(uid, "beginning their turn");
         updatePlayers(uid, "trading in cards");
         IPlayer playerInterface = playerInterfaces.get(uid);
-        ArrayList<Card> hand = new ArrayList<Card>(playerHands.get(uid)); // create a copy because hand may be edited by the check function
+        ArrayList<Card> hand = playerHands.get(uid);
         ArrayList<Card> toTradeIn = playerInterface.tradeInCards("Trade in cards");
         while(!checkTradeInCards(hand, toTradeIn)){
             toTradeIn = playerInterface.tradeInCards("Invalid selection");
@@ -167,16 +168,16 @@ public class Game {
             }
 
             updatePlayers(uid, "deciding how many dice to attack with");
-            int attackingDice = playerInterface.chooseAttackingDice("Attack with 1, 2, or 3 dice?");
+            int attackingDice = playerInterface.chooseAttackingDice("Attack with 1, 2, or 3 dice?", board.getTerritories().get(attackMove.get(0)).getArmies());
             while(!checkAttackingDice(uid, attackingDice, attackMove.get(0))){
-                attackingDice = playerInterface.chooseAttackingDice("Invalid selection");
+                attackingDice = playerInterface.chooseAttackingDice("Invalid selection", board.getTerritories().get(attackMove.get(0)).getArmies());
             }
 
             int enemyUID = board.getTerritories().get(attackMove.get(1)).getOwner();
             updatePlayers(enemyUID, "deciding how many dice to defend with");
-            int defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Defend with 1 or 2 dice?");
+            int defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Defend with 1 or 2 dice?", board.getTerritories().get(attackMove.get(1)).getArmies());
             while(!checkDefendingDice(uid, defendingDice, attackMove.get(1))){
-                defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Invalid selection");
+                defendingDice = playerInterfaces.get(enemyUID).chooseDefendingDice("Invalid selection", board.getTerritories().get(attackMove.get(1)).getArmies());
             }
 
             updatePlayers(uid, "rolling the dice");
@@ -206,12 +207,14 @@ public class Game {
 
             if(isEliminated(enemyUID)){
                 updatePlayers(enemyUID, "eliminated");
-                eliminatePlayer(uid, enemyUID);
-                hand = new ArrayList<Card>(playerHands.get(uid));
+                if(eliminatePlayer(uid, enemyUID)){
+                    return;
+                }
+                hand = playerHands.get(uid);
                 updatePlayers(uid, "trading in cards");
                 if(hand.size() > 5){ // immediately trade in cards when at 6 or more
                     while(hand.size() >= 5){ // trade in cards and place armies until 4 or fewer cards
-                        hand = new ArrayList<Card>(playerHands.get(uid));
+                        hand = playerHands.get(uid);
                         toTradeIn = playerInterface.tradeInCards("Trade in cards");
                         while(!checkTradeInCards(hand, toTradeIn)){
                             toTradeIn = playerInterface.tradeInCards("Invalid selection");
@@ -235,7 +238,9 @@ public class Game {
         if(territoryCaptured){
             updatePlayers(uid, "drawing a card");
             Card newCard = deck.drawCard();
-            playerHands.get(uid).add(newCard);
+            if(newCard != null){
+                playerHands.get(uid).add(newCard);
+            }
         }
 
         if(checkFortifyPossible(uid)){
@@ -262,7 +267,7 @@ public class Game {
         if(toTradeIn.size() == 0 && hand.size() < 5){
             return true;
         }
-        if(Card.containsSet(hand)){
+        if(Card.containsSet(hand) && Card.containsSet(toTradeIn)){
             if(toTradeIn.size() == 3 && Card.isSubset(toTradeIn, hand)){
                 return true;
             }
@@ -477,7 +482,7 @@ public class Game {
         return true;
     }
 
-    public void eliminatePlayer(int currentUID, int eliminatedUID){
+    public boolean eliminatePlayer(int currentUID, int eliminatedUID){
         ArrayList<Card> hand = playerHands.get(currentUID);
         for(Card c : playerHands.get(eliminatedUID)){
             hand.add(c);
@@ -485,6 +490,7 @@ public class Game {
         playerHands.get(eliminatedUID).clear();
         playerInterfaces.get(eliminatedUID).eliminate();
         activePlayerCount--;
+        return (activePlayerCount == 1);
     }
 
     public boolean checkFortifyPossible(int uid){

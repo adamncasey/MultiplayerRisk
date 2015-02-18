@@ -25,6 +25,9 @@ or
 - ui test
 java -cp "bin/RiskyBusiness.jar:lib/*" ui.Main
 
-- rungame
-java -cp "bin/RiskyBusiness.jar:lib/*" main.RunGame (On Linux)
-java -cp "bin/RiskyBusiness.jar;lib/*" main.RunGame (On Windows)
+- Run game where 3 AIs play eachother
+java -cp "bin/RiskyBusiness.jar:lib/*" main.RunGame
+
+- Run game from command line
+java -cp "bin/RiskyBusiness.jar:lib/*" main.PlayCLI
+

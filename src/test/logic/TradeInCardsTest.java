@@ -277,6 +277,16 @@ public class TradeInCardsTest{
         toTradeIn.add(infantry2);
         assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
     }
+
+    // hand has 5 cards, including a set of 3 same cards, toTrade in has 3 cards, including 3 of the 5 cards, but not a set
+    @Test
+    public void toTradeInNotSet(){
+        ArrayList<Card> hand = new ArrayList<Card>();
+        hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(cavalry2);
+        ArrayList<Card> toTradeIn = new ArrayList<Card>();
+        toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(cavalry);
+        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+    }
 }
 
 

@@ -19,6 +19,9 @@ public class Deck {
     }
 
     public Card drawCard(){
+        if(cards.size() == 0){
+            return null;
+        }
         Card c = cards.get(0);
         cards.remove(0);
         return c;
@@ -30,14 +33,6 @@ public class Deck {
         for(int i = 0; i != size; ++i){
             int j = twister.nextInt(size);
             Collections.swap(cards, i, j);
-        }
-    }
-
-    public void printDeck(){
-        System.out.println("Printing current deck:");
-        for(int i = 0; i != cards.size(); ++i){
-            Card C = cards.get(i);
-            System.out.format("    %d - %d - %s\n", C.getID(), C.getType(), C.getName());
         }
     }
 }

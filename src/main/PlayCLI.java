@@ -20,7 +20,7 @@ public class PlayCLI {
         PrintWriter writer = System.console().writer();
 
         writer.println("Hello! Welcome to Risk");
-        writer.print("How many AIs would you like to play against? (2-6)\n> ");
+        writer.print("How many AIs would you like to play against? (2-5)\n> ");
         writer.flush();
         int numAI = 0; boolean correct = false;
         while(!correct){
@@ -31,7 +31,7 @@ public class PlayCLI {
                 reader.next();
             }
             numAI = reader.nextInt();
-            correct = numAI >= 2 && numAI <= 6;
+            correct = numAI >= 2 && numAI <= 5;
             if(!correct){
                 writer.print("Invalid Input\n> ");
                 writer.flush();
@@ -53,8 +53,8 @@ public class PlayCLI {
         writer.println("The setup has completed");
 
         writer.println("The game will now start");
-        game.playGame();
-        writer.println("The game has completed");
+        int turns = game.playGame();
+        writer.format("The game has completed in %d turns\n", turns);
     }
 }
 

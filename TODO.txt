@@ -8,3 +8,8 @@ Logic:
   implement leave game functionality including neutral territories (in protocol)
 
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
+
+Protocol:
+  What happens when the deck runs out of cards?
+
+  How will card types be specified in the map file?

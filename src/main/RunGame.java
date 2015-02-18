@@ -37,8 +37,7 @@ public class RunGame {
         game.setupGame();
 
         System.out.println("Playing Game");
-        game.playGame();
-
-        System.out.println("Game Ended");
+        int turns = game.playGame();
+        System.out.format("Game ended in %d turns\n", turns);
     }
 }

@@ -45,9 +45,7 @@ public class Game {
     // IPlayer implementations can decide whether or not they care about this information
     private void updatePlayers(){
         for(IPlayer p : playerInterfaces){
-            if(!p.isEliminated()){
-                p.updatePlayer(board, playerHands.get(p.getUID()));
-            }
+            p.updatePlayer(board, playerHands.get(p.getUID()));
         }
     }
 

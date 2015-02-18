@@ -27,6 +27,10 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	
 	public void setApp(Main application) {
 		this.application = application;
+	}
+	
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.players.setText("4");
 		this.port.setText(Settings.port + "");
 	}
@@ -67,7 +71,4 @@ public class CreateGameController extends AnchorPane implements Initializable {
 			application.gotoLobbyHost();
 		}
 	}
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {	}
 }

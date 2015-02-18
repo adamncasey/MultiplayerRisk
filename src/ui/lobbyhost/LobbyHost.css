@@ -74,7 +74,6 @@
 }
 
 .text-field, .text-area {
-    -fx-font-size: 18;
     -fx-background-color:rgba(255, 255, 255, 0.9);
     -fx-background-insets: 0 0 -1 0, 0, 1.5;
     -fx-padding: 6 10 4 10;
@@ -82,8 +81,13 @@
     -fx-font-family: "Arial";
 }
 
+.text-field {
+    -fx-font-size: 18;
+}
+
 .text-area {
     -fx-padding: 6 5 6 5;
+    -fx-font-size: 14;
 }
 
 .text-field:focused, .text-area:focused {

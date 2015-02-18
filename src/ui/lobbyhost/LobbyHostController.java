@@ -48,6 +48,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	
 	@FXML
 	protected void kickPlayerButtonAction(ActionEvent event) {
-		
+		int selectedIndex = players.getSelectionModel().getSelectedIndex();
+		String selected = playersList.get(selectedIndex);
+		if(selectedIndex >= 0) {
+			playersList.remove(selectedIndex);
+			consoleWindow.appendText(String.format("-> You kicked %s\n", selected));
+		}
 	}
 }

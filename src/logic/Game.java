@@ -78,6 +78,7 @@ public class Game {
             updatePlayers();
         }
 
+        boolean territoryCaptured = false;
         while(playerInterface.decideAttack("Do you want to attack?")){
             ArrayList<Integer> attackMove = playerInterface.startAttack("Which territory do you want to attack?");
             while(!checkStartAttack(uid, attackMove)){
@@ -107,10 +108,23 @@ public class Game {
 
             ArrayList<Integer> attackResult = decideAttackResult(attackRoll, defendRoll);
 
-
-            // result
-
+            if(loseArmies(attackResult, attackMove)){ // loseArmies returns true when the territory should be captured
+                territoryCaptured = true;
+                updatePlayers();
+                int currentArmies = board.getTerritories().get(attackMove.get(0)).getArmies();
+                int occupyArmies = playerInterface.occupyTerritory("You captured the territory, how many armies would you lose to move in?", currentArmies, attackingDice);
+                while(!checkOccupyArmies(occupyArmies, attackingDice, attackMove.get(0))){
+                    occupyArmies = playerInterface.occupyTerritory("Invalid number of armies", currentArmies, attackingDice);
+                }
+                occupyTerritory(uid, occupyArmies, attackMove);
+            }
         }
+
+        if(territoryCaptured){
+            Card newCard = deck.drawCard();
+            playerHands.get(uid).add(newCard);
+        }
+        updatePlayers();
 
     }
 
@@ -278,5 +292,36 @@ public class Game {
         result.add(attackerLosses);
         result.add(defenderLosses);
         return result;
+    }
+
+    // Return value decides whether or not the territory should be captured
+    public boolean loseArmies(ArrayList<Integer> attackResult, ArrayList<Integer> attackMove){
+        for(int i = 0; i != 2; ++i){
+            Territory t = board.getTerritories().get(attackMove.get(i));
+            t.loseArmies(attackResult.get(i));
+            if(i == 1 && t.getArmies() == 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkOccupyArmies(int armies, int numDice, int TID){
+        if(armies < numDice){
+            return false;
+        }
+        int currentArmies = board.getTerritories().get(TID).getArmies();
+        if((currentArmies - armies) < 1){
+            return false;
+        }
+        return true;
+    }
+
+    public void occupyTerritory(int uid, int armies, ArrayList<Integer> attackMove){
+        Territory attacker = board.getTerritories().get(attackMove.get(0));
+        attacker.loseArmies(armies);
+        Territory defender = board.getTerritories().get(attackMove.get(1));
+        defender.addArmies(armies);
+        defender.setOwner(uid);
     }
 }

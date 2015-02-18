@@ -91,5 +91,15 @@ public class RandomPlayer implements IPlayer {
         }
         return roll;
     }
+
+    public int occupyTerritory(String requestMessage, int currentArmies, int numDice){
+        int decision = -1;
+        while(decision < numDice){
+            decision = random.nextInt(currentArmies-1)+1;
+        }
+        return decision;
+    }
+
+
 }
 

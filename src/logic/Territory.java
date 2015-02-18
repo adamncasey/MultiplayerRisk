@@ -62,6 +62,10 @@ public class Territory {
         this.armies += armies;
     }
 
+    public void loseArmies(int armies){
+        this.armies -= armies;
+    }
+
     public int getArmies(){
         return this.armies;
     }

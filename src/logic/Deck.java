@@ -18,6 +18,12 @@ public class Deck {
         cards.add(card);
     }
 
+    public Card drawCard(){
+        Card c = cards.get(cards.size()-1);
+        cards.remove(cards.size()-1);
+        return c;
+    }
+
     public void shuffle(int seed){
         MersenneTwister twister = new MersenneTwister();
         int size = cards.size();

@@ -46,4 +46,8 @@ public interface IPlayer {
 
     // return value should be an array list of ints, one int for each dice roll, each int should be between 1 and 6
     public ArrayList<Integer> rollDice(String requestMessage, int numDice);
+
+    // return value should be the number of armies to move from attacking territory to defending territory.
+    // It has to be at least numDice, and you must leave 1 army at the attacking territory (Game will check and enforce this)
+    public int occupyTerritory(String requestMessage, int currentArmies, int numDice);
 }

@@ -106,8 +106,8 @@ public class Main extends Application {
         } 
         Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
-        stage.sizeToScene();
-        stage.centerOnScreen();
+        //stage.sizeToScene();
+        //stage.centerOnScreen();
         return (Initializable) loader.getController();
     }
 }

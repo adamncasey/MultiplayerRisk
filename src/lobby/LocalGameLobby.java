@@ -279,4 +279,14 @@ public class LocalGameLobby extends Thread {
     private synchronized boolean isLobbyOpen() {
         return lobbyOpen;
     }
+    
+    public synchronized void closeLobby() {
+    	lobbyOpen = false;
+    	try {
+    		if(server != null) {
+    			server.close();
+    		}
+		} catch (Exception e) {
+		}
+    }
 }

@@ -20,6 +20,9 @@ public class Main extends Application {
 	private Stage stage;
     private final double MINIMUM_WINDOW_WIDTH = 500;
     private final double MINIMUM_WINDOW_HEIGHT = 600;
+    
+    private final double HEIGHT = 600;
+    private final double WIDTH = 1000;
 
 
     public static void main(String[] args) {
@@ -42,7 +45,7 @@ public class Main extends Application {
 
     public void gotoMenu() {
         try {
-            MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml", 500, 600);
+            MenuController menu = (MenuController) replaceSceneContent("menu/menu.fxml", WIDTH, HEIGHT);
             stage.setResizable(false);
             menu.setApp(this);
         } catch (Exception ex) {
@@ -52,7 +55,7 @@ public class Main extends Application {
     
     public void gotoCreateGame() {
         try {
-        	CreateGameController lobby = (CreateGameController) replaceSceneContent("creategame/creategame.fxml", 500, 600);
+        	CreateGameController lobby = (CreateGameController) replaceSceneContent("creategame/creategame.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {
@@ -71,7 +74,7 @@ public class Main extends Application {
     
     public void gotoDirectConnect() {
         try {
-        	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml", 500, 600);
+        	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {

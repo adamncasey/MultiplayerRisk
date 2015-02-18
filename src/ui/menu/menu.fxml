@@ -9,35 +9,16 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="500.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.menu.MenuController">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.menu.MenuController">
     <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox spacing="30.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0">
          <children>
-            <BorderPane prefHeight="150.0">
-               <center>
-                      <ImageView id="app-login-logo" y="40.0" BorderPane.alignment="CENTER">
-                          <image>
-                              <Image preserveRatio="true" smooth="true" url="@../risk_logo.png" />
-                          </image>
-                     <BorderPane.margin>
-                        <Insets />
-                     </BorderPane.margin>
-                      </ImageView>
-               </center>
-               <VBox.margin>
-                  <Insets bottom="15.0" top="15.0" />
-               </VBox.margin>
-            </BorderPane>
-              <VBox id="VBox" alignment="CENTER" spacing="30.0">
-                  <children>
-                      <Button focusTraversable="false" onAction="#createGame" prefHeight="70.0" prefWidth="400.0" text="Create game" AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button focusTraversable="false" onAction="#findGame" prefHeight="70.0" prefWidth="400.0" text="Find game" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button focusTraversable="false" onAction="#directConnect" prefHeight="70.0" prefWidth="400.0" text="Direct connect" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                      <Button focusTraversable="false" onAction="#quit" prefHeight="70.0" prefWidth="400.0" text="Quit" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-                  </children>
-              </VBox>
+                <Button focusTraversable="false" onAction="#createGame" prefHeight="80.0" prefWidth="400.0" text="Create game" />
+                <Button focusTraversable="false" onAction="#findGame" prefHeight="80.0" prefWidth="400.0" text="Find game" />
+                <Button focusTraversable="false" onAction="#directConnect" prefHeight="80.0" prefWidth="400.0" text="Direct connect" />
+                <Button focusTraversable="false" onAction="#quit" prefHeight="80.0" prefWidth="400.0" text="Quit" />
          </children>
-      </VBox>
+      </HBox>
     </children>
     <stylesheets>
         <URL value="@Menu.css" />

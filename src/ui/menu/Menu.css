@@ -1,6 +1,6 @@
 
 .background {
-    -fx-background-image: url("../background.jpg");
+    -fx-background-image: url("./main_menu_background.jpg");
     -fx-background-repeat: repeat;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .button {
-    -fx-background-color:rgba(0, 0, 0, 0.6);
+    -fx-background-color:#292929;
     -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
     -fx-font-family: "Arial";
     -fx-text-fill: white;
@@ -25,5 +25,5 @@
 }
 
 .button:focused, .button:hover {
-    -fx-background-color:rgba(0, 0, 0, 0.8);
+    -fx-background-color:#313131;
 }

@@ -16,6 +16,7 @@ public class Territory {
     private Integer card;
 
     private int owner = 0;
+    private int armies = 0;
 
     public Territory(Integer id){
         ID = id;
@@ -47,6 +48,14 @@ public class Territory {
 
     public int getOwner(){
         return this.owner;
+    }
+
+    public void addArmies(int armies){
+        this.armies += armies;
+    }
+
+    public int getArmies(){
+        return this.armies;
     }
 }
 

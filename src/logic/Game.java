@@ -68,6 +68,15 @@ public class Game {
         updatePlayers();
 
         int armies = calculatePlayerArmies(uid, traded, toTradeIn);
+
+        while(armies != 0){
+            ArrayList<Integer> move = playerInterface.placeArmies("Place your armies", armies);
+            while(!checkPlaceArmies(uid, move, armies)){
+                move = playerInterface.placeArmies("Invalid selection", armies);
+            }
+            armies = placeArmies(uid, move, armies);
+            updatePlayers();
+        }
     }
 
     public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
@@ -124,5 +133,21 @@ public class Game {
             armyReward = setValues[setCounter];
         }
         return reward; 
+    }
+
+    public boolean checkPlaceArmies(int uid, ArrayList<Integer> move, int armies){
+        if(move.get(1) > armies){
+            return false;
+        }
+        if(!board.checkTerritoryOwner(uid, move.get(0))){
+            return false;
+        }
+        return true;
+    }
+
+    public int placeArmies(int uid, ArrayList<Integer> move, int armies){
+        Territory t = board.getTerritories().get(move.get(0));
+        t.addArmies(move.get(1));
+        return armies - move.get(1);
     }
 }

@@ -47,6 +47,13 @@ public class RandomPlayer implements IPlayer {
 
     public ArrayList<Integer> placeArmies(String requestMessage, int armiesToPlace){
         ArrayList<Integer> move = new ArrayList<Integer>();
+        int randomTerritory = -1;
+        while(!board.checkTerritoryOwner(uid, randomTerritory)){
+            randomTerritory = random.nextInt(board.getTerritories().size());
+        }
+        move.add(randomTerritory);
+        int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
+        move.add(randomArmies);
         return move;
     }
 

@@ -277,20 +277,6 @@ public class TradeInCardsTest{
         toTradeIn.add(infantry2);
         assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
     }
-
-
-//5 cards 2 2 1 must be 1 1 1
-//5 cards 3 1 1 must be 3 0 0 or 1 1 1
-//5 cards 3 0 2 must be 3 0 0
-
-// Test checkTradeInCards
-// Test makeTradeInCards
-//    private boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
-//        return true; 
-//    }
-//    private void makeTradeInCards(int uid, ArrayList<Card> toTradeIn){
-//   }
-
 }
 
 

@@ -206,8 +206,8 @@ public class Board {
         return armies;
     }
 
-    protected boolean checkTerritoryOwner(int uid, int id){
-        Territory t = territories.get(id);
+    public boolean checkTerritoryOwner(int uid, int TID){
+        Territory t = territories.get(TID);
         if(t.getOwner() == uid){
             return true;
         }

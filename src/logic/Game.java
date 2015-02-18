@@ -82,7 +82,7 @@ public class Game {
              if(currentPlayer == totalPlayerCount){
                  currentPlayer = 0;
              }
-        } 
+        }
     }
 
     public boolean checkClaimTerritory(int tid){
@@ -120,7 +120,9 @@ public class Game {
         int currentPlayer = firstPlayer;
         while(activePlayerCount != 1){
             IPlayer playerInterface = playerInterfaces.get(currentPlayer);
+
             if(!playerInterface.isEliminated()){
+
                 playerTurn(currentPlayer);
             }
             if(currentPlayer == totalPlayerCount){
@@ -136,6 +138,7 @@ public class Game {
         IPlayer playerInterface = playerInterfaces.get(uid);
         ArrayList<Card> hand = new ArrayList<Card>(playerHands.get(uid)); // create a copy because hand may be edited by the check function
         ArrayList<Card> toTradeIn = playerInterface.tradeInCards("Trade in cards");
+
         while(!checkTradeInCards(hand, toTradeIn)){
             toTradeIn = playerInterface.tradeInCards("Invalid selection");
         }
@@ -154,7 +157,8 @@ public class Game {
         }
 
         boolean territoryCaptured = false;
-        while(playerInterface.decideAttack("Do you want to attack?")){
+        while(checkAttackPossible(uid) && playerInterface.decideAttack("Do you want to attack?")){
+
             ArrayList<Integer> attackMove = playerInterface.startAttack("Which territory do you want to attack?");
             while(!checkStartAttack(uid, attackMove)){
                 attackMove = playerInterface.startAttack("Invalid selection");
@@ -228,6 +232,8 @@ public class Game {
         }
         updatePlayers();
 
+        if(checkFortifyPossible(uid)){
+
         if(playerInterface.decideFortify("Do you want to fortify?")){
             ArrayList<Integer> fortifyMove = playerInterface.startFortify("Which territory do you want to fortify?");
             while(!checkStartFortify(uid, fortifyMove)){
@@ -239,7 +245,8 @@ public class Game {
                 numFortifyArmies = playerInterface.chooseFortifyArmies("Invalid selection", currentFortifyArmies);
             }
             fortifyArmies(fortifyMove, numFortifyArmies);
-       }
+        }
+        }
     }
 
     public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
@@ -314,12 +321,30 @@ public class Game {
         return armies - move.get(1);
     }
 
+    public boolean checkAttackPossible(int uid){
+        for(Territory t : board.getTerritories().values()){
+            if(t.getOwner() == uid && t.getArmies() >= 2){
+                for(int i : t.getLinks()){
+                    if(!board.checkTerritoryOwner(uid, i)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean checkStartAttack(int uid, ArrayList<Integer> move){
         Territory ally = board.getTerritories().get(move.get(0));
         Territory enemy = board.getTerritories().get(move.get(1));
 
         // Does this player own the territory to be attacked from?
         if(ally.getOwner() != uid){
+            return false;
+        }
+
+        // Does ally have at least 2 armies?
+        if(ally.getArmies() < 2){
             return false;
         }
 
@@ -336,11 +361,6 @@ public class Game {
             }
         }
         if(!found){
-            return false;
-        }
-
-        // Does ally have at least 2 territories?
-        if(ally.getArmies() < 2){
             return false;
         }
 
@@ -458,12 +478,30 @@ public class Game {
         activePlayerCount--;
     }
 
+    public boolean checkFortifyPossible(int uid){
+        for(Territory t : board.getTerritories().values()){
+            if(t.getOwner() == uid && t.getArmies() >= 2){
+                for(int i : t.getLinks()){
+                    if(board.checkTerritoryOwner(uid, i)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean checkStartFortify(int uid, ArrayList<Integer> move){
         Territory ally = board.getTerritories().get(move.get(0));
         Territory fortify = board.getTerritories().get(move.get(1));
 
         // Does this player own the territory to be attacked from?
         if(ally.getOwner() != uid){
+            return false;
+        }
+
+        // Does this territory have at least 2 armies?
+        if(ally.getArmies() < 2){
             return false;
         }
 

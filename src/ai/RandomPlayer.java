@@ -69,7 +69,7 @@ public class RandomPlayer implements IPlayer {
 
     public ArrayList<Integer> placeArmies(String requestMessage, int armiesToPlace){
         ArrayList<Integer> move = new ArrayList<Integer>();
-        int randomTerritory = -1;
+        int randomTerritory = random.nextInt(board.getTerritories().size());
         while(!board.checkTerritoryOwner(uid, randomTerritory)){
             randomTerritory = random.nextInt(board.getTerritories().size());
         }
@@ -85,12 +85,12 @@ public class RandomPlayer implements IPlayer {
 
     public ArrayList<Integer> startAttack(String requestMessage){
         ArrayList<Integer> move = new ArrayList<Integer>();
-        int randomAlly = -1;
-        while(!board.checkTerritoryOwner(uid, randomAlly)){
+        int randomAlly = random.nextInt(board.getTerritories().size());
+        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
             randomAlly = random.nextInt(board.getTerritories().size());
         }
         ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
-        int randomEnemy = adjacents.get(random.nextInt(adjacents.size())); // Doesn't guarantee that an enemy is chosen, Game can do that
+        int randomEnemy = adjacents.get(random.nextInt(adjacents.size())); // Doesn't guarantee that an enemy is chosen, Game can do that // Adjacents might not even have an enemy in it
         move.add(randomAlly);
         move.add(randomEnemy);
         return move;
@@ -128,8 +128,8 @@ public class RandomPlayer implements IPlayer {
 
     public ArrayList<Integer> startFortify(String requestMessage){
         ArrayList<Integer> move = new ArrayList<Integer>();
-        int randomAlly = -1;
-        while(!board.checkTerritoryOwner(uid, randomAlly)){
+        int randomAlly = random.nextInt(board.getTerritories().size());;
+        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
             randomAlly = random.nextInt(board.getTerritories().size());
         }
         ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();

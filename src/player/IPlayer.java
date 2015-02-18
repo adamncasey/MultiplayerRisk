@@ -39,6 +39,7 @@ public interface IPlayer {
     // true = yes this player wants to attack, false = do not attack
     // after this request either an attack will commence, or the game will move on
     // after the attack this will be requested again until the player no longer wants to attack
+    // players will not be asked if they want to attack, if it is not possible for them to attack on the current board
     public boolean decideAttack(String requestMessage);
 
     // return valie should be a list of 2 ints, the first int should be the ID of the territory you are attacking from, the second should be the id of the territory being attacked
@@ -60,6 +61,7 @@ public interface IPlayer {
 
     // true = yes this player wants to fortify, false = do not fortify
     // players only get one opportunity to fortify per turn
+    // players will not be asked if they want to fortify, if it is not possible for them to fortify on the current board
     public boolean decideFortify(String requestMessage);
 
     // Same format as startAttack, but both territories should be owned by the player (and adjacent)

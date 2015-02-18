@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
 <?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -6,42 +8,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="500" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.lobbyhost.LobbyHostController">
+
+<AnchorPane id="AnchorPane" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.lobbyhost.LobbyHostController">
   <children>
-    <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <children>
         <BorderPane prefHeight="100.0">
           <center>
             <Label styleClass="title" text="Host New Game" BorderPane.alignment="CENTER" />
           </center>
           <top>
-            <Button focusTraversable="false" onAction="#backButtonAction" styleClass="button-nav" text="Back" BorderPane.alignment="TOP_LEFT">
+            <Button focusTraversable="false" onAction="#backButtonAction" styleClass="button-nav" text="Cancel" BorderPane.alignment="TOP_LEFT">
               <BorderPane.margin>
                 <Insets left="10.0" top="10.0" />
               </BorderPane.margin>
             </Button>
           </top>
         </BorderPane>
-        <GridPane alignment="center" hgap="10" vgap="10">
+        <GridPane alignment="center" hgap="30.0" vgap="12.0">
           <children>
-            <Label text="Max Players" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="players" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="Port" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <TextField fx:id="port" maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
-              <children>
-                <Button focusTraversable="false" onAction="#startButtonAction" text="Start Lobby" />
-              </children>
-            </HBox>
-            <ProgressIndicator fx:id="progressRing" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-            <Label fx:id="status" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6">
-              <padding>
-                <Insets top="15.0" />
-              </padding>
-              <GridPane.margin>
-                <Insets top="40.0" />
-              </GridPane.margin>
-            </Label>
+                  <Label text="Players" />
+                  <ListView fx:id="players" GridPane.rowIndex="1" />
+                  <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="6" GridPane.valignment="TOP" />
+                  <Label text="Map" GridPane.columnIndex="1" />
+          <Button focusTraversable="false" onAction="#startButtonAction" text="Start Lobby" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                  <Label text="Tools" GridPane.rowIndex="2">
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </Label>
+                  <Button focusTraversable="false" onAction="#kickPlayerButtonAction" text="Kick Player" GridPane.rowIndex="3" />
+                  <TextArea fx:id="consoleWindow" GridPane.rowIndex="6" />
+                  <Label text="Console" GridPane.rowIndex="5">
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </Label>
           </children>
           <columnConstraints>
             <ColumnConstraints />
@@ -59,7 +61,7 @@
             <RowConstraints />
           </rowConstraints>
           <VBox.margin>
-            <Insets top="30.0" />
+            <Insets bottom="30.0" left="40.0" right="40.0" top="30.0" />
           </VBox.margin>
         </GridPane>
       </children>

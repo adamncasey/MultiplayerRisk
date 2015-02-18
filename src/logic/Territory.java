@@ -15,7 +15,7 @@ public class Territory {
     private String name = "";
     private Integer card;
 
-    private int owner = 0;
+    private int owner = -1;
     private int armies = 0;
 
     public Territory(Integer id){

@@ -1,9 +1,8 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
+import ai.*;
 import logic.*;
 import player.*;
 
@@ -15,11 +14,11 @@ public class RunGame {
     public static void main(String[] args){ 
         System.out.println("Begin");
 
-        String boardFilename = "resources/risk_map.json"; // Should be passed in from lobby
+        String boardFilename = "resources/risk_map.json"; // TODO load this from settings
         System.out.format("Using board : %s\n", boardFilename);
 
         Random random = new Random();
-        int seed = random.nextInt(); // Should be chosen by dice roll and agreed upon by all players (seed is a 32 bit int for the mersenne twister)
+        int seed = random.nextInt(); // Should be chosen by dice roll and agreed upon by all players 
 
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
 
@@ -28,6 +27,6 @@ public class RunGame {
         players.add(p1);
         
         System.out.println("Creating Game");
-        Game game = new Game(players, seed, boardFilename);
+        Game game = new Game(players, 0, seed, boardFilename);
     }
 }

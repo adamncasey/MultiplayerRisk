@@ -11,7 +11,8 @@ public interface IPlayer {
     // if you are implementing this, and would like more information to be passed to IPlayer for one of the methods, or in updatePlayers, it should be easy to add
     // ---
 
-    // For move functions, i.e. tradeInCards, placeArmies etc. Game will check if a move is valid and not allow it otherwise.
+    // For every move function here, i.e. everything from claimTerritory to chooseFortifyArmies. Game will check if a move is valid and not allow it otherwise.
+    // the requestMessage on the subsequent calls will let you know that an invalid move was made
 
     public int getUID();
     public void setUID(int uid);
@@ -22,6 +23,13 @@ public interface IPlayer {
     // updatePlayer -- need a method to give player info about their hand and the board
     public void updatePlayer(Board board, ArrayList<Card> hand);
 
+    // Pick an empty territory to add 1 army to
+    public int claimTerritory(String requestMessage);
+
+    // Pick one of your territories to add 1 army to
+    public int reinforceTerritory(String requestMessage, int uid);
+
+    // return value is a list of the cards to be traded in, Game will check that these cards make a valid set, return an empty list to trade nothing
     public ArrayList<Card> tradeInCards(String requestMessage);
 
     // return value should be a list of 2 ints, the first int should be the ID of the territory, the second should be the number of armies to be placed

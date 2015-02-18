@@ -1,8 +1,8 @@
-package player;
+package ai;
 
 import java.util.*;
 import logic.*;
-import java.util.Random;
+import player.*;
 
 /**
  * RandomPlayer --- Randomly makes moves until one is valid.
@@ -35,6 +35,23 @@ public class RandomPlayer implements IPlayer {
         this.board = board;
         this.hand = hand;
     }
+
+    public int claimTerritory(String requestMessage){
+        int tid = random.nextInt(board.getTerritories().size());
+        while(!(board.checkTerritoryOwner(-1, tid))){
+            tid = random.nextInt(board.getTerritories().size());
+        }
+        return tid;
+    }
+
+    public int reinforceTerritory(String requestMessage, int uid){
+        int tid = random.nextInt(board.getTerritories().size());
+        while(!(board.checkTerritoryOwner(uid, tid))){
+            tid = random.nextInt(board.getTerritories().size());
+        }
+        return tid;
+    }
+
 
     public ArrayList<Card> tradeInCards(String requestMessage){ 
         ArrayList<Card> toTradeIn = new ArrayList<Card>();

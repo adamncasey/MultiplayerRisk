@@ -1,7 +1,6 @@
 package logic;
 
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import player.*;
 
@@ -11,25 +10,30 @@ import player.*;
 public class Game {
 
     private ArrayList<IPlayer> playerInterfaces;
+    private int firstPlayer;
 
     private Board board;
     private Deck deck;
     private ArrayList<ArrayList<Card>> playerHands;
 
+    private int setupValues[] = {35, 30, 25, 20};
     private int setCounter = 0;
     private int armyReward = 4;
     private int setValues[] = {4, 6, 8, 10, 12, 15};
 
-    private int activePlayerCount;
+    private int totalPlayerCount = 0;
+    private int activePlayerCount = 0;
 
-    public Game(ArrayList<IPlayer> playerInterfaces, int seed, String boardFilename){
+    public Game(ArrayList<IPlayer> playerInterfaces, int firstPlayer, int seed, String boardFilename){
         this.playerInterfaces = new ArrayList<IPlayer>();
+        this.firstPlayer = firstPlayer;
         this.playerHands = new ArrayList<ArrayList<Card>>();
         for(int i = 0; i != playerInterfaces.size(); ++i){
             IPlayer pi = playerInterfaces.get(i);
             pi.setUID(i);
             this.playerInterfaces.add(pi);
             this.playerHands.add(new ArrayList<Card>());
+            totalPlayerCount++;
             activePlayerCount++;
         }
         this.board = new Board(boardFilename);
@@ -37,21 +41,8 @@ public class Game {
         this.deck.shuffle(seed);
     }
 
-    public void setupGame(){
-        // Setup here
-    }
-
-    public void playGame(){
-// remember to check if player is eliminated before giving them a turn
-
-        if(activePlayerCount == 1){
-            // Win Game 
-            return;
-        }
-
-        playerTurn(0);
-    }
-
+    // Whenever the game state changes, update all players
+    // IPlayer implementations can decide whether or not they care about this information
     private void updatePlayers(){
         for(IPlayer p : playerInterfaces){
             if(!p.isEliminated()){
@@ -60,8 +51,86 @@ public class Game {
         }
     }
 
+    public void setupGame(){
+        if(activePlayerCount < 3 || activePlayerCount > 6){
+            return;
+        }
+        int initialArmyValue = setupValues[activePlayerCount-3];
+        int totalArmies = activePlayerCount * initialArmyValue;
+        int territoriesToClaim = board.getTerritories().size();
+
+        int currentPlayer = firstPlayer;
+        while(totalArmies != 0){
+            updatePlayers();
+            IPlayer playerInterface = playerInterfaces.get(currentPlayer);
+             if(territoriesToClaim != 0){
+                 int territory = playerInterface.claimTerritory("Claim a territory");
+                 while(!checkClaimTerritory(territory)){
+                     territory = playerInterface.claimTerritory("Invalid selection");
+                 }
+                 claimTerritory(currentPlayer, territory);
+                 territoriesToClaim--;
+             } else {
+                 int territory = playerInterface.reinforceTerritory("Reinforce a territory", currentPlayer);
+                 while(!checkReinforceTerritory(currentPlayer, territory)){
+                     territory = playerInterface.reinforceTerritory("Invalid selection", currentPlayer);
+                 }
+                 reinforceTerritory(territory);
+             }
+             totalArmies--;
+             currentPlayer++;
+             if(currentPlayer == totalPlayerCount){
+                 currentPlayer = 0;
+             }
+        } 
+    }
+
+    public boolean checkClaimTerritory(int tid){
+        Territory territory = board.getTerritories().get(tid);
+        if(territory.getOwner() != -1){
+            return false;
+        }
+        return true;
+    }
+
+    public void claimTerritory(int uid, int tid){
+        Territory territory = board.getTerritories().get(tid);
+        territory.setOwner(uid);
+        territory.addArmies(1);
+    }
+
+    public boolean checkReinforceTerritory(int uid, int tid){
+        Territory territory = board.getTerritories().get(tid);
+        if(territory.getOwner() != uid){
+            return false;
+        }
+        return true;
+    }
+
+    public void reinforceTerritory(int tid){
+        Territory territory = board.getTerritories().get(tid);
+        territory.addArmies(1);
+    }
+
+    public void playGame(){
+        if(totalPlayerCount < 3 || totalPlayerCount > 6){
+            return;
+        }
+
+        int currentPlayer = firstPlayer;
+        while(activePlayerCount != 1){
+            IPlayer playerInterface = playerInterfaces.get(currentPlayer);
+            if(!playerInterface.isEliminated()){
+                playerTurn(currentPlayer);
+            }
+            if(currentPlayer == totalPlayerCount){
+                currentPlayer = 0;
+            }
+        }
+        return;
+    }
+
     private void playerTurn(int uid){
-        // Whenever the game state changes, update all players.
         updatePlayers();
 
         IPlayer playerInterface = playerInterfaces.get(uid);

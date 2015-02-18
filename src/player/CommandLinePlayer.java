@@ -1,19 +1,24 @@
-package ai;
+package player;
 
+import java.io.*;
 import java.util.*;
 import logic.*;
-import player.*;
 
 /**
- * RandomPlayer --- Randomly makes moves until one is valid.
+ * CommandLinePlayer --- Asks the user to make moves on the command line.
  */
-public class RandomPlayer implements IPlayer {
+public class CommandLinePlayer implements IPlayer {
     private static Random random = new Random();
 
-    public RandomPlayer(){
+    private Scanner reader;
+    private PrintWriter writer;
+
+    public CommandLinePlayer(Scanner reader, PrintWriter writer){
+        this.reader = reader;
+        this.writer = writer;
     }
 
-    private int uid = 0; // Set and used by Game
+    private int uid = 0;
     public int getUID(){
         return this.uid;
     }
@@ -21,7 +26,7 @@ public class RandomPlayer implements IPlayer {
         this.uid = uid;
 
     }
-    private boolean eliminated = false; // Set and used by Game
+    private boolean eliminated = false;
     public boolean isEliminated(){
         return eliminated;
     }
@@ -34,6 +39,12 @@ public class RandomPlayer implements IPlayer {
     public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, String currentStage){
         this.board = board;
         this.hand = hand;
+//        try{
+//        Thread.sleep(100);
+//        }catch(Exception e){
+//        }
+        writer.format("%d is currently %s\n", currentPlayer, currentStage);
+        writer.flush();
     }
 
     public int claimTerritory(String requestMessage){
@@ -143,4 +154,5 @@ public class RandomPlayer implements IPlayer {
         return random.nextInt(currentArmies-1)+1;
     }
 }
+
 

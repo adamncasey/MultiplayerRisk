@@ -21,7 +21,8 @@ public interface IPlayer {
     public void eliminate();
 
     // updatePlayer -- need a method to give player info about their hand and the board
-    public void updatePlayer(Board board, ArrayList<Card> hand);
+    // currentStage lets the IPlayer know what the current player is about to do
+    public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, String currentStage);
 
     // Pick an empty territory to add 1 army to
     public int claimTerritory(String requestMessage);

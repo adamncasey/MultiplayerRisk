@@ -7,7 +7,7 @@ import logic.*;
 import player.*;
 
 /**
- * RunGame --- A simple main that tests Game / GameState / IPlayer 
+ * RunGame --- Sets up and runs the game with 3 RandomPlayers.
  */
 public class RunGame {
 

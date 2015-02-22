@@ -11,5 +11,3 @@ Logic:
 
 Protocol:
   What happens when the deck runs out of cards?
-
-  How will card types be specified in the map file?

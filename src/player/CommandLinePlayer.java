@@ -34,8 +34,8 @@ public class CommandLinePlayer implements IPlayer {
         eliminated = true;
     }
 
-    boolean printInfo = false;
-    boolean printBoard = false;
+    boolean printInfo = true;
+    boolean printBoard = true;
     boolean slowDown = false;
 
     private Board board;
@@ -52,7 +52,7 @@ public class CommandLinePlayer implements IPlayer {
         }
         if(slowDown){
             try{
-                Thread.sleep(200);
+                Thread.sleep(100);
             }catch(Exception e){
             }
         }

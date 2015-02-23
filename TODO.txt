@@ -9,5 +9,7 @@ Logic:
 
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
 
+  Abstract the randomness, (put all randomness into classes with its own interface/implementation)
+
 Protocol:
   What happens when the deck runs out of cards?

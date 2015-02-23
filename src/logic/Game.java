@@ -59,6 +59,12 @@ public class Game {
         checker.update(board);
     }
 
+    private void endGame(int winner){
+        for(IPlayer p : players){
+            p.endGame(winner);
+        }
+    }
+
     public void setupGame() throws WrongMoveException{
         if(activePlayerCount < 3 || activePlayerCount > 6){
             return;
@@ -462,7 +468,11 @@ public class Game {
         playerHands.get(eliminatedUID).clear();
         players.get(eliminatedUID).eliminate();
         activePlayerCount--;
-        return (activePlayerCount == 1);
+        if(activePlayerCount == 1){
+            endGame(currentUID);
+            return true;
+        }
+        return false;
     }
 
     public boolean checkFortifyPossible(int uid){

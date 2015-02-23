@@ -28,11 +28,15 @@ public class ComputerPlayer implements IPlayer {
     public void eliminate(){
         eliminated = true;
     }
+
+    public void nextMove(int currentPlayer, String currentMove){
+    }
+
     public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){
         this.controller.updateAI(hand, board, currentPlayer, previousMove);
     }
 
-    public void nextMove(int currentPlayer, String currentMove){
+    public void endGame(int winner){
     }
 
     public Move getMove(Move move){

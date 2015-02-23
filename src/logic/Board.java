@@ -208,7 +208,11 @@ public class Board {
 
     public void printBoard(PrintWriter writer){
         for(Territory t : territories.values()){
-            writer.format("[%d-%s-%d-%d]", t.getID(), t.getName(), t.getOwner(), t.getArmies());
+            if(t.getOwner() == -1){
+            writer.format("[%d-%s-Free-%d]", t.getID(), t.getName(), t.getArmies());
+            }else{
+                writer.format("[%d-%s-%d-%d]", t.getID(), t.getName(), t.getOwner(), t.getArmies());
+            }
         }
         writer.format("\n");
         writer.flush();

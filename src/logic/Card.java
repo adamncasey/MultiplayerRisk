@@ -96,7 +96,8 @@ public class Card {
         return true;
     }
 
-    public static void printHand(PrintWriter writer, ArrayList<Card> hand){
+    public static String printHand(PrintWriter writer, ArrayList<Card> hand){
+        String message = "";
         int counter = 1;
         for(Card c : hand){
             String type = "";
@@ -107,11 +108,17 @@ public class Card {
             }else if(c.getType() == 10){
                 type = "artillery";
             }
-            writer.format("%d. [%s-%s]  ", counter, c.getName(), type);
+            message += String.format("%d. [%s-%s]  ", counter, c.getName(), type);
             counter++;
         }
-        writer.format("\n");
-        writer.flush();
+        message += "\n";
+        if(writer != null){
+            writer.print(message);
+            writer.flush();
+            return "";
+        }else{
+            return message;
+        }
     }
 }
 

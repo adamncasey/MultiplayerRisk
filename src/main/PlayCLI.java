@@ -40,7 +40,7 @@ public class PlayCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, true, false);
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, true);
         players.add(user);
         for(int i = 0; i != numAI; ++i){
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());
@@ -49,13 +49,8 @@ public class PlayCLI {
         Game game = new Game(players, 0, seed, boardFilename);
 
         try{
-            writer.println("The setup will now begin"); 
             game.setupGame();
-            writer.println("The setup has completed");
-
-            writer.println("The game will now start");
-            int turns = game.playGame();
-            writer.format("The game has completed in %d turns\n", turns);
+            game.playGame();
         } catch(WrongMoveException e){
             System.out.println("Game has crashed.");
             System.out.println(e.getMessage());

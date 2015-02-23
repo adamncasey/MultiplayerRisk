@@ -36,9 +36,6 @@ public class ComputerPlayer implements IPlayer {
         this.controller.updateAI(hand, board, currentPlayer, previousMove);
     }
 
-    public void endGame(int winner){
-    }
-
     public Move getMove(Move move){
         return controller.getMove(move); 
     }

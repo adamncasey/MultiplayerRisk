@@ -12,14 +12,12 @@ public class CommandLinePlayer implements IPlayer {
     private Scanner reader;
     private PrintWriter writer;
 
-    private boolean printBoard = false;
     private boolean slowDown = false;
 
-    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, boolean printBoard, boolean slowDown){
+    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, boolean slowDown){
         this.controller = controller;
         this.reader = reader;
         this.writer = writer;
-        this.printBoard = printBoard;
         this.slowDown = slowDown;
     }
 
@@ -41,25 +39,23 @@ public class CommandLinePlayer implements IPlayer {
     }
 
     public void nextMove(int currentPlayer, String currentMove){
-        writer.format("Player %d is %s\n", currentPlayer, currentMove);
+        writer.format("Player %d is %s.\n", currentPlayer, currentMove);
         writer.flush();
     }
 
     public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){
         this.controller.updateAI(hand, board, currentPlayer, previousMove);
-        if(printBoard){
-            board.printBoard(writer);
-        }
+
+        String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
+        writer.print(message);
+        writer.flush();
+
         if(slowDown){
             try{
                 Thread.sleep(100);
             }catch(Exception e){
             }
         }
-    }
-
-    public void endGame(int winner){
-        writer.format("Player %d is the winner!\n", winner);
     }
 
     public Move getMove(Move move){

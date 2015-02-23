@@ -19,8 +19,5 @@ public interface IPlayer {
     // Lets the player know when ever the gamestate changes, and describes how it changed
     public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove);
 
-    // Lets the player know when the game ends (and who the winner is)
-    public void endGame(int winner);
-
     public Move getMove(Move move);
 }

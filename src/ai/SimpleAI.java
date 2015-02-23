@@ -131,7 +131,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getAttackingNumArmies();
+        int numArmies = board.getTerritories().get(move.getAttackingFrom()).getArmies();
         if(numArmies > 4){
             move.setAttackingDice(3);
         }else if(numArmies > 3){
@@ -143,7 +143,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getDefendingNumArmies();
+        int numArmies = board.getTerritories().get(move.getDefendingFrom()).getArmies();
         if(numArmies > 1){
             move.setDefendingDice(2);
         }else{

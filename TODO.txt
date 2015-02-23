@@ -1,10 +1,6 @@
 Logic:
   Make tests for all methods that take in IPlayer input (important)
 
-  Have tests that run the game with 3, 4, 5 and 6 AIs.
-
-  Make CLI
-
   implement leave game functionality including neutral territories (in protocol)
 
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)

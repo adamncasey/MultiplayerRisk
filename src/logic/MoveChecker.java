@@ -43,6 +43,9 @@ public class MoveChecker {
     }
 
     public boolean checkPlaceArmies(int uid, int territory, int armies, int armiesToPlace){
+        if(armies < 1){
+            return false;
+        }
         if(armies > armiesToPlace){
             return false;
         }

@@ -32,6 +32,16 @@ public class Move {
     // Stage 11 = chooseFortifyArmies
     // returns int - number of armies to fortify with
 
+    // These stages are used to let IPlayer know what has just changed (in situations where the game updates but a player hasn't had to input anything)
+    // Stage 101 - An attack has just been carried out (After dice rolls the board is updated)
+    // Stage 102 - The player has just been eliminated
+    // Stage 103 - The player has just drawn a card
+    // Stage 104 - Game setup is beginning
+    // Stage 105 - Game setup has ended
+    // Stage 106 - Game is beginning
+    // Stage 107 - Game had ended (winner)
+    // Stage 108 - Game has ended (numTurns)
+
     private int stage;
 
     public Move(int stage){
@@ -149,16 +159,25 @@ public class Move {
         return this.attackingDice;
     }
     //stage 6 inputs
-    private int attackingNumArmies = 0;
-    public void setAttackingNumArmies(int numArmies) throws WrongMoveException{
+    private int attackingFrom = -1;
+    public void setAttackingFrom(int territory) throws WrongMoveException{
         checkStage(6);
-        this.attackingNumArmies = numArmies;
+        this.attackingFrom = territory;
     }
-    public int getAttackingNumArmies() throws WrongMoveException{
+    public int getAttackingFrom() throws WrongMoveException{
         checkStage(6);
-        return this.attackingNumArmies;
+        return this.attackingFrom;
     }
-
+    private int attackingTo = -1;
+    public void setAttackingTo(int territory) throws WrongMoveException{
+        checkStage(6);
+        this.attackingTo = territory;
+    }
+    public int getAttackingTo() throws WrongMoveException{
+        checkStage(6);
+        return this.attackingTo;
+    }
+    
     //stage 7
     private int defendingDice = 0;
     public void setDefendingDice(int numDice) throws WrongMoveException{
@@ -170,14 +189,23 @@ public class Move {
         return this.defendingDice;
     }
     //stage 7 inputs
-    private int defendingNumArmies = 0;
-    public void setDefendingNumArmies(int numArmies) throws WrongMoveException{
+    private int defendingFrom = -1;
+    public void setDefendingFrom(int territory) throws WrongMoveException{
         checkStage(7);
-        this.defendingNumArmies = numArmies;
+        this.defendingFrom = territory;
     }
-    public int getDefendingNumArmies() throws WrongMoveException{
+    public int getDefendingFrom() throws WrongMoveException{
         checkStage(7);
-        return this.defendingNumArmies;
+        return this.defendingFrom;
+    }
+    private int defendingTo = -1;
+    public void setDefendingTo(int territory) throws WrongMoveException{
+        checkStage(7);
+        this.defendingTo = territory;
+    }
+    public int getDefendingTo() throws WrongMoveException{
+        checkStage(7);
+        return this.defendingTo;
     }
 
     //stage 8
@@ -262,6 +290,25 @@ public class Move {
         return this.fortifyCurrentArmies;
     }
 
+    //stage 101
+    private int attackerLosses = 0;
+    public void setAttackerLosses(int numLosses) throws WrongMoveException{
+        checkStage(101);
+        this.attackerLosses = numLosses;
+    }
+    public int getAttackerLosses() throws WrongMoveException{
+        checkStage(101);
+        return this.attackerLosses;
+    }
+    private int defenderLosses = 0;
+    public void setDefenderLosses(int numLosses) throws WrongMoveException{
+        checkStage(101);
+        this.defenderLosses = numLosses;
+    }
+    public int getDefenderLosses() throws WrongMoveException{
+        checkStage(101);
+        return this.defenderLosses;
+    }
 
     private void checkStage(int stage) throws WrongMoveException{
         if(this.stage != stage){

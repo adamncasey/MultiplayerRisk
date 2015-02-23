@@ -84,14 +84,18 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move claimTerritory(Move move) throws WrongMoveException{
-        writer.print("Which territory do you want to claim?\n> ");
+        writer.println("Which territory do you want to claim?");
+        board.printBoard(writer);
+        writer.print("> ");
         int territory = chooseUnclaimedTerritory();
         move.setTerritoryToClaim(territory);
         return move;
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
-        writer.print("Which territory do you want to reinforce?\n> ");
+        writer.println("Which territory do you want to reinforce?");
+        board.printBoard(writer);
+        writer.print("> ");
         int territory = chooseAllyTerritory();
         move.setTerritoryToReinforce(territory);
         return move;
@@ -179,9 +183,13 @@ public class CommandLineController implements PlayerController {
     private Move placeArmies(Move move) throws WrongMoveException{
         int armiesToPlace = move.getArmiesToPlace();
         writer.format("You have %d armies to place.\n", armiesToPlace);
-        writer.print("In which territory would you like to place some armies?\n> ");
+        writer.println("In which territory would you like to place some armies?");
+        board.printBoard(writer);
+        writer.print("> ");
         int territory = chooseAllyTerritory();
-        writer.format("How many armies would you like to place in %s?\n> ", board.getTerritories().get(territory).getName());
+        writer.format("How many armies would you like to place in %s?\n", board.getTerritories().get(territory).getName());
+        board.printBoard(writer);
+        writer.print("> ");
         int numArmies = 0; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -208,15 +216,18 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move decideAttack(Move move) throws WrongMoveException{
-        writer.print("Do you want to attack? (y or n)\n> ");
-        writer.flush();
+        writer.println("Do you want to attack? (y or n)");
+        board.printBoard(writer);
+        writer.print("> ");
         boolean attack = chooseYesNo();
         move.setDecideAttack(attack);
         return move;
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
-        writer.print("Choose the territory to attack from.\n> ");
+        writer.println("Choose the territory to attack from.");
+        board.printBoard(writer);
+        writer.print("> ");
         int ally = -1; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -237,7 +248,9 @@ public class CommandLineController implements PlayerController {
                 writer.format("%s does not have enough armies to attack.\n> ", board.getTerritories().get(ally).getName());
             }
         }
-        writer.print("Choose the territory to attack.\n> ");
+        writer.println("Choose the territory to attack.");
+        board.printBoard(writer);
+        writer.print("> ");
         ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
         int enemy = -1; correct = false;
         while(!correct){
@@ -259,8 +272,11 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getAttackingNumArmies();
-        writer.format("Choose how many dice to roll. You are attacking from a territory with %d armies.\n> ", numArmies);
+        int numArmies = board.getTerritories().get(move.getAttackingFrom()).getArmies();
+        String attackingName = board.getTerritories().get(move.getAttackingFrom()).getName();
+        String defendingName = board.getTerritories().get(move.getAttackingTo()).getName();
+        int defendingArmies = board.getTerritories().get(move.getAttackingTo()).getArmies();
+        writer.format("Choose how many dice to roll. You are attacking from %s which has %d armies, to %s which has %d armies.\n> ", attackingName, numArmies, defendingName, defendingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -274,7 +290,7 @@ public class CommandLineController implements PlayerController {
                 if(numArmies > numDice){
                     correct = true;
                 }else{
-                    writer.print("You can't roll that many dice when attacking from that territory.\n> ");
+                    writer.format("You can't roll that many dice when attacking from %s.\n> ", attackingName);
                 }
             }else{
                 writer.print("Invalid number of dice.\n> ");
@@ -286,8 +302,11 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getDefendingNumArmies();
-        writer.format("Choose how many dice to roll. You are defending a territory with %d armies.\n> ", numArmies);
+        int numArmies = board.getTerritories().get(move.getDefendingFrom()).getArmies();
+        String defendingName = board.getTerritories().get(move.getDefendingFrom()).getName();
+        String attackingName = board.getTerritories().get(move.getDefendingTo()).getName();
+        int attackingArmies = board.getTerritories().get(move.getDefendingTo()).getArmies();
+        writer.format("Choose how many dice to roll. You are defending %s which has %d armies, from an attack from %s which has %d armies.\n> ", defendingName, numArmies, attackingName, attackingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -301,7 +320,7 @@ public class CommandLineController implements PlayerController {
                 if(numArmies >= numDice){
                     correct = true;
                 }else{
-                    writer.print("You can't roll that many dice when defending this territory.\n> ");
+                    writer.format("You can't roll that many dice when defending %s.\n> ", defendingName);
                 }
             }else{
                 writer.print("Invalid number of dice.\n> ");
@@ -340,15 +359,18 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move decideFortify(Move move) throws WrongMoveException{
-        writer.print("Do you want to fortify? (y or n)\n> ");
-        writer.flush();
+        writer.println("Do you want to fortify? (y or n)");
+        board.printBoard(writer);
+        writer.print("> ");
         boolean fortifying = chooseYesNo();
         move.setDecideFortify(fortifying);
         return move;
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
-        writer.print("Choose the territory to fortify from.\n> ");
+        writer.println("Choose the territory to fortify from.");
+        board.printBoard(writer);
+        writer.print("> ");
         int ally = -1; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -369,7 +391,9 @@ public class CommandLineController implements PlayerController {
                 writer.format("%s does not have enough armies to fortify.\n> ", board.getTerritories().get(ally).getName());
             }
         }
-        writer.print("Choose the territory to fortify.\n> ");
+        writer.println("Choose the territory to fortify.");
+        board.printBoard(writer);
+        writer.print("> ");
         ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
         int fortify = -1; correct = false;
         while(!correct){
@@ -420,6 +444,7 @@ public class CommandLineController implements PlayerController {
         boolean decision = false;
         String answer = ""; boolean correct = false;
         while(!correct){
+            writer.flush();
             answer = reader.next();
             answer.toLowerCase();
             if(answer.equals("y") || answer.equals("yes")){

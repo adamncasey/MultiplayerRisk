@@ -7,16 +7,16 @@ import java.util.*;
 import java.io.*;
 
 /**
- * SimpleAI --- Takes moves with the aim of ending the game quickly.
+ * DumbAI --- Randomly decides what to do, will drag out games forever if there are no smarter players in the game.
  */
-public class SimpleAI implements PlayerController {
+public class DumbAI implements PlayerController {
     private static Random random = new Random();
 
     private int uid;
     private ArrayList<Card> hand;
     private Board board;
 
-    public SimpleAI(){
+    public DumbAI(){
     }
 
     public void setUID(int uid){
@@ -59,7 +59,8 @@ public class SimpleAI implements PlayerController {
                      return move;
             }
         }catch(WrongMoveException e){
-            System.out.println("SimpleAI is not choosing a move correctly");
+            System.out.println("DumbAI is not choosing a move correctly");
+            System.out.println(e.getMessage());
             return new Move(-1);
         }
     }
@@ -113,7 +114,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move decideAttack(Move move) throws WrongMoveException{
-        move.setDecideAttack(true);
+        move.setDecideAttack(random.nextBoolean());
         return move;
     }
 
@@ -131,78 +132,35 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getAttackingNumArmies();
-        if(numArmies > 4){
-            move.setAttackingDice(3);
-        }else if(numArmies > 3){
-            move.setAttackingDice(2);
-        }else{
-            move.setAttackingDice(1);
-        }
+        move.setAttackingDice(random.nextInt(3)+1);
         return move;
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getDefendingNumArmies();
-        if(numArmies > 1){
-            move.setDefendingDice(2);
-        }else{
-            move.setDefendingDice(1);
-        }
+        move.setDefendingDice(random.nextInt(2)+1);
         return move;
     }
 
     private Move occupyTerritory(Move move) throws WrongMoveException{
         int currentArmies = move.getOccupyCurrentArmies();
-        int numDice = move.getOccupyDice();
-        int decision = currentArmies-1;
-        move.setOccupyArmies(decision);
+        move.setOccupyArmies(random.nextInt(currentArmies));
         return move;
     }
 
-    // This AI only fortifies when one of it's territories has no adjacent enemies
     private Move decideFortify(Move move) throws WrongMoveException{
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() != uid || t.getArmies() < 2){
-                continue;
-            }
-            ArrayList<Integer> adjacents = t.getLinks();
-            int enemyCounter = 0;
-            for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
-                    enemyCounter++;
-                }
-            }
-            if(enemyCounter == 0){
-                move.setDecideFortify(true);
-                return move;
-            }
-        }
-        move.setDecideFortify(false);
+        move.setDecideFortify(random.nextBoolean());
         return move;
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
         int randomAlly = 0;
         ArrayList<Integer> adjacents = new ArrayList<Integer>();
-        int enemyCounter = -1;
-        while(enemyCounter != 0){
+        randomAlly = random.nextInt(board.getTerritories().size());
+        while(!board.checkTerritoryOwner(uid, randomAlly)){
             randomAlly = random.nextInt(board.getTerritories().size());
-            while(!board.checkTerritoryOwner(uid, randomAlly)){
-                randomAlly = random.nextInt(board.getTerritories().size());
-            }
-            adjacents = board.getTerritories().get(randomAlly).getLinks();
-            enemyCounter = 0;
-            for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
-                    enemyCounter++;
-                }
-            }
         }
+        adjacents = board.getTerritories().get(randomAlly).getLinks();
         int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        while(!board.checkTerritoryOwner(uid, randomFortify)){
-            randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        }
 
         move.setFortifyFrom(randomAlly);
         move.setFortifyTo(randomFortify);
@@ -210,7 +168,8 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseFortifyArmies(Move move) throws WrongMoveException{
-        move.setFortifyArmies(move.getFortifyCurrentArmies()-1);
+        move.setFortifyArmies(random.nextInt(move.getFortifyCurrentArmies()));
         return move;
     }
 }
+

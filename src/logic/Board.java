@@ -25,9 +25,6 @@ public class Board {
     protected Deck getDeck(){
         Deck deck = new Deck();
    
-        //TEMP HACK TO MAKE GAME MORE INTERESTING
-        //Rather than just cycling through 1, 5, 10, this should be stored in the map format.
-        int counter = 0;
         int values[] = {1, 5, 10};
 
         Iterator it = territories.entrySet().iterator();
@@ -36,15 +33,11 @@ public class Board {
             Integer TID = (Integer)pairs.getKey();
             Territory T = (Territory)pairs.getValue();
 
-            for(int i = 0; i != T.getCard(); ++i){
-                Card card = new Card(TID, values[counter], T.getName()); // Still need a way for card values (the 1) to be stored withtin the map.
-                deck.addCard(card);
-            }
+            int type = values[T.getCard()];
 
-            counter++;
-            if(counter == 3){
-                counter = 0;
-            }
+            Card card = new Card(TID, type, T.getName());
+            deck.addCard(card);
+
         }
         for(int i = 0; i != wildcards; ++i){
             Card card = new Card(0, 0, "Wildcard");

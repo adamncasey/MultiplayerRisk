@@ -266,7 +266,7 @@ public class Move {
     private void checkStage(int stage) throws WrongMoveException{
         if(this.stage != stage){
             StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-            String callingMethod = ste[ste.length - 1 - 1].getMethodName();
+            String callingMethod = ste[ste.length - 8].getMethodName();
             String message = String.format("%s cannot be accessed from stage %d.", callingMethod, stage);
             throw new WrongMoveException(message);
         }

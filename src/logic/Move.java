@@ -95,6 +95,17 @@ public class Move {
         checkStage(3);
         return this.placeArmiesNum;
     }
+    //stage 3 inputs (Game will provide these for IPlayer to use)
+    private int armiesToPlace = 0;
+    public void setArmiesToPlace(int armiesToPlace) throws WrongMoveException{
+        checkStage(3);
+        this.armiesToPlace = armiesToPlace;
+    }
+    public int getArmiesToPlace() throws WrongMoveException{
+        checkStage(3);
+        return this.armiesToPlace;
+    }
+
 
     //stage 4
     private boolean decideAttack = false;
@@ -137,6 +148,16 @@ public class Move {
         checkStage(6);
         return this.attackingDice;
     }
+    //stage 6 inputs
+    private int attackingNumArmies = 0;
+    public void setAttackingNumArmies(int numArmies) throws WrongMoveException{
+        checkStage(6);
+        this.attackingNumArmies = numArmies;
+    }
+    public int getAttackingNumArmies() throws WrongMoveException{
+        checkStage(6);
+        return this.attackingNumArmies;
+    }
 
     //stage 7
     private int defendingDice = 0;
@@ -148,6 +169,16 @@ public class Move {
         checkStage(7);
         return this.defendingDice;
     }
+    //stage 7 inputs
+    private int defendingNumArmies = 0;
+    public void setDefendingNumArmies(int numArmies) throws WrongMoveException{
+        checkStage(7);
+        this.defendingNumArmies = numArmies;
+    }
+    public int getDefendingNumArmies() throws WrongMoveException{
+        checkStage(7);
+        return this.defendingNumArmies;
+    }
 
     //stage 8
     private int occupyArmies = 0;
@@ -158,6 +189,25 @@ public class Move {
     public int getOccupyArmies() throws WrongMoveException{
         checkStage(8);
         return this.occupyArmies;
+    }
+    //stage 8 inputs
+    private int occupyCurrentArmies = 0;
+    public void setOccupyCurrentArmies(int numArmies) throws WrongMoveException{
+        checkStage(8);
+        this.occupyCurrentArmies = numArmies;
+    }
+    public int getOccupyCurrentArmies() throws WrongMoveException{
+        checkStage(8);
+        return this.occupyCurrentArmies;
+    }
+    private int occupyDice = 0;
+    public void setOccupyDice(int numDice) throws WrongMoveException{
+        checkStage(8);
+        this.occupyDice = numDice;
+    }
+    public int getOccupyDice() throws WrongMoveException{
+        checkStage(8);
+        return this.occupyDice;
     }
 
     //stage 9
@@ -201,6 +251,17 @@ public class Move {
         checkStage(11);
         return this.fortifyArmies;
     }
+    //stage 11 inputs
+    private int fortifyCurrentArmies = 0;
+    public void setFortifyCurrentArmies(int numArmies) throws WrongMoveException{
+        checkStage(11);
+        this.fortifyCurrentArmies = numArmies;
+    }
+    public int getFortifyCurrentArmies() throws WrongMoveException{
+        checkStage(11);
+        return this.fortifyCurrentArmies;
+    }
+
 
     private void checkStage(int stage) throws WrongMoveException{
         if(this.stage != stage){

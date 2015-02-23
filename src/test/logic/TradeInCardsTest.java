@@ -10,7 +10,7 @@ import player.*;
 
 public class TradeInCardsTest{
 
-    private static Game game;
+    private static MoveChecker game;
     private Card infantry; // an infantry card
     private Card infantry2; // an infantry card with a different id
     private Card infantry3; // an infantry card with another different id
@@ -20,9 +20,9 @@ public class TradeInCardsTest{
     private Card wildcard; // a wildcard
 
     @BeforeClass
-    public static void setupGame(){
+    public static void setupChecker(){
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
-        game = new Game(players, 0, 0, "resources/risk_map.json");
+        game = new MoveChecker(new Board("resources/risk_map.json"));
     }
 
     @Before

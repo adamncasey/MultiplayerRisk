@@ -97,6 +97,7 @@ public class Card {
     }
 
     public static void printHand(PrintWriter writer, ArrayList<Card> hand){
+        int counter = 1;
         for(Card c : hand){
             String type = "";
             if(c.getType() == 1){
@@ -106,7 +107,8 @@ public class Card {
             }else if(c.getType() == 10){
                 type = "artillery";
             }
-            writer.format("[%s-%s]", c.getName(), type);
+            writer.format("%d. [%s-%s]  ", counter, c.getName(), type);
+            counter++;
         }
         writer.format("\n");
         writer.flush();

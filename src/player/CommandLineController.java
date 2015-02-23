@@ -1,5 +1,6 @@
 package player;
 
+import ai.DumbAI;
 import logic.*;
 import player.*;
 
@@ -19,6 +20,10 @@ public class CommandLineController implements PlayerController {
     private Scanner reader;
     private PrintWriter writer;
 
+    private PlayerController testingAI = new DumbAI(); // Will fill in the blanks when I want to test a particular move stage.
+    boolean testing = false;
+    int testingStage = -1;
+
     public CommandLineController(Scanner reader, PrintWriter writer){
         this.reader = reader;
         this.writer = writer;
@@ -26,15 +31,24 @@ public class CommandLineController implements PlayerController {
 
     public void setUID(int uid){
         this.uid = uid;
+        if(testing){
+            testingAI.setUID(uid);
+        }
     }
 
     public void updateAI(ArrayList<Card> hand, Board board, int currentPlayer, Move previousMove){
         this.hand = new ArrayList<Card>(hand);
         this.board = board;
+        if(testing){
+            testingAI.updateAI(hand, board, currentPlayer, previousMove);
+        }
     }
 
     public Move getMove(Move move){
         try{
+            if(testing && move.getStage() != testingStage){
+                return testingAI.getMove(move);
+            }
             switch(move.getStage()){
                 case 0:
                     return claimTerritory(move);
@@ -71,11 +85,363 @@ public class CommandLineController implements PlayerController {
 
     private Move claimTerritory(Move move) throws WrongMoveException{
         writer.print("Which territory do you want to claim?\n> ");
+        int territory = chooseUnclaimedTerritory();
+        move.setTerritoryToClaim(territory);
+        return move;
+    }
+
+    private Move reinforceTerritory(Move move) throws WrongMoveException{
+        writer.print("Which territory do you want to reinforce?\n> ");
+        int territory = chooseAllyTerritory();
+        move.setTerritoryToReinforce(territory);
+        return move;
+    }
+
+    private Move tradeInCards(Move move) throws WrongMoveException{ 
+        boolean tradingInCards = false;
+        if(Card.containsSet(hand)){
+            if(hand.size() >= 5){
+                writer.println("You must trade in cards.");
+                tradingInCards = true;
+            }else{
+                writer.println("Do you want to trade in cards? (y or n)");
+                Card.printHand(writer, hand);
+                writer.print("> ");
+                writer.flush();
+                tradingInCards = chooseYesNo();
+            }
+        } 
+
+        ArrayList<Card> toTradeIn = new ArrayList<Card>(); 
+        if(tradingInCards){
+            writer.println("Which cards do you want to trade in? Enter 3 cards.");
+            Card.printHand(writer, hand);
+            writer.print("> ");
+            writer.flush();
+            boolean correct = false;
+            while(!correct){
+                toTradeIn = pickCards();
+                if(Card.containsSet(toTradeIn)){
+                    correct = true;
+                }else{
+                    writer.println("Invalid selection, try again.");
+                    Card.printHand(writer, hand);
+                    writer.print("> ");
+                    writer.flush();
+                }
+            }
+        }
+
+        move.setToTradeIn(toTradeIn);
+        return move;
+    }
+
+    private ArrayList<Card> pickCards(){
+        boolean correct = false;
+        ArrayList<Integer> picked = new ArrayList<Integer>();
+        while(!correct){
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            int cardIndex = reader.nextInt();
+            if(cardIndex > 0 && cardIndex <= hand.size()){
+                boolean found = false;
+                for(Integer i : picked){
+                    if(i == cardIndex){
+                        found = true;
+                    }
+                }
+                if(!found){
+                    picked.add(cardIndex);
+                    writer.print("> ");
+                    writer.flush();
+                }else{
+                    writer.print("You have already picked that card\n> ");
+                    writer.flush();
+                }
+            }else{
+                writer.print("Invalid card index\n> ");
+                writer.flush();
+            }
+            if(picked.size() == 3){
+                correct = true;
+            }
+        }
+        ArrayList<Card> toTradeIn = new ArrayList<Card>();
+        for(Integer i : picked){
+            toTradeIn.add(hand.get(i-1));
+        }
+        return toTradeIn;
+    }
+
+    private Move placeArmies(Move move) throws WrongMoveException{
+        int armiesToPlace = move.getArmiesToPlace();
+        writer.format("You have %d armies to place.\n", armiesToPlace);
+        writer.print("In which territory would you like to place some armies?\n> ");
+        int territory = chooseAllyTerritory();
+        writer.format("How many armies would you like to place in %s?\n> ", board.getTerritories().get(territory).getName());
+        int numArmies = 0; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            numArmies = reader.nextInt();
+            if(numArmies >= 1){
+                if(numArmies <= armiesToPlace){
+                    correct = true;
+                }else{
+                    writer.print("You can't place that many armies.\n> ");
+                }
+            }else{
+                writer.print("You must place at least 1 army.\n> ");
+            }
+        }
+
+        move.setPlaceArmiesTerritory(territory);
+        move.setPlaceArmiesNum(numArmies);
+        return move;
+    }
+
+    private Move decideAttack(Move move) throws WrongMoveException{
+        writer.print("Do you want to attack? (y or n)\n> ");
+        writer.flush();
+        boolean attack = chooseYesNo();
+        move.setDecideAttack(attack);
+        return move;
+    }
+
+    private Move startAttack(Move move) throws WrongMoveException{
+        writer.print("Choose the territory to attack from.\n> ");
+        int ally = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            ally = chooseAllyTerritory();
+            if(board.getTerritories().get(ally).getArmies() >= 2){
+                boolean found = false;
+                for(Integer i : board.getTerritories().get(ally).getLinks()){
+                    if(board.getTerritories().get(i).getOwner() != uid){
+                        found = true;
+                    }
+                }
+                if(found){
+                    correct = true;
+                }else{
+                    writer.format("There are no enemies adjacent to %s.\n> ", board.getTerritories().get(ally).getName());
+                }
+            }else{
+                writer.format("%s does not have enough armies to attack.\n> ", board.getTerritories().get(ally).getName());
+            }
+        }
+        writer.print("Choose the territory to attack.\n> ");
+        ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
+        int enemy = -1; correct = false;
+        while(!correct){
+            writer.flush();
+            enemy = chooseEnemyTerritory();
+            for(Integer i : board.getTerritories().get(ally).getLinks()){
+                if(enemy == i){
+                    correct = true;
+                }
+            }
+            if(!correct){
+                writer.format("%s is not adjacent to %s.\n> ", board.getTerritories().get(enemy).getName(), board.getTerritories().get(ally).getName());
+            }
+        }
+
+        move.setAttackFrom(ally);
+        move.setAttackTo(enemy);
+        return move;
+    }
+
+    private Move chooseAttackingDice(Move move) throws WrongMoveException{
+        int numArmies = move.getAttackingNumArmies();
+        writer.format("Choose how many dice to roll. You are attacking from a territory with %d armies.\n> ", numArmies);
+        int numDice = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            numDice = reader.nextInt();
+            if(numDice >= 1 && numDice <= 3){
+                if(numArmies > numDice){
+                    correct = true;
+                }else{
+                    writer.print("You can't roll that many dice when attacking from that territory.\n> ");
+                }
+            }else{
+                writer.print("Invalid number of dice.\n> ");
+            }
+        }
+
+        move.setAttackingDice(numDice);
+        return move;
+    }
+
+    private Move chooseDefendingDice(Move move) throws WrongMoveException{
+        int numArmies = move.getDefendingNumArmies();
+        writer.format("Choose how many dice to roll. You are defending a territory with %d armies.\n> ", numArmies);
+        int numDice = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            numDice = reader.nextInt();
+            if(numDice >= 1 && numDice <= 2){
+                if(numArmies >= numDice){
+                    correct = true;
+                }else{
+                    writer.print("You can't roll that many dice when defending this territory.\n> ");
+                }
+            }else{
+                writer.print("Invalid number of dice.\n> ");
+            }
+        }
+
+        move.setDefendingDice(numDice);
+        return move;
+    }
+
+    private Move occupyTerritory(Move move) throws WrongMoveException{
+        int currentArmies = move.getOccupyCurrentArmies();
+        int numDice = move.getOccupyDice();
+        writer.format("Choose how many armies to occupy with. The attacking territory has %d armies remaining.\n> ", currentArmies);
+        int numArmies = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            numArmies = reader.nextInt();
+            if(numArmies >= numDice){
+                if((currentArmies - numArmies) >= 1){
+                    correct = true;
+                }else{
+                    writer.print("You must leave at least 1 army behind.\n> ");
+                }
+            }else{
+                writer.format("You must occupy with at least %d armies.\n> ", numDice);
+            }
+        }
+        move.setOccupyArmies(numArmies);
+        return move;
+    }
+
+    private Move decideFortify(Move move) throws WrongMoveException{
+        writer.print("Do you want to fortify? (y or n)\n> ");
+        writer.flush();
+        boolean fortifying = chooseYesNo();
+        move.setDecideFortify(fortifying);
+        return move;
+    }
+
+    private Move startFortify(Move move) throws WrongMoveException{
+        writer.print("Choose the territory to fortify from.\n> ");
+        int ally = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            ally = chooseAllyTerritory();
+            if(board.getTerritories().get(ally).getArmies() >= 2){
+                boolean found = false;
+                for(Integer i : board.getTerritories().get(ally).getLinks()){
+                    if(board.getTerritories().get(i).getOwner() == uid){
+                        found = true;
+                    }
+                }
+                if(found){
+                    correct = true;
+                }else{
+                    writer.format("There are no allies adjacent to %s.\n> ", board.getTerritories().get(ally).getName());
+                }
+            }else{
+                writer.format("%s does not have enough armies to fortify.\n> ", board.getTerritories().get(ally).getName());
+            }
+        }
+        writer.print("Choose the territory to fortify.\n> ");
+        ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
+        int fortify = -1; correct = false;
+        while(!correct){
+            writer.flush();
+            fortify = chooseAllyTerritory();
+            for(Integer i : board.getTerritories().get(ally).getLinks()){
+                if(fortify == i){
+                    correct = true;
+                }
+            }
+            if(!correct){
+                writer.format("%s is not adjacent to %s.\n> ", board.getTerritories().get(fortify).getName(), board.getTerritories().get(ally).getName());
+            }
+        }
+
+        move.setFortifyFrom(ally);
+        move.setFortifyTo(fortify);
+        return move;
+    }
+
+    private Move chooseFortifyArmies(Move move) throws WrongMoveException{
+        int currentArmies = move.getFortifyCurrentArmies();
+        writer.format("Choose how many armies to fortify with. The fortifying territory has %d armies remaining.\n> ", currentArmies);
+        int numArmies = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
+            }
+            numArmies = reader.nextInt();
+            if(numArmies >= 1){
+                if((currentArmies - numArmies) >= 1){
+                    correct = true;
+                }else{
+                    writer.print("You must leave at least 1 army behind.\n> ");
+                }
+            }else{
+                writer.print("You must fortify with at least 1 army.\n> ");
+            }
+        }
+        move.setFortifyArmies(numArmies);
+        return move;
+    }
+
+    private boolean chooseYesNo(){
+        boolean decision = false;
+        String answer = ""; boolean correct = false;
+        while(!correct){
+            answer = reader.next();
+            answer.toLowerCase();
+            if(answer.equals("y") || answer.equals("yes")){
+                decision = true;
+                correct = true;
+            }else if(answer.equals("n") || answer.equals("no")){
+                correct = true;
+            }else{
+                writer.print("Invalid input\n> ");
+                writer.flush();
+            }         
+        } 
+        return decision;
+
+    }
+
+    private int chooseUnclaimedTerritory(){
         int territory = -1; boolean correct = false;
         while(!correct){
             writer.flush();
             while(!reader.hasNextInt()){
-                writer.print("Invalid Input\n> ");
+                writer.print("Invalid input\n> ");
                 writer.flush();
                 reader.next();
             }
@@ -90,149 +456,53 @@ public class CommandLineController implements PlayerController {
                 writer.print("That territory doesn't exist.\n> ");
             }
         }
-
-        move.setTerritoryToClaim(territory);
-        return move;
+        return territory;
     }
 
-    private Move reinforceTerritory(Move move) throws WrongMoveException{
-        int tid = random.nextInt(board.getTerritories().size());
-        while(!(board.checkTerritoryOwner(uid, tid))){
-            tid = random.nextInt(board.getTerritories().size());
-        }
-
-        move.setTerritoryToReinforce(tid);
-        return move;
-    }
-
-    private Move tradeInCards(Move move) throws WrongMoveException{ 
-        ArrayList<Card> toTradeIn = new ArrayList<Card>();
-        if(hand.size() >= 5){
-            for(int i = 0; i != 3; ++i){
-                int randomCard = random.nextInt(hand.size());
-                Card c = hand.get(randomCard);
-                toTradeIn.add(c);
-            } 
-        }
-
-        move.setToTradeIn(toTradeIn);
-        return move;
-    }
-
-    private Move placeArmies(Move move) throws WrongMoveException{
-        int armiesToPlace = move.getArmiesToPlace();
-
-        int randomTerritory = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomTerritory)){
-            randomTerritory = random.nextInt(board.getTerritories().size());
-        }
-        int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
-
-        move.setPlaceArmiesTerritory(randomTerritory);
-        move.setPlaceArmiesNum(randomArmies);
-        return move;
-    }
-
-    private Move decideAttack(Move move) throws WrongMoveException{
-        move.setDecideAttack(true);
-        return move;
-    }
-
-    private Move startAttack(Move move) throws WrongMoveException{
-        int randomAlly = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
-            randomAlly = random.nextInt(board.getTerritories().size());
-        }
-        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
-        int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
-
-        move.setAttackFrom(randomAlly);
-        move.setAttackTo(randomEnemy);
-        return move;
-    }
-
-    private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getAttackingNumArmies();
-        if(numArmies > 4){
-            move.setAttackingDice(3);
-        }else if(numArmies > 3){
-            move.setAttackingDice(2);
-        }else{
-            move.setAttackingDice(1);
-        }
-        return move;
-    }
-
-    private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = move.getDefendingNumArmies();
-        if(numArmies > 1){
-            move.setDefendingDice(2);
-        }else{
-            move.setDefendingDice(1);
-        }
-        return move;
-    }
-
-    private Move occupyTerritory(Move move) throws WrongMoveException{
-        int currentArmies = move.getOccupyCurrentArmies();
-        int numDice = move.getOccupyDice();
-        int decision = currentArmies-1;
-        move.setOccupyArmies(decision);
-        return move;
-    }
-
-    // This AI only fortifies when one of it's territories has no adjacent enemies
-    private Move decideFortify(Move move) throws WrongMoveException{
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() != uid || t.getArmies() < 2){
-                continue;
+    private int chooseAllyTerritory(){
+        int territory = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
             }
-            ArrayList<Integer> adjacents = t.getLinks();
-            int enemyCounter = 0;
-            for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
-                    enemyCounter++;
+            territory = reader.nextInt();
+            if(territory >= 0 && territory < board.getTerritories().size()){
+                if(board.getTerritories().get(territory).getOwner() == uid){
+                    correct = true;
+                }else{
+                    writer.print("You do not own that territory.\n> ");
                 }
-            }
-            if(enemyCounter == 0){
-                move.setDecideFortify(true);
-                return move;
+            }else{
+                writer.print("That territory doesn't exist.\n> ");
             }
         }
-        move.setDecideFortify(false);
-        return move;
+        return territory;
     }
 
-    private Move startFortify(Move move) throws WrongMoveException{
-        int randomAlly = 0;
-        ArrayList<Integer> adjacents = new ArrayList<Integer>();
-        int enemyCounter = -1;
-        while(enemyCounter != 0){
-            randomAlly = random.nextInt(board.getTerritories().size());
-            while(!board.checkTerritoryOwner(uid, randomAlly)){
-                randomAlly = random.nextInt(board.getTerritories().size());
+    private int chooseEnemyTerritory(){
+        int territory = -1; boolean correct = false;
+        while(!correct){
+            writer.flush();
+            while(!reader.hasNextInt()){
+                writer.print("Invalid input\n> ");
+                writer.flush();
+                reader.next();
             }
-            adjacents = board.getTerritories().get(randomAlly).getLinks();
-            enemyCounter = 0;
-            for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
-                    enemyCounter++;
+            territory = reader.nextInt();
+            if(territory >= 0 && territory < board.getTerritories().size()){
+                if(board.getTerritories().get(territory).getOwner() != uid){
+                    correct = true;
+                }else{
+                    writer.print("You own that territory.\n> ");
                 }
+            }else{
+                writer.print("That territory doesn't exist.\n> ");
             }
         }
-        int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        while(!board.checkTerritoryOwner(uid, randomFortify)){
-            randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        }
-
-        move.setFortifyFrom(randomAlly);
-        move.setFortifyTo(randomFortify);
-        return move;
-    }
-
-    private Move chooseFortifyArmies(Move move) throws WrongMoveException{
-        move.setFortifyArmies(move.getFortifyCurrentArmies()-1);
-        return move;
+        return territory;
     }
 }
 

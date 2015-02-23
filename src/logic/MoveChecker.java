@@ -142,6 +142,12 @@ public class MoveChecker {
     }
 
     public boolean checkFortifyArmies(int fortifyArmies, int fortifyCurrentArmies){
-        return ((fortifyCurrentArmies - fortifyArmies) >= 1);
+        if((fortifyCurrentArmies - fortifyArmies) < 1){
+            return false;
+        }
+        if(fortifyArmies < 1){
+            return false;
+        }
+        return true;
     }
 }

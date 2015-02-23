@@ -146,6 +146,10 @@ public class Game {
             move = new Move(4);
             move = getMove(uid, 4, move);
             updatePlayers(uid, move);
+            boolean attacking = move.getDecideAttack();
+            if(!attacking){
+                break;
+            }
 
             informPlayers(uid, "choosing where to attack");
             move = new Move(5);

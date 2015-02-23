@@ -26,14 +26,14 @@ public class WatchCLI {
         while(!correct){
             writer.flush();
             while(!reader.hasNextInt()){
-                writer.print("Invalid Input\n> ");
+                writer.print("Invalid input\n> ");
                 writer.flush();
                 reader.next();
             }
             numAI = reader.nextInt();
             correct = numAI >= 3 && numAI <= 6;
             if(!correct){
-                writer.print("Invalid Input\n> ");
+                writer.print("Invalid input\n> ");
                 writer.flush();
             }
         }

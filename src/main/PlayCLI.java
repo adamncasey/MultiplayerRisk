@@ -26,14 +26,14 @@ public class PlayCLI {
         while(!correct){
             writer.flush();
             while(!reader.hasNextInt()){
-                writer.print("Invalid Input\n> ");
+                writer.print("Invalid input\n> ");
                 writer.flush();
                 reader.next();
             }
             numAI = reader.nextInt();
             correct = numAI >= 2 && numAI <= 5;
             if(!correct){
-                writer.print("Invalid Input\n> ");
+                writer.print("Invalid input\n> ");
                 writer.flush();
             }
         }

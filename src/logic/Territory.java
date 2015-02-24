@@ -9,14 +9,14 @@ public class Territory {
 
     private Integer ID;
 
+    private String name = "";
+    private int owner = -1;
+    private int armies = 0;
+
     // Stores the IDs of the territories linked to this territory
     private ArrayList<Integer> links = new ArrayList<Integer>();
 
-    private String name = "";
     private Integer card;
-
-    private int owner = -1;
-    private int armies = 0;
 
     public Territory(Integer id){
         ID = id;
@@ -26,48 +26,44 @@ public class Territory {
         return this.ID;
     }
 
-    public void addLink(Integer id){
-        links.add(new Integer(id));
-    }
-
-    public ArrayList<Integer> getLinks(){
-        return links;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return this.name;
-    }
-
-    public void setCard(Integer card){
-        this.card = card;
-    }
-
-    public Integer getCard(){
-        return this.card;
-    }
-
-    public void setOwner(int uid){
+    protected void setOwner(int uid){
         this.owner = uid;
     }
 
-    public int getOwner(){
+    protected int getOwner(){
         return this.owner;
     }
 
-    public void addArmies(int armies){
+    protected void addArmies(int armies){
         this.armies += armies;
     }
 
-    public void loseArmies(int armies){
-        this.armies -= armies;
+    protected int getArmies(){
+        return this.armies;
     }
 
-    public int getArmies(){
-        return this.armies;
+    protected void setName(String name){
+        this.name = name;
+    }
+
+    protected String getName(){
+        return this.name;
+    }
+
+    protected void addLink(Integer id){
+        links.add(new Integer(id));
+    }
+
+    protected ArrayList<Integer> getLinks(){
+        return links;
+    }
+
+    protected void setCard(Integer card){
+        this.card = card;
+    }
+
+    protected Integer getCard(){
+        return this.card;
     }
 }
 

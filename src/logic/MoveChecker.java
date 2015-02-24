@@ -15,16 +15,14 @@ public class MoveChecker {
     }
 
     public boolean checkClaimTerritory(int tid){
-        Territory territory = board.getTerritories().get(tid);
-        if(territory.getOwner() != -1){
+        if(board.getOwner(tid) != -1){
             return false;
         }
         return true;
     }
 
     public boolean checkReinforceTerritory(int uid, int tid){
-        Territory territory = board.getTerritories().get(tid);
-        if(territory.getOwner() != uid){
+        if(board.getOwner(tid) != uid){
             return false;
         }
         return true;
@@ -49,35 +47,32 @@ public class MoveChecker {
         if(armies > armiesToPlace){
             return false;
         }
-        if(!board.checkTerritoryOwner(uid, territory)){
+        if(board.getOwner(territory) != uid){
             return false;
         }
         return true;
     }
 
     public boolean checkStartAttack(int uid, int attackFrom, int attackTo){
-        Territory ally = board.getTerritories().get(attackFrom);
-        Territory enemy = board.getTerritories().get(attackTo);
-
         // Does this player own the territory to be attacked from?
-        if(ally.getOwner() != uid){
+        if(board.getOwner(attackFrom) != uid){
             return false;
         }
 
         // Does ally have at least 2 armies?
-        if(ally.getArmies() < 2){
+        if(board.getArmies(attackFrom) < 2){
             return false;
         }
 
         // Does this player not own the territory to be attacked?
-        if(enemy.getOwner() == uid){
+        if(board.getOwner(attackTo) == uid){
             return false;
         }
         
         // Are the two territories adjacent?
         boolean found = false;
-        for(Integer i : ally.getLinks()){
-            if(i == enemy.getID()){
+        for(Integer i : board.getLinks(attackFrom)){
+            if(i == attackTo){
                 found = true;
             }
         }
@@ -113,28 +108,25 @@ public class MoveChecker {
     }
 
     public boolean checkStartFortify(int uid, int fortifyFrom, int fortifyTo){
-        Territory ally = board.getTerritories().get(fortifyFrom);
-        Territory fortify = board.getTerritories().get(fortifyTo);
-
         // Does this player own the territory to be attacked from?
-        if(ally.getOwner() != uid){
+        if(board.getOwner(fortifyFrom) != uid){
             return false;
         }
 
         // Does this territory have at least 2 armies?
-        if(ally.getArmies() < 2){
+        if(board.getArmies(fortifyFrom) < 2){
             return false;
         }
 
         // Does this player own the territory to be fortified?
-        if(fortify.getOwner() != uid){
+        if(board.getOwner(fortifyTo) != uid){
             return false;
         }
         
         // Are the two territories adjacent?
         boolean found = false;
-        for(Integer i : ally.getLinks()){
-            if(i == fortify.getID()){
+        for(Integer i : board.getLinks(fortifyFrom)){
+            if(i == fortifyTo){
                 found = true;
             }
         }

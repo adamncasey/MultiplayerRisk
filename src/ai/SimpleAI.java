@@ -65,9 +65,9 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move claimTerritory(Move move) throws WrongMoveException{
-        int tid = random.nextInt(board.getTerritories().size());
-        while(!(board.checkTerritoryOwner(-1, tid))){
-            tid = random.nextInt(board.getTerritories().size());
+        int tid = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(tid) != -1){
+            tid = random.nextInt(board.getNumTerritories());
         }
 
         move.setTerritoryToClaim(tid);
@@ -75,9 +75,9 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
-        int tid = random.nextInt(board.getTerritories().size());
-        while(!(board.checkTerritoryOwner(uid, tid))){
-            tid = random.nextInt(board.getTerritories().size());
+        int tid = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(tid) != uid){
+            tid = random.nextInt(board.getNumTerritories());
         }
 
         move.setTerritoryToReinforce(tid);
@@ -101,9 +101,9 @@ public class SimpleAI implements PlayerController {
     private Move placeArmies(Move move) throws WrongMoveException{
         int armiesToPlace = move.getArmiesToPlace();
 
-        int randomTerritory = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomTerritory)){
-            randomTerritory = random.nextInt(board.getTerritories().size());
+        int randomTerritory = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(randomTerritory) != uid){
+            randomTerritory = random.nextInt(board.getNumTerritories());
         }
         int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
 
@@ -118,11 +118,11 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
-        int randomAlly = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
-            randomAlly = random.nextInt(board.getTerritories().size());
+        int randomAlly = random.nextInt(board.getNumTerritories());
+        while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
+            randomAlly = random.nextInt(board.getNumTerritories());
         }
-        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
+        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setAttackFrom(randomAlly);
@@ -131,7 +131,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getTerritories().get(move.getAttackingFrom()).getArmies();
+        int numArmies = board.getArmies(move.getAttackingFrom());
         if(numArmies > 4){
             move.setAttackingDice(3);
         }else if(numArmies > 3){
@@ -143,7 +143,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getTerritories().get(move.getDefendingFrom()).getArmies();
+        int numArmies = board.getArmies(move.getDefendingFrom());
         if(numArmies > 1){
             move.setDefendingDice(2);
         }else{
@@ -162,14 +162,14 @@ public class SimpleAI implements PlayerController {
 
     // This AI only fortifies when one of it's territories has no adjacent enemies
     private Move decideFortify(Move move) throws WrongMoveException{
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() != uid || t.getArmies() < 2){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) != uid || board.getArmies(uid) < 2){
                 continue;
             }
-            ArrayList<Integer> adjacents = t.getLinks();
+            ArrayList<Integer> adjacents = board.getLinks(i);
             int enemyCounter = 0;
-            for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
+            for(int j : adjacents){
+                if(board.getOwner(j) != uid){
                     enemyCounter++;
                 }
             }
@@ -183,24 +183,24 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
-        int randomAlly = 0;
-        ArrayList<Integer> adjacents = new ArrayList<Integer>();
+        int randomAlly = 0;;
         int enemyCounter = -1;
+        ArrayList<Integer> adjacents = new ArrayList<Integer>();
         while(enemyCounter != 0){
-            randomAlly = random.nextInt(board.getTerritories().size());
-            while(!board.checkTerritoryOwner(uid, randomAlly)){
-                randomAlly = random.nextInt(board.getTerritories().size());
+            randomAlly = random.nextInt(board.getNumTerritories());
+            while(board.getOwner(randomAlly) != uid){
+                randomAlly = random.nextInt(board.getNumTerritories());
             }
-            adjacents = board.getTerritories().get(randomAlly).getLinks();
+            adjacents = board.getLinks(randomAlly);
             enemyCounter = 0;
             for(int i : adjacents){
-                if(!board.checkTerritoryOwner(uid, i)){
+                if(board.getOwner(i) != uid){
                     enemyCounter++;
                 }
             }
         }
         int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        while(!board.checkTerritoryOwner(uid, randomFortify)){
+        while(board.getOwner(randomFortify) != uid){
             randomFortify = adjacents.get(random.nextInt(adjacents.size()));
         }
 

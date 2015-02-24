@@ -32,7 +32,7 @@ public class Move {
     // Stage 11 = chooseFortifyArmies
     // returns int - number of armies to fortify with
 
-    // These stages are used to let IPlayer know what has just changed (in situations where the game updates but a player hasn't had to input anything)
+    // These stages are used to let IPlayer know when an event happens (in situations where the game updates but a player hasn't had to input anything)
     // Stage 101 - An attack has just been carried out (After dice rolls the board is updated)
     // Stage 102 - The player has just been eliminated
     // Stage 103 - The player has just drawn a card

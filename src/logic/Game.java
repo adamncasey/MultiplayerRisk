@@ -73,7 +73,7 @@ public class Game {
         updatePlayers(activePlayerCount, new Move(104));
         int initialArmyValue = setupValues[activePlayerCount-3];
         int totalArmies = activePlayerCount * initialArmyValue;
-        int territoriesToClaim = board.getTerritories().size();
+        int territoriesToClaim = board.getNumTerritories();
 
         int currentPlayer = firstPlayer;
         while(totalArmies != 0){
@@ -82,14 +82,15 @@ public class Game {
                 Move move = new Move(0);
                 move = getMove(currentPlayer, 0, move);
                 int territoryToClaim = move.getTerritoryToClaim();
-                claimTerritory(currentPlayer, territoryToClaim);
+                board.claimTerritory(territoryToClaim, currentPlayer);
+                board.placeArmies(territoryToClaim, 1);
                 territoriesToClaim--;
                 updatePlayers(currentPlayer, move);
             } else {
                 Move move = new Move(1);
                 move = getMove(currentPlayer, 1, move);
                 int territoryToReinforce = move.getTerritoryToReinforce();
-                reinforceTerritory(territoryToReinforce);
+                board.placeArmies(territoryToReinforce, 1);
                 updatePlayers(currentPlayer, move);
             }
             totalArmies--;
@@ -138,7 +139,8 @@ public class Game {
             move = new Move(3);
             move.setArmiesToPlace(armies);
             move = getMove(uid, 3, move);
-            armies = placeArmies(uid, move.getPlaceArmiesTerritory(), move.getPlaceArmiesNum(), armies);
+            board.placeArmies(move.getPlaceArmiesTerritory(), move.getPlaceArmiesNum());
+            armies -= move.getPlaceArmiesNum();
             updatePlayers(uid, move);
         }
 
@@ -165,7 +167,7 @@ public class Game {
             int attackingDice = move.getAttackingDice();
             updatePlayers(uid, move);
 
-            int enemyUID = board.getTerritories().get(attackTo).getOwner();
+            int enemyUID = board.getOwner(attackTo);
             move = new Move(7);
             move.setDefendingFrom(attackTo);
             move.setDefendingTo(attackFrom);
@@ -176,7 +178,10 @@ public class Game {
             ArrayList<Integer> attackDiceRolls = rollDice(attackingDice);
             ArrayList<Integer> defendDiceRolls = rollDice(defendingDice);
             ArrayList<Integer> attackResult = decideAttackResult(attackDiceRolls, defendDiceRolls);
-            boolean willCaptureTerritory = loseArmies(attackResult, attackFrom, attackTo); // loseArmies returns true when the territory should be captured
+            board.placeArmies(attackFrom, -attackResult.get(0));
+            board.placeArmies(attackTo, -attackResult.get(1));
+            boolean willCaptureTerritory = board.getArmies(attackTo) == 0;
+
             move = new Move(101);
             move.setAttackerLosses(attackResult.get(0));
             move.setDefenderLosses(attackResult.get(1));
@@ -185,11 +190,13 @@ public class Game {
             if(willCaptureTerritory){ 
                 territoryCaptured = true;
                 move = new Move(8);
-                move.setOccupyCurrentArmies(board.getTerritories().get(attackFrom).getArmies());
+                move.setOccupyCurrentArmies(board.getArmies(attackFrom));
                 move.setOccupyDice(attackingDice);
                 move = getMove(uid, 8, move);
                 int occupyArmies = move.getOccupyArmies();
-                occupyTerritory(uid, occupyArmies, attackFrom, attackTo);
+                board.placeArmies(attackFrom, -occupyArmies);
+                board.placeArmies(attackTo, occupyArmies);
+                board.claimTerritory(attackTo, uid);
                 updatePlayers(uid, move);
             }
 
@@ -212,7 +219,8 @@ public class Game {
                             move = new Move(3);
                             move.setArmiesToPlace(armies);
                             move = getMove(uid, 3, move);
-                            armies = placeArmies(uid, move.getPlaceArmiesTerritory(), move.getPlaceArmiesNum(), armies);
+                            board.placeArmies(move.getPlaceArmiesTerritory(), move.getPlaceArmiesNum());
+                            armies -= move.getPlaceArmiesNum();
                             updatePlayers(uid, move);
                         }
                     }
@@ -242,10 +250,11 @@ public class Game {
                 updatePlayers(uid, move);
 
                 move = new Move(11);
-                move.setFortifyCurrentArmies(board.getTerritories().get(fortifyFrom).getArmies());
+                move.setFortifyCurrentArmies(board.getArmies(fortifyFrom));
                 move = getMove(uid, 11, move);
                 int numFortifyArmies = move.getFortifyArmies();
-                fortifyArmies(fortifyFrom, fortifyTo, numFortifyArmies);
+                board.placeArmies(fortifyFrom, -numFortifyArmies);
+                board.placeArmies(fortifyTo, numFortifyArmies);
                 updatePlayers(uid, move);
             }
         }
@@ -295,11 +304,11 @@ public class Game {
                 return checker.checkStartAttack(currentPlayer, attackFrom, attackTo);
             case 6:
                 int attackingDice = move.getAttackingDice();
-                int attackingNumArmies = board.getTerritories().get(move.getAttackingFrom()).getArmies();
+                int attackingNumArmies = board.getArmies(move.getAttackingFrom());
                 return checker.checkAttackingDice(attackingDice, attackingNumArmies);
             case 7:
                 int defendingDice = move.getDefendingDice();
-                int defendingNumArmies = board.getTerritories().get(move.getDefendingFrom()).getArmies();
+                int defendingNumArmies = board.getArmies(move.getDefendingFrom());
                 return checker.checkDefendingDice(defendingDice, defendingNumArmies);
             case 8:
                 int occupyArmies = move.getOccupyArmies();
@@ -319,17 +328,6 @@ public class Game {
             default:
                 return false;
         }
-    }
-
-    public void claimTerritory(int uid, int tid){
-        Territory territory = board.getTerritories().get(tid);
-        territory.setOwner(uid);
-        territory.addArmies(1);
-    }
-
-    public void reinforceTerritory(int tid){
-        Territory territory = board.getTerritories().get(tid);
-        territory.addArmies(1);
     }
 
     public boolean tradeInCards(int uid, ArrayList<Card> toTradeIn){
@@ -355,7 +353,7 @@ public class Game {
 
         int extraArmies = 0;
         for(Card card : toTradeIn){
-            if(board.checkTerritoryOwner(uid, card.getID())){
+            if(board.getOwner(card.getID()) == uid){
                 extraArmies = 2;
             }
         }
@@ -376,17 +374,11 @@ public class Game {
         return reward; 
     }
 
-    public int placeArmies(int uid, int territory, int armiesBeingPlaced, int armiesToPlace){
-        Territory t = board.getTerritories().get(territory);
-        t.addArmies(armiesBeingPlaced);
-        return armiesToPlace - armiesBeingPlaced;
-    }
-
     public boolean checkAttackPossible(int uid){
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() == uid && t.getArmies() >= 2){
-                for(int i : t.getLinks()){
-                    if(!board.checkTerritoryOwner(uid, i)){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) == uid && board.getArmies(i) >= 2){
+                for(int j : board.getLinks(i)){
+                    if(board.getOwner(j) != uid){
                         return true;
                     }
                 }
@@ -436,29 +428,9 @@ public class Game {
         return result;
     }
 
-    // Return value decides whether or not the territory should be captured
-    public boolean loseArmies(ArrayList<Integer> attackResult, int attackFrom, int attackTo){
-        Territory t1 = board.getTerritories().get(attackFrom);
-        t1.loseArmies(attackResult.get(0));
-        Territory t2 = board.getTerritories().get(attackTo);
-        t2.loseArmies(attackResult.get(1));
-        if(t2.getArmies() == 0){
-            return true;
-        }
-        return false;
-    }
-
-    public void occupyTerritory(int uid, int armies, int attackFrom, int attackTo){
-        Territory attacker = board.getTerritories().get(attackFrom);
-        attacker.loseArmies(armies);
-        Territory defender = board.getTerritories().get(attackTo);
-        defender.addArmies(armies);
-        defender.setOwner(uid);
-    }
-
     public boolean isEliminated(int uid){
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() == uid){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) == uid){
                 return false;
             }
         }
@@ -480,22 +452,15 @@ public class Game {
     }
 
     public boolean checkFortifyPossible(int uid){
-        for(Territory t : board.getTerritories().values()){
-            if(t.getOwner() == uid && t.getArmies() >= 2){
-                for(int i : t.getLinks()){
-                    if(board.checkTerritoryOwner(uid, i)){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) == uid && board.getArmies(i) >= 2){
+                for(int j : board.getLinks(i)){
+                    if(board.getOwner(j) == uid){
                         return true;
                     }
                 }
             }
         }
         return false;
-    }
-
-    public void fortifyArmies(int fortifyFrom, int fortifyTo, int numFortifyArmies){
-        Territory ally = board.getTerritories().get(fortifyFrom);
-        Territory fortify = board.getTerritories().get(fortifyTo);
-        ally.loseArmies(numFortifyArmies);
-        fortify.addArmies(numFortifyArmies);
     }
 }

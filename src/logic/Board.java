@@ -7,48 +7,71 @@ import java.util.*;
  * Board --- Stores information about the game board.
  */
 public class Board {
-
-    private Map<Integer, Territory> territories = new HashMap<Integer, Territory>();
-    private Map<Integer, Continent> continents = new HashMap<Integer, Continent>();
+    private ArrayList<Territory> territories;
+    private ArrayList<Continent> continents;
     private Integer wildcards = 0;
 
-    // Don't change territories using this
-    public Map<Integer, Territory> getTerritories(){
-        return territories;
+    public Board(String filename){
+        this.territories = new ArrayList<Territory>();
+        this.continents = new ArrayList<Continent>();
+        loadBoard(filename);
     }
 
-    // Don't change continents using this
-    public Map<Integer, Continent> getContinents(){
-        return continents;
+//// Use these methods
+
+    public int getNumTerritories(){
+        return territories.size();
     }
 
-    protected Deck getDeck(){
-        Deck deck = new Deck();
-   
-        int values[] = {1, 5, 10};
+    public int getOwner(int territory){
+        return territories.get(territory).getOwner();
+    }
 
-        Iterator it = territories.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry pairs = (Map.Entry)it.next();
-            Integer TID = (Integer)pairs.getKey();
-            Territory T = (Territory)pairs.getValue();
+    public int getArmies(int territory){
+        return territories.get(territory).getArmies();
+    }
 
-            int type = values[T.getCard()];
+    public String getName(int territory){
+        return territories.get(territory).getName();
+    }
 
-            Card card = new Card(TID, type, T.getName());
-            deck.addCard(card);
+    public ArrayList<Integer> getLinks(int territory){
+        return territories.get(territory).getLinks();
+    }
 
+    // Prints a representation of the board to writer, or returns the representation as a string (if writer is null)
+    public String printBoard(PrintWriter writer){
+        String message = "";
+        for(Territory t : territories){
+            if(t.getOwner() == -1){
+                message += String.format("[%d-%s-Free-%d]", t.getID(), t.getName(), t.getArmies());
+            }else{
+                message += String.format("[%d-%s-%d-%d]", t.getID(), t.getName(), t.getOwner(), t.getArmies());
+            }
         }
-        for(int i = 0; i != wildcards; ++i){
-            Card card = new Card(0, 0, "Wildcard");
-            deck.addCard(card);
+        message += "\n";
+        if(writer != null){
+            writer.print(message);
+            writer.flush();
+            return "";
+        }else{
+            return message;
         }
-        return deck;
     }
 
-   /**
-    * Take a board file and initiate this object.
-    */
+////////
+// For Game use
+    protected void claimTerritory(int tid, int uid){
+        Territory t = territories.get(tid);
+        t.setOwner(uid);
+    }
+
+    protected void placeArmies(int tid, int numArmies){
+        Territory t = territories.get(tid);
+        t.addArmies(numArmies);
+    }
+////////
+
     private void loadBoard(String filename){
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -99,10 +122,10 @@ public class Board {
             }
             br.close();
         } catch (Exception e) {
-             // oh well
         }
     }
 
+    // This won't work if a new map file doesn't list territories in order.
     private void processContinents(String[] parts){
         Integer newCID = Integer.valueOf(parts[0].replace("\"", ""));
         Continent newContinent = new Continent(newCID);
@@ -110,10 +133,10 @@ public class Board {
         for(int i = 0; i != newTerritories.length; ++i){
             Integer newTID = Integer.valueOf(newTerritories[i].replace("[", "").replace("]", "").trim());
             Territory newTerritory = new Territory(newTID);
-            territories.put(newTID, newTerritory);
+            territories.add(newTerritory);
             newContinent.addTerritory(newTID);
         }
-        continents.put(newCID, newContinent);
+        continents.add(newContinent);
     }
 
     private void processConnections(String[] parts){
@@ -163,13 +186,26 @@ public class Board {
         this.wildcards =  Integer.valueOf(parts[1].trim());
     }
 
-    public Board(String filename){
-        loadBoard(filename);
+    // Extracts the initial deck from the board
+    protected Deck getDeck(){
+        Deck deck = new Deck();
+        int values[] = {1, 5, 10};
+        for(int i = 0; i != territories.size(); ++i){
+            Territory t = territories.get(i);
+            int type = values[t.getCard()];
+            Card card = new Card(i, type, t.getName());
+            deck.addCard(card);
+        }
+        for(int i = 0; i != wildcards; ++i){
+            Card card = new Card(0, 0, "Wildcard");
+            deck.addCard(card);
+        }
+        return deck;
     }
 
     protected int calculatePlayerTerritoryArmies(int uid){
         int territoryCounter = 0;
-        for(Territory t : territories.values()){
+        for(Territory t : territories){
             if(t.getOwner() == uid){
                 territoryCounter++;
             }
@@ -183,7 +219,7 @@ public class Board {
 
     protected int calculatePlayerContinentArmies(int uid){
         int armies = 0;
-        for(Continent c : continents.values()){
+        for(Continent c : continents){
             boolean owned = true;
             for(Integer TID : c.getTerritories()){
                 Territory t = territories.get(TID);
@@ -196,25 +232,5 @@ public class Board {
             }
         }
         return armies;
-    }
-
-    public boolean checkTerritoryOwner(int uid, int TID){
-        Territory t = territories.get(TID);
-        if(t.getOwner() == uid){
-            return true;
-        }
-        return false;
-    }
-
-    public void printBoard(PrintWriter writer){
-        for(Territory t : territories.values()){
-            if(t.getOwner() == -1){
-            writer.format("[%d-%s-Free-%d]", t.getID(), t.getName(), t.getArmies());
-            }else{
-                writer.format("[%d-%s-%d-%d]", t.getID(), t.getName(), t.getOwner(), t.getArmies());
-            }
-        }
-        writer.format("\n");
-        writer.flush();
     }
 }

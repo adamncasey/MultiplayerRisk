@@ -10,12 +10,12 @@ public class Card {
 
     private Integer territory; // the territory number, 0 = wildcard
     private Integer type; // infantry, cavalry or artillery - 1, 5, 10
-    private String country;
+    private String name;
 
-    public Card(Integer territory, Integer type, String country){
+    public Card(Integer territory, Integer type, String name){
         this.territory = territory;
         this.type = type;
-        this.country = country;
+        this.name = name;
     }
 
     public Integer getID(){
@@ -27,7 +27,7 @@ public class Card {
     }
 
     public String getName(){
-        return this.country;
+        return this.name;
     }
 
     public boolean equals(Card c){
@@ -37,7 +37,7 @@ public class Card {
         if(type != c.getType()){
             return false;
         }
-        if(country != c.getName()){
+        if(name != c.getName()){
             return false;
         }
         return true;

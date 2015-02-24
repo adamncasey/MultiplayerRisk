@@ -16,12 +16,12 @@ public class MoveProcessor {
             switch(move.getStage()){
                 case 0:
                     int claimedTerritory = move.getTerritoryToClaim();
-                    String claimedTerritoryName = board.getTerritories().get(claimedTerritory).getName();
+                    String claimedTerritoryName = board.getName(claimedTerritory);
                     message = String.format("Player %d has claimed territory [%d-%s].\n", uid, claimedTerritory, claimedTerritoryName);
                     return message;
                 case 1:
                     int reinforcedTerritory = move.getTerritoryToReinforce();
-                    String reinforcedTerritoryName = board.getTerritories().get(reinforcedTerritory).getName(); 
+                    String reinforcedTerritoryName = board.getName(reinforcedTerritory);
                     message = String.format("Player %d has reinforced territory [%d-%s].\n", uid, reinforcedTerritory, reinforcedTerritoryName);
                     return message;
                 case 2:
@@ -32,7 +32,7 @@ public class MoveProcessor {
                 case 3:
                     int placeArmiesTerritory = move.getPlaceArmiesTerritory();
                     int placeArmiesNum = move.getPlaceArmiesNum();
-                    String placeArmiesName = board.getTerritories().get(placeArmiesTerritory).getName();
+                    String placeArmiesName = board.getName(placeArmiesTerritory);
                     message = String.format("Player %d has placed %d armies at [%d-%s].\n", uid, placeArmiesNum, placeArmiesTerritory, placeArmiesName); 
                     return message;
                 case 4:
@@ -46,8 +46,8 @@ public class MoveProcessor {
                 case 5:
                     int attackFrom = move.getAttackFrom();
                     int attackTo = move.getAttackTo();
-                    String attackFromName = board.getTerritories().get(attackFrom).getName();
-                    String attackToName = board.getTerritories().get(attackTo).getName();
+                    String attackFromName = board.getName(attackFrom);
+                    String attackToName = board.getName(attackTo);
                     message = String.format("Player %d is attacking [%d-%s] from [%d-%s].\n", uid, attackTo, attackToName, attackFrom, attackFromName);
                     return message;
                 case 6:
@@ -73,8 +73,8 @@ public class MoveProcessor {
                 case 10:
                     int fortifyFrom = move.getFortifyFrom();
                     int fortifyTo = move.getFortifyTo();
-                    String fortifyFromName = board.getTerritories().get(fortifyFrom).getName();
-                    String fortifyToName = board.getTerritories().get(fortifyTo).getName();
+                    String fortifyFromName = board.getName(fortifyFrom);
+                    String fortifyToName = board.getName(fortifyTo);
                     message = String.format("Player %d is fortifying [%d-%s] from [%d-%s].\n", uid, fortifyTo, fortifyToName, fortifyFrom, fortifyFromName);
                     return message;
                 case 11:

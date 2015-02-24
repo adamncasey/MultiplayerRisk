@@ -19,23 +19,27 @@ public class Continent {
         ID = id;
     } 
 
-    public void addTerritory(Integer id){
+    protected void addTerritory(Integer id){
         territories.add(id);
     }
 
-    public ArrayList<Integer> getTerritories(){
+    protected ArrayList<Integer> getTerritories(){
         return territories;
     }
 
-    public void setValue(int value){
+    protected void setValue(int value){
         this.value = value;
     }
 
-    public int getValue(){
+    protected int getValue(){
         return this.value;
     }
 
-    public void setName(String name){
+    protected void setName(String name){
         this.name = name;
+    }
+
+    protected String getName(){
+        return this.name;
     }
 }

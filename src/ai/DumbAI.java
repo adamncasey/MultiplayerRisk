@@ -66,9 +66,9 @@ public class DumbAI implements PlayerController {
     }
 
     private Move claimTerritory(Move move) throws WrongMoveException{
-        int tid = random.nextInt(board.getTerritories().size());
-        while(!(board.checkTerritoryOwner(-1, tid))){
-            tid = random.nextInt(board.getTerritories().size());
+        int tid = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(tid) != -1){
+            tid = random.nextInt(board.getNumTerritories());
         }
 
         move.setTerritoryToClaim(tid);
@@ -76,9 +76,9 @@ public class DumbAI implements PlayerController {
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
-        int tid = random.nextInt(board.getTerritories().size());
-        while(!(board.checkTerritoryOwner(uid, tid))){
-            tid = random.nextInt(board.getTerritories().size());
+        int tid = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(tid) != uid){
+            tid = random.nextInt(board.getNumTerritories());
         }
 
         move.setTerritoryToReinforce(tid);
@@ -102,9 +102,9 @@ public class DumbAI implements PlayerController {
     private Move placeArmies(Move move) throws WrongMoveException{
         int armiesToPlace = move.getArmiesToPlace();
 
-        int randomTerritory = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomTerritory)){
-            randomTerritory = random.nextInt(board.getTerritories().size());
+        int randomTerritory = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(randomTerritory) != uid){
+            randomTerritory = random.nextInt(board.getNumTerritories());
         }
         int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
 
@@ -119,11 +119,11 @@ public class DumbAI implements PlayerController {
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
-        int randomAlly = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomAlly) || board.getTerritories().get(randomAlly).getArmies() < 2){
-            randomAlly = random.nextInt(board.getTerritories().size());
+        int randomAlly = random.nextInt(board.getNumTerritories());
+        while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
+            randomAlly = random.nextInt(board.getNumTerritories());
         }
-        ArrayList<Integer> adjacents = board.getTerritories().get(randomAlly).getLinks();
+        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setAttackFrom(randomAlly);
@@ -154,12 +154,11 @@ public class DumbAI implements PlayerController {
 
     private Move startFortify(Move move) throws WrongMoveException{
         int randomAlly = 0;
-        ArrayList<Integer> adjacents = new ArrayList<Integer>();
-        randomAlly = random.nextInt(board.getTerritories().size());
-        while(!board.checkTerritoryOwner(uid, randomAlly)){
-            randomAlly = random.nextInt(board.getTerritories().size());
+        randomAlly = random.nextInt(board.getNumTerritories());
+        while(board.getOwner(randomAlly) != uid){
+            randomAlly = random.nextInt(board.getNumTerritories());
         }
-        adjacents = board.getTerritories().get(randomAlly).getLinks();
+        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setFortifyFrom(randomAlly);

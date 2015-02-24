@@ -1,6 +1,6 @@
 package player;
 
-import ai.DumbAI;
+import ai.*;
 import logic.*;
 import player.*;
 
@@ -187,7 +187,7 @@ public class CommandLineController implements PlayerController {
         board.printBoard(writer);
         writer.print("> ");
         int territory = chooseAllyTerritory();
-        writer.format("How many armies would you like to place in %s?\n", board.getTerritories().get(territory).getName());
+        writer.format("How many armies would you like to place in %s?\n", board.getName(territory));
         board.printBoard(writer);
         writer.print("> ");
         int numArmies = 0; boolean correct = false;
@@ -232,37 +232,37 @@ public class CommandLineController implements PlayerController {
         while(!correct){
             writer.flush();
             ally = chooseAllyTerritory();
-            if(board.getTerritories().get(ally).getArmies() >= 2){
+            if(board.getArmies(ally) >= 2){
                 boolean found = false;
-                for(Integer i : board.getTerritories().get(ally).getLinks()){
-                    if(board.getTerritories().get(i).getOwner() != uid){
+                for(Integer i : board.getLinks(ally)){
+                    if(board.getOwner(i) != uid){
                         found = true;
                     }
                 }
                 if(found){
                     correct = true;
                 }else{
-                    writer.format("There are no enemies adjacent to %s.\n> ", board.getTerritories().get(ally).getName());
+                    writer.format("There are no enemies adjacent to %s.\n> ", board.getName(ally));
                 }
             }else{
-                writer.format("%s does not have enough armies to attack.\n> ", board.getTerritories().get(ally).getName());
+                writer.format("%s does not have enough armies to attack.\n> ", board.getName(ally));
             }
         }
         writer.println("Choose the territory to attack.");
         board.printBoard(writer);
         writer.print("> ");
-        ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
+        ArrayList<Integer> adjacents = board.getLinks(ally);
         int enemy = -1; correct = false;
         while(!correct){
             writer.flush();
             enemy = chooseEnemyTerritory();
-            for(Integer i : board.getTerritories().get(ally).getLinks()){
+            for(Integer i : adjacents){
                 if(enemy == i){
                     correct = true;
                 }
             }
             if(!correct){
-                writer.format("%s is not adjacent to %s.\n> ", board.getTerritories().get(enemy).getName(), board.getTerritories().get(ally).getName());
+                writer.format("%s is not adjacent to %s.\n> ", board.getName(enemy), board.getName(ally));
             }
         }
 
@@ -272,10 +272,10 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getTerritories().get(move.getAttackingFrom()).getArmies();
-        String attackingName = board.getTerritories().get(move.getAttackingFrom()).getName();
-        String defendingName = board.getTerritories().get(move.getAttackingTo()).getName();
-        int defendingArmies = board.getTerritories().get(move.getAttackingTo()).getArmies();
+        int numArmies = board.getArmies(move.getAttackingFrom());
+        String attackingName = board.getName(move.getAttackingFrom());
+        String defendingName = board.getName(move.getAttackingTo());
+        int defendingArmies = board.getArmies(move.getAttackingTo());
         writer.format("Choose how many dice to roll. You are attacking from %s which has %d armies, to %s which has %d armies.\n> ", attackingName, numArmies, defendingName, defendingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
@@ -302,10 +302,10 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getTerritories().get(move.getDefendingFrom()).getArmies();
-        String defendingName = board.getTerritories().get(move.getDefendingFrom()).getName();
-        String attackingName = board.getTerritories().get(move.getDefendingTo()).getName();
-        int attackingArmies = board.getTerritories().get(move.getDefendingTo()).getArmies();
+        int numArmies = board.getArmies(move.getDefendingFrom());
+        String defendingName = board.getName(move.getDefendingFrom());
+        String attackingName = board.getName(move.getDefendingTo());
+        int attackingArmies = board.getArmies(move.getDefendingTo());
         writer.format("Choose how many dice to roll. You are defending %s which has %d armies, from an attack from %s which has %d armies.\n> ", defendingName, numArmies, attackingName, attackingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
@@ -375,37 +375,37 @@ public class CommandLineController implements PlayerController {
         while(!correct){
             writer.flush();
             ally = chooseAllyTerritory();
-            if(board.getTerritories().get(ally).getArmies() >= 2){
+            if(board.getArmies(ally) >= 2){
                 boolean found = false;
-                for(Integer i : board.getTerritories().get(ally).getLinks()){
-                    if(board.getTerritories().get(i).getOwner() == uid){
+                for(Integer i : board.getLinks(ally)){
+                    if(board.getOwner(i) == uid){
                         found = true;
                     }
                 }
                 if(found){
                     correct = true;
                 }else{
-                    writer.format("There are no allies adjacent to %s.\n> ", board.getTerritories().get(ally).getName());
+                    writer.format("There are no allies adjacent to %s.\n> ", board.getName(ally));
                 }
             }else{
-                writer.format("%s does not have enough armies to fortify.\n> ", board.getTerritories().get(ally).getName());
+                writer.format("%s does not have enough armies to fortify.\n> ", board.getName(ally));;
             }
         }
         writer.println("Choose the territory to fortify.");
         board.printBoard(writer);
         writer.print("> ");
-        ArrayList<Integer> adjacents = board.getTerritories().get(ally).getLinks();
+        ArrayList<Integer> adjacents = board.getLinks(ally);
         int fortify = -1; correct = false;
         while(!correct){
             writer.flush();
             fortify = chooseAllyTerritory();
-            for(Integer i : board.getTerritories().get(ally).getLinks()){
+            for(Integer i : adjacents){
                 if(fortify == i){
                     correct = true;
                 }
             }
             if(!correct){
-                writer.format("%s is not adjacent to %s.\n> ", board.getTerritories().get(fortify).getName(), board.getTerritories().get(ally).getName());
+                writer.format("%s is not adjacent to %s.\n> ", board.getName(fortify), board.getName(ally));
             }
         }
 
@@ -471,8 +471,8 @@ public class CommandLineController implements PlayerController {
                 reader.next();
             }
             territory = reader.nextInt();
-            if(territory >= 0 && territory < board.getTerritories().size()){
-                if(board.getTerritories().get(territory).getOwner() == -1){
+            if(territory >= 0 && territory < board.getNumTerritories()){
+                if(board.getOwner(territory) == -1){
                     correct = true;
                 }else{
                     writer.print("That territory has already been claimed.\n> ");
@@ -494,8 +494,8 @@ public class CommandLineController implements PlayerController {
                 reader.next();
             }
             territory = reader.nextInt();
-            if(territory >= 0 && territory < board.getTerritories().size()){
-                if(board.getTerritories().get(territory).getOwner() == uid){
+            if(territory >= 0 && territory < board.getNumTerritories()){
+                if(board.getOwner(territory) == uid){
                     correct = true;
                 }else{
                     writer.print("You do not own that territory.\n> ");
@@ -517,8 +517,8 @@ public class CommandLineController implements PlayerController {
                 reader.next();
             }
             territory = reader.nextInt();
-            if(territory >= 0 && territory < board.getTerritories().size()){
-                if(board.getTerritories().get(territory).getOwner() != uid){
+            if(territory >= 0 && territory < board.getNumTerritories()){
+                if(board.getOwner(territory) != uid){
                     correct = true;
                 }else{
                     writer.print("You own that territory.\n> ");

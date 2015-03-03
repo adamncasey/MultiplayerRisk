@@ -14,7 +14,6 @@ import java.io.*;
 public class CommandLineController implements PlayerController {
     private static Random random = new Random();
 
-    private int uid;
     private List<Card> hand;
     private Board board;
 
@@ -28,13 +27,6 @@ public class CommandLineController implements PlayerController {
     public CommandLineController(Scanner reader, PrintWriter writer){
         this.reader = reader;
         this.writer = writer;
-    }
-
-    public void setUID(int uid){
-        this.uid = uid;
-        if(testing){
-            testingAI.setUID(uid);
-        }
     }
 
     public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
@@ -95,10 +87,11 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         writer.println("Which territory do you want to reinforce?");
         board.printBoard(writer);
         writer.print("> ");
-        int territory = chooseAllyTerritory();
+        int territory = chooseAllyTerritory(uid);
         move.setTerritory(territory);
         return move;
     }
@@ -183,12 +176,13 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
         writer.format("You have %d armies to place.\n", armiesToPlace);
         writer.println("In which territory would you like to place some armies?");
         board.printBoard(writer);
         writer.print("> ");
-        int territory = chooseAllyTerritory();
+        int territory = chooseAllyTerritory(uid);
         writer.format("How many armies would you like to place in %s?\n", board.getName(territory));
         board.printBoard(writer);
         writer.print("> ");
@@ -227,13 +221,14 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         writer.println("Choose the territory to attack from.");
         board.printBoard(writer);
         writer.print("> ");
         int ally = -1; boolean correct = false;
         while(!correct){
             writer.flush();
-            ally = chooseAllyTerritory();
+            ally = chooseAllyTerritory(uid);
             if(board.getArmies(ally) >= 2){
                 boolean found = false;
                 for(Integer i : board.getLinks(ally)){
@@ -257,7 +252,7 @@ public class CommandLineController implements PlayerController {
         int enemy = -1; correct = false;
         while(!correct){
             writer.flush();
-            enemy = chooseEnemyTerritory();
+            enemy = chooseEnemyTerritory(uid);
             for(Integer i : adjacents){
                 if(enemy == i){
                     correct = true;
@@ -370,13 +365,14 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         writer.println("Choose the territory to fortify from.");
         board.printBoard(writer);
         writer.print("> ");
         int ally = -1; boolean correct = false;
         while(!correct){
             writer.flush();
-            ally = chooseAllyTerritory();
+            ally = chooseAllyTerritory(uid);
             if(board.getArmies(ally) >= 2){
                 boolean found = false;
                 for(Integer i : board.getLinks(ally)){
@@ -400,7 +396,7 @@ public class CommandLineController implements PlayerController {
         int fortify = -1; correct = false;
         while(!correct){
             writer.flush();
-            fortify = chooseAllyTerritory();
+            fortify = chooseAllyTerritory(uid);
             for(Integer i : adjacents){
                 if(fortify == i){
                     correct = true;
@@ -486,7 +482,7 @@ public class CommandLineController implements PlayerController {
         return territory;
     }
 
-    private int chooseAllyTerritory(){
+    private int chooseAllyTerritory(int uid){
         int territory = -1; boolean correct = false;
         while(!correct){
             writer.flush();
@@ -509,7 +505,7 @@ public class CommandLineController implements PlayerController {
         return territory;
     }
 
-    private int chooseEnemyTerritory(){
+    private int chooseEnemyTerritory(int uid){
         int territory = -1; boolean correct = false;
         while(!correct){
             writer.flush();

@@ -3,6 +3,8 @@ package logic;
 import java.util.*;
 
 public class Move {
+    public final int uid;
+
     public enum Stage {
         // Moves
         CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
@@ -15,8 +17,13 @@ public class Move {
 
     private final Stage stage;
 
-    public Move(Stage stage){
+    public Move(int uid, Stage stage){
+        this.uid = uid;
         this.stage = stage;
+    }
+
+    public int getUID(){
+        return this.uid;
     }
 
     public Stage getStage(){

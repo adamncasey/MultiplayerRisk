@@ -13,15 +13,10 @@ import java.io.*;
 public class DumbAI implements PlayerController {
     private static Random random = new Random();
 
-    private int uid;
     private List<Card> hand;
     private Board board;
 
     public DumbAI(){
-    }
-
-    public void setUID(int uid){
-        this.uid = uid;
     }
 
     public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
@@ -77,6 +72,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int tid = random.nextInt(board.getNumTerritories());
         while(board.getOwner(tid) != uid){
             tid = random.nextInt(board.getNumTerritories());
@@ -101,6 +97,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
 
         int randomTerritory = random.nextInt(board.getNumTerritories());
@@ -120,6 +117,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int randomAlly = random.nextInt(board.getNumTerritories());
         while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
             randomAlly = random.nextInt(board.getNumTerritories());
@@ -154,6 +152,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int randomAlly = 0;
         randomAlly = random.nextInt(board.getNumTerritories());
         while(board.getOwner(randomAlly) != uid){

@@ -12,15 +12,6 @@ public class ComputerPlayer implements IPlayer {
         this.controller = controller;
     }
 
-    private int uid = 0; // Set and used by Game
-    public int getUID(){
-        return this.uid;
-    }
-    public void setUID(int uid){
-        this.uid = uid;
-        this.controller.setUID(uid);
-    }
-
     private boolean eliminated = false; // Set and used by Game
     public boolean isEliminated(){
         return eliminated;

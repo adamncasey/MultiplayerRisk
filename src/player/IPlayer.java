@@ -7,9 +7,6 @@ import java.util.*;
  * IPlayer --- The common interface between players and game logic.
  */
 public interface IPlayer {
-    public int getUID();
-    public void setUID(int uid);
-
     public boolean isEliminated();
     public void eliminate();
 

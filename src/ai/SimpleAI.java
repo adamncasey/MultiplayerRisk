@@ -13,15 +13,10 @@ import java.io.*;
 public class SimpleAI implements PlayerController {
     private static Random random = new Random();
 
-    private int uid;
     private List<Card> hand;
     private Board board;
 
     public SimpleAI(){
-    }
-
-    public void setUID(int uid){
-        this.uid = uid;
     }
 
     public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
@@ -77,6 +72,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move reinforceTerritory(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int tid = random.nextInt(board.getNumTerritories());
         while(board.getOwner(tid) != uid){
             tid = random.nextInt(board.getNumTerritories());
@@ -101,6 +97,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
 
         int randomTerritory = random.nextInt(board.getNumTerritories());
@@ -120,6 +117,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move startAttack(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int randomAlly = random.nextInt(board.getNumTerritories());
         while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
             randomAlly = random.nextInt(board.getNumTerritories());
@@ -164,6 +162,7 @@ public class SimpleAI implements PlayerController {
 
     // This AI only fortifies when one of it's territories has no adjacent enemies
     private Move decideFortify(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         for(int i = 0; i != board.getNumTerritories(); ++i){
             if(board.getOwner(i) != uid || board.getArmies(uid) < 2){
                 continue;
@@ -185,6 +184,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move startFortify(Move move) throws WrongMoveException{
+        int uid = move.getUID();
         int randomAlly = 0;;
         int enemyCounter = -1;
         List<Integer> adjacents = new ArrayList<Integer>();

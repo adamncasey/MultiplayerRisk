@@ -36,7 +36,6 @@ public class Game {
         this.playerHands = new ArrayList<List<Card>>();
         for(int i = 0; i != players.size(); ++i){
             IPlayer pi = players.get(i);
-            pi.setUID(i);
             this.players.add(pi);
             this.playerHands.add(new ArrayList<Card>());
             totalPlayerCount++;
@@ -49,8 +48,9 @@ public class Game {
     }
 
     private void updatePlayers(int currentPlayer, Move previousMove){
-        for(IPlayer p : players){
-            p.updatePlayer(board, playerHands.get(p.getUID()), currentPlayer, previousMove);
+        for(int i = 0; i != players.size(); ++i){
+            IPlayer p = players.get(i);
+            p.updatePlayer(board, playerHands.get(i), currentPlayer, previousMove);
         }
         checker.update(board);
         String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
@@ -60,7 +60,7 @@ public class Game {
         if(activePlayerCount < 3 || activePlayerCount > 6){
             return;
         }
-        updatePlayers(activePlayerCount, new Move(SETUP_BEGIN));
+        updatePlayers(activePlayerCount, new Move(-1, SETUP_BEGIN));
         int initialArmyValue = setupValues[activePlayerCount-3];
         int totalArmies = activePlayerCount * initialArmyValue;
         int territoriesToClaim = board.getNumTerritories();
@@ -69,7 +69,7 @@ public class Game {
         while(totalArmies != 0){
             IPlayer player = players.get(currentPlayer);
             if(territoriesToClaim != 0){
-                Move move = new Move(CLAIM_TERRITORY);
+                Move move = new Move(currentPlayer, CLAIM_TERRITORY);
                 move = getMove(currentPlayer, move);
                 int territoryToClaim = move.getTerritory();
                 board.claimTerritory(territoryToClaim, currentPlayer);
@@ -77,7 +77,7 @@ public class Game {
                 territoriesToClaim--;
                 updatePlayers(currentPlayer, move);
             } else {
-                Move move = new Move(REINFORCE_TERRITORY);
+                Move move = new Move(currentPlayer, REINFORCE_TERRITORY);
                 move = getMove(currentPlayer, move);
                 int territoryToReinforce = move.getTerritory();
                 board.placeArmies(territoryToReinforce, 1);
@@ -89,7 +89,7 @@ public class Game {
                 currentPlayer = 0;
             }
         }
-        updatePlayers(activePlayerCount, new Move(SETUP_END));
+        updatePlayers(activePlayerCount, new Move(-1, SETUP_END));
     }
 
     public void playGame() throws WrongMoveException{
@@ -98,7 +98,7 @@ public class Game {
         }
         int turnCounter = 0;
         int currentPlayer = firstPlayer;
-        updatePlayers(currentPlayer, new Move(GAME_BEGIN));
+        updatePlayers(currentPlayer, new Move(-1, GAME_BEGIN));
         while(activePlayerCount != 1){
             IPlayer player = players.get(currentPlayer);
             if(!player.isEliminated()){
@@ -110,7 +110,7 @@ public class Game {
                 currentPlayer = 0;
             }
         }
-        Move gameEnded = new Move(GAME_END);
+        Move gameEnded = new Move(-1, GAME_END);
         gameEnded.setTurns(turnCounter);
         gameEnded.setPlayer(currentPlayer);
         updatePlayers(currentPlayer, gameEnded);
@@ -120,7 +120,7 @@ public class Game {
     private void playerTurn(int uid) throws WrongMoveException{
         IPlayer player = players.get(uid);
 
-        Move move = new Move(TRADE_IN_CARDS);
+        Move move = new Move(uid, TRADE_IN_CARDS);
         move = getMove(uid, move);
         List<Card> toTradeIn = move.getToTradeIn();
         boolean traded = tradeInCards(uid, toTradeIn); 
@@ -128,7 +128,7 @@ public class Game {
 
         int armies = calculatePlayerArmies(uid, traded, toTradeIn);
         while(armies != 0){
-            move = new Move(PLACE_ARMIES);
+            move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);
             move = getMove(uid, move);
             board.placeArmies(move.getTerritory(), move.getArmies());
@@ -138,7 +138,7 @@ public class Game {
 
         boolean territoryCaptured = false;
         while(checkAttackPossible(uid)){
-            move = new Move(DECIDE_ATTACK);
+            move = new Move(uid, DECIDE_ATTACK);
             move = getMove(uid, move);
             updatePlayers(uid, move);
             boolean attacking = move.getDecision();
@@ -146,13 +146,13 @@ public class Game {
                 break;
             }
 
-            move = new Move(START_ATTACK);
+            move = new Move(uid, START_ATTACK);
             move = getMove(uid, move);
             int attackFrom = move.getFrom();
             int attackTo = move.getTo();
             updatePlayers(uid, move);
 
-            move = new Move(CHOOSE_ATTACK_DICE);
+            move = new Move(uid, CHOOSE_ATTACK_DICE);
             move.setFrom(attackFrom);
             move.setTo(attackTo);
             move = getMove(uid, move);
@@ -160,7 +160,7 @@ public class Game {
             updatePlayers(uid, move);
 
             int enemyUID = board.getOwner(attackTo);
-            move = new Move(CHOOSE_DEFEND_DICE);
+            move = new Move(enemyUID, CHOOSE_DEFEND_DICE);
             move.setFrom(attackFrom);
             move.setTo(attackTo);
             move = getMove(enemyUID, move);
@@ -174,14 +174,14 @@ public class Game {
             board.placeArmies(attackTo, -attackResult.get(1));
             boolean willCaptureTerritory = board.getArmies(attackTo) == 0;
 
-            move = new Move(END_ATTACK);
+            move = new Move(uid, END_ATTACK);
             move.setAttackerLosses(attackResult.get(0));
             move.setDefenderLosses(attackResult.get(1));
             updatePlayers(uid, move);
 
             if(willCaptureTerritory){ 
                 territoryCaptured = true;
-                move = new Move(OCCUPY_TERRITORY);
+                move = new Move(uid, OCCUPY_TERRITORY);
                 move.setCurrentArmies(board.getArmies(attackFrom));
                 move.setAttackDice(attackingDice);
                 move = getMove(uid, move);
@@ -196,13 +196,13 @@ public class Game {
                 if(eliminatePlayer(uid, enemyUID)){
                     return;
                 }
-                move = new Move(PLAYER_ELIMINATED);
+                move = new Move(uid, PLAYER_ELIMINATED);
                 move.setPlayer(enemyUID);
                 updatePlayers(uid, move);
                 List<Card> hand = playerHands.get(uid);
                 if(hand.size() > 5){ // immediately trade in cards when at 6 or more
                     while(hand.size() >= 5){ // trade in cards and place armies until 4 or fewer cards
-                        move = new Move(TRADE_IN_CARDS);
+                        move = new Move(uid, TRADE_IN_CARDS);
                         move = getMove(uid, move);
                         toTradeIn = move.getToTradeIn();
                         tradeInCards(uid, toTradeIn); 
@@ -210,8 +210,8 @@ public class Game {
                     
                         armies = incrementSetCounter();
                         while(armies != 0){
-                            move = new Move(PLACE_ARMIES);
-                            move.setArmies(armies);
+                            move = new Move(uid, PLACE_ARMIES);
+                            move.setCurrentArmies(armies);
                             move = getMove(uid, move);
                             board.placeArmies(move.getTerritory(), move.getArmies());
                             armies -= move.getArmies();
@@ -226,24 +226,24 @@ public class Game {
             Card newCard = deck.drawCard();
             if(newCard != null){
                 playerHands.get(uid).add(newCard);
-                updatePlayers(uid, new Move(CARD_DRAWN));
+                updatePlayers(uid, new Move(uid, CARD_DRAWN));
             }
         }
 
         if(checkFortifyPossible(uid)){
-            move = new Move(DECIDE_FORTIFY);
+            move = new Move(uid, DECIDE_FORTIFY);
             move = getMove(uid, move);
             updatePlayers(uid, move);
 
             boolean decideFortify = move.getDecision();
             if(decideFortify){
-                move = new Move(START_FORTIFY);
+                move = new Move(uid, START_FORTIFY);
                 move = getMove(uid, move);
                 int fortifyFrom = move.getFrom();
                 int fortifyTo = move.getTo();
                 updatePlayers(uid, move);
 
-                move = new Move(FORTIFY_TERRITORY);
+                move = new Move(uid, FORTIFY_TERRITORY);
                 move.setCurrentArmies(board.getArmies(fortifyFrom));
                 move = getMove(uid, move);
                 int numFortifyArmies = move.getArmies();

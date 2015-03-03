@@ -14,7 +14,7 @@ public class SimpleAI implements PlayerController {
     private static Random random = new Random();
 
     private int uid;
-    private ArrayList<Card> hand;
+    private List<Card> hand;
     private Board board;
 
     public SimpleAI(){
@@ -24,7 +24,7 @@ public class SimpleAI implements PlayerController {
         this.uid = uid;
     }
 
-    public void updateAI(ArrayList<Card> hand, Board board, int currentPlayer, Move previousMove){
+    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
         this.hand = new ArrayList<Card>(hand);
         this.board = board;
     }
@@ -87,7 +87,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move tradeInCards(Move move) throws WrongMoveException{ 
-        ArrayList<Card> toTradeIn = new ArrayList<Card>();
+        List<Card> toTradeIn = new ArrayList<Card>();
         if(hand.size() >= 5){
             for(int i = 0; i != 3; ++i){
                 int randomCard = random.nextInt(hand.size());
@@ -124,7 +124,7 @@ public class SimpleAI implements PlayerController {
         while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
             randomAlly = random.nextInt(board.getNumTerritories());
         }
-        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
+        List<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setFrom(randomAlly);
@@ -168,7 +168,7 @@ public class SimpleAI implements PlayerController {
             if(board.getOwner(i) != uid || board.getArmies(uid) < 2){
                 continue;
             }
-            ArrayList<Integer> adjacents = board.getLinks(i);
+            List<Integer> adjacents = board.getLinks(i);
             int enemyCounter = 0;
             for(int j : adjacents){
                 if(board.getOwner(j) != uid){
@@ -187,7 +187,7 @@ public class SimpleAI implements PlayerController {
     private Move startFortify(Move move) throws WrongMoveException{
         int randomAlly = 0;;
         int enemyCounter = -1;
-        ArrayList<Integer> adjacents = new ArrayList<Integer>();
+        List<Integer> adjacents = new ArrayList<Integer>();
         while(enemyCounter != 0){
             randomAlly = random.nextInt(board.getNumTerritories());
             while(board.getOwner(randomAlly) != uid){

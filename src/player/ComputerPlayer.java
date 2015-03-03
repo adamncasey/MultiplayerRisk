@@ -32,7 +32,7 @@ public class ComputerPlayer implements IPlayer {
     public void nextMove(int currentPlayer, String currentMove){
     }
 
-    public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){
+    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
         this.controller.updateAI(hand, board, currentPlayer, previousMove);
     }
 

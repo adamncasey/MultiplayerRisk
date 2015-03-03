@@ -3,8 +3,6 @@ package test.logic;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.ArrayList;
-
 import logic.*;
 
 public class CardTest{

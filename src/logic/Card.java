@@ -44,7 +44,7 @@ public class Card {
     }
 
     // Checks that the hand contains a set of 3 different cards, 3 of the same type of card, or a set using a wildcard.
-    public static boolean containsSet(ArrayList<Card> hand){
+    public static boolean containsSet(List<Card> hand){
         // Count how many times each type of card appears
         int iC = 0; int cC = 0; int aC = 0; int wC = 0;
         for(Card c : hand){
@@ -75,7 +75,7 @@ public class Card {
     }
 
     // Check that toTradeIn is a subset of hand
-    public static boolean isSubset(ArrayList<Card> toTradeIn, ArrayList<Card> hand){
+    public static boolean isSubset(List<Card> toTradeIn, List<Card> hand){
         toTradeIn = new ArrayList<Card>(toTradeIn);
         hand = new ArrayList<Card>(hand);
         // Loop until either all cards in toTradeIn are found, or a card is not found
@@ -96,7 +96,7 @@ public class Card {
         return true;
     }
 
-    public static String printHand(PrintWriter writer, ArrayList<Card> hand){
+    public static String printHand(PrintWriter writer, List<Card> hand){
         String message = "";
         int counter = 1;
         for(Card c : hand){

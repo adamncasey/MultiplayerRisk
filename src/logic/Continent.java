@@ -10,7 +10,7 @@ public class Continent {
     private Integer ID;
 
     // Stores the IDs of the territories in the continent
-    private ArrayList<Integer> territories = new ArrayList<Integer>();
+    private List<Integer> territories = new ArrayList<Integer>();
 
     private int value = 0;
     private String name = "";
@@ -23,7 +23,7 @@ public class Continent {
         territories.add(id);
     }
 
-    protected ArrayList<Integer> getTerritories(){
+    protected List<Integer> getTerritories(){
         return territories;
     }
 

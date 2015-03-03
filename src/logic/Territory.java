@@ -14,7 +14,7 @@ public class Territory {
     private int armies = 0;
 
     // Stores the IDs of the territories linked to this territory
-    private ArrayList<Integer> links = new ArrayList<Integer>();
+    private List<Integer> links = new ArrayList<Integer>();
 
     private Integer card;
 
@@ -54,7 +54,7 @@ public class Territory {
         links.add(new Integer(id));
     }
 
-    protected ArrayList<Integer> getLinks(){
+    protected List<Integer> getLinks(){
         return links;
     }
 
@@ -66,6 +66,3 @@ public class Territory {
         return this.card;
     }
 }
-
-
-

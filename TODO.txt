@@ -7,13 +7,17 @@ Logic:
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
-  Remove magic numbers
-
   Add dice rolls to Move
 
   Add player names to IPlayer
 
   Move Game.check_move() into move checker
+
+  move board/deck/setcounter into its own class
+
+  set move to readonly
+
+  remove uids from player
 
 Protocol:
   What happens when the deck runs out of cards?

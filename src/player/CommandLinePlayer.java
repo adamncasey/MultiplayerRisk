@@ -42,7 +42,7 @@ public class CommandLinePlayer implements IPlayer {
         writer.println(currentMove); 
     }
 
-    public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){
+    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
         this.controller.updateAI(hand, board, currentPlayer, previousMove);
 
         String message = MoveProcessor.processMove(currentPlayer, previousMove, board);

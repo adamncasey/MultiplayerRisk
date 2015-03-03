@@ -1,7 +1,6 @@
 package logic;
 
-import java.util.Collections;
-import java.util.ArrayList;
+import java.util.*;
 import org.apache.commons.math3.random.MersenneTwister;
 
 /**
@@ -9,7 +8,7 @@ import org.apache.commons.math3.random.MersenneTwister;
  */
 public class Deck {
 
-    ArrayList<Card> cards = new ArrayList<Card>();
+    List<Card> cards = new ArrayList<Card>();
 
     public Deck(){
     }

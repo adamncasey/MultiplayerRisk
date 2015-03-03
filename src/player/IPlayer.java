@@ -1,7 +1,7 @@
 package player;
 
 import logic.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  * IPlayer --- The common interface between players and game logic.
@@ -17,7 +17,7 @@ public interface IPlayer {
     public void nextMove(int currentPlayer, String currentMove);
 
     // Lets the player know when ever the gamestate changes, and describes how it changed
-    public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove);
+    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove);
 
     public Move getMove(Move move);
 }

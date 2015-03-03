@@ -3,7 +3,7 @@ package test.logic;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import logic.*;
 
@@ -37,21 +37,21 @@ public class ContainsSetTest{
     // hand is empty
     @Test
     public void empty(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         assertEquals(false, Card.containsSet(hand));
     }
 
     // hand has one card
     @Test
     public void oneCard(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         assertEquals(false, Card.containsSet(hand));
     }
 
     // hand has a set of 3 different cards
     @Test
     public void different(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -59,7 +59,7 @@ public class ContainsSetTest{
     // hand has a set of 3 infantry
     @Test
     public void same1(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -67,7 +67,7 @@ public class ContainsSetTest{
     // hand has a set of 3 cavalry
     @Test
     public void same2(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(cavalry); hand.add(cavalry2); hand.add(cavalry3);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -75,7 +75,7 @@ public class ContainsSetTest{
     // hand has a set of 3 artillery
     @Test
     public void same3(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(artillery); hand.add(artillery2); hand.add(artillery3);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -83,7 +83,7 @@ public class ContainsSetTest{
     // hand has 3 cards, but they do not make a set
     @Test
     public void no(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry);
         assertEquals(false, Card.containsSet(hand));
     }
@@ -91,7 +91,7 @@ public class ContainsSetTest{
     // hand has 4 cards, including a set of 3 different cards
     @Test
     public void extraDifferent(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         hand.add(infantry2);
         assertEquals(true, Card.containsSet(hand));
@@ -100,7 +100,7 @@ public class ContainsSetTest{
     // hand has 4 cards, including a set of 3 of the same card
     @Test
     public void extraSame(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         hand.add(cavalry);
         assertEquals(true, Card.containsSet(hand));
@@ -109,7 +109,7 @@ public class ContainsSetTest{
     // hand has 4 cards, but doesn't contain a set
     @Test
     public void extraNo(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry);
         hand.add(cavalry2);
         assertEquals(false, Card.containsSet(hand));
@@ -118,7 +118,7 @@ public class ContainsSetTest{
     // hand has a set containing a wildcard and 2 different cards
     @Test
     public void wildcardDifferent(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(cavalry); hand.add(wildcard);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -126,7 +126,7 @@ public class ContainsSetTest{
     // hand has a set containing a wildcard and 2 infantry
     @Test
     public void wildcardSame(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(wildcard);
         assertEquals(true, Card.containsSet(hand));
     }
@@ -134,7 +134,7 @@ public class ContainsSetTest{
     // hand has a wildcard but still doesn't make a set
     @Test
     public void wildcardNo(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(wildcard);
         assertEquals(false, Card.containsSet(hand)); 
     }
@@ -142,7 +142,7 @@ public class ContainsSetTest{
     // hand has a wildcard that could be a part of 2 different sets
     @Test
     public void wildcardExtra(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(cavalry); hand.add(wildcard);
         hand.add(infantry2);
         assertEquals(true, Card.containsSet(hand));
@@ -151,7 +151,7 @@ public class ContainsSetTest{
     // hand has two wildcards but nothing else
     @Test
     public void wildcardTwoNo(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(wildcard); hand.add(wildcard);
         assertEquals(false, Card.containsSet(hand));
     }
@@ -159,7 +159,7 @@ public class ContainsSetTest{
     // hand makes a set containing 2 wildcards
     @Test
     public void wildcardTwo(){
-        ArrayList<Card> hand = new ArrayList<Card>();
+        List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(wildcard); hand.add(wildcard);
         assertEquals(true, Card.containsSet(hand));
     }

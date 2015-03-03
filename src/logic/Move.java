@@ -1,6 +1,6 @@
 package logic;
 
-import java.util.ArrayList;
+import java.util.*;
 
 public class Move {
     public enum Stage {
@@ -58,12 +58,12 @@ public class Move {
     }
     
     // TRADE_IN_CARDS
-    private ArrayList<Card> toTradeIn = null;
-    public void setToTradeIn(ArrayList<Card> cards) throws WrongMoveException{
+    private List<Card> toTradeIn = null;
+    public void setToTradeIn(List<Card> cards) throws WrongMoveException{
         checkStage(Stage.TRADE_IN_CARDS);
         this.toTradeIn = new ArrayList<Card>(cards);
     }
-    public ArrayList<Card> getToTradeIn() throws WrongMoveException{
+    public List<Card> getToTradeIn() throws WrongMoveException{
         checkStage(Stage.TRADE_IN_CARDS);
         return this.toTradeIn;
     }

@@ -15,7 +15,7 @@ public class CommandLineController implements PlayerController {
     private static Random random = new Random();
 
     private int uid;
-    private ArrayList<Card> hand;
+    private List<Card> hand;
     private Board board;
 
     private Scanner reader;
@@ -37,7 +37,7 @@ public class CommandLineController implements PlayerController {
         }
     }
 
-    public void updateAI(ArrayList<Card> hand, Board board, int currentPlayer, Move previousMove){
+    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
         this.hand = new ArrayList<Card>(hand);
         this.board = board;
         if(testing){
@@ -118,7 +118,7 @@ public class CommandLineController implements PlayerController {
             }
         } 
 
-        ArrayList<Card> toTradeIn = new ArrayList<Card>(); 
+        List<Card> toTradeIn = new ArrayList<Card>(); 
         if(tradingInCards){
             writer.println("Which cards do you want to trade in? Enter 3 cards.");
             Card.printHand(writer, hand);
@@ -142,9 +142,9 @@ public class CommandLineController implements PlayerController {
         return move;
     }
 
-    private ArrayList<Card> pickCards(){
+    private List<Card> pickCards(){
         boolean correct = false;
-        ArrayList<Integer> picked = new ArrayList<Integer>();
+        List<Integer> picked = new ArrayList<Integer>();
         while(!correct){
             while(!reader.hasNextInt()){
                 writer.print("Invalid input\n> ");
@@ -175,7 +175,7 @@ public class CommandLineController implements PlayerController {
                 correct = true;
             }
         }
-        ArrayList<Card> toTradeIn = new ArrayList<Card>();
+        List<Card> toTradeIn = new ArrayList<Card>();
         for(Integer i : picked){
             toTradeIn.add(hand.get(i-1));
         }
@@ -253,7 +253,7 @@ public class CommandLineController implements PlayerController {
         writer.println("Choose the territory to attack.");
         board.printBoard(writer);
         writer.print("> ");
-        ArrayList<Integer> adjacents = board.getLinks(ally);
+        List<Integer> adjacents = board.getLinks(ally);
         int enemy = -1; correct = false;
         while(!correct){
             writer.flush();
@@ -396,7 +396,7 @@ public class CommandLineController implements PlayerController {
         writer.println("Choose the territory to fortify.");
         board.printBoard(writer);
         writer.print("> ");
-        ArrayList<Integer> adjacents = board.getLinks(ally);
+        List<Integer> adjacents = board.getLinks(ally);
         int fortify = -1; correct = false;
         while(!correct){
             writer.flush();

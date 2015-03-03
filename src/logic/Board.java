@@ -35,7 +35,7 @@ public class Board {
         return territories.get(territory).getName();
     }
 
-    public ArrayList<Integer> getLinks(int territory){
+    public List<Integer> getLinks(int territory){
         return territories.get(territory).getLinks();
     }
 

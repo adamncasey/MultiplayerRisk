@@ -14,7 +14,7 @@ public class DumbAI implements PlayerController {
     private static Random random = new Random();
 
     private int uid;
-    private ArrayList<Card> hand;
+    private List<Card> hand;
     private Board board;
 
     public DumbAI(){
@@ -24,7 +24,7 @@ public class DumbAI implements PlayerController {
         this.uid = uid;
     }
 
-    public void updateAI(ArrayList<Card> hand, Board board, int currentPlayer, Move previousMove){
+    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
         this.hand = new ArrayList<Card>(hand);
         this.board = board;
     }
@@ -87,7 +87,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move tradeInCards(Move move) throws WrongMoveException{ 
-        ArrayList<Card> toTradeIn = new ArrayList<Card>();
+        List<Card> toTradeIn = new ArrayList<Card>();
         if(hand.size() >= 5){
             for(int i = 0; i != 3; ++i){
                 int randomCard = random.nextInt(hand.size());
@@ -124,7 +124,7 @@ public class DumbAI implements PlayerController {
         while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
             randomAlly = random.nextInt(board.getNumTerritories());
         }
-        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
+        List<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setFrom(randomAlly);
@@ -159,7 +159,7 @@ public class DumbAI implements PlayerController {
         while(board.getOwner(randomAlly) != uid){
             randomAlly = random.nextInt(board.getNumTerritories());
         }
-        ArrayList<Integer> adjacents = board.getLinks(randomAlly);
+        List<Integer> adjacents = board.getLinks(randomAlly);
         int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
 
         move.setFrom(randomAlly);

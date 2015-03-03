@@ -2,7 +2,7 @@ package logic;
 
 import logic.Move.Stage;
 
-import java.util.ArrayList;
+import java.util.*;
 
 
 /**
@@ -28,7 +28,7 @@ public class MoveProcessor {
                     message = String.format("Player %d has reinforced territory [%d-%s].\n", uid, reinforcedTerritory, reinforcedTerritoryName);
                     return message;
                 case TRADE_IN_CARDS:
-                    ArrayList<Card> toTradeIn = move.getToTradeIn();
+                    List<Card> toTradeIn = move.getToTradeIn();
                     String handMessage = Card.printHand(null, toTradeIn);
                     message = String.format("Player %d has traded in %s", uid, handMessage);
                     return message;

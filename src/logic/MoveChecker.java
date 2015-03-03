@@ -28,7 +28,7 @@ public class MoveChecker {
         return true;
     }
 
-    public static boolean checkTradeInCards(ArrayList<Card> hand, ArrayList<Card> toTradeIn){
+    public static boolean checkTradeInCards(List<Card> hand, List<Card> toTradeIn){
         if(toTradeIn.size() == 0 && hand.size() < 5){
             return true;
         }

@@ -3,7 +3,7 @@ package test.logic;
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.ArrayList;
+import java.util.*;
 
 import logic.*;
 import player.*;
@@ -14,7 +14,7 @@ public class IncrementSetCounterTest{
 
     @BeforeClass
     public static void setupGame(){
-        ArrayList<IPlayer> players = new ArrayList<IPlayer>();
+        List<IPlayer> players = new ArrayList<IPlayer>();
         game = new Game(players, 0, 0, "resources/risk_map.json");
     }
 

@@ -13,12 +13,12 @@ import player.*;
 public class Game {
     private static Random random;
 
-    private ArrayList<IPlayer> players;
+    private List<IPlayer> players;
     private int firstPlayer;
 
     private Board board;
     private Deck deck;
-    private ArrayList<ArrayList<Card>> playerHands;
+    private List<List<Card>> playerHands;
     private MoveChecker checker;
 
     private int setupValues[] = {35, 30, 25, 20};
@@ -29,11 +29,11 @@ public class Game {
     private int totalPlayerCount = 0;
     private int activePlayerCount = 0;
 
-    public Game(ArrayList<IPlayer> players, int firstPlayer, int seed, String boardFilename){
+    public Game(List<IPlayer> players, int firstPlayer, int seed, String boardFilename){
         this.random = new Random(seed);
         this.players = new ArrayList<IPlayer>();
         this.firstPlayer = firstPlayer;
-        this.playerHands = new ArrayList<ArrayList<Card>>();
+        this.playerHands = new ArrayList<List<Card>>();
         for(int i = 0; i != players.size(); ++i){
             IPlayer pi = players.get(i);
             pi.setUID(i);
@@ -122,7 +122,7 @@ public class Game {
 
         Move move = new Move(TRADE_IN_CARDS);
         move = getMove(uid, move);
-        ArrayList<Card> toTradeIn = move.getToTradeIn();
+        List<Card> toTradeIn = move.getToTradeIn();
         boolean traded = tradeInCards(uid, toTradeIn); 
         updatePlayers(uid, move);
 
@@ -167,9 +167,9 @@ public class Game {
             int defendingDice = move.getDefendDice();
             updatePlayers(enemyUID, move);
  
-            ArrayList<Integer> attackDiceRolls = rollDice(attackingDice);
-            ArrayList<Integer> defendDiceRolls = rollDice(defendingDice);
-            ArrayList<Integer> attackResult = decideAttackResult(attackDiceRolls, defendDiceRolls);
+            List<Integer> attackDiceRolls = rollDice(attackingDice);
+            List<Integer> defendDiceRolls = rollDice(defendingDice);
+            List<Integer> attackResult = decideAttackResult(attackDiceRolls, defendDiceRolls);
             board.placeArmies(attackFrom, -attackResult.get(0));
             board.placeArmies(attackTo, -attackResult.get(1));
             boolean willCaptureTerritory = board.getArmies(attackTo) == 0;
@@ -199,7 +199,7 @@ public class Game {
                 move = new Move(PLAYER_ELIMINATED);
                 move.setPlayer(enemyUID);
                 updatePlayers(uid, move);
-                ArrayList<Card> hand = playerHands.get(uid);
+                List<Card> hand = playerHands.get(uid);
                 if(hand.size() > 5){ // immediately trade in cards when at 6 or more
                     while(hand.size() >= 5){ // trade in cards and place armies until 4 or fewer cards
                         move = new Move(TRADE_IN_CARDS);
@@ -283,8 +283,8 @@ public class Game {
                 int territoryToReinforce = move.getTerritory();
                 return checker.checkReinforceTerritory(currentPlayer, territoryToReinforce);
             case TRADE_IN_CARDS:
-                ArrayList<Card> hand = playerHands.get(currentPlayer); 
-                ArrayList<Card> toTradeIn = move.getToTradeIn();
+                List<Card> hand = playerHands.get(currentPlayer); 
+                List<Card> toTradeIn = move.getToTradeIn();
                 return checker.checkTradeInCards(hand, toTradeIn);
             case PLACE_ARMIES:
                 int placeArmiesTerritory = move.getTerritory();
@@ -325,8 +325,8 @@ public class Game {
         }
     }
 
-    public boolean tradeInCards(int uid, ArrayList<Card> toTradeIn){
-        ArrayList<Card> hand = playerHands.get(uid);
+    public boolean tradeInCards(int uid, List<Card> toTradeIn){
+        List<Card> hand = playerHands.get(uid);
         for(Card c: toTradeIn){
             hand.remove(c);
         }
@@ -336,7 +336,7 @@ public class Game {
         return false;
     }
 
-    public int calculatePlayerArmies(int uid, boolean traded, ArrayList<Card> toTradeIn){
+    public int calculatePlayerArmies(int uid, boolean traded, List<Card> toTradeIn){
         int armies = 0;
 
         armies += board.calculatePlayerTerritoryArmies(uid);
@@ -382,15 +382,15 @@ public class Game {
         return false;
     }
 
-    public static ArrayList<Integer> rollDice(int numDice){
-        ArrayList<Integer> diceRolls = new ArrayList<Integer>();
+    public static List<Integer> rollDice(int numDice){
+        List<Integer> diceRolls = new ArrayList<Integer>();
         for(int i = 0; i != numDice; ++i){
             diceRolls.add(random.nextInt(6)+1);
         }
         return diceRolls;
     }
 
-    public static ArrayList<Integer> decideAttackResult(ArrayList<Integer> attack, ArrayList<Integer> defend){
+    public static List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){
         int attackerLosses = 0; int defenderLosses = 0;
 
         while(attack.size() != 0 && defend.size() != 0){
@@ -417,7 +417,7 @@ public class Game {
             defend.remove(defendIndex);
         }
 
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ArrayList<Integer>();
         result.add(attackerLosses);
         result.add(defenderLosses);
         return result;
@@ -433,7 +433,7 @@ public class Game {
     }
 
     public boolean eliminatePlayer(int currentUID, int eliminatedUID){
-        ArrayList<Card> hand = playerHands.get(currentUID);
+        List<Card> hand = playerHands.get(currentUID);
         for(Card c : playerHands.get(eliminatedUID)){
             hand.add(c);
         }

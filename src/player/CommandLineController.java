@@ -2,6 +2,7 @@ package player;
 
 import ai.*;
 import logic.*;
+import logic.Move.Stage;
 import player.*;
 
 import java.util.*;
@@ -22,7 +23,7 @@ public class CommandLineController implements PlayerController {
 
     private PlayerController testingAI = new DumbAI(); // Will fill in the blanks when I want to test a particular move stage.
     boolean testing = false;
-    int testingStage = -1;
+    Stage testingStage = null;
 
     public CommandLineController(Scanner reader, PrintWriter writer){
         this.reader = reader;
@@ -50,36 +51,37 @@ public class CommandLineController implements PlayerController {
                 return testingAI.getMove(move);
             }
             switch(move.getStage()){
-                case 0:
+                case CLAIM_TERRITORY:
                     return claimTerritory(move);
-                case 1:
+                case REINFORCE_TERRITORY:
                     return reinforceTerritory(move);
-                case 2:
+                case TRADE_IN_CARDS:
                     return tradeInCards(move);
-                case 3:
+                case PLACE_ARMIES:
                     return placeArmies(move);
-                case 4:
+                case DECIDE_ATTACK:
                     return decideAttack(move);
-                case 5:
+                case START_ATTACK:
                     return startAttack(move);
-                case 6:
+                case CHOOSE_ATTACK_DICE:
                     return chooseAttackingDice(move);
-                case 7:
+                case CHOOSE_DEFEND_DICE:
                     return chooseDefendingDice(move);
-                case 8:
+                case OCCUPY_TERRITORY:
                     return occupyTerritory(move);
-                case 9:
+                case DECIDE_FORTIFY:
                     return decideFortify(move);
-                case 10:
+                case START_FORTIFY:
                     return startFortify(move);
-                case 11:
+                case FORTIFY_TERRITORY:
                     return chooseFortifyArmies(move);
                 default:
                      return move;
             }
         }catch(WrongMoveException e){
             System.out.println("CommandLineController is not choosing a move correctly");
-            return new Move(-1);
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 
@@ -88,7 +90,7 @@ public class CommandLineController implements PlayerController {
         board.printBoard(writer);
         writer.print("> ");
         int territory = chooseUnclaimedTerritory();
-        move.setTerritoryToClaim(territory);
+        move.setTerritory(territory);
         return move;
     }
 
@@ -97,7 +99,7 @@ public class CommandLineController implements PlayerController {
         board.printBoard(writer);
         writer.print("> ");
         int territory = chooseAllyTerritory();
-        move.setTerritoryToReinforce(territory);
+        move.setTerritory(territory);
         return move;
     }
 
@@ -181,7 +183,7 @@ public class CommandLineController implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
-        int armiesToPlace = move.getArmiesToPlace();
+        int armiesToPlace = move.getCurrentArmies();
         writer.format("You have %d armies to place.\n", armiesToPlace);
         writer.println("In which territory would you like to place some armies?");
         board.printBoard(writer);
@@ -210,8 +212,8 @@ public class CommandLineController implements PlayerController {
             }
         }
 
-        move.setPlaceArmiesTerritory(territory);
-        move.setPlaceArmiesNum(numArmies);
+        move.setTerritory(territory);
+        move.setArmies(numArmies);
         return move;
     }
 
@@ -220,7 +222,7 @@ public class CommandLineController implements PlayerController {
         board.printBoard(writer);
         writer.print("> ");
         boolean attack = chooseYesNo();
-        move.setDecideAttack(attack);
+        move.setDecision(attack);
         return move;
     }
 
@@ -266,16 +268,16 @@ public class CommandLineController implements PlayerController {
             }
         }
 
-        move.setAttackFrom(ally);
-        move.setAttackTo(enemy);
+        move.setFrom(ally);
+        move.setTo(enemy);
         return move;
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getArmies(move.getAttackingFrom());
-        String attackingName = board.getName(move.getAttackingFrom());
-        String defendingName = board.getName(move.getAttackingTo());
-        int defendingArmies = board.getArmies(move.getAttackingTo());
+        int numArmies = board.getArmies(move.getFrom());
+        String attackingName = board.getName(move.getFrom());
+        String defendingName = board.getName(move.getTo());
+        int defendingArmies = board.getArmies(move.getTo());
         writer.format("Choose how many dice to roll. You are attacking from %s which has %d armies, to %s which has %d armies.\n> ", attackingName, numArmies, defendingName, defendingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
@@ -297,15 +299,15 @@ public class CommandLineController implements PlayerController {
             }
         }
 
-        move.setAttackingDice(numDice);
+        move.setAttackDice(numDice);
         return move;
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getArmies(move.getDefendingFrom());
-        String defendingName = board.getName(move.getDefendingFrom());
-        String attackingName = board.getName(move.getDefendingTo());
-        int attackingArmies = board.getArmies(move.getDefendingTo());
+        int numArmies = board.getArmies(move.getTo());
+        String defendingName = board.getName(move.getTo());
+        String attackingName = board.getName(move.getFrom());
+        int attackingArmies = board.getArmies(move.getFrom());
         writer.format("Choose how many dice to roll. You are defending %s which has %d armies, from an attack from %s which has %d armies.\n> ", defendingName, numArmies, attackingName, attackingArmies);
         int numDice = -1; boolean correct = false;
         while(!correct){
@@ -327,13 +329,13 @@ public class CommandLineController implements PlayerController {
             }
         }
 
-        move.setDefendingDice(numDice);
+        move.setDefendDice(numDice);
         return move;
     }
 
     private Move occupyTerritory(Move move) throws WrongMoveException{
-        int currentArmies = move.getOccupyCurrentArmies();
-        int numDice = move.getOccupyDice();
+        int currentArmies = move.getCurrentArmies();
+        int numDice = move.getAttackDice();
         writer.format("Choose how many armies to occupy with. The attacking territory has %d armies remaining.\n> ", currentArmies);
         int numArmies = -1; boolean correct = false;
         while(!correct){
@@ -354,7 +356,7 @@ public class CommandLineController implements PlayerController {
                 writer.format("You must occupy with at least %d armies.\n> ", numDice);
             }
         }
-        move.setOccupyArmies(numArmies);
+        move.setArmies(numArmies);
         return move;
     }
 
@@ -363,7 +365,7 @@ public class CommandLineController implements PlayerController {
         board.printBoard(writer);
         writer.print("> ");
         boolean fortifying = chooseYesNo();
-        move.setDecideFortify(fortifying);
+        move.setDecision(fortifying);
         return move;
     }
 
@@ -409,13 +411,13 @@ public class CommandLineController implements PlayerController {
             }
         }
 
-        move.setFortifyFrom(ally);
-        move.setFortifyTo(fortify);
+        move.setFrom(ally);
+        move.setTo(fortify);
         return move;
     }
 
     private Move chooseFortifyArmies(Move move) throws WrongMoveException{
-        int currentArmies = move.getFortifyCurrentArmies();
+        int currentArmies = move.getCurrentArmies();
         writer.format("Choose how many armies to fortify with. The fortifying territory has %d armies remaining.\n> ", currentArmies);
         int numArmies = -1; boolean correct = false;
         while(!correct){
@@ -436,7 +438,7 @@ public class CommandLineController implements PlayerController {
                 writer.print("You must fortify with at least 1 army.\n> ");
             }
         }
-        move.setFortifyArmies(numArmies);
+        move.setArmies(numArmies);
         return move;
     }
 
@@ -530,4 +532,3 @@ public class CommandLineController implements PlayerController {
         return territory;
     }
 }
-

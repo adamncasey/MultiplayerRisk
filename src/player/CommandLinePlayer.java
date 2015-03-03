@@ -39,8 +39,7 @@ public class CommandLinePlayer implements IPlayer {
     }
 
     public void nextMove(int currentPlayer, String currentMove){
-        writer.format("Player %d is %s.\n", currentPlayer, currentMove);
-        writer.flush();
+        writer.println(currentMove); 
     }
 
     public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){

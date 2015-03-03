@@ -1,11 +1,19 @@
 Logic:
-  Make tests for all methods that take in IPlayer input (important)
+  Make tests for all methods that take in IPlayer input
 
   implement leave game functionality including neutral territories (in protocol)
 
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
+
+  Remove magic numbers
+
+  Add dice rolls to Move
+
+  Add player names to IPlayer
+
+  Move Game.check_move() into move checker
 
 Protocol:
   What happens when the deck runs out of cards?

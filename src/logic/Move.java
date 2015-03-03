@@ -2,320 +2,227 @@ package logic;
 
 import java.util.ArrayList;
 
-
 public class Move {
-    // Stage 0 = claimTerritory
-    // returns int - id of territory to claim
-    // Stage 1 = reinforceTerritory
-    // returns int - id of territory to claim
-    // Stage 2 = tradeInCards
-    // returns ArrayList<Card> cards to be traded in
-    // Stage 3 = placeArmies
-    // returns int - id of territory to reinforce
-    // returns int - number of armies to reinforce with
-    // Stage 4 = decideAttack
-    // returns boolean - whether or not the player wants to attack
-    // Stage 5 = startAttack
-    // returns int - id of territory to attack from
-    // returns int - id of territory to attack
-    // Stage 6 = chooseAttackDice
-    // returns int - 1, 2, or 3 dice
-    // Stage 7 = chooseDefendDice
-    // returns int - 1, or 2 dice
-    // Stage 8 = occupyTerritory
-    // returns int - the number of armies to move from attacking territory to attacked territory
-    // Stage 9 = decideFortify
-    // returns boolean - whether or not to fortify
-    // Stage 10 = startFortify
-    // returns int - id of territory to fortify from
-    // returns int - id of territory to fortify
-    // Stage 11 = chooseFortifyArmies
-    // returns int - number of armies to fortify with
+    public enum Stage {
+        // Moves
+        CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
+        DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, OCCUPY_TERRITORY,
+        DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
+        // Events
+        END_ATTACK, PLAYER_ELIMINATED, CARD_DRAWN,
+        SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
+    }
 
-    // These stages are used to let IPlayer know when an event happens (in situations where the game updates but a player hasn't had to input anything)
-    // Stage 101 - An attack has just been carried out (After dice rolls the board is updated)
-    // Stage 102 - The player has just been eliminated
-    // Stage 103 - The player has just drawn a card
-    // Stage 104 - Game setup is beginning
-    // Stage 105 - Game setup has ended
-    // Stage 106 - Game is beginning
-    // Stage 107 - Game had ended (winner)
-    // Stage 108 - Game has ended (numTurns)
+    private final Stage stage;
 
-    private int stage;
-
-    public Move(int stage){
+    public Move(Stage stage){
         this.stage = stage;
     }
 
-    public int getStage(){
+    public Stage getStage(){
         return this.stage;
     }
 
-    //stage 0
-    private int territoryToClaim = -1;
-    public void setTerritoryToClaim(int territory) throws WrongMoveException{
-        checkStage(0);
-        this.territoryToClaim = territory;
+    // CLAIM_TERRITORY, REINFORCE_TERRITORY, PLACE_ARMIES
+    private int territory = -1;
+    public void setTerritory(int territory) throws WrongMoveException{
+        checkStage(Stage.CLAIM_TERRITORY, Stage.REINFORCE_TERRITORY, Stage.PLACE_ARMIES);
+        this.territory = territory;
     }
-    public int getTerritoryToClaim() throws WrongMoveException{
-        checkStage(0);
-        return this.territoryToClaim;
+    public int getTerritory() throws WrongMoveException{
+        checkStage(Stage.CLAIM_TERRITORY, Stage.REINFORCE_TERRITORY, Stage.PLACE_ARMIES);
+        return this.territory;
 
     }
 
-    //stage 1
-    private int territoryToReinforce = -1;
-    public void setTerritoryToReinforce(int territory) throws WrongMoveException{
-        checkStage(1);
-        this.territoryToReinforce = territory;
+    // PLACE_ARMIES, OCCUPY_TERRITORY, FORTIFY_TERRITORY
+    private int armies = -1;
+    public void setArmies(int numArmies) throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
+        this.armies = numArmies;
     }
-    public int getTerritoryToReinforce() throws WrongMoveException{
-        checkStage(1);
-        return this.territoryToReinforce;
+    public int getArmies() throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
+        return this.armies;
     }
 
-    //stage 2
+    // PLACE_ARMIES, OCCUPY_TERRITORY, FORTIFY_TERRITORY
+    private int currentArmies = 0;
+    protected void setCurrentArmies(int numArmies) throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
+        this.currentArmies = numArmies;
+    }
+    public int getCurrentArmies() throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
+        return this.currentArmies;
+    }
+    
+    // TRADE_IN_CARDS
     private ArrayList<Card> toTradeIn = null;
     public void setToTradeIn(ArrayList<Card> cards) throws WrongMoveException{
-        checkStage(2);
+        checkStage(Stage.TRADE_IN_CARDS);
         this.toTradeIn = new ArrayList<Card>(cards);
     }
     public ArrayList<Card> getToTradeIn() throws WrongMoveException{
-        checkStage(2);
+        checkStage(Stage.TRADE_IN_CARDS);
         return this.toTradeIn;
     }
 
-    //stage 3
-    private int placeArmiesTerritory = -1;
-    private int placeArmiesNum = -1;
-    public void setPlaceArmiesTerritory(int territory) throws WrongMoveException{
-        checkStage(3);
-        this.placeArmiesTerritory = territory;
+    // DECIDE_ATTACK, DECIDE_FORTIFY
+    private boolean decision = false;
+    public void setDecision(boolean decision) throws WrongMoveException{
+        checkStage(Stage.DECIDE_ATTACK, Stage.DECIDE_FORTIFY);
+        this.decision = decision;
     }
-    public void setPlaceArmiesNum(int numArmies) throws WrongMoveException{
-        checkStage(3);
-        this.placeArmiesNum = numArmies;
-    }
-    public int getPlaceArmiesTerritory() throws WrongMoveException{
-        checkStage(3);
-        return this.placeArmiesTerritory;
-    }
-    public int getPlaceArmiesNum() throws WrongMoveException{
-        checkStage(3);
-        return this.placeArmiesNum;
-    }
-    //stage 3 inputs (Game will provide these for IPlayer to use)
-    private int armiesToPlace = 0;
-    public void setArmiesToPlace(int armiesToPlace) throws WrongMoveException{
-        checkStage(3);
-        this.armiesToPlace = armiesToPlace;
-    }
-    public int getArmiesToPlace() throws WrongMoveException{
-        checkStage(3);
-        return this.armiesToPlace;
+    public boolean getDecision() throws WrongMoveException{
+        checkStage(Stage.DECIDE_ATTACK, Stage.DECIDE_FORTIFY);
+        return this.decision;
     }
 
-
-    //stage 4
-    private boolean decideAttack = false;
-    public void setDecideAttack(boolean decision) throws WrongMoveException{
-        checkStage(4);
-        this.decideAttack = decision;
+    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE
+    private int from = -1;
+    public void setFrom(int territory) throws WrongMoveException{
+        checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        this.from = territory;
     }
-    public boolean getDecideAttack() throws WrongMoveException{
-        checkStage(4);
-        return this.decideAttack;
-    }
-
-    //stage 5
-    private int attackFrom = -1;
-    private int attackTo = -1;
-    public void setAttackFrom(int territory) throws WrongMoveException{
-        checkStage(5);
-        this.attackFrom = territory;
-    }
-    public void setAttackTo(int territory) throws WrongMoveException{
-        checkStage(5);
-        this.attackTo = territory;
-    }
-    public int getAttackFrom() throws WrongMoveException{
-        checkStage(5);
-        return this.attackFrom;
-    }
-    public int getAttackTo() throws WrongMoveException{
-        checkStage(5);
-        return this.attackTo;
+    public int getFrom() throws WrongMoveException{
+        checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        return this.from;
     }
 
-    //stage 6
-    private int attackingDice = 0;
-    public void setAttackingDice(int numDice) throws WrongMoveException{
-        checkStage(6);
-        this.attackingDice = numDice;
+    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE
+    private int to = -1;
+    public void setTo(int territory) throws WrongMoveException{
+        checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        this.to = territory;
     }
-    public int getAttackingDice() throws WrongMoveException{
-        checkStage(6);
-        return this.attackingDice;
-    }
-    //stage 6 inputs
-    private int attackingFrom = -1;
-    public void setAttackingFrom(int territory) throws WrongMoveException{
-        checkStage(6);
-        this.attackingFrom = territory;
-    }
-    public int getAttackingFrom() throws WrongMoveException{
-        checkStage(6);
-        return this.attackingFrom;
-    }
-    private int attackingTo = -1;
-    public void setAttackingTo(int territory) throws WrongMoveException{
-        checkStage(6);
-        this.attackingTo = territory;
-    }
-    public int getAttackingTo() throws WrongMoveException{
-        checkStage(6);
-        return this.attackingTo;
-    }
-    
-    //stage 7
-    private int defendingDice = 0;
-    public void setDefendingDice(int numDice) throws WrongMoveException{
-        checkStage(7);
-        this.defendingDice = numDice;
-    }
-    public int getDefendingDice() throws WrongMoveException{
-        checkStage(7);
-        return this.defendingDice;
-    }
-    //stage 7 inputs
-    private int defendingFrom = -1;
-    public void setDefendingFrom(int territory) throws WrongMoveException{
-        checkStage(7);
-        this.defendingFrom = territory;
-    }
-    public int getDefendingFrom() throws WrongMoveException{
-        checkStage(7);
-        return this.defendingFrom;
-    }
-    private int defendingTo = -1;
-    public void setDefendingTo(int territory) throws WrongMoveException{
-        checkStage(7);
-        this.defendingTo = territory;
-    }
-    public int getDefendingTo() throws WrongMoveException{
-        checkStage(7);
-        return this.defendingTo;
+    public int getTo() throws WrongMoveException{
+        checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        return this.to;
     }
 
-    //stage 8
-    private int occupyArmies = 0;
-    public void setOccupyArmies(int numArmies) throws WrongMoveException{
-        checkStage(8);
-        this.occupyArmies = numArmies;
+    // CHOOSE_ATTACK_DICE, OCCUPY_TERRITORY
+    private int attackDice = 0;
+    public void setAttackDice(int numDice) throws WrongMoveException{
+        checkStage(Stage.CHOOSE_ATTACK_DICE, Stage.OCCUPY_TERRITORY);
+        this.attackDice = numDice;
     }
-    public int getOccupyArmies() throws WrongMoveException{
-        checkStage(8);
-        return this.occupyArmies;
+    public int getAttackDice() throws WrongMoveException{
+        checkStage(Stage.CHOOSE_ATTACK_DICE, Stage.OCCUPY_TERRITORY);
+        return this.attackDice;
     }
-    //stage 8 inputs
-    private int occupyCurrentArmies = 0;
-    public void setOccupyCurrentArmies(int numArmies) throws WrongMoveException{
-        checkStage(8);
-        this.occupyCurrentArmies = numArmies;
+ 
+    // CHOOSE_DEFEND_DICE
+    private int defendDice = 0;
+    public void setDefendDice(int numDice) throws WrongMoveException{
+        checkStage(Stage.CHOOSE_DEFEND_DICE);
+        this.defendDice = numDice;
     }
-    public int getOccupyCurrentArmies() throws WrongMoveException{
-        checkStage(8);
-        return this.occupyCurrentArmies;
-    }
-    private int occupyDice = 0;
-    public void setOccupyDice(int numDice) throws WrongMoveException{
-        checkStage(8);
-        this.occupyDice = numDice;
-    }
-    public int getOccupyDice() throws WrongMoveException{
-        checkStage(8);
-        return this.occupyDice;
+    public int getDefendDice() throws WrongMoveException{
+        checkStage(Stage.CHOOSE_DEFEND_DICE);
+        return this.defendDice;
     }
 
-    //stage 9
-    private boolean decideFortify = false;
-    public void setDecideFortify(boolean decision) throws WrongMoveException{
-        checkStage(9);
-        this.decideFortify = decision;
-    }
-    public boolean getDecideFortify() throws WrongMoveException{
-        checkStage(9);
-        return this.decideFortify;
-    }
-
-    //stage 10
-    private int fortifyFrom = -1;
-    private int fortifyTo = -1;
-    public void setFortifyFrom(int territory) throws WrongMoveException{
-        checkStage(10);
-        this.fortifyFrom = territory;
-    }
-    public void setFortifyTo(int territory) throws WrongMoveException{
-        checkStage(10);
-        this.fortifyTo = territory;
-    }
-    public int getFortifyFrom() throws WrongMoveException{
-        checkStage(10);
-        return this.fortifyFrom;
-    }
-    public int getFortifyTo() throws WrongMoveException{
-        checkStage(10);
-        return this.fortifyTo;
-    }
-
-    //stage 11
-    private int fortifyArmies = 0;
-    public void setFortifyArmies(int numArmies) throws WrongMoveException{
-        checkStage(11);
-        this.fortifyArmies = numArmies;
-    }
-    public int getFortifyArmies() throws WrongMoveException{
-        checkStage(11);
-        return this.fortifyArmies;
-    }
-    //stage 11 inputs
-    private int fortifyCurrentArmies = 0;
-    public void setFortifyCurrentArmies(int numArmies) throws WrongMoveException{
-        checkStage(11);
-        this.fortifyCurrentArmies = numArmies;
-    }
-    public int getFortifyCurrentArmies() throws WrongMoveException{
-        checkStage(11);
-        return this.fortifyCurrentArmies;
-    }
-
-    //stage 101
+    // END_ATTACK
     private int attackerLosses = 0;
-    public void setAttackerLosses(int numLosses) throws WrongMoveException{
-        checkStage(101);
+    protected void setAttackerLosses(int numLosses) throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
         this.attackerLosses = numLosses;
     }
     public int getAttackerLosses() throws WrongMoveException{
-        checkStage(101);
+        checkStage(Stage.END_ATTACK);
         return this.attackerLosses;
     }
+
+    // END_ATTACK
     private int defenderLosses = 0;
-    public void setDefenderLosses(int numLosses) throws WrongMoveException{
-        checkStage(101);
+    protected void setDefenderLosses(int numLosses) throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
         this.defenderLosses = numLosses;
     }
     public int getDefenderLosses() throws WrongMoveException{
-        checkStage(101);
+        checkStage(Stage.END_ATTACK);
         return this.defenderLosses;
     }
 
-    private void checkStage(int stage) throws WrongMoveException{
-        if(this.stage != stage){
+    // PLAYER_ELIMINATED, GAME_END
+    private int player = -1;
+    protected void setPlayer(int player) throws WrongMoveException{
+        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+        this.player = player;
+    }
+    public int getPlayer() throws WrongMoveException{
+        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+        return this.player;
+    }
+
+    // GAME_END
+    private int turns = -1;
+    protected void setTurns(int turns) throws WrongMoveException{
+        checkStage(Stage.GAME_END);
+        this.turns = turns;
+    }
+    public int getTurns() throws WrongMoveException{
+        checkStage(Stage.GAME_END);
+        return this.turns;
+    }
+
+    private void checkStage(Stage... stages) throws WrongMoveException{
+        boolean ok = false;
+        for(Stage s : stages){
+            if(this.stage == s){
+                ok = true;
+            }
+
+        }
+        if(!ok){
             StackTraceElement[] ste = Thread.currentThread().getStackTrace();
             String callingMethod = ste[ste.length - 8].getMethodName();
             String message = String.format("%s cannot be accessed from stage %d.", callingMethod, stage);
             throw new WrongMoveException(message);
         }
+    }
+
+    public static String getDescription(int uid, Stage stage){
+        String message = "";
+        switch(stage){
+            case CLAIM_TERRITORY:
+                message = String.format("Player %d is claiming a territory.", uid);
+                break;
+            case REINFORCE_TERRITORY:
+                message = String.format("Player %d is reinforcing a territory.", uid);
+                break;
+            case TRADE_IN_CARDS:
+                message = String.format("Player %d is trading in cards.", uid);
+                break;
+            case PLACE_ARMIES:
+                message = String.format("Player %d is placing armies.", uid);
+                break;
+            case DECIDE_ATTACK:
+                message = String.format("Player %d is deciding whether or not to attack.", uid);
+                break;
+            case START_ATTACK:
+                message = String.format("Player %d is choosing where to attack.", uid);
+                break;
+            case CHOOSE_ATTACK_DICE:
+                message = String.format("Player %d is deciding how many dice to attack with.", uid);
+                break;
+            case CHOOSE_DEFEND_DICE:
+                message = String.format("Player %d is deciding how many dice to defend with.", uid);
+                break;
+            case OCCUPY_TERRITORY:
+                message = String.format("Player %d is deciding how many armies to move into the captured territory.", uid);
+                break;
+            case DECIDE_FORTIFY:
+                message = String.format("Player %d is deciding whether or not to fortify.", uid);
+                break;
+            case START_FORTIFY:
+                message = String.format("Player %d is choosing where to fortify.", uid);
+                break;
+            case FORTIFY_TERRITORY:
+                message = String.format("Player %d is deciding how many armies to fortify with.", uid);
+                break;
+        }
+        return message;
     }
 }

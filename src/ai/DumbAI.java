@@ -1,6 +1,7 @@
 package ai;
 
 import logic.*;
+import logic.Move.Stage;
 import player.*;
 
 import java.util.*;
@@ -31,29 +32,29 @@ public class DumbAI implements PlayerController {
     public Move getMove(Move move){
         try{
             switch(move.getStage()){
-                case 0:
+                case CLAIM_TERRITORY:
                     return claimTerritory(move);
-                case 1:
+                case REINFORCE_TERRITORY:
                     return reinforceTerritory(move);
-                case 2:
+                case TRADE_IN_CARDS:
                     return tradeInCards(move);
-                case 3:
+                case PLACE_ARMIES:
                     return placeArmies(move);
-                case 4:
+                case DECIDE_ATTACK:
                     return decideAttack(move);
-                case 5:
+                case START_ATTACK:
                     return startAttack(move);
-                case 6:
+                case CHOOSE_ATTACK_DICE:
                     return chooseAttackingDice(move);
-                case 7:
+                case CHOOSE_DEFEND_DICE:
                     return chooseDefendingDice(move);
-                case 8:
+                case OCCUPY_TERRITORY:
                     return occupyTerritory(move);
-                case 9:
+                case DECIDE_FORTIFY:
                     return decideFortify(move);
-                case 10:
+                case START_FORTIFY:
                     return startFortify(move);
-                case 11:
+                case FORTIFY_TERRITORY:
                     return chooseFortifyArmies(move);
                 default:
                      return move;
@@ -61,7 +62,7 @@ public class DumbAI implements PlayerController {
         }catch(WrongMoveException e){
             System.out.println("DumbAI is not choosing a move correctly");
             System.out.println(e.getMessage());
-            return new Move(-1);
+            return null;
         }
     }
 
@@ -71,7 +72,7 @@ public class DumbAI implements PlayerController {
             tid = random.nextInt(board.getNumTerritories());
         }
 
-        move.setTerritoryToClaim(tid);
+        move.setTerritory(tid);
         return move;
     }
 
@@ -81,7 +82,7 @@ public class DumbAI implements PlayerController {
             tid = random.nextInt(board.getNumTerritories());
         }
 
-        move.setTerritoryToReinforce(tid);
+        move.setTerritory(tid);
         return move;
     }
 
@@ -100,7 +101,7 @@ public class DumbAI implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
-        int armiesToPlace = move.getArmiesToPlace();
+        int armiesToPlace = move.getCurrentArmies();
 
         int randomTerritory = random.nextInt(board.getNumTerritories());
         while(board.getOwner(randomTerritory) != uid){
@@ -108,13 +109,13 @@ public class DumbAI implements PlayerController {
         }
         int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
 
-        move.setPlaceArmiesTerritory(randomTerritory);
-        move.setPlaceArmiesNum(randomArmies);
+        move.setTerritory(randomTerritory);
+        move.setArmies(randomArmies);
         return move;
     }
 
     private Move decideAttack(Move move) throws WrongMoveException{
-        move.setDecideAttack(random.nextBoolean());
+        move.setDecision(random.nextBoolean());
         return move;
     }
 
@@ -126,29 +127,29 @@ public class DumbAI implements PlayerController {
         ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
-        move.setAttackFrom(randomAlly);
-        move.setAttackTo(randomEnemy);
+        move.setFrom(randomAlly);
+        move.setTo(randomEnemy);
         return move;
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        move.setAttackingDice(random.nextInt(3)+1);
+        move.setAttackDice(random.nextInt(3)+1);
         return move;
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        move.setDefendingDice(random.nextInt(2)+1);
+        move.setDefendDice(random.nextInt(2)+1);
         return move;
     }
 
     private Move occupyTerritory(Move move) throws WrongMoveException{
-        int currentArmies = move.getOccupyCurrentArmies();
-        move.setOccupyArmies(random.nextInt(currentArmies));
+        int currentArmies = move.getCurrentArmies();
+        move.setArmies(random.nextInt(currentArmies));
         return move;
     }
 
     private Move decideFortify(Move move) throws WrongMoveException{
-        move.setDecideFortify(random.nextBoolean());
+        move.setDecision(random.nextBoolean());
         return move;
     }
 
@@ -161,13 +162,13 @@ public class DumbAI implements PlayerController {
         ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
 
-        move.setFortifyFrom(randomAlly);
-        move.setFortifyTo(randomFortify);
+        move.setFrom(randomAlly);
+        move.setTo(randomFortify);
         return move;
     }
 
     private Move chooseFortifyArmies(Move move) throws WrongMoveException{
-        move.setFortifyArmies(random.nextInt(move.getFortifyCurrentArmies()));
+        move.setArmies(random.nextInt(move.getCurrentArmies()));
         return move;
     }
 }

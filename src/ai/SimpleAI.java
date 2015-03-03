@@ -1,6 +1,7 @@
 package ai;
 
 import logic.*;
+import logic.Move.Stage;
 import player.*;
 
 import java.util.*;
@@ -31,36 +32,37 @@ public class SimpleAI implements PlayerController {
     public Move getMove(Move move){
         try{
             switch(move.getStage()){
-                case 0:
+                case CLAIM_TERRITORY:
                     return claimTerritory(move);
-                case 1:
+                case REINFORCE_TERRITORY:
                     return reinforceTerritory(move);
-                case 2:
+                case TRADE_IN_CARDS:
                     return tradeInCards(move);
-                case 3:
+                case PLACE_ARMIES:
                     return placeArmies(move);
-                case 4:
+                case DECIDE_ATTACK:
                     return decideAttack(move);
-                case 5:
+                case START_ATTACK:
                     return startAttack(move);
-                case 6:
+                case CHOOSE_ATTACK_DICE:
                     return chooseAttackingDice(move);
-                case 7:
+                case CHOOSE_DEFEND_DICE:
                     return chooseDefendingDice(move);
-                case 8:
+                case OCCUPY_TERRITORY:
                     return occupyTerritory(move);
-                case 9:
+                case DECIDE_FORTIFY:
                     return decideFortify(move);
-                case 10:
+                case START_FORTIFY:
                     return startFortify(move);
-                case 11:
+                case FORTIFY_TERRITORY:
                     return chooseFortifyArmies(move);
                 default:
-                     return move;
+                    return move;
             }
         }catch(WrongMoveException e){
             System.out.println("SimpleAI is not choosing a move correctly");
-            return new Move(-1);
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 
@@ -70,7 +72,7 @@ public class SimpleAI implements PlayerController {
             tid = random.nextInt(board.getNumTerritories());
         }
 
-        move.setTerritoryToClaim(tid);
+        move.setTerritory(tid);
         return move;
     }
 
@@ -80,7 +82,7 @@ public class SimpleAI implements PlayerController {
             tid = random.nextInt(board.getNumTerritories());
         }
 
-        move.setTerritoryToReinforce(tid);
+        move.setTerritory(tid);
         return move;
     }
 
@@ -99,7 +101,7 @@ public class SimpleAI implements PlayerController {
     }
 
     private Move placeArmies(Move move) throws WrongMoveException{
-        int armiesToPlace = move.getArmiesToPlace();
+        int armiesToPlace = move.getCurrentArmies();
 
         int randomTerritory = random.nextInt(board.getNumTerritories());
         while(board.getOwner(randomTerritory) != uid){
@@ -107,13 +109,13 @@ public class SimpleAI implements PlayerController {
         }
         int randomArmies = random.nextInt(armiesToPlace+1); // Can't place 0 armies
 
-        move.setPlaceArmiesTerritory(randomTerritory);
-        move.setPlaceArmiesNum(randomArmies);
+        move.setTerritory(randomTerritory);
+        move.setArmies(randomArmies);
         return move;
     }
 
     private Move decideAttack(Move move) throws WrongMoveException{
-        move.setDecideAttack(true);
+        move.setDecision(true);
         return move;
     }
 
@@ -125,38 +127,38 @@ public class SimpleAI implements PlayerController {
         ArrayList<Integer> adjacents = board.getLinks(randomAlly);
         int randomEnemy = adjacents.get(random.nextInt(adjacents.size()));
 
-        move.setAttackFrom(randomAlly);
-        move.setAttackTo(randomEnemy);
+        move.setFrom(randomAlly);
+        move.setTo(randomEnemy);
         return move;
     }
 
     private Move chooseAttackingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getArmies(move.getAttackingFrom());
+        int numArmies = board.getArmies(move.getFrom());
+        int decision = 1;
         if(numArmies > 4){
-            move.setAttackingDice(3);
+            decision = 3;
         }else if(numArmies > 3){
-            move.setAttackingDice(2);
-        }else{
-            move.setAttackingDice(1);
+            decision = 2;
         }
+        move.setAttackDice(decision);
         return move;
     }
 
     private Move chooseDefendingDice(Move move) throws WrongMoveException{
-        int numArmies = board.getArmies(move.getDefendingFrom());
+        int numArmies = board.getArmies(move.getTo());
+        int decision = 1;
         if(numArmies > 1){
-            move.setDefendingDice(2);
-        }else{
-            move.setDefendingDice(1);
+            decision = 2;
         }
+        move.setDefendDice(decision);
         return move;
     }
 
     private Move occupyTerritory(Move move) throws WrongMoveException{
-        int currentArmies = move.getOccupyCurrentArmies();
-        int numDice = move.getOccupyDice();
+        int currentArmies = move.getCurrentArmies();
+        int numDice = move.getAttackDice();
         int decision = currentArmies-1;
-        move.setOccupyArmies(decision);
+        move.setArmies(decision);
         return move;
     }
 
@@ -174,11 +176,11 @@ public class SimpleAI implements PlayerController {
                 }
             }
             if(enemyCounter == 0){
-                move.setDecideFortify(true);
+                move.setDecision(true);
                 return move;
             }
         }
-        move.setDecideFortify(false);
+        move.setDecision(false);
         return move;
     }
 
@@ -204,13 +206,13 @@ public class SimpleAI implements PlayerController {
             randomFortify = adjacents.get(random.nextInt(adjacents.size()));
         }
 
-        move.setFortifyFrom(randomAlly);
-        move.setFortifyTo(randomFortify);
+        move.setFrom(randomAlly);
+        move.setTo(randomFortify);
         return move;
     }
 
     private Move chooseFortifyArmies(Move move) throws WrongMoveException{
-        move.setFortifyArmies(move.getFortifyCurrentArmies()-1);
+        move.setArmies(move.getCurrentArmies()-1);
         return move;
     }
 }

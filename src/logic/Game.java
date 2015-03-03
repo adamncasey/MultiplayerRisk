@@ -265,6 +265,7 @@ public class Game {
         while(!checkMove(currentPlayer, stage, move)){
             move = player.getMove(move);
         }
+        move.setReadOnly();
         return move;
     }
 

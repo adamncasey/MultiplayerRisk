@@ -15,9 +15,5 @@ Logic:
 
   move board/deck/setcounter into its own class
 
-  set move to readonly
-
-  remove uids from player
-
 Protocol:
   What happens when the deck runs out of cards?

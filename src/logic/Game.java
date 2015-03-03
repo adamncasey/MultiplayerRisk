@@ -44,7 +44,7 @@ public class Game {
         this.board = new Board(boardFilename);
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
-        this.checker = new MoveChecker(board);
+        this.checker = new MoveChecker(board, playerHands);
     }
 
     private void updatePlayers(int currentPlayer, Move previousMove){
@@ -52,7 +52,7 @@ public class Game {
             IPlayer p = players.get(i);
             p.updatePlayer(board, playerHands.get(i), currentPlayer, previousMove);
         }
-        checker.update(board);
+        checker.update(board, playerHands);
         String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
     }
 
@@ -262,68 +262,11 @@ public class Game {
 
         IPlayer player = players.get(currentPlayer);
         move = player.getMove(move);
-        while(!checkMove(currentPlayer, stage, move)){
+        while(!checker.checkMove(currentPlayer, stage, move)){
             move = player.getMove(move);
         }
         move.setReadOnly();
         return move;
-    }
-
-    public boolean checkMove(int currentPlayer, Stage stage, Move move) throws WrongMoveException{
-        if(move == null){
-            return false;
-        }
-        if(stage != move.getStage()){
-            return false;
-        }
-        switch(stage){
-            case CLAIM_TERRITORY:
-                int territoryToClaim = move.getTerritory();
-                return checker.checkClaimTerritory(territoryToClaim);
-            case REINFORCE_TERRITORY:
-                int territoryToReinforce = move.getTerritory();
-                return checker.checkReinforceTerritory(currentPlayer, territoryToReinforce);
-            case TRADE_IN_CARDS:
-                List<Card> hand = playerHands.get(currentPlayer); 
-                List<Card> toTradeIn = move.getToTradeIn();
-                return checker.checkTradeInCards(hand, toTradeIn);
-            case PLACE_ARMIES:
-                int placeArmiesTerritory = move.getTerritory();
-                int placeArmiesNum = move.getArmies();
-                int armiesToPlace = move.getCurrentArmies();
-                return checker.checkPlaceArmies(currentPlayer, placeArmiesTerritory, placeArmiesNum, armiesToPlace);
-            case DECIDE_ATTACK:
-                return true;
-            case START_ATTACK:
-                int attackFrom = move.getFrom();
-                int attackTo = move.getTo();
-                return checker.checkStartAttack(currentPlayer, attackFrom, attackTo);
-            case CHOOSE_ATTACK_DICE:
-                int attackingDice = move.getAttackDice();
-                int attackingNumArmies = board.getArmies(move.getFrom());
-                return checker.checkAttackingDice(attackingDice, attackingNumArmies);
-            case CHOOSE_DEFEND_DICE:
-                int defendingDice = move.getDefendDice();
-                int defendingNumArmies = board.getArmies(move.getTo());
-                return checker.checkDefendingDice(defendingDice, defendingNumArmies);
-            case OCCUPY_TERRITORY:
-                int occupyArmies = move.getArmies();
-                int occupyDice = move.getAttackDice();
-                int occupyCurrentArmies = move.getCurrentArmies();
-                return checker.checkOccupyArmies(occupyArmies, occupyDice, occupyCurrentArmies);
-            case DECIDE_FORTIFY:
-                return true;
-            case START_FORTIFY:
-                int fortifyFrom = move.getFrom();
-                int fortifyTo = move.getTo();
-                return checker.checkStartFortify(currentPlayer, fortifyFrom, fortifyTo);
-            case FORTIFY_TERRITORY:
-                int fortifyArmies = move.getArmies();
-                int fortifyCurrentArmies = move.getCurrentArmies();
-                return checker.checkFortifyArmies(fortifyArmies, fortifyCurrentArmies);
-            default:
-                return false;
-        }
     }
 
     public boolean tradeInCards(int uid, List<Card> toTradeIn){

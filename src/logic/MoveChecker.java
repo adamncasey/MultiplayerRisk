@@ -1,17 +1,78 @@
 package logic;
 
 import java.util.*;
+import logic.Move.Stage;
 
 public class MoveChecker {
 
     private Board board;
+    private List<List<Card>> playerHands;
 
-    public MoveChecker(Board board){
+    public MoveChecker(Board board, List<List<Card>> playerHands){
         this.board = board;
+        this.playerHands = playerHands;
     }
 
-    public void update(Board board){
+    public void update(Board board, List<List<Card>> playerHands){
         this.board = board;
+        this.playerHands = playerHands;
+    }
+
+    public boolean checkMove(int currentPlayer, Stage stage, Move move) throws WrongMoveException{
+        if(move == null){
+            return false;
+        }
+        if(stage != move.getStage()){
+            return false;
+        }
+        switch(stage){
+            case CLAIM_TERRITORY:
+                int territoryToClaim = move.getTerritory();
+                return checkClaimTerritory(territoryToClaim);
+            case REINFORCE_TERRITORY:
+                int territoryToReinforce = move.getTerritory();
+                return checkReinforceTerritory(currentPlayer, territoryToReinforce);
+            case TRADE_IN_CARDS:
+                List<Card> hand = playerHands.get(currentPlayer); 
+                List<Card> toTradeIn = move.getToTradeIn();
+                return checkTradeInCards(hand, toTradeIn);
+            case PLACE_ARMIES:
+                int placeArmiesTerritory = move.getTerritory();
+                int placeArmiesNum = move.getArmies();
+                int armiesToPlace = move.getCurrentArmies();
+                return checkPlaceArmies(currentPlayer, placeArmiesTerritory, placeArmiesNum, armiesToPlace);
+            case DECIDE_ATTACK:
+                return true;
+            case START_ATTACK:
+                int attackFrom = move.getFrom();
+                int attackTo = move.getTo();
+                return checkStartAttack(currentPlayer, attackFrom, attackTo);
+            case CHOOSE_ATTACK_DICE:
+                int attackingDice = move.getAttackDice();
+                int attackingNumArmies = board.getArmies(move.getFrom());
+                return checkAttackingDice(attackingDice, attackingNumArmies);
+            case CHOOSE_DEFEND_DICE:
+                int defendingDice = move.getDefendDice();
+                int defendingNumArmies = board.getArmies(move.getTo());
+                return checkDefendingDice(defendingDice, defendingNumArmies);
+            case OCCUPY_TERRITORY:
+                int occupyArmies = move.getArmies();
+                int occupyDice = move.getAttackDice();
+                int occupyCurrentArmies = move.getCurrentArmies();
+                return checkOccupyArmies(occupyArmies, occupyDice, occupyCurrentArmies);
+            case DECIDE_FORTIFY:
+                return true;
+            case START_FORTIFY:
+                int fortifyFrom = move.getFrom();
+                int fortifyTo = move.getTo();
+                return checkStartFortify(currentPlayer, fortifyFrom, fortifyTo);
+            case FORTIFY_TERRITORY:
+                int fortifyArmies = move.getArmies();
+                int fortifyCurrentArmies = move.getCurrentArmies();
+                return checkFortifyArmies(fortifyArmies, fortifyCurrentArmies);
+            default:
+                return false;
+        }
     }
 
     public boolean checkClaimTerritory(int tid){

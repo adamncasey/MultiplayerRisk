@@ -1,5 +1,7 @@
 package gameUI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventType;
@@ -21,6 +23,8 @@ import java.lang.management.MonitorInfo;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Controller implements Initializable{
 
@@ -30,26 +34,8 @@ public class Controller implements Initializable{
     @FXML //  fx:id="console"
     public TextArea console;
 
-    @FXML //Australia
+    @FXML
     public ImageView worldmap;
-    
-    @FXML //Australia
-    public ImageView AU0, AU1, AU2, AU3;
-
-    @FXML //Africa
-    public ImageView AF0, AF1, AF2, AF3, AF4, AF5;
-
-    @FXML //South America
-    public ImageView SA0, SA1, SA2, SA3;
-
-    @FXML //Europe
-    public ImageView EU0, EU1, EU2, EU3, EU4, EU5, EU6;
-
-    @FXML //North America
-    public ImageView NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8;
-
-    @FXML //Asia
-    public ImageView AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11;
 
     @FXML //
     public Button addArmies;
@@ -60,7 +46,15 @@ public class Controller implements Initializable{
     @FXML //
     public Button setArmies;
     
-    Image infantryImage = new Image(getClass().getResourceAsStream("armies/infantry.gif"));
+	@FXML //territories
+    public ImageView AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3, AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5, EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11;
+    
+    Image infantryImage = new Image(getClass().getResourceAsStream("armies/infantry.png"));
+    Image cavalryImage = new Image(getClass().getResourceAsStream("armies/cavalry.png"));
+    Image artilleryImage = new Image(getClass().getResourceAsStream("armies/artillery.png"));
+    
+    private double x_over_y;
+    private double global_X, global_Y;
     
     // modes
     public boolean setArmyMode, addArmyMode, removeArmyMode;
@@ -97,88 +91,70 @@ public class Controller implements Initializable{
         console.appendText(message + "\n");
     }
 
+    public void set_armies(int playerID, int number, GUITerritory territory){
+    	double sizex = territory.getImage().getImage().getWidth();
+        double sizey = territory.getImage().getImage().getHeight();
+    	
+    	double x = territory.getImage().getLayoutX() + sizex/2;
+        double y = territory.getImage().getLayoutY() + sizey/2;
+        
+        printToConsole(territory.getImage().getId()+ " " + x + " " + y + " " + sizex + " " + sizey);
+        
+        if(addArmyMode) {
+        	ImageView army = null;
+        	if(number < 5){
+        		army = new ImageView(infantryImage);
+        	}
+        	if(number >=5 && number <20){
+        		army = new ImageView(cavalryImage);
+        	}
+        	if(number >=20){
+        		army = new ImageView(artilleryImage);
+        	}
+        	army.setScaleX(0.5);
+        	army.setScaleY(0.5);
+        	x-=army.getImage().getWidth()/2;
+        	y-=army.getImage().getHeight()/2;
+        	army.relocate(x, y);
+        	gamePane.getChildren().add(army);
+        	
+        }
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        ArrayList<ImageView> highlighted_all = new ArrayList<ImageView>();
-        highlighted_all.add(AF0);
-        highlighted_all.add(AF1);
-        highlighted_all.add(AF2);
-        highlighted_all.add(AF3);
-        highlighted_all.add(AF4);
-        highlighted_all.add(AF5);
-        highlighted_all.add(AS0);
-        highlighted_all.add(AS1);
-        highlighted_all.add(AS2);
-        highlighted_all.add(AS3);
-        highlighted_all.add(AS4);
-        highlighted_all.add(AS5);
-        highlighted_all.add(AS6);
-        highlighted_all.add(AS7);
-        highlighted_all.add(AS8);
-        highlighted_all.add(AS9);
-        highlighted_all.add(AS10);
-        highlighted_all.add(AS11);
-        highlighted_all.add(NA0);
-        highlighted_all.add(NA1);
-        highlighted_all.add(NA2);
-        highlighted_all.add(NA3);
-        highlighted_all.add(NA4);
-        highlighted_all.add(NA5);
-        highlighted_all.add(NA6);
-        highlighted_all.add(NA7);
-        highlighted_all.add(NA8);
-        highlighted_all.add(AU0);
-        highlighted_all.add(AU1);
-        highlighted_all.add(AU2);
-        highlighted_all.add(AU3);
-        highlighted_all.add(SA0);
-        highlighted_all.add(SA1);
-        highlighted_all.add(SA2);
-        highlighted_all.add(SA3);
-        highlighted_all.add(EU0);
-        highlighted_all.add(EU1);
-        highlighted_all.add(EU2);
-        highlighted_all.add(EU3);
-        highlighted_all.add(EU4);
-        highlighted_all.add(EU5);
-        highlighted_all.add(EU6);
+    	x_over_y = gamePane.getPrefWidth() / gamePane.getPrefHeight();
+    	
+    	DefaultMap default_map = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3, AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5, EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
+    	default_map.getTerritoryList();
+    	
+        ArrayList<GUITerritory> highlighted_all = default_map.getTerritoryList();
+        
+        System.out.println(highlighted_all.get(0).getImage().getLayoutX());
 
-        for(final ImageView territory : highlighted_all){
+        for(final GUITerritory territory : highlighted_all){
 
-            territory.addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    if(territory.getOpacity() < 100)
-                        territory.setOpacity(100);
+                    if(territory.getImage().getOpacity() < 100)
+                        territory.getImage().setOpacity(100);
                 }
             });
 
-            territory.addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
+            territory.getImage().addEventFilter(MouseEvent.MOUSE_EXITED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    territory.setOpacity(0);
+                    territory.getImage().setOpacity(0);
                 }
             });
             
-            territory.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            territory.getImage().addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     
-                	double sizex = territory.getImage().getWidth();
-                    double sizey = territory.getImage().getHeight();
-                	
-                	double x = territory.getLayoutX() + sizex/4;
-                    double y = territory.getLayoutY() + sizey/10;
-                    
-                    printToConsole(territory.getId()+ " " + x + " " + y + " " + sizex + " " + sizey);
-                    
-                    if(addArmyMode) {
-                    	ImageView infantry = new ImageView(infantryImage);
-                    	infantry.relocate(x, y);
-                    	gamePane.getChildren().add(infantry);
-                    	
-                    }
+                	set_armies(1, 20, territory);
                 }
             });
         }
@@ -216,6 +192,9 @@ public class Controller implements Initializable{
                 System.out.print("Mouse click at: " + mouseEvent.getSceneX() + ", " + mouseEvent.getSceneY() + "\n" );
             }
         });
+        
+        //gamePane.widthProperty().addListener(listener);
+        //gamePane.heightProperty().addListener(listener);
 
         gamePane.addEventFilter(MouseEvent.MOUSE_MOVED, new EventHandler<MouseEvent>() {
             @Override
@@ -225,4 +204,38 @@ public class Controller implements Initializable{
         });
 
     }
+  
+    
+ // create a listener
+    final ChangeListener<Number> listener = new ChangeListener<Number>(){
+    	
+
+    	
+      final Timer timer = new Timer(); // uses a timer to call your resize method
+      TimerTask task = null; // task to execute after defined delay
+      final long delayTime = 200; // delay that has to pass in order to consider an operation done
+
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue, final Number newValue)
+      {
+    	  
+        if (task != null)
+        { // there was already a task scheduled from the previous operation ...
+          task.cancel(); // cancel it, we have a new size to consider
+        }
+
+        task = new TimerTask() // create new task that calls your resize operation
+        {
+          @Override
+          public void run()
+          { 
+
+            // resize code here
+          }
+
+        };
+        // schedule new task
+        timer.schedule(task, delayTime);
+      }
+    };
 }

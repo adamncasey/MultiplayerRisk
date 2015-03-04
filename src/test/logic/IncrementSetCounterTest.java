@@ -15,7 +15,7 @@ public class IncrementSetCounterTest{
     @BeforeClass
     public static void setupGame(){
         List<IPlayer> players = new ArrayList<IPlayer>();
-        game = new Game(players, 0, 0, "resources/risk_map.json");
+        game = new Game(players, 0, "resources/risk_map.json");
     }
 
     @Test

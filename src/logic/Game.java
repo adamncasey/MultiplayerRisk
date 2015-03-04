@@ -13,12 +13,11 @@ import player.*;
 public class Game {
     private static Random random;
 
-    private List<IPlayer> players;
-    private int firstPlayer;
+    private List<IPlayer> playerInterfaces;
+    private List<Player> players;
 
     private Board board;
     private Deck deck;
-    private List<List<Card>> playerHands;
     private MoveChecker checker;
 
     private int setupValues[] = {35, 30, 25, 20};
@@ -29,31 +28,33 @@ public class Game {
     private int totalPlayerCount = 0;
     private int activePlayerCount = 0;
 
-    public Game(List<IPlayer> players, int firstPlayer, int seed, String boardFilename){
+    public Game(List<IPlayer> playerInterfaces, int seed, String boardFilename){
         this.random = new Random(seed);
-        this.players = new ArrayList<IPlayer>();
-        this.firstPlayer = firstPlayer;
-        this.playerHands = new ArrayList<List<Card>>();
-        for(int i = 0; i != players.size(); ++i){
-            IPlayer pi = players.get(i);
-            this.players.add(pi);
-            this.playerHands.add(new ArrayList<Card>());
+        this.playerInterfaces = new ArrayList<IPlayer>();
+        this.players = new ArrayList<Player>();
+        for(int i = 0; i != playerInterfaces.size(); ++i){
+            IPlayer pi = playerInterfaces.get(i);
+            this.playerInterfaces.add(pi);
+            Player p = new Player();
+            this.players.add(p);
             totalPlayerCount++;
         }
         activePlayerCount = totalPlayerCount;
         this.board = new Board(boardFilename);
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
-        this.checker = new MoveChecker(board, playerHands);
+        this.checker = new MoveChecker();
+        this.checker.update(board, this.players);
     }
 
     private void updatePlayers(int currentPlayer, Move previousMove){
         previousMove.setReadOnly();
-        for(int i = 0; i != players.size(); ++i){
-            IPlayer p = players.get(i);
-            p.updatePlayer(board, playerHands.get(i), currentPlayer, previousMove);
+        for(int i = 0; i != playerInterfaces.size(); ++i){
+            Player p = players.get(i);
+            IPlayer pi = playerInterfaces.get(i);
+            pi.updatePlayer(board, p.getHand(), currentPlayer, previousMove);
         }
-        checker.update(board, playerHands);
+        checker.update(board, players);
     }
 
     public void setupGame() throws WrongMoveException{
@@ -65,9 +66,9 @@ public class Game {
         int totalArmies = activePlayerCount * initialArmyValue;
         int territoriesToClaim = board.getNumTerritories();
 
-        int currentPlayer = firstPlayer;
+        int currentPlayer = 0;
         while(totalArmies != 0){
-            IPlayer player = players.get(currentPlayer);
+            IPlayer player = playerInterfaces.get(currentPlayer);
             if(territoriesToClaim != 0){
                 Move move = new Move(currentPlayer, CLAIM_TERRITORY);
                 move = getMove(currentPlayer, move);
@@ -97,11 +98,10 @@ public class Game {
             return;
         }
         int turnCounter = 0;
-        int currentPlayer = firstPlayer;
+        int currentPlayer = 0;
         updatePlayers(currentPlayer, new Move(-1, GAME_BEGIN));
         while(activePlayerCount != 1){
-            IPlayer player = players.get(currentPlayer);
-            if(!player.isEliminated()){
+            if(stillPlaying(currentPlayer)){
                 playerTurn(currentPlayer);
                 turnCounter++;
             }
@@ -118,8 +118,6 @@ public class Game {
     }
 
     private void playerTurn(int uid) throws WrongMoveException{
-        IPlayer player = players.get(uid);
-
         Move move = new Move(uid, TRADE_IN_CARDS);
         move = getMove(uid, move);
         List<Card> toTradeIn = move.getToTradeIn();
@@ -201,7 +199,7 @@ public class Game {
                 move = new Move(uid, PLAYER_ELIMINATED);
                 move.setPlayer(enemyUID);
                 updatePlayers(uid, move);
-                List<Card> hand = playerHands.get(uid);
+                List<Card> hand = players.get(uid).getHand();
                 if(hand.size() > 5){ // immediately trade in cards when at 6 or more
                     while(hand.size() >= 5){ // trade in cards and place armies until 4 or fewer cards
                         move = new Move(uid, TRADE_IN_CARDS);
@@ -227,7 +225,7 @@ public class Game {
         if(territoryCaptured){
             Card newCard = deck.drawCard();
             if(newCard != null){
-                playerHands.get(uid).add(newCard);
+                players.get(uid).getHand().add(newCard);
                 updatePlayers(uid, new Move(uid, CARD_DRAWN));
             }
         }
@@ -258,11 +256,11 @@ public class Game {
 
     public Move getMove(int currentPlayer, Move move) throws WrongMoveException{
         Stage stage = move.getStage();
-        for(IPlayer p : players){
+        for(IPlayer p : playerInterfaces){
             p.nextMove(currentPlayer, Move.describeStatus(currentPlayer, stage));
         }
 
-        IPlayer player = players.get(currentPlayer);
+        IPlayer player = playerInterfaces.get(currentPlayer);
         move = player.getMove(move);
         while(!checker.checkMove(currentPlayer, stage, move)){
             move = player.getMove(move);
@@ -271,7 +269,7 @@ public class Game {
     }
 
     public boolean tradeInCards(int uid, List<Card> toTradeIn){
-        List<Card> hand = playerHands.get(uid);
+        List<Card> hand = players.get(uid).getHand();
         for(Card c: toTradeIn){
             hand.remove(c);
         }
@@ -370,6 +368,11 @@ public class Game {
         return result;
     }
 
+    public boolean stillPlaying(int uid){
+       Player p = players.get(uid);
+       return !p.isEliminated();
+    }
+
     public boolean isEliminated(int uid){
         for(int i = 0; i != board.getNumTerritories(); ++i){
             if(board.getOwner(i) == uid){
@@ -380,11 +383,12 @@ public class Game {
     }
 
     public boolean eliminatePlayer(int currentUID, int eliminatedUID){
-        List<Card> hand = playerHands.get(currentUID);
-        for(Card c : playerHands.get(eliminatedUID)){
+        List<Card> hand = players.get(currentUID).getHand();
+        List<Card> eliminatedHand = players.get(eliminatedUID).getHand();
+        for(Card c : eliminatedHand){
             hand.add(c);
         }
-        playerHands.get(eliminatedUID).clear();
+        eliminatedHand.clear();
         players.get(eliminatedUID).eliminate();
         activePlayerCount--;
         if(activePlayerCount == 1){

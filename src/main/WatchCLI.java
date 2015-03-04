@@ -46,7 +46,7 @@ public class WatchCLI {
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());
             players.add(ai);
         }
-        Game game = new Game(players, 0, seed, boardFilename);
+        Game game = new Game(players, seed, boardFilename);
 
         try{
             game.setupGame();

@@ -6,16 +6,14 @@ import logic.Move.Stage;
 public class MoveChecker {
 
     private Board board;
-    private List<List<Card>> playerHands;
+    private List<Player> players;
 
-    public MoveChecker(Board board, List<List<Card>> playerHands){
-        this.board = board;
-        this.playerHands = playerHands;
+    public MoveChecker(){
     }
 
-    public void update(Board board, List<List<Card>> playerHands){
+    public void update(Board board, List<Player> players){
         this.board = board;
-        this.playerHands = playerHands;
+        this.players = players;
     }
 
     public boolean checkMove(int currentPlayer, Stage stage, Move move) throws WrongMoveException{
@@ -33,7 +31,7 @@ public class MoveChecker {
                 int territoryToReinforce = move.getTerritory();
                 return checkReinforceTerritory(currentPlayer, territoryToReinforce);
             case TRADE_IN_CARDS:
-                List<Card> hand = playerHands.get(currentPlayer); 
+                List<Card> hand = players.get(currentPlayer).getHand(); 
                 List<Card> toTradeIn = move.getToTradeIn();
                 return checkTradeInCards(hand, toTradeIn);
             case PLACE_ARMIES:

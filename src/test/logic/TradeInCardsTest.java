@@ -22,7 +22,8 @@ public class TradeInCardsTest{
     @BeforeClass
     public static void setupChecker(){
         List<IPlayer> players = new ArrayList<IPlayer>();
-        game = new MoveChecker(new Board("resources/risk_map.json"), new ArrayList<List<Card>>());
+        game = new MoveChecker();
+        game.update(new Board("resources/risk_map.json"), new ArrayList<Player>());
     }
 
     @Before

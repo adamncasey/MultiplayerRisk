@@ -2,6 +2,7 @@ package logic;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Player --- Stores information about a player.
@@ -22,9 +23,15 @@ public class Player {
     }
 
     public List<Card> getHand(){
-        return this.hand;
+        return Collections.unmodifiableList(this.hand);
     }
+
+    protected void addCard(Card card){
+        this.hand.add(card);
+    }
+
     public boolean isEliminated(){
+        this.hand.clear();
         return this.eliminated;
     }
 

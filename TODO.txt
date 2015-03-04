@@ -9,7 +9,5 @@ Logic:
 
   simplify relationship between game and gamestate
 
-  make sure that no one can edit player outside of GameState
-
 Protocol:
   What happens when the deck runs out of cards?

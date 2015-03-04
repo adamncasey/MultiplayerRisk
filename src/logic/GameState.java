@@ -159,12 +159,10 @@ public class GameState {
     }
 
     public boolean eliminatePlayer(int currentUID, int eliminatedUID){
-        List<Card> hand = players.get(currentUID).getHand();
         List<Card> eliminatedHand = players.get(eliminatedUID).getHand();
         for(Card c : eliminatedHand){
-            hand.add(c);
+            players.get(currentUID).addCard((c));
         }
-        eliminatedHand.clear();
         players.get(eliminatedUID).eliminate();
         activePlayerCount--;
         if(activePlayerCount == 1){

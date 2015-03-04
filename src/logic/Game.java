@@ -220,7 +220,7 @@ public class Game {
         if(territoryCaptured){
             Card newCard = state.getDeck().drawCard();
             if(newCard != null){
-                state.getPlayer(uid).getHand().add(newCard);
+                state.getPlayer(uid).addCard(newCard);
                 updatePlayers(new Move(uid, CARD_DRAWN));
             }
         }
@@ -263,5 +263,4 @@ public class Game {
         }
         return move;
     }
-
 }

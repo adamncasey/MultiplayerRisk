@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
-import ui.lobbyhost.LobbyHostController;
+import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 
 public class Main extends Application {

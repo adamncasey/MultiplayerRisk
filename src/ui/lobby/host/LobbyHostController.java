@@ -1,4 +1,4 @@
-package ui.lobbyhost;
+package ui.lobby.host;
 
 import java.net.URL;
 import java.util.List;

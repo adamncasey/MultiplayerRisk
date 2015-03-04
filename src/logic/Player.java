@@ -39,6 +39,3 @@ public class Player {
         this.eliminated = true;
     }
 }
-
-
-

@@ -39,8 +39,8 @@ public class CommandLinePlayer implements IPlayer {
         writer.flush();
     }
 
-    public Move getMove(Move move){
-        return controller.getMove(move); 
+    public void getMove(Move move){
+        controller.getMove(move); 
     }
 }
 

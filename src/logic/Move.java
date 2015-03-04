@@ -80,7 +80,7 @@ public class Move {
     }
     public List<Card> getToTradeIn() throws WrongMoveException{
         checkStage(Stage.TRADE_IN_CARDS);
-        return this.toTradeIn;
+        return Collections.unmodifiableList(this.toTradeIn);
     }
 
     // DECIDE_ATTACK, DECIDE_FORTIFY
@@ -361,7 +361,9 @@ public class Move {
     }
 
     // Returns a string describe what the player is about to do. (To be displayed while waiting)
-    public static String describeStatus(int uid, Stage stage){
+    public static String describeStatus(Move move){
+        int uid = move.getUID();
+        Stage stage = move.getStage();
         String message = "";
         switch(stage){
             case CLAIM_TERRITORY:

@@ -14,7 +14,7 @@ public class GameState {
 
     private static int setValues[] = {4, 6, 8, 10, 12, 15};
     private int setCounter = 0;
-    private int armyReward = setValues[0];
+    private int armyReward = setValues[setCounter];
 
     private int activePlayerCount;
 
@@ -31,7 +31,6 @@ public class GameState {
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
     }
-
 
     public Board getBoard(){
         return this.board;
@@ -149,15 +148,6 @@ public class GameState {
         return result;
     }
 
-    public boolean isEliminated(int uid){
-        for(int i = 0; i != board.getNumTerritories(); ++i){
-            if(board.getOwner(i) == uid){
-                return false;
-            }
-        }
-        return true;
-    }
-
     public boolean eliminatePlayer(int currentUID, int eliminatedUID){
         List<Card> eliminatedHand = players.get(eliminatedUID).getHand();
         for(Card c : eliminatedHand){
@@ -182,5 +172,14 @@ public class GameState {
             }
         }
         return false;
+    }
+
+    public boolean isEliminated(int uid){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) == uid){
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -53,7 +53,6 @@ public class Game {
             p.updatePlayer(board, playerHands.get(i), currentPlayer, previousMove);
         }
         checker.update(board, playerHands);
-        String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
     }
 
     public void setupGame() throws WrongMoveException{
@@ -257,7 +256,7 @@ public class Game {
     public Move getMove(int currentPlayer, Move move) throws WrongMoveException{
         Stage stage = move.getStage();
         for(IPlayer p : players){
-            p.nextMove(currentPlayer, Move.getDescription(currentPlayer, stage));
+            p.nextMove(currentPlayer, Move.describeStatus(currentPlayer, stage));
         }
 
         IPlayer player = players.get(currentPlayer);

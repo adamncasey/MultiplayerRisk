@@ -8,7 +8,7 @@ import player.PlayerController;
 import logic.*;
 
 /**
- * CommandLinePlayer --- A player that outputs everything that happens to the console (So we can spectate AI vs AI games / play on the command line)
+ * GUIPlayer
  */
 public class GUIPlayer implements IPlayer {
     private PlayerController controller;
@@ -26,15 +26,6 @@ public class GUIPlayer implements IPlayer {
         this.slowDown = slowDown;
     }
 
-    private int uid = 0; // Set and used by Game
-    public int getUID(){
-        return this.uid;
-    }
-    public void setUID(int uid){
-        this.uid = uid;
-        this.controller.setUID(uid);
-    }
-
     private boolean eliminated = false; // Set and used by Game
     public boolean isEliminated(){
         return eliminated;
@@ -47,7 +38,7 @@ public class GUIPlayer implements IPlayer {
         writer.println(currentMove); 
     }
 
-    public void updatePlayer(Board board, ArrayList<Card> hand, int currentPlayer, Move previousMove){
+    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
 
         String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
         

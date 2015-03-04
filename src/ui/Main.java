@@ -66,7 +66,7 @@ public class Main extends Application {
     
     public void gotoLobbyHost() {
         try {
-        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobbyhost/lobbyhost.fxml", WIDTH, HEIGHT);
+        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {

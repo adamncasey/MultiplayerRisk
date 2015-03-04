@@ -71,6 +71,6 @@
     </VBox>
   </children>
   <stylesheets>
-    <URL value="@LobbyHost.css" />
+    <URL value="@Lobby.css" />
   </stylesheets>
 </AnchorPane>

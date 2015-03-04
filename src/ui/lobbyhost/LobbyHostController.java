@@ -40,7 +40,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ObservableList<String> items = FXCollections.observableArrayList("You (Hosting)");
+		ObservableList<String> items = FXCollections.observableArrayList("You (Host)");
 		playersList = items;
 		players.setItems(playersList);
 		
@@ -62,14 +62,14 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	@FXML
 	protected void kickPlayerButtonAction(ActionEvent event) {
 		int selectedIndex = players.getSelectionModel().getSelectedIndex();
-		String selected = playersList.get(selectedIndex);
 		if(selectedIndex > 0) {
 			playersList.remove(selectedIndex);
+			String selected = playersList.get(selectedIndex);
 			writeToConsole(String.format("-> You kicked %s\n", selected));
 		}
 		else
 		{
-			writeToConsole("You cannot kick yourself!");
+			writeToConsole("You cannot kick the host!");
 		}
 	}
 	

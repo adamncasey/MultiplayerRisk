@@ -172,4 +172,34 @@ public class DecideAttackResultTest{
         List<Integer> result = game.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
+
+    @Test
+    public void edgeCase1(){
+        List<Integer> attack = new ArrayList<Integer>();
+        attack.add(2);
+        attack.add(3);
+        List<Integer> defend = new ArrayList<Integer>();
+        defend.add(3);
+        defend.add(4);
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(2);
+        expected.add(0);
+        List<Integer> result = game.decideAttackResult(attack, defend);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void edgeCase2(){
+        List<Integer> attack = new ArrayList<Integer>();
+        attack.add(1);
+        List<Integer> defend = new ArrayList<Integer>();
+        defend.add(2);
+        List<Integer> expected = new ArrayList<Integer>();
+        expected.add(1);
+        expected.add(0);
+        List<Integer> result = game.decideAttackResult(attack, defend);
+        assertEquals(expected, result);
+    }
+
+
 }

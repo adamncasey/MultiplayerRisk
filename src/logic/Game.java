@@ -48,6 +48,7 @@ public class Game {
     }
 
     private void updatePlayers(int currentPlayer, Move previousMove){
+        previousMove.setReadOnly();
         for(int i = 0; i != players.size(); ++i){
             IPlayer p = players.get(i);
             p.updatePlayer(board, playerHands.get(i), currentPlayer, previousMove);
@@ -176,6 +177,8 @@ public class Game {
             move = new Move(uid, END_ATTACK);
             move.setAttackerLosses(attackResult.get(0));
             move.setDefenderLosses(attackResult.get(1));
+            move.setAttackDiceRolls(attackDiceRolls);
+            move.setDefendDiceRolls(defendDiceRolls);
             updatePlayers(uid, move);
 
             if(willCaptureTerritory){ 
@@ -264,7 +267,6 @@ public class Game {
         while(!checker.checkMove(currentPlayer, stage, move)){
             move = player.getMove(move);
         }
-        move.setReadOnly();
         return move;
     }
 
@@ -334,6 +336,8 @@ public class Game {
     }
 
     public static List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){
+        attack = new ArrayList<Integer>(attack);
+        defend = new ArrayList<Integer>(defend);
         int attackerLosses = 0; int defenderLosses = 0;
 
         while(attack.size() != 0 && defend.size() != 0){

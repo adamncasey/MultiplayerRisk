@@ -6,11 +6,11 @@ public class Move {
     public final int uid;
 
     public enum Stage {
-        // Moves
+        // Moves - Stages that IPlayers have to react to
         CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
         DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, OCCUPY_TERRITORY,
         DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
-        // Events
+        // Events - Stages used by Game (IPlayers are only updated with these)
         END_ATTACK, PLAYER_ELIMINATED, CARD_DRAWN,
         SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
     }
@@ -165,6 +165,30 @@ public class Move {
         return this.defenderLosses;
     }
 
+    // END_ATTACK
+    private List<Integer> attackDiceRolls = null;
+    protected void setAttackDiceRolls(List<Integer> results) throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
+        checkPermissions();
+        this.attackDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
+    }
+    public List<Integer> getAttackDiceRolls() throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
+        return this.attackDiceRolls;
+    }
+
+    // END_ATTACK
+    private List<Integer> defendDiceRolls = null;
+    protected void setDefendDiceRolls(List<Integer> results) throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
+        checkPermissions();
+        this.defendDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
+    }
+    public List<Integer> getDefendDiceRolls() throws WrongMoveException{
+        checkStage(Stage.END_ATTACK);
+        return this.defendDiceRolls;
+    }
+
     // PLAYER_ELIMINATED, GAME_END
     private int player = -1;
     protected void setPlayer(int player) throws WrongMoveException{
@@ -254,7 +278,8 @@ public class Move {
                     int attackTo = move.getTo();
                     String attackFromName = board.getName(attackFrom);
                     String attackToName = board.getName(attackTo);
-                    message = String.format("Player %d is attacking [%d-%s] from [%d-%s].\n", uid, attackTo, attackToName, attackFrom, attackFromName);
+                    int enemyUID = board.getOwner(attackTo);
+                    message = String.format("Player %d is attacking Player %d owned territory [%d-%s] from [%d-%s].\n", uid, enemyUID, attackTo, attackToName, attackFrom, attackFromName);
                     return message;
                 case CHOOSE_ATTACK_DICE:
                     int numAttackingDice = move.getAttackDice();
@@ -290,7 +315,18 @@ public class Move {
                 case END_ATTACK:
                     int attackerLosses = move.getAttackerLosses();
                     int defenderLosses = move.getDefenderLosses();
-                    message = String.format("The attacker lost %d armies, the defender lost %d armies.\n", attackerLosses, defenderLosses);
+                    List<Integer> attackDiceRolls = move.getAttackDiceRolls();
+                    message = "Dice Rolls : Attacker - ";
+                    for(int r : attackDiceRolls){
+                        message += String.format("(%d) ", r);
+                    }
+                    message += "- Defender - ";
+                    List<Integer> defendDiceRolls = move.getDefendDiceRolls();
+                    for(int r : defendDiceRolls){
+                        message += String.format("(%d) ", r);
+                    }
+                    message += "\n";
+                    message += String.format("The attacker lost %d armies, the defender lost %d armies.\n", attackerLosses, defenderLosses);
                     return message;
                 case PLAYER_ELIMINATED:
                     int eliminatedPlayer = move.getPlayer();

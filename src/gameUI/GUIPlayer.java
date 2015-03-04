@@ -40,7 +40,7 @@ public class GUIPlayer implements IPlayer {
 
     public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
 
-        String message = MoveProcessor.processMove(currentPlayer, previousMove, board);
+        String message = Move.describeMove(currentPlayer, previousMove, board);
         
         Controller controller = (Controller) gui.getLoader().getController();
         

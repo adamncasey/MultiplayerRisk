@@ -7,13 +7,7 @@ Logic:
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
-  Add dice rolls to Move
-
-  Add player names to IPlayer
-
   move board/deck/setcounter into its own class (maybe use this class to update game state rather than have game do it)
-
-  add default case to all switches
 
 Protocol:
   What happens when the deck runs out of cards?

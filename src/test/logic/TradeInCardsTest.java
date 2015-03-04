@@ -10,7 +10,6 @@ import player.*;
 
 public class TradeInCardsTest{
 
-    private static MoveChecker game;
     private Card infantry; // an infantry card
     private Card infantry2; // an infantry card with a different id
     private Card infantry3; // an infantry card with another different id
@@ -18,13 +17,6 @@ public class TradeInCardsTest{
     private Card cavalry2;
     private Card artillery; // an artillery card
     private Card wildcard; // a wildcard
-
-    @BeforeClass
-    public static void setupChecker(){
-        List<IPlayer> players = new ArrayList<IPlayer>();
-        game = new MoveChecker();
-        game.update(new Board("resources/risk_map.json"), new ArrayList<Player>());
-    }
 
     @Before
     public void setupCards(){
@@ -42,7 +34,7 @@ public class TradeInCardsTest{
     public void emptyHandGood(){
         List<Card> hand = new ArrayList<Card>();
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand is empty, toTradeIn isn't empty
@@ -51,7 +43,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has one card, toTradeIn is empty
@@ -60,7 +52,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has one card, toTradeIn isn't empty
@@ -70,7 +62,7 @@ public class TradeInCardsTest{
         hand.add(infantry);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 different cards making a set, toTradeIn is empty
@@ -79,7 +71,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
     
     // hand has 3 different cards making a set, toTradeIn contains that set
@@ -89,7 +81,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(cavalry); toTradeIn.add(artillery);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 different cards making a set, toTradeIn contains that set in a different order
@@ -99,7 +91,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(artillery); toTradeIn.add(cavalry); toTradeIn.add(infantry);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 different cards making a set, toTradeIn contains a different 3 cards
@@ -109,7 +101,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry); toTradeIn.add(cavalry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 different cards making a set, toTradeIn contains a set with a card not in hand
@@ -119,7 +111,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry2); toTradeIn.add(cavalry); toTradeIn.add(artillery);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 same cards making a set, toTradeIn is empty
@@ -128,7 +120,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 same cards making a set, toTradeIn contains that set
@@ -138,7 +130,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(infantry3);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 same cards making a set, toTradeIn contains that set in a different order
@@ -148,7 +140,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry2); toTradeIn.add(infantry); toTradeIn.add(infantry3);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 same cards making a set, toTradeIn contains a different 3 cards
@@ -158,7 +150,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry); toTradeIn.add(infantry2);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 same cards making a set, toTradeIn contains a set with a card not in hand
@@ -168,7 +160,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(cavalry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 cards not making a set, toTradeIn is empty
@@ -177,7 +169,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 cards not making a set, toTradeIn contains those cards
@@ -187,7 +179,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); hand.add(infantry2); hand.add(cavalry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 3 cards not making a set, toTradeIn contains a set (with cards not in hand)
@@ -197,7 +189,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); hand.add(cavalry); hand.add(artillery);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 different cards, toTradeIn is empty
@@ -206,7 +198,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry); hand.add(cavalry2); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 different cards, toTradeIn contains the set of 3 different cards
@@ -216,7 +208,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(cavalry); hand.add(cavalry2); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(cavalry); toTradeIn.add(artillery);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 same cards, toTradeIn is empty
@@ -225,7 +217,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(cavalry2);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 same cards, toTradeIn contains the set of 3 same cards
@@ -235,7 +227,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(cavalry2);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(infantry3);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
 
@@ -245,7 +237,7 @@ public class TradeInCardsTest{
         List<Card> hand = new ArrayList<Card>();
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including potentially 2 different sets, toTradeIn contains the set of 3 different cards
@@ -255,7 +247,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(cavalry); toTradeIn.add(artillery);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including potentially 2 different sets, toTradeIn contains the set of 3 same cards
@@ -265,7 +257,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(artillery);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(infantry3);
-        assertEquals(true, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(true, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 different cards, toTradeIn has 4 cards, including that set
@@ -276,7 +268,7 @@ public class TradeInCardsTest{
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(cavalry); toTradeIn.add(artillery);
         toTradeIn.add(infantry2);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 
     // hand has 5 cards, including a set of 3 same cards, toTrade in has 3 cards, including 3 of the 5 cards, but not a set
@@ -286,7 +278,7 @@ public class TradeInCardsTest{
         hand.add(infantry); hand.add(infantry2); hand.add(infantry3); hand.add(cavalry); hand.add(cavalry2);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(infantry); toTradeIn.add(infantry2); toTradeIn.add(cavalry);
-        assertEquals(false, game.checkTradeInCards(hand, toTradeIn));
+        assertEquals(false, MoveChecker.checkTradeInCards(hand, toTradeIn));
     }
 }
 

@@ -1,8 +1,10 @@
 package player;
 
-import java.io.*;
-import java.util.*;
-import logic.*;
+import java.io.PrintWriter;
+import java.util.Scanner;
+import logic.Player;
+import logic.Board;
+import logic.Move;
 
 /**
  * CommandLinePlayer --- A player that outputs everything that happens to the console (So we can spectate AI vs AI games / play on the command line)
@@ -12,32 +14,29 @@ public class CommandLinePlayer implements IPlayer {
     private Scanner reader;
     private PrintWriter writer;
 
-    private boolean slowDown = false;
+    private Player player;
+    private Board board;
 
-    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, boolean slowDown){
+    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer){
         this.controller = controller;
         this.reader = reader;
         this.writer = writer;
-        this.slowDown = slowDown;
     }
 
-    public void nextMove(int currentPlayer, String currentMove){
-        writer.println(currentMove); 
+    public void setup(Player player, Board board){
+       this.player = player;
+       this.board = board;
+       this.controller.setup(player, board);
     }
 
-    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
-        this.controller.updateAI(hand, board, currentPlayer, previousMove);
+    public void nextMove(String move){
+        writer.println(move); 
+    }
 
-        String message = Move.describeMove(currentPlayer, previousMove, board);
+    public void updatePlayer(Move move){
+        String message = Move.describeMove(move, board);
         writer.print(message);
         writer.flush();
-
-        if(slowDown){
-            try{
-                Thread.sleep(100);
-            }catch(Exception e){
-            }
-        }
     }
 
     public Move getMove(Move move){

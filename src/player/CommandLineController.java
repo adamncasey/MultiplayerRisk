@@ -14,11 +14,11 @@ import java.io.*;
 public class CommandLineController implements PlayerController {
     private static Random random = new Random();
 
-    private List<Card> hand;
-    private Board board;
-
     private Scanner reader;
     private PrintWriter writer;
+
+    private Player player;
+    private Board board;
 
     private PlayerController testingAI = new DumbAI(); // Will fill in the blanks when I want to test a particular move stage.
     boolean testing = false;
@@ -29,11 +29,11 @@ public class CommandLineController implements PlayerController {
         this.writer = writer;
     }
 
-    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
-        this.hand = new ArrayList<Card>(hand);
+    public void setup(Player player, Board board){
+        this.player = player;
         this.board = board;
         if(testing){
-            testingAI.updateAI(hand, board, currentPlayer, previousMove);
+            this.testingAI.setup(player, board);
         }
     }
 
@@ -98,6 +98,7 @@ public class CommandLineController implements PlayerController {
 
     private Move tradeInCards(Move move) throws WrongMoveException{ 
         boolean tradingInCards = false;
+        List<Card> hand = player.getHand();
         if(Card.containsSet(hand)){
             if(hand.size() >= 5){
                 writer.println("You must trade in cards.");
@@ -137,6 +138,7 @@ public class CommandLineController implements PlayerController {
 
     private List<Card> pickCards(){
         boolean correct = false;
+        List<Card> hand = player.getHand();
         List<Integer> picked = new ArrayList<Integer>();
         while(!correct){
             while(!reader.hasNextInt()){

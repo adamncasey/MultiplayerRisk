@@ -7,9 +7,9 @@ Logic:
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
-  move board/deck/setcounter into its own class (maybe use this class to update game state rather than have game do it)
+  simplify relationship between game and gamestate
 
-  add player class for game to use DONE - now remove eliminated from IPlayers
+  make sure that no one can edit player outside of GameState
 
 Protocol:
   What happens when the deck runs out of cards?

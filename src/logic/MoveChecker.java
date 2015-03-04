@@ -1,28 +1,29 @@
 package logic;
 
-import java.util.*;
+import java.util.List;
 import logic.Move.Stage;
 
 public class MoveChecker {
 
+    private GameState state;
     private Board board;
-    private List<Player> players;
 
     public MoveChecker(){
     }
 
-    public void update(Board board, List<Player> players){
-        this.board = board;
-        this.players = players;
+    public void update(GameState state){
+        this.state = state;
+        this.board = state.getBoard();
     }
 
-    public boolean checkMove(int currentPlayer, Stage stage, Move move) throws WrongMoveException{
+    public boolean checkMove(Stage stage, Move move) throws WrongMoveException{
         if(move == null){
             return false;
         }
         if(stage != move.getStage()){
             return false;
         }
+        int currentPlayer = move.getUID();
         switch(stage){
             case CLAIM_TERRITORY:
                 int territoryToClaim = move.getTerritory();
@@ -31,7 +32,7 @@ public class MoveChecker {
                 int territoryToReinforce = move.getTerritory();
                 return checkReinforceTerritory(currentPlayer, territoryToReinforce);
             case TRADE_IN_CARDS:
-                List<Card> hand = players.get(currentPlayer).getHand(); 
+                List<Card> hand = state.getPlayer(currentPlayer).getHand(); 
                 List<Card> toTradeIn = move.getToTradeIn();
                 return checkTradeInCards(hand, toTradeIn);
             case PLACE_ARMIES:

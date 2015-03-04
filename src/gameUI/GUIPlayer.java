@@ -16,34 +16,31 @@ public class GUIPlayer implements IPlayer {
     private PrintWriter writer;
 
     public Main gui = new Main();
-    
-    private boolean slowDown = false;
 
-    public GUIPlayer(PlayerController controller, Scanner reader, PrintWriter writer, boolean slowDown){
+    private Board board;
+    private Player player;
+
+    public GUIPlayer(PlayerController controller, Scanner reader, PrintWriter writer){
         this.controller = controller;
         this.reader = reader;
         this.writer = writer;
-        this.slowDown = slowDown;
     }
 
-    public void nextMove(int currentPlayer, String currentMove){
-        writer.println(currentMove); 
+    public void setup(Player player, Board board){
+        this.board = board;
+        this.player = player;
+    } 
+
+    public void nextMove(String move){
+        writer.println(move); 
     }
 
-    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
-
-        String message = Move.describeMove(currentPlayer, previousMove, board);
+    public void updatePlayer(Move move){
+        String message = Move.describeMove(move, board);
         
         Controller controller = (Controller) gui.getLoader().getController();
         
         controller.printToConsole(message);
-
-        if(slowDown){
-            try{
-                Thread.sleep(100);
-            }catch(Exception e){
-            }
-        }
     }
 
     public Move getMove(Move move){

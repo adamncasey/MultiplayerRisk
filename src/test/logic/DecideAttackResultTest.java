@@ -10,13 +10,6 @@ import player.*;
 
 public class DecideAttackResultTest{
 
-    private static Game game;
-
-    @BeforeClass
-    public static void setupGame(){
-        List<IPlayer> players = new ArrayList<IPlayer>();
-    }
-
     @Test
     public void attack1v1(){
         List<Integer> attack = new ArrayList<Integer>();
@@ -26,7 +19,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         expected.add(1);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -39,7 +32,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -52,7 +45,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -66,7 +59,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         expected.add(1);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -80,7 +73,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -94,7 +87,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         expected.add(1);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -108,7 +101,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -123,7 +116,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(0);
         expected.add(2);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -138,7 +131,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(1);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -153,7 +146,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(1);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -168,7 +161,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(2);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -183,7 +176,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(2);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
 
@@ -196,9 +189,7 @@ public class DecideAttackResultTest{
         List<Integer> expected = new ArrayList<Integer>();
         expected.add(1);
         expected.add(0);
-        List<Integer> result = Game.decideAttackResult(attack, defend);
+        List<Integer> result = GameState.decideAttackResult(attack, defend);
         assertEquals(expected, result);
     }
-
-
 }

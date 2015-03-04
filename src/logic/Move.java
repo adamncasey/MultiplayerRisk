@@ -1,6 +1,8 @@
 package logic;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Move {
     public final int uid;
@@ -240,7 +242,8 @@ public class Move {
     }
 
     // Returns a string describing what has just happened.
-    public static String describeMove(int uid, Move move, Board board){
+    public static String describeMove(Move move, Board board){
+        int uid = move.getUID();
         try{
             String message;
             switch(move.getStage()){

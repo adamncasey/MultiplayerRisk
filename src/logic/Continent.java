@@ -1,6 +1,7 @@
 package logic;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Continent --- Stores information about a continent.

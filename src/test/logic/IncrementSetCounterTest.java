@@ -10,12 +10,12 @@ import player.*;
 
 public class IncrementSetCounterTest{
 
-    private static Game game;
+    private static GameState game;
 
     @BeforeClass
     public static void setupGame(){
         List<IPlayer> players = new ArrayList<IPlayer>();
-        game = new Game(players, 0, "resources/risk_map.json");
+        game = new GameState(0, 0, "resources/risk_map.json");
     }
 
     @Test

@@ -1,12 +1,10 @@
 package player;
 
-import logic.*;
-
-import java.util.*;
+import logic.Player;
+import logic.Board;
+import logic.Move;
 
 public interface PlayerController {
-    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove);
-
+    public void setup(Player player, Board board);
     public Move getMove(Move move);
-
 }

@@ -1,8 +1,8 @@
 package player;
 
-import java.util.*;
-import logic.*;
-import ai.*;
+import logic.Player;
+import logic.Board;
+import logic.Move;
 
 public class ComputerPlayer implements IPlayer {
 
@@ -12,11 +12,14 @@ public class ComputerPlayer implements IPlayer {
         this.controller = controller;
     }
 
-    public void nextMove(int currentPlayer, String currentMove){
+    public void setup(Player player, Board board){
+        this.controller.setup(player, board);
     }
 
-    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove){
-        this.controller.updateAI(hand, board, currentPlayer, previousMove);
+    public void nextMove(String move){
+    }
+
+    public void updatePlayer(Move move){
     }
 
     public Move getMove(Move move){

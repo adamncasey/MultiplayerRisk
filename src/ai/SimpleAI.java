@@ -1,11 +1,16 @@
 package ai;
 
-import logic.*;
+import logic.Player;
+import logic.Board;
+import logic.Card;
+import logic.Move;
 import logic.Move.Stage;
-import player.*;
+import logic.WrongMoveException;
+import player.PlayerController;
 
-import java.util.*;
-import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * SimpleAI --- Takes moves with the aim of ending the game quickly.
@@ -13,14 +18,14 @@ import java.io.*;
 public class SimpleAI implements PlayerController {
     private static Random random = new Random();
 
-    private List<Card> hand;
+    private Player player;
     private Board board;
 
     public SimpleAI(){
     }
 
-    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
-        this.hand = new ArrayList<Card>(hand);
+    public void setup(Player player, Board board){
+        this.player = player;
         this.board = board;
     }
 
@@ -84,6 +89,7 @@ public class SimpleAI implements PlayerController {
 
     private Move tradeInCards(Move move) throws WrongMoveException{ 
         List<Card> toTradeIn = new ArrayList<Card>();
+        List<Card> hand = player.getHand();
         if(hand.size() >= 5){
             for(int i = 0; i != 3; ++i){
                 int randomCard = random.nextInt(hand.size());

@@ -40,7 +40,7 @@ public class PlayCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, true);
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer);
         players.add(user);
         for(int i = 0; i != numAI; ++i){
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());

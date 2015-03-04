@@ -40,7 +40,7 @@ public class WatchCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new SimpleAI(), reader, writer, false);
+        CommandLinePlayer user = new CommandLinePlayer(new SimpleAI(), reader, writer);
         players.add(user);
         for(int i = 0; i != numAI-1; ++i){
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());

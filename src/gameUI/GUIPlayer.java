@@ -43,8 +43,8 @@ public class GUIPlayer implements IPlayer {
         controller.printToConsole(message);
     }
 
-    public Move getMove(Move move){
-        return controller.getMove(move); 
+    public void getMove(Move move){
+        controller.getMove(move); 
     }
 }
 

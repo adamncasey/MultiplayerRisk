@@ -22,7 +22,7 @@ public class ComputerPlayer implements IPlayer {
     public void updatePlayer(Move move){
     }
 
-    public Move getMove(Move move){
-        return controller.getMove(move); 
+    public void getMove(Move move){
+        controller.getMove(move); 
     }
 }

@@ -4,27 +4,20 @@ import java.util.List;
 import logic.Move.Stage;
 
 public class MoveChecker {
-
     private GameState state;
     private Board board;
 
-    public MoveChecker(){
-    }
-
-    public void update(GameState state){
+    public MoveChecker(GameState state){
         this.state = state;
         this.board = state.getBoard();
     }
 
-    public boolean checkMove(Stage stage, Move move) throws WrongMoveException{
+    public boolean checkMove(Move move) throws WrongMoveException{
         if(move == null){
             return false;
         }
-        if(stage != move.getStage()){
-            return false;
-        }
         int currentPlayer = move.getUID();
-        switch(stage){
+        switch(move.getStage()){
             case CLAIM_TERRITORY:
                 int territoryToClaim = move.getTerritory();
                 return checkClaimTerritory(territoryToClaim);

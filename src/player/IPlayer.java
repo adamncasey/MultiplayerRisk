@@ -18,5 +18,5 @@ public interface IPlayer {
     public void updatePlayer(Move move);
 
     // Asks the player to make their move
-    public Move getMove(Move move);
+    public void getMove(Move move);
 }

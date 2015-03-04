@@ -21,14 +21,6 @@ public class CommandLinePlayer implements IPlayer {
         this.slowDown = slowDown;
     }
 
-    private boolean eliminated = false; // Set and used by Game
-    public boolean isEliminated(){
-        return eliminated;
-    }
-    public void eliminate(){
-        eliminated = true;
-    }
-
     public void nextMove(int currentPlayer, String currentMove){
         writer.println(currentMove); 
     }

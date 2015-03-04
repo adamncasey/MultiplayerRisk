@@ -7,9 +7,6 @@ import java.util.*;
  * IPlayer --- The common interface between players and game logic.
  */
 public interface IPlayer {
-    public boolean isEliminated();
-    public void eliminate();
-
     // Lets the player know who is currently acting, and what they are doing
     public void nextMove(int currentPlayer, String currentMove);
 

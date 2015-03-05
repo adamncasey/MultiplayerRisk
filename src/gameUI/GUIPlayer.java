@@ -26,7 +26,7 @@ public class GUIPlayer implements IPlayer {
         this.writer = writer;
     }
 
-    public void setup(Player player, Board board){
+    public void setup(Player player, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
     } 

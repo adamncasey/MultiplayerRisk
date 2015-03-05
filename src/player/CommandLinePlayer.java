@@ -5,6 +5,7 @@ import java.util.Scanner;
 import logic.Player;
 import logic.Board;
 import logic.Move;
+import logic.MoveChecker;
 
 /**
  * CommandLinePlayer --- A player that outputs everything that happens to the console (So we can spectate AI vs AI games / play on the command line)
@@ -23,7 +24,7 @@ public class CommandLinePlayer implements IPlayer {
         this.writer = writer;
     }
 
-    public void setup(Player player, Board board){
+    public void setup(Player player, Board board, MoveChecker checker){
        this.player = player;
        this.board = board;
        this.controller.setup(player, board);

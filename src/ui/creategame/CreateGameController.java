@@ -87,7 +87,7 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
 		if (isFormValid()) {
-			application.gotoLobbyAsHost();
+			application.gotoLobbyAsHost(Integer.parseInt(port.getText()), Integer.parseInt(players.getText()));
 		}
 	}
 }

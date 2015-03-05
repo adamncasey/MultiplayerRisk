@@ -74,9 +74,11 @@ public class Main extends Application {
         }
     }
     
-    public void gotoLobbyAsHost() {
+    public void gotoLobbyAsHost(int port, int maxPlayers) {
         try {
         	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
+        	lobby.startLobby(port, maxPlayers);
+        	
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {

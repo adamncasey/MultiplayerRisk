@@ -30,6 +30,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	private TextArea consoleWindow;
 	
 	private ObservableList<String> playersList;
+	private int port;
+	private int maxPlayers;
 	
 	LocalGameLobby lobby;
 
@@ -43,8 +45,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		ObservableList<String> items = FXCollections.observableArrayList("You (Host)");
 		playersList = items;
 		players.setItems(playersList);
-		
-        lobby = new LocalGameLobby(handler, Settings.port);
+	}
+	
+	public void startLobby(int port, int maxPlayers) {
+		this.maxPlayers = maxPlayers;
+        lobby = new LocalGameLobby(handler, port);
         lobby.start();
 	}
 
@@ -86,14 +91,27 @@ public class LobbyHostController extends AnchorPane implements Initializable {
     public HostLobbyEventHandler handler = new HostLobbyEventHandler() {
         @Override
         public String onPlayerJoinRequest(LobbyClient client) {
-            writeToConsole("onPLayerJoinRequest " + client.supportedVersions[0]);
-            return null; // Accept the player (rejecting requires a string for reject message)
+        	if(playersList.size() == maxPlayers) {
+        		writeToConsole("New join request rejected because lobby is full");
+        		return "Lobby is full";
+        	}
+        	else
+        	{
+                writeToConsole("New join request " + client.supportedVersions[0]);
+                return null;
+        	}
         }
 
         @Override
         public void onPlayerJoin(int playerid) {
+    		Platform.runLater(new Runnable() {
+    			@Override
+    			public void run() {
+    				playersList.add("Player " + playerid);
+    			}
+    		});
+    		
             writeToConsole("Player " + playerid + " joined the lobby");
-            playersList.add("Player " + playerid);
         }
 
         @Override

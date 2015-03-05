@@ -129,7 +129,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onJoinRejected(String message) {
-			status("onJoinRejected " + message);
+			status("Join rejected: " + message);
 		}
 
 		@Override

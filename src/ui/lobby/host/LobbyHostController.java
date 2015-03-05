@@ -17,7 +17,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import lobby.LocalGameLobby;
 import lobby.handler.HostLobbyEventHandler;
-import settings.Settings;
 import ui.*;
 
 public class LobbyHostController extends AnchorPane implements Initializable {
@@ -30,7 +29,6 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	private TextArea consoleWindow;
 	
 	private ObservableList<String> playersList;
-	private int port;
 	private int maxPlayers;
 	
 	LocalGameLobby lobby;
@@ -68,8 +66,15 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	protected void kickPlayerButtonAction(ActionEvent event) {
 		int selectedIndex = players.getSelectionModel().getSelectedIndex();
 		if(selectedIndex > 0) {
-			playersList.remove(selectedIndex);
 			String selected = playersList.get(selectedIndex);
+			
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					playersList.remove(selectedIndex);
+				}
+			});
+			
 			writeToConsole(String.format("-> You kicked %s\n", selected));
 		}
 		else
@@ -97,7 +102,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         	}
         	else
         	{
-                writeToConsole("New join request " + client.supportedVersions[0]);
+                writeToConsole("New join request. Supported version: " + client.supportedVersions[0]);
                 return null;
         	}
         }
@@ -179,7 +184,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
         @Override
         public void onFailure(Throwable e) {
-            writeToConsole("onFailure: " + e.getMessage());
+            writeToConsole("ERROR: " + e.getMessage());
 
             e.printStackTrace();
         }

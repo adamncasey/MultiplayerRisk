@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import player.IPlayer;
+import settings.Settings;
 
 /**
  * Game --- The main game loop that lets each player take their turn, updating every player whenever anything happens.
@@ -35,7 +36,7 @@ public class Game {
 
 
     public void setupGame() throws WrongMoveException{
-        if(numPlayers < 3 || numPlayers > 6){
+        if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MinNumberOfPlayers){
             return;
         }
         updatePlayers(new Move(-1, SETUP_BEGIN));
@@ -68,7 +69,7 @@ public class Game {
     }
 
     public void playGame() throws WrongMoveException{
-        if(numPlayers < 3 || numPlayers > 6){
+        if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
         updatePlayers(new Move(-1, GAME_BEGIN));

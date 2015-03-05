@@ -17,18 +17,18 @@ import ui.*;
 public class CreateGameController extends AnchorPane implements Initializable {
 
 	private Main application;
-	
+
 	@FXML
 	private TextField port;
 	@FXML
 	private TextField players;
 	@FXML
 	private Label status;
-	
+
 	public void setApp(Main application) {
 		this.application = application;
 	}
-	
+
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.players.setText("4");
@@ -36,9 +36,9 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	}
 
 	private boolean isFormValid() {
-		return isValidPort();
+		return isValidPort() && isValidNumberOfPlayers();
 	}
-	
+
 	private boolean isValidPort() {
 		boolean valid = true;
 
@@ -49,7 +49,27 @@ public class CreateGameController extends AnchorPane implements Initializable {
 
 		return valid;
 	}
-	
+
+	private boolean isValidNumberOfPlayers() {
+		boolean valid = false;
+
+		try {
+			int noOfPlayers = Integer.parseInt(players.getText());
+
+			if (noOfPlayers < Settings.MinNumberOfPlayers)
+				status("Error: Minimum " + Settings.MinNumberOfPlayers + " players");
+			else if (noOfPlayers > Settings.MaxNumberOfPlayers)
+				status("Error: Maximum " + Settings.MaxNumberOfPlayers + " players");
+			else {
+				valid = true;
+			}
+		} catch (NumberFormatException e) {
+			status("Error: Invalid value for max number of players.");
+		}
+
+		return valid;
+	}
+
 	private void status(String message) {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -59,7 +79,6 @@ public class CreateGameController extends AnchorPane implements Initializable {
 		});
 	}
 
-	
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
 		application.gotoMenu();
@@ -67,8 +86,8 @@ public class CreateGameController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
-		if(isFormValid()) {
-			application.gotoLobbyHost();
+		if (isFormValid()) {
+			application.gotoLobbyAsHost();
 		}
 	}
 }

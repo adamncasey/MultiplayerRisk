@@ -63,8 +63,18 @@ public class Main extends Application {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    public void gotoLobbyAsClient() {
+        try {
+        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
+        	stage.setResizable(true);
+            lobby.setApp(this);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
-    public void gotoLobbyHost() {
+    public void gotoLobbyAsHost() {
         try {
         	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);

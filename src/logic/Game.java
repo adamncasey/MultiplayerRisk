@@ -36,7 +36,7 @@ public class Game {
 
 
     public void setupGame() throws WrongMoveException{
-        if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MinNumberOfPlayers){
+        if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
         updatePlayers(new Move(-1, SETUP_BEGIN));

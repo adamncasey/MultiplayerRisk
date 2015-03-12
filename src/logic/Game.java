@@ -30,7 +30,7 @@ public class Game {
         this.checker = new MoveChecker(state);
 
         for(int i = 0; i != this.numPlayers; ++i){
-            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getBoard());
+            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getBoard(), this.checker);
         }
     }
 

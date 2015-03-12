@@ -3,6 +3,7 @@ package player;
 import logic.Player;
 import logic.Board;
 import logic.Move;
+import logic.MoveChecker;
 
 public class ComputerPlayer implements IPlayer {
 
@@ -12,7 +13,7 @@ public class ComputerPlayer implements IPlayer {
         this.controller = controller;
     }
 
-    public void setup(Player player, Board board){
+    public void setup(Player player, Board board, MoveChecker checker){
         this.controller.setup(player, board);
     }
 

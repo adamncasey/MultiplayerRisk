@@ -1,15 +1,12 @@
 package ui.directconnect;
 
-import java.awt.Color;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import player.IPlayer;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 import lobby.RemoteGameLobby;
 import lobby.Validator;
 import lobby.handler.JoinLobbyEventHandler;

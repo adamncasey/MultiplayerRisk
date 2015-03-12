@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 /**
  * Concrete implementation of IConnection
@@ -52,7 +53,9 @@ public class Connection implements IConnection {
 	public String receiveLine() throws ConnectionLostException, TimeoutException {
 		try {
 			return in.readLine();
-		} catch (IOException e) {
+		} catch(SocketTimeoutException e1) {
+			throw new TimeoutException();
+		} catch (IOException e2) {
 			throw new ConnectionLostException();
 		}
 	}

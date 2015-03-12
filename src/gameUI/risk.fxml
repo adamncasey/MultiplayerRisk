@@ -37,9 +37,15 @@
                </children>
             </VBox>
             <TextArea fx:id="console" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Pane fx:id="centerPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane fx:id="centerPane" alignment="center" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <columnConstraints>
+                   <ColumnConstraints />
+                </columnConstraints>
+                <rowConstraints>
+                   <RowConstraints />
+                </rowConstraints>
                <children>
-                  <GridPane fx:id="dicePane" alignment="CENTER" visible="false">
+                  <GridPane fx:id="dicePane" alignment="center" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
                      <columnConstraints>
                         <ColumnConstraints />
                      </columnConstraints>
@@ -49,12 +55,11 @@
                      </rowConstraints>
                      <children>
                         <Label text="Dice Roll!" />
-                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1" />
                      </children>
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding></GridPane>
-                  <Pane fx:id="gamePane">
+                  <Pane fx:id="gamePane" GridPane.columnIndex="0" GridPane.rowIndex="0">
                      <children>
                         <ImageView fx:id="worldmap" layoutX="-315.0" layoutY="-221.0" scaleX="0.5" scaleY="0.5" scaleZ="0.0">
                            <image>
@@ -400,7 +405,7 @@
                      </children>
                   </Pane>
                </children>
-            </Pane>
+            </GridPane>
          </children>
       </GridPane>
    </children>

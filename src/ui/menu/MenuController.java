@@ -24,12 +24,6 @@ public class MenuController extends AnchorPane implements Initializable {
         	application.gotoCreateGame();
         }
     }
-
-    public void findGame(ActionEvent event) {
-        if (application != null) {
-            application.gotoLobbyFinder();
-        }
-    }
     
     public void directConnect(ActionEvent event) {
         if (application != null) {

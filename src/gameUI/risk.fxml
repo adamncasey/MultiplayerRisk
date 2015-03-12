@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="867.0" xmlns:gamePane="http://javafx.com/javafx/8" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.Controller">
+<AnchorPane prefHeight="600.0" prefWidth="867.0" xmlns:gamePane="http://javafx.com/javafx/8" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gameUI.Controller">
    <children>
       <GridPane layoutX="4.0" layoutY="5.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -23,9 +23,10 @@
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                <children>
-                  <Button fx:id="addArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="AddArmies" />
-                  <Button fx:id="removeArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="RemoveArmies" />
-                  <Button fx:id="setArmies" mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="SetArmies" />
+                  <Button onAction="#addArmies" prefHeight="25.0" prefWidth="130.0" text="AddArmies" />
+                  <Button onAction="#removeArmies" prefHeight="25.0" prefWidth="130.0" text="RemoveArmies" />
+                  <Button onAction="#setArmies" prefHeight="25.0" prefWidth="130.0" text="SetArmies" />
+                  <Button onAction="#rollDie" prefHeight="25.0" prefWidth="130.0" text="DICE MODE" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -36,349 +37,368 @@
                </children>
             </VBox>
             <TextArea fx:id="console" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Pane fx:id="gamePane" prefHeight="440.0" prefWidth="650.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Pane fx:id="centerPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <ImageView fx:id="worldmap" layoutX="-315.0" layoutY="-221.0" scaleX="0.5" scaleY="0.5" scaleZ="0.0">
-                     <image>
-                        <Image url="@territories/world.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="AF2" focusTraversable="true" layoutX="288.0" layoutY="255.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF2_congo_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="SA3" focusTraversable="true" layoutX="124.0" layoutY="246.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/SA3_argentina_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS3" focusTraversable="true" layoutX="484.0" layoutY="-10.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS3_kamichatka_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA0" focusTraversable="true" layoutX="-7.0" layoutY="15.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA0_alaska_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA6" focusTraversable="true" layoutX="49.0" layoutY="94.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA6_wus_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS4" focusTraversable="true" layoutX="452.0" layoutY="53.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS4_irkutsk_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS7" focusTraversable="true" layoutX="363.0" layoutY="89.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS7_afganistan_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="SA1" focusTraversable="true" layoutX="91.0" layoutY="215.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/SA1_peru_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AU2" focusTraversable="true" layoutX="496.0" layoutY="291.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AU2_westaustralia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU0" focusTraversable="true" layoutX="243.0" layoutY="64.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU0_iceland_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS9" focusTraversable="true" layoutX="301.0" layoutY="143.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS9_middleeast_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AU1" focusTraversable="true" layoutX="532.0" layoutY="259.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AU1_newguinea_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AF0" focusTraversable="true" layoutX="219.0" layoutY="166.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF0_northafrica_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AF4" focusTraversable="true" layoutX="292.0" layoutY="285.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF4_southafrica_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS10" focusTraversable="true" layoutX="399.0" layoutY="131.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS10_india_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS0" focusTraversable="true" layoutX="398.0" layoutY="-13.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS0_ural_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU1" focusTraversable="true" layoutX="274.0" layoutY="22.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU1_scandinavia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AF1" focusTraversable="true" layoutX="289.0" layoutY="208.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF1_egypt_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AU0" focusTraversable="true" layoutX="461.0" layoutY="256.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AU0_indonesia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA2" focusTraversable="true" layoutX="139.0" layoutY="-28.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA2_greenland_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS11" focusTraversable="true" layoutX="472.0" layoutY="183.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS11_siam_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS8" focusTraversable="true" layoutX="405.0" layoutY="89.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS8_china_china.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AF3" focusTraversable="true" layoutX="316.0" layoutY="210.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF3_eastafrica_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS6" focusTraversable="true" layoutX="546.0" layoutY="79.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS6_japan_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="SA2" focusTraversable="true" layoutX="89.0" layoutY="192.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/SA2_brazil_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA4" focusTraversable="true" layoutX="103.0" layoutY="50.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA4_ontario_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA3" focusTraversable="true" layoutX="50.0" layoutY="59.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA3_alberta_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA1" focusTraversable="true" layoutX="18.0" layoutY="12.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA1_northwest_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AF5" focusTraversable="true" layoutX="380.0" layoutY="321.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AF5_madagascar_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA7" focusTraversable="true" layoutX="74.0" layoutY="88.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA7_eus_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU4" focusTraversable="true" layoutX="266.0" layoutY="85.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU4_northerneurope_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="SA0" focusTraversable="true" layoutX="93.0" layoutY="202.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/SA0_venezuela_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU2" focusTraversable="true" layoutX="294.0" layoutY="-14.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU2_ukraine_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA5" focusTraversable="true" layoutX="140.0" layoutY="49.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA5_quebec_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU3" focusTraversable="true" layoutX="221.0" layoutY="78.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU3_greatbritain_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU6" focusTraversable="true" layoutX="274.0" layoutY="125.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU6_southerneurope_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS1" focusTraversable="true" layoutX="400.0" layoutY="-41.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS1_siberia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS5" focusTraversable="true" layoutX="452.0" layoutY="86.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS5_mongolia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AS2" focusTraversable="true" layoutX="465.0" layoutY="3.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AS2_yakutsk_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="NA8" focusTraversable="true" layoutX="58.0" layoutY="139.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/NA8_centralamerica_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="EU5" focusTraversable="true" layoutX="234.0" layoutY="121.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/EU5_westerneurope_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
-                  <ImageView fx:id="AU3" focusTraversable="true" layoutX="542.0" layoutY="274.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
-                     <image>
-                        <Image url="@territories/AU3_eastaustralia_highlighted.png" />
-                     </image>
-                     <effect>
-                        <Glow level="0.4" />
-                     </effect>
-                  </ImageView>
+                  <GridPane fx:id="dicePane" alignment="CENTER" visible="false">
+                     <columnConstraints>
+                        <ColumnConstraints />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Dice Roll!" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding></GridPane>
+                  <Pane fx:id="gamePane">
+                     <children>
+                        <ImageView fx:id="worldmap" layoutX="-315.0" layoutY="-221.0" scaleX="0.5" scaleY="0.5" scaleZ="0.0">
+                           <image>
+                              <Image url="@territories/world.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="AF2" focusTraversable="true" layoutX="288.0" layoutY="255.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF2_congo_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="SA3" focusTraversable="true" layoutX="124.0" layoutY="246.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/SA3_argentina_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS3" focusTraversable="true" layoutX="484.0" layoutY="-10.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS3_kamichatka_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA0" focusTraversable="true" layoutX="-7.0" layoutY="15.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA0_alaska_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA6" focusTraversable="true" layoutX="49.0" layoutY="94.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA6_wus_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS4" focusTraversable="true" layoutX="452.0" layoutY="53.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS4_irkutsk_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS7" focusTraversable="true" layoutX="363.0" layoutY="89.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS7_afganistan_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="SA1" focusTraversable="true" layoutX="91.0" layoutY="215.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/SA1_peru_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AU2" focusTraversable="true" layoutX="496.0" layoutY="291.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AU2_westaustralia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU0" focusTraversable="true" layoutX="243.0" layoutY="64.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU0_iceland_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS9" focusTraversable="true" layoutX="301.0" layoutY="143.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS9_middleeast_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AU1" focusTraversable="true" layoutX="532.0" layoutY="259.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AU1_newguinea_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AF0" focusTraversable="true" layoutX="219.0" layoutY="166.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF0_northafrica_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AF4" focusTraversable="true" layoutX="292.0" layoutY="285.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF4_southafrica_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS10" focusTraversable="true" layoutX="399.0" layoutY="131.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS10_india_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS0" focusTraversable="true" layoutX="398.0" layoutY="-13.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS0_ural_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU1" focusTraversable="true" layoutX="274.0" layoutY="22.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU1_scandinavia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AF1" focusTraversable="true" layoutX="289.0" layoutY="208.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF1_egypt_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AU0" focusTraversable="true" layoutX="461.0" layoutY="256.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AU0_indonesia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA2" focusTraversable="true" layoutX="139.0" layoutY="-28.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA2_greenland_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS11" focusTraversable="true" layoutX="472.0" layoutY="183.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS11_siam_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS8" focusTraversable="true" layoutX="405.0" layoutY="89.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS8_china_china.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AF3" focusTraversable="true" layoutX="316.0" layoutY="210.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF3_eastafrica_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS6" focusTraversable="true" layoutX="546.0" layoutY="79.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS6_japan_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="SA2" focusTraversable="true" layoutX="89.0" layoutY="192.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/SA2_brazil_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA4" focusTraversable="true" layoutX="103.0" layoutY="50.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA4_ontario_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA3" focusTraversable="true" layoutX="50.0" layoutY="59.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA3_alberta_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA1" focusTraversable="true" layoutX="18.0" layoutY="12.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA1_northwest_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AF5" focusTraversable="true" layoutX="380.0" layoutY="321.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AF5_madagascar_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA7" focusTraversable="true" layoutX="74.0" layoutY="88.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA7_eus_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU4" focusTraversable="true" layoutX="266.0" layoutY="85.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU4_northerneurope_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="SA0" focusTraversable="true" layoutX="93.0" layoutY="202.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/SA0_venezuela_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU2" focusTraversable="true" layoutX="294.0" layoutY="-14.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU2_ukraine_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA5" focusTraversable="true" layoutX="140.0" layoutY="49.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA5_quebec_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU3" focusTraversable="true" layoutX="221.0" layoutY="78.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU3_greatbritain_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU6" focusTraversable="true" layoutX="274.0" layoutY="125.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU6_southerneurope_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS1" focusTraversable="true" layoutX="400.0" layoutY="-41.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS1_siberia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS5" focusTraversable="true" layoutX="452.0" layoutY="86.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS5_mongolia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AS2" focusTraversable="true" layoutX="465.0" layoutY="3.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AS2_yakutsk_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="NA8" focusTraversable="true" layoutX="58.0" layoutY="139.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/NA8_centralamerica_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="EU5" focusTraversable="true" layoutX="234.0" layoutY="121.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/EU5_westerneurope_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                        <ImageView fx:id="AU3" focusTraversable="true" layoutX="542.0" layoutY="274.0" opacity="0.0" scaleX="0.5" scaleY="0.5">
+                           <image>
+                              <Image url="@territories/AU3_eastaustralia_highlighted.png" />
+                           </image>
+                           <effect>
+                              <Glow level="0.4" />
+                           </effect>
+                        </ImageView>
+                     </children>
+                  </Pane>
                </children>
             </Pane>
          </children>

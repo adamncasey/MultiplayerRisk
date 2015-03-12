@@ -86,15 +86,6 @@ public class Main extends Application {
         }
     }
     
-    public void gotoLobbyFinder() {
-        try {
-//            LobbyFinderController lobby = (LobbyFinderController) replaceSceneContent("lobbyfinder.fxml");
-//            lobby.setApp(this);
-        } catch (Exception ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
     public void gotoDirectConnect() {
         try {
         	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml", WIDTH, HEIGHT);
@@ -118,8 +109,6 @@ public class Main extends Application {
         } 
         Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
-        //stage.sizeToScene();
-        //stage.centerOnScreen();
         return (Initializable) loader.getController();
     }
 }

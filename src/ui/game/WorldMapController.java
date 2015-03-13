@@ -1,4 +1,4 @@
-package gameUI;
+package ui.game;
 
 import java.util.ArrayList;
 import javafx.event.EventHandler;
@@ -17,11 +17,11 @@ public class WorldMapController {
 	Pane mapPane;
 
 	Image infantryImage = new Image(getClass().getResourceAsStream(
-			"armies/infantry.png"));
+			"army/infantry.png"));
 	Image cavalryImage = new Image(getClass().getResourceAsStream(
-			"armies/cavalry.png"));
+			"army/cavalry.png"));
 	Image artilleryImage = new Image(getClass().getResourceAsStream(
-			"armies/artillery.png"));
+			"army/artillery.png"));
 
 	public WorldMapController(Pane pane, GameConsole console, DefaultMap territories) {
 		this.mapPane = pane;

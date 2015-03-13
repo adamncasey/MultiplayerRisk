@@ -1,6 +1,5 @@
-package gameUI;
+package ui.game;
 
-import gameUI.WorldMapController.ArmyMode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,6 +9,8 @@ import javafx.scene.layout.*;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import ui.game.WorldMapController.ArmyMode;
 
 public class GameController implements Initializable {
 	

@@ -1,4 +1,4 @@
-package gameUI;
+package ui.game;
 
 import java.util.ArrayList;
 import javafx.fxml.FXML;

@@ -6,6 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.*?>
+<?import ui.game.dice.DiceRollControl?>
 
 <AnchorPane prefHeight="600.0" prefWidth="867.0" xmlns:gamePane="http://javafx.com/javafx/8" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
    <children>
@@ -45,20 +47,11 @@
                    <RowConstraints />
                 </rowConstraints>
                <children>
-                  <GridPane fx:id="dicePane" alignment="center" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                     <columnConstraints>
-                        <ColumnConstraints />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Dice Roll!" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                     </padding></GridPane>
+                  <DiceRollControl fx:id="dicePane" alignment="center" visible="false" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                      <padding>
+                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                      </padding>
+                  </DiceRollControl>
                   <Pane fx:id="mapPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
                      <children>
                         <ImageView fx:id="worldmap" layoutX="-315.0" layoutY="-221.0" scaleX="0.5" scaleY="0.5" scaleZ="0.0">

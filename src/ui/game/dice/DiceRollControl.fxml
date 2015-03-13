@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+
+
+<fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+    <columnConstraints>
+      <ColumnConstraints />
+      <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+       <RowConstraints />
+       <RowConstraints />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" />
+    </rowConstraints>
+    <children>
+        <Label text="How many dice would you like to roll?" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <ChoiceBox fx:id="userDiceComboBox" prefWidth="150.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <Integer fx:value="1" />
+                    <Integer fx:value="2" />
+                    <Integer fx:value="3" />
+                    <Integer fx:value="4" />
+                    <Integer fx:value="5" />
+                    <Integer fx:value="6" />
+                </FXCollections>
+            </items>
+            <value>
+                <Integer fx:value="1" />
+            </value>
+        </ChoiceBox>
+
+        <Button onAction="#submit" text="Roll!" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    </children>
+</fx:root>

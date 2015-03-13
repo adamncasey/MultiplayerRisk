@@ -38,9 +38,9 @@ public class GUIPlayer implements IPlayer {
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
         
-        Controller controller = (Controller) gui.getLoader().getController();
+        GameController controller = (GameController) gui.getLoader().getController();
         
-        controller.printToConsole(message);
+        controller.console.write(message);
     }
 
     public void getMove(Move move){

@@ -1,11 +1,8 @@
 package gameUI;
 
 import java.util.ArrayList;
-
 import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
 public class DefaultMap {
 	

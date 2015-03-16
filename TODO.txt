@@ -1,5 +1,5 @@
 Logic:
-  Make tests for all methods that take in IPlayer input
+  Test move checker
 
   implement leave game functionality including neutral territories (in protocol)
 

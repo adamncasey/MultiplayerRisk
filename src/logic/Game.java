@@ -1,6 +1,5 @@
 package logic;
 
-import logic.Move.Stage;
 import static logic.Move.Stage.*;
 
 import java.util.List;
@@ -245,6 +244,7 @@ public class Game {
         while(!checker.checkMove(move)){
             player.getMove(move);
         }
+        move.setReadOnly();
     }
 
     public boolean isActive(int uid){

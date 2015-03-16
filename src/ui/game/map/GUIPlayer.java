@@ -1,10 +1,12 @@
-package ui.game;
+package ui.game.map;
 
 import java.io.*;
 import java.util.*;
 
 import player.IPlayer;
 import player.PlayerController;
+import ui.game.GameController;
+import ui.game.Main;
 import logic.*;
 
 /**

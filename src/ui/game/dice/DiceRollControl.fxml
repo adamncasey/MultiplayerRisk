@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.*?>
+<?import javafx.collections.*?>
+<?import java.net.*?>
 <?import java.lang.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
-
-
-
-<fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
-    <columnConstraints>
-      <ColumnConstraints />
-      <ColumnConstraints />
-    </columnConstraints>
-    <rowConstraints>
-       <RowConstraints />
-       <RowConstraints />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" />
-    </rowConstraints>
-    <children>
+<fx:root prefHeight="450" prefWidth="650" styleClass="background" type="Pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <GridPane hgap="20.0" vgap="20.0">
+      <columnConstraints>
+        <ColumnConstraints />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+      </rowConstraints>
+      <children>
         <Label text="How many dice would you like to roll?" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <ChoiceBox fx:id="userDiceComboBox" prefWidth="150.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <Integer fx:value="1" />
-                    <Integer fx:value="2" />
-                    <Integer fx:value="3" />
-                    <Integer fx:value="4" />
-                    <Integer fx:value="5" />
-                    <Integer fx:value="6" />
-                </FXCollections>
-            </items>
-            <value>
-                <Integer fx:value="1" />
-            </value>
+        <ChoiceBox fx:id="userDiceComboBox" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <Integer fx:value="1" />
+              <Integer fx:value="2" />
+              <Integer fx:value="3" />
+              <Integer fx:value="4" />
+              <Integer fx:value="5" />
+              <Integer fx:value="6" />
+            </FXCollections>
+          </items>
+          <value>
+            <Integer fx:value="1" />
+          </value>
         </ChoiceBox>
-
-        <Button onAction="#submit" text="Roll!" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-    </children>
+        <Button onAction="#submit" text="Roll dice!" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+      </children>
+      <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+      </padding>
+    </GridPane>
+  </children>
+  <stylesheets>
+    <URL value="@Dice.css" />
+  </stylesheets>
 </fx:root>

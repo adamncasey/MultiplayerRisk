@@ -1,6 +1,7 @@
-package ui.game;
+package ui.game.map;
 
 import java.util.ArrayList;
+
 import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 

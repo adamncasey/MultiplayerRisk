@@ -1,4 +1,4 @@
-package ui.game;
+package ui.game.map;
 
 import javafx.scene.image.ImageView;
 

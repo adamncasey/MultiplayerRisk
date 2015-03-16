@@ -6,20 +6,19 @@ import java.util.Random;
 import ui.game.GameConsole;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.layout.*;
 
-public class DiceRollControl extends GridPane {
+public class DiceRollControl extends Pane {
 	
 	@FXML
-	ComboBox<Integer> userDiceComboBox;
+	ChoiceBox<Integer> userDiceChoiceBox;
 	GameConsole console;
 
 	public DiceRollControl() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DiceRollControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
-
         try {
             fxmlLoader.load();
         } catch (IOException exception) {
@@ -58,7 +57,7 @@ public class DiceRollControl extends GridPane {
 		int[] attackerResults;
 		int[] defenderResults;
 		
-		int userNumberOfDice = (int)userDiceComboBox.getSelectionModel().getSelectedItem();
+		int userNumberOfDice = (int)userDiceChoiceBox.getSelectionModel().getSelectedItem();
 		
 		if(isAttacking) {
 			defenderResults = new int[numberOfEnemyDice];

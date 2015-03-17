@@ -191,15 +191,15 @@ public class Move {
         return this.defendDiceRolls;
     }
 
-    // PLAYER_ELIMINATED, GAME_END
+    // SETUP_BEGIN, PLAYER_ELIMINATED, GAME_END
     private int player = -1;
     public void setPlayer(int player) throws WrongMoveException{
-        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+        checkStage(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
         checkPermissions();
         this.player = player;
     }
     public int getPlayer() throws WrongMoveException{
-        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+        checkStage(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
         return this.player;
     }
 
@@ -339,7 +339,8 @@ public class Move {
                     message = String.format("Player %d has drawn a card.\n", uid);
                     return message;
                 case SETUP_BEGIN:
-                    message = String.format("Game setup is beginning with %d players.\n", uid);
+                    int numPlayers = move.getPlayer();
+                    message = String.format("Game setup is beginning with %d players, player %d is first to go.\n", uid, numPlayers);
                     return message;
                 case SETUP_END:
                     return "Game setup has ended.\n";

@@ -268,15 +268,15 @@ public class MoveAccessTest {
             Move move = new Move(0, s);
             try{
                 move.setPlayer(1);
-                assertTrue(s == PLAYER_ELIMINATED || s == GAME_END);
+                assertTrue(s == SETUP_BEGIN || s == PLAYER_ELIMINATED || s == GAME_END);
             }catch(WrongMoveException e){
-                assertFalse(s == PLAYER_ELIMINATED || s == GAME_END);
+                assertFalse(s == SETUP_BEGIN ||s == PLAYER_ELIMINATED || s == GAME_END);
             }
             try{
                 int player = move.getPlayer();
-                assertTrue(s == PLAYER_ELIMINATED || s == GAME_END);
+                assertTrue(s == SETUP_BEGIN || s == PLAYER_ELIMINATED || s == GAME_END);
             }catch(WrongMoveException e){
-                assertFalse(s == PLAYER_ELIMINATED || s == GAME_END);
+                assertFalse(s == SETUP_BEGIN || s == PLAYER_ELIMINATED || s == GAME_END);
             }
         }
     }
@@ -420,5 +420,3 @@ public class MoveAccessTest {
         move.setTurns(1);
     }
 }
-
-

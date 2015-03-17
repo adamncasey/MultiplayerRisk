@@ -1,8 +1,6 @@
 package logic;
 
 import java.io.PrintWriter;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -10,14 +8,59 @@ import java.util.ArrayList;
  * Board --- Stores information about the game board.
  */
 public class Board {
-    private ArrayList<Territory> territories;
-    private ArrayList<Continent> continents;
+    private static int[] CONTINENT_SIZES = {9, 4, 7, 6, 12, 4};
+    private static int[] CONTINENT_VALUES = {5, 2, 5, 3, 7, 2};
+    private static String[] CONTINENT_NAMES = {"North America", "South America", "Europe", "Africa", "Asia", "Australia"};
+    private static int[][] TERRITORY_LINKS = {{ 1,  3, 29, -1, -1}, { 2,  3,  4, -1, -1}, { 4,  5, 13, -1, -1}, { 4,  6, -1, -1, -1}, { 5,  6,  7, -1, -1}, { 7, -1, -1, -1, -1}, { 7,  8, -1, -1, -1},
+                                              { 8, -1, -1, -1, -1}, { 9, -1, -1, -1, -1}, {10, 11, -1, -1, -1}, {11, 12, -1, -1, -1}, {12, 20, -1, -1, -1}, {-1, -1, -1, -1, -1}, {14, 16, -1, -1, -1},
+                                              {15, 16, 17, -1, -1}, {17, 19, 26, 33, 35}, {14, 17, 18, -1, -1}, {18, 19, -1, -1, -1}, {19, 20, -1, -1, -1}, {20, 21, 35, -1, -1}, {21, 22, 23, -1, -1},
+                                              {23, 35, -1, -1, -1}, {23, 24, -1, -1, -1}, {24, 25, 35, -1, -1}, {25, -1, -1, -1, -1}, {-1, -1, -1, -1, -1}, {27, 33, 34, -1, -1}, {28, 30, 34, -1, -1},
+                                              {29, 30, -1, -1, -1}, {30, 31, 32, -1, -1}, {31, -1, -1, -1, -1}, {32, 34, -1, -1, -1}, {-1, -1, -1, -1, -1}, {34, 35, 36, -1, -1}, {36, 37, -1, -1, -1},
+                                              {36, -1, -1, -1, -1}, {37, -1, -1, -1, -1}, {38, -1, -1, -1, -1}, {39, 40, -1, -1, -1}, {40, 41, -1, -1, -1}, {41, -1, -1, -1, -1}, {-1, -1, -1, -1, -1}};
+    private static String[] TERRITORY_NAMES = {"Alaska", "Northwest Territory", "Greenland", "Alberta", "Ontario", "Quebec",
+                                               "Western United States", "Eastern United States", "Central America", "Venezuela",
+                                               "Peru", "Brazil", "Argentina", "Iceland", "Scandinavia", "Ukraine", "Great Britain",
+                                               "Northern Europe", "Western Europe", "Southern Europe", "North Africa", "Egypt",
+                                               "Congo", "East Africa", "South Africa", "Madagascar", "Ural", "Siberia", "Yakutsk",
+                                               "Kamchatka", "Irkutsk", "Mongolia", "Japan", "Afghanistan", "China", "Middle East",
+                                               "India", "Siam", "Indonesia", "New Guinea", "Western Australia", "Eastern Australia"};
+    private static int[] TERRITORY_CARDS = {10, 5, 5, 10, 10, 10, 10, 10, 1, 5, 5, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 5, 10, 1, 10, 5, 1,
+                                            1, 10, 10, 10, 5, 5, 1, 10, 10, 5, 5, 1, 5, 10, 5};
+    private static int NUM_WILDCARDS = 2;
+
+    private List<Territory> territories;
+    private List<Continent> continents;
     private Integer wildcards = 0;
 
-    public Board(String filename){
+    public Board(){
         this.territories = new ArrayList<Territory>();
         this.continents = new ArrayList<Continent>();
-        loadBoard(filename);
+
+        int territoryCounter = 0;
+        for(int i = 0; i != CONTINENT_SIZES.length; ++i){
+            Continent newContinent = new Continent(i);
+            newContinent.setValue(CONTINENT_VALUES[i]);
+            newContinent.setName(CONTINENT_NAMES[i]);
+            for(int j = 0; j != CONTINENT_SIZES[i]; ++j){
+                int newTID = territoryCounter++;
+                newContinent.addTerritory(newTID);
+                Territory newTerritory = new Territory(newTID);
+                newTerritory.setName(TERRITORY_NAMES[newTID]);
+                territories.add(newTerritory);
+            }
+            continents.add(newContinent);
+        }
+        for(int i = 0; i != TERRITORY_LINKS.length; ++i){
+            Territory t1 = territories.get(i);
+            for(int k = 0; k != 5; ++k){
+                int link = TERRITORY_LINKS[i][k];
+                if(link != -1){
+                    t1.addLink(link);
+                    Territory t2 = territories.get(link);
+                    t2.addLink(i);
+                }
+            }
+        }
     }
 
 //// Use these methods
@@ -75,131 +118,13 @@ public class Board {
     }
 ////////
 
-    private void loadBoard(String filename){
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            String line;
-            int control = 0;
-            while((line = br.readLine()) != null) {
-                line = line.trim();
-                String[] parts = line.split(":");
-                if(parts[0].equals("\"continents\"")) {
-                    control = 1;
-                    continue;
-                } else if(parts[0].equals("\"connections\"")) {
-                    control = 2;
-                    continue;
-                } else if(parts[0].equals("\"continent_values\"")) {
-                    control = 3;
-                    continue;
-                } else if(parts[0].equals("\"continent_names\"")) {
-                    control = 4;
-                    continue;
-                } else if(parts[0].equals("\"country_names\"")) {
-                    control = 5;
-                    continue;
-                } else if(parts[0].equals("\"country_card\"")) {
-                    control = 6;
-                    continue;
-                } else if(parts[0].equals("\"wildcards\"")) {
-                    processWildcards(parts);
-                    continue;
-                } else if(parts.length == 1){
-                    control = 0; // end current block 
-                    continue;
-                }
-
-                if(control == 1) {
-                    processContinents(parts); 
-                } else if(control == 2){
-                    processConnections(parts); 
-                } else if(control == 3){
-                    processContinentValues(parts); 
-                } else if(control == 4){
-                    processContinentNames(parts); 
-                } else if(control == 5){
-                    processCountryNames(parts); 
-                } else if(control == 6){
-                    processCountryCard(parts); 
-                }
-            }
-            br.close();
-        } catch (Exception e) {
-        }
-    }
-
-    // This won't work if a new map file doesn't list territories in order.
-    private void processContinents(String[] parts){
-        Integer newCID = Integer.valueOf(parts[0].replace("\"", ""));
-        Continent newContinent = new Continent(newCID);
-        String[] newTerritories = parts[1].split(",");
-        for(int i = 0; i != newTerritories.length; ++i){
-            Integer newTID = Integer.valueOf(newTerritories[i].replace("[", "").replace("]", "").trim());
-            Territory newTerritory = new Territory(newTID);
-            territories.add(newTerritory);
-            newContinent.addTerritory(newTID);
-        }
-        continents.add(newContinent);
-    }
-
-    private void processConnections(String[] parts){
-        Integer TID1 = Integer.valueOf(parts[0].replace("\"", ""));
-        Territory T1 = territories.get(TID1);
-        String[] newLinks = parts[1].split(",");
-        for(int i = 0; i != newLinks.length; ++i){
-            if(newLinks[i].equals("[]")){
-                continue;
-            }
-            Integer TID2 = Integer.valueOf(newLinks[i].replace("[", "").replace("]", "").trim());
-            Territory T2 = territories.get(TID2);
-            T1.addLink(TID2);
-            T2.addLink(TID1);
-        }
-    }
-
-    private void processContinentValues(String[] parts){
-        Integer CID = Integer.valueOf(parts[0].replace("\"", ""));
-        Continent C = continents.get(CID);
-        Integer value = Integer.valueOf(parts[1].replace(",", ""));
-        C.setValue(value);
-    }
-
-    private void processContinentNames(String[] parts){
-        Integer CID = Integer.valueOf(parts[0].replace("\"", ""));
-        Continent C = continents.get(CID);
-        String name = parts[1].replace(",", "");
-        C.setName(name);
-    }
-
-    private void processCountryNames(String[] parts){
-        Integer TID = Integer.valueOf(parts[0].replace("\"", ""));
-        Territory T = territories.get(TID);
-        String name = parts[1].replace(",", "").replace("\"", "");
-        T.setName(name);
-    }
-
-    private void processCountryCard(String[] parts){
-        Integer TID = Integer.valueOf(parts[0].replace("\"", ""));
-        Territory T = territories.get(TID);
-        Integer card = Integer.valueOf(parts[1].replace(",", ""));
-        T.setCard(card);
-    }
-
-    private void processWildcards(String[] parts){
-        this.wildcards =  Integer.valueOf(parts[1].trim());
-    }
-
-    // Extracts the initial deck from the board
     protected Deck getDeck(){
         Deck deck = new Deck();
-        int values[] = {1, 5, 10};
         for(int i = 0; i != territories.size(); ++i){
-            Territory t = territories.get(i);
-            int type = values[t.getCard()];
-            Card card = new Card(i, type, t.getName());
+            Card card = new Card(i, TERRITORY_CARDS[i], getName(i));
             deck.addCard(card);
         }
-        for(int i = 0; i != wildcards; ++i){
+        for(int i = 0; i != NUM_WILDCARDS; ++i){
             Card card = new Card(0, 0, "Wildcard");
             deck.addCard(card);
         }

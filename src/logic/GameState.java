@@ -18,7 +18,7 @@ public class GameState {
 
     private int activePlayerCount;
 
-    public GameState(int numPlayers, int seed, String boardFilename){
+    public GameState(int numPlayers, int seed){
         GameState.random = new Random(seed);
 
         this.players = new ArrayList<Player>();
@@ -27,7 +27,7 @@ public class GameState {
         }
         this.activePlayerCount = numPlayers;
         
-        this.board = new Board(boardFilename);
+        this.board = new Board();
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
     }

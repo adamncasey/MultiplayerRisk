@@ -41,12 +41,12 @@ public class MoveChecker {
                 return checkStartAttack(currentPlayer, attackFrom, attackTo);
             case CHOOSE_ATTACK_DICE:
                 int attackingDice = move.getAttackDice();
-                int attackingNumArmies = board.getArmies(move.getFrom());
-                return checkAttackingDice(attackingDice, attackingNumArmies);
+                int attackingFrom = move.getFrom();
+                return checkAttackingDice(attackingDice, attackingFrom);
             case CHOOSE_DEFEND_DICE:
                 int defendingDice = move.getDefendDice();
-                int defendingNumArmies = board.getArmies(move.getTo());
-                return checkDefendingDice(defendingDice, defendingNumArmies);
+                int defendingTo = move.getTo();
+                return checkDefendingDice(defendingDice, defendingTo);
             case OCCUPY_TERRITORY:
                 int occupyArmies = move.getArmies();
                 int occupyDice = move.getAttackDice();
@@ -68,6 +68,9 @@ public class MoveChecker {
     }
 
     public boolean checkClaimTerritory(int tid){
+        if(checkBounds(tid)){
+            return false;
+        }
         if(board.getOwner(tid) != -1){
             return false;
         }
@@ -75,13 +78,16 @@ public class MoveChecker {
     }
 
     public boolean checkReinforceTerritory(int uid, int tid){
+        if(checkBounds(tid)){
+            return false;
+        }
         if(board.getOwner(tid) != uid){
             return false;
         }
         return true;
     }
 
-    public static boolean checkTradeInCards(List<Card> hand, List<Card> toTradeIn){
+    public boolean checkTradeInCards(List<Card> hand, List<Card> toTradeIn){
         if(toTradeIn.size() == 0 && hand.size() < 5){
             return true;
         }
@@ -94,6 +100,9 @@ public class MoveChecker {
     }
 
     public boolean checkPlaceArmies(int uid, int territory, int armies, int armiesToPlace){
+        if(checkBounds(territory)){
+            return false;
+        }
         if(armies < 1){
             return false;
         }
@@ -107,6 +116,10 @@ public class MoveChecker {
     }
 
     public boolean checkStartAttack(int uid, int attackFrom, int attackTo){
+        if(checkBounds(attackFrom) || checkBounds(attackTo)){
+            return false;
+        }
+
         // Does this player own the territory to be attacked from?
         if(board.getOwner(attackFrom) != uid){
             return false;
@@ -136,14 +149,28 @@ public class MoveChecker {
         return true;
     }
 
-    public boolean checkAttackingDice(int numDice, int numArmies){
+    public boolean checkAttackingDice(int numDice, int attackingFrom){
+        if(checkBounds(attackingFrom)){
+            return false;
+        }
+        int numArmies = board.getArmies(attackingFrom);
+        if(numDice > 3 || numDice < 1){
+            return false;
+        }
         if(numArmies <= numDice){ // You must have one more armies than the number of dice you wish to roll.
             return false;
         }
         return true;
     }
 
-    public boolean checkDefendingDice(int numDice, int numArmies){ 
+    public boolean checkDefendingDice(int numDice, int defendingTo){
+        if(checkBounds(defendingTo)){
+            return false;
+        }
+        int numArmies = board.getArmies(defendingTo);
+        if(numDice > 2 || numDice < 1){
+            return false;
+        }
         if(numArmies < numDice){ // You must have 2 armies to roll 2 dice.
             return false;
         }
@@ -161,6 +188,10 @@ public class MoveChecker {
     }
 
     public boolean checkStartFortify(int uid, int fortifyFrom, int fortifyTo){
+        if(checkBounds(fortifyFrom) || checkBounds(fortifyTo)){
+            return false;
+        }
+
         // Does this player own the territory to be attacked from?
         if(board.getOwner(fortifyFrom) != uid){
             return false;
@@ -197,5 +228,9 @@ public class MoveChecker {
             return false;
         }
         return true;
+    }
+
+    private boolean checkBounds(int territory){
+        return (territory < 0 || territory >= board.getNumTerritories());
     }
 }

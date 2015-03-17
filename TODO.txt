@@ -1,6 +1,10 @@
 Logic:
   Test move checker
 
+  Change place armies so that if a card traded in matches a territory that player owns, the 2 extra armies MUST be placed on the territory pictured.
+
+  save/load GameState
+
   implement leave game functionality including neutral territories (in protocol)
 
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameState {
-    private static Random random;
+    private Random random;
 
     private List<Player> players;
 
@@ -18,8 +18,11 @@ public class GameState {
 
     private int activePlayerCount;
 
+    /**
+     * Create a blank GameState
+     */
     public GameState(int numPlayers, int seed){
-        GameState.random = new Random(seed);
+        this.random = new Random(seed);
 
         this.players = new ArrayList<Player>();
         for(int i = 0; i != numPlayers; ++i){
@@ -30,6 +33,23 @@ public class GameState {
         this.board = new Board();
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
+    }
+
+    /**
+     * Load in a GameState
+     */
+    public GameState(boolean testing, int numPlayers, int[] owners, int[] armies){
+        this.random = new Random(0);
+
+        this.players = new ArrayList<Player>();
+        for(int i = 0; i != numPlayers; ++i){
+            this.players.add(new Player(i));
+        }
+        this.activePlayerCount = numPlayers;
+
+        this.board = new Board(testing, owners, armies);
+        this.deck = board.getDeck();
+        this.deck.shuffle(0);
     }
 
     public Board getBoard(){
@@ -105,7 +125,7 @@ public class GameState {
         return false;
     }
 
-    public static List<Integer> rollDice(int numDice){
+    public List<Integer> rollDice(int numDice){
         List<Integer> diceRolls = new ArrayList<Integer>();
         for(int i = 0; i != numDice; ++i){
             diceRolls.add(random.nextInt(6)+1);
@@ -113,7 +133,7 @@ public class GameState {
         return diceRolls;
     }
 
-    public static List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){
+    public List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){
         attack = new ArrayList<Integer>(attack);
         defend = new ArrayList<Integer>(defend);
         int attackerLosses = 0; int defenderLosses = 0;

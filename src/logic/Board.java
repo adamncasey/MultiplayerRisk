@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Board --- Stores information about the game board.
  */
 public class Board {
+    // Default Board
     private static int[] CONTINENT_SIZES = {9, 4, 7, 6, 12, 4};
     private static int[] CONTINENT_VALUES = {5, 2, 5, 3, 7, 2};
     private static String[] CONTINENT_NAMES = {"North America", "South America", "Europe", "Africa", "Asia", "Australia"};
@@ -30,37 +31,18 @@ public class Board {
 
     private List<Territory> territories;
     private List<Continent> continents;
-    private Integer wildcards = 0;
 
     public Board(){
-        this.territories = new ArrayList<Territory>();
-        this.continents = new ArrayList<Continent>();
+        loadDefaultBoard();
+    }
 
-        int territoryCounter = 0;
-        for(int i = 0; i != CONTINENT_SIZES.length; ++i){
-            Continent newContinent = new Continent(i);
-            newContinent.setValue(CONTINENT_VALUES[i]);
-            newContinent.setName(CONTINENT_NAMES[i]);
-            for(int j = 0; j != CONTINENT_SIZES[i]; ++j){
-                int newTID = territoryCounter++;
-                newContinent.addTerritory(newTID);
-                Territory newTerritory = new Territory(newTID);
-                newTerritory.setName(TERRITORY_NAMES[newTID]);
-                territories.add(newTerritory);
-            }
-            continents.add(newContinent);
+    protected Board(boolean testing, int[] owners, int[] armies){
+        if(testing){
+            loadTestBoard();
+        }else{
+            loadDefaultBoard();
         }
-        for(int i = 0; i != TERRITORY_LINKS.length; ++i){
-            Territory t1 = territories.get(i);
-            for(int k = 0; k != 5; ++k){
-                int link = TERRITORY_LINKS[i][k];
-                if(link != -1){
-                    t1.addLink(link);
-                    Territory t2 = territories.get(link);
-                    t2.addLink(i);
-                }
-            }
-        }
+        fillTestBoard(owners, armies);
     }
 
 //// Use these methods
@@ -105,8 +87,8 @@ public class Board {
         }
     }
 
-////////
-// For Game use
+////
+
     protected void claimTerritory(int tid, int uid){
         Territory t = territories.get(tid);
         t.setOwner(uid);
@@ -116,7 +98,6 @@ public class Board {
         Territory t = territories.get(tid);
         t.addArmies(numArmies);
     }
-////////
 
     protected Deck getDeck(){
         Deck deck = new Deck();
@@ -160,5 +141,59 @@ public class Board {
             }
         }
         return armies;
+    }
+
+    private void loadDefaultBoard(){
+        loadBoard(CONTINENT_SIZES, CONTINENT_VALUES, CONTINENT_NAMES, TERRITORY_LINKS, 5, TERRITORY_NAMES, TERRITORY_CARDS, NUM_WILDCARDS);
+    }
+
+    private void loadTestBoard(){
+        int[] continentSizes = {4, 4, 4};
+        int[] continentValues = {3, 4, 5};
+        String[] continentNames = {"CA", "CB", "CC"};
+        int[][] territoryLinks = {{ 1,  2, -1}, { 2,  3,  5}, { 3,  9, -1}, { 7, 11, -1},
+                                  { 5,  6, -1}, { 6,  7, -1}, { 7, 10, -1}, {11, -1, -1},
+                                  { 9, 10, -1}, {10, 11, -1}, {11, -1, -1}, {-1, -1, -1}};
+        String[] territoryNames = {"T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11"};
+        int[] territoryCards = {10, 5, 5, 1, 10, 5, 5, 1, 10, 5, 5, 1};
+        int numWildcards = 1;
+        loadBoard(continentSizes, continentValues, continentNames, territoryLinks, 3, territoryNames, territoryCards, numWildcards);
+    }
+
+    private void loadBoard(int[] continentSizes, int[] continentValues, String[] continentNames, int[][] territoryLinks, int maxLinks, String[] territoryNames, int[] territoryCards, int numWildcards){
+        this.territories = new ArrayList<Territory>();
+        this.continents = new ArrayList<Continent>();
+        int territoryCounter = 0;
+        for(int i = 0; i != continentSizes.length; ++i){
+            Continent newContinent = new Continent(i);
+            newContinent.setValue(continentValues[i]);
+            newContinent.setName(continentNames[i]);
+            for(int j = 0; j != continentSizes[i]; ++j){
+                int newTID = territoryCounter++;
+                newContinent.addTerritory(newTID);
+                Territory newTerritory = new Territory(newTID);
+                newTerritory.setName(territoryNames[newTID]);
+                territories.add(newTerritory);
+            }
+            continents.add(newContinent);
+        }
+        for(int i = 0; i != territoryLinks.length; ++i){
+            Territory t1 = territories.get(i);
+            for(int k = 0; k != maxLinks; ++k){
+                int link = territoryLinks[i][k];
+                if(link != -1){
+                    t1.addLink(link);
+                    Territory t2 = territories.get(link);
+                    t2.addLink(i);
+                }
+            }
+        }
+    }
+
+    private void fillTestBoard(int[] owners, int[] armies){
+        for(int i = 0; i != owners.length; ++i){
+            claimTerritory(i, owners[i]);
+            placeArmies(i, armies[i]);
+        } 
     }
 }

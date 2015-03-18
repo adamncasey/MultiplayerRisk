@@ -16,8 +16,8 @@ public class WatchCLI {
 
     public static void main(String[] args){ 
         int seed = random.nextInt();
-        Scanner reader = new Scanner(System.console().reader());
-        PrintWriter writer = System.console().writer();
+        Scanner reader = new Scanner(System.in);
+        PrintWriter writer = new PrintWriter(System.out);
 
         writer.println("Hello! Welcome to Risk");
         writer.print("How many AIs would you like to watch? (3-6)\n> ");

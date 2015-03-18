@@ -1,0 +1,48 @@
+.background {
+    -fx-background-color:
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-padding: 20 20 20 20;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+/*.text-area .content {
+    -fx-font-size: 14px;
+    -fx-background-color:#2e4477;
+    -fx-background-radius:0px;
+    -fx-font-family: "Arial";
+    -fx-background-insets: 0;
+}*/
+
+#centerPane {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+.text-area {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-family:'Open Sans', sans-serif;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-font-family:'Open Sans', sans-serif;
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
+}

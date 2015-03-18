@@ -1,0 +1,164 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1194" measuredH="800" mockupW="1000" mockupH="800">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="194" y="0" w="1000" h="800" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <close>true</close>
+        <dragger>true</dragger>
+        <maximizeRestore>true</maximizeRestore>
+        <minimize>true</minimize>
+        <text>Risk</text>
+      </controlProperties>
+    </control>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Image" x="209" y="155" w="650" h="450" measuredW="1280" measuredH="832" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./map.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::List" x="209" y="657" w="368" h="107" measuredW="100" measuredH="126" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <borderStyle>square</borderStyle>
+        <text>MrCasey%20joined%0AMrBlades%20joined%20using%20an%20AI%20player</text>
+        <verticalScrollbar>true</verticalScrollbar>
+      </controlProperties>
+    </control>
+    <control controlID="12" controlTypeID="com.balsamiq.mockups::Label" x="209" y="627" w="-1" h="-1" measuredW="59" measuredH="24" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Console</text>
+      </controlProperties>
+    </control>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Image" x="221" y="41" w="210" h="68" measuredW="816" measuredH="258" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./Screen%20Shot%202015-03-16%20at%2018.23.51.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::Canvas" x="194" y="21" w="1000" h="758" measuredW="100" measuredH="70" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>2101837</color>
+      </controlProperties>
+    </control>
+    <control controlID="42" controlTypeID="com.balsamiq.mockups::Label" x="881" y="272" w="-1" h="-1" measuredW="46" measuredH="24" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Action</text>
+      </controlProperties>
+    </control>
+    <control controlID="43" controlTypeID="com.balsamiq.mockups::Label" x="1007" y="66" w="-1" h="-1" measuredW="120" measuredH="28" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>20</size>
+        <text>It%27s%20your%20turn%21</text>
+      </controlProperties>
+    </control>
+    <control controlID="45" controlTypeID="com.balsamiq.mockups::Image" x="907" y="41" w="-1" h="-1" measuredW="77" measuredH="79" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Hourglass</text>
+      </controlProperties>
+    </control>
+    <control controlID="46" controlTypeID="com.balsamiq.mockups::Canvas" x="881" y="296" w="288" h="309" measuredW="100" measuredH="70" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>0.25</backgroundAlpha>
+        <borderStyle>none</borderStyle>
+        <color>16777215</color>
+      </controlProperties>
+    </control>
+    <control controlID="48" controlTypeID="com.balsamiq.mockups::Label" x="907" y="419" w="-1" h="-1" measuredW="85" measuredH="22" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <italic>true</italic>
+        <size>14</size>
+        <text>You%20selected%3A</text>
+      </controlProperties>
+    </control>
+    <control controlID="49" controlTypeID="com.balsamiq.mockups::Label" x="937" y="353" w="-1" h="-1" measuredW="177" measuredH="22" zOrder="19" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <italic>true</italic>
+        <size>14</size>
+        <text>Choose%20a%20territory%20to%20fortify%21</text>
+      </controlProperties>
+    </control>
+    <control controlID="50" controlTypeID="com.balsamiq.mockups::Label" x="1007" y="434" w="-1" h="-1" measuredW="43" measuredH="24" zOrder="20" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <color>16777215</color>
+        <size>16</size>
+        <text>China</text>
+      </controlProperties>
+    </control>
+    <control controlID="51" controlTypeID="com.balsamiq.mockups::Button" x="1040" y="541" w="116" h="51" measuredW="98" measuredH="27" zOrder="21" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Fortify%20China</text>
+      </controlProperties>
+    </control>
+    <control controlID="52" controlTypeID="com.balsamiq.mockups::Label" x="892" y="305" w="-1" h="-1" measuredW="58" measuredH="26" zOrder="22" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>true</bold>
+        <color>16777215</color>
+        <size>18</size>
+        <text>Fortify</text>
+      </controlProperties>
+    </control>
+    <control controlID="54" controlTypeID="com.balsamiq.mockups::Label" x="881" y="131" w="-1" h="-1" measuredW="53" measuredH="24" zOrder="13" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Players</text>
+      </controlProperties>
+    </control>
+    <control controlID="55" controlTypeID="com.balsamiq.mockups::Canvas" x="881" y="155" w="288" h="92" measuredW="100" measuredH="70" zOrder="6" locked="false" isInGroup="-1">
+      <controlProperties>
+        <backgroundAlpha>0.25</backgroundAlpha>
+        <borderStyle>none</borderStyle>
+        <color>16777215</color>
+      </controlProperties>
+    </control>
+    <control controlID="57" controlTypeID="com.balsamiq.mockups::Image" x="895" y="165" w="44" h="52" measuredW="820" measuredH="1004" zOrder="7" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./shield.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="58" controlTypeID="com.balsamiq.mockups::Label" x="905" y="217" w="-1" h="-1" measuredW="24" measuredH="21" zOrder="8" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>You%21</text>
+      </controlProperties>
+    </control>
+    <control controlID="59" controlTypeID="com.balsamiq.mockups::Image" x="966" y="165" w="44" h="52" measuredW="820" measuredH="1004" zOrder="9" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./shield.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="60" controlTypeID="com.balsamiq.mockups::Label" x="961" y="217" w="-1" h="-1" measuredW="54" measuredH="21" zOrder="10" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>MrCasey</text>
+      </controlProperties>
+    </control>
+    <control controlID="61" controlTypeID="com.balsamiq.mockups::Image" x="1037" y="165" w="44" h="52" measuredW="820" measuredH="1004" zOrder="11" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./shield.png</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="62" controlTypeID="com.balsamiq.mockups::Label" x="1034" y="217" w="-1" h="-1" measuredW="50" measuredH="21" zOrder="12" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <text>Basic%20AI</text>
+      </controlProperties>
+    </control>
+    <control controlID="63" controlTypeID="com.balsamiq.mockups::Label" x="209" y="120" w="-1" h="-1" measuredW="31" measuredH="24" zOrder="23" locked="false" isInGroup="-1">
+      <controlProperties>
+        <color>16777215</color>
+        <size>16</size>
+        <text>Map</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

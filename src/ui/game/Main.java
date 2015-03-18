@@ -9,20 +9,25 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	FXMLLoader loader;
-	
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-    	Parent root = FXMLLoader.load(getClass().getResource("risk.fxml"));
-        primaryStage.setTitle("Risk");
-        primaryStage.setScene(new Scene(root, 800, 600));
-        primaryStage.show();
-    }
-    
-    public FXMLLoader getLoader(){
-    	return loader;
-    }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("Game.fxml"));
+		primaryStage.setTitle("Risk");
+
+		Scene newScene = new Scene(root, 1000, 800);
+		newScene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");
+
+		primaryStage.setScene(newScene);
+		primaryStage.show();
+
+	}
+
+	public FXMLLoader getLoader() {
+		return loader;
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
 }

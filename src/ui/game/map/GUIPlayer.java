@@ -42,7 +42,7 @@ public class GUIPlayer implements IPlayer {
         
         GameController controller = (GameController) gui.getLoader().getController();
         
-        //controller.console.write(message);
+        controller.console.write(message);
     }
 
     public void getMove(Move move){

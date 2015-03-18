@@ -41,7 +41,7 @@ public class WatchNetworkCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
         ArrayList<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new NetworkPlayer(), reader, writer, false);
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, false);
         players.add(user);
         for(int i = 0; i != numAI-1; ++i){
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());

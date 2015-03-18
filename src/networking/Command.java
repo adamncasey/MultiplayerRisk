@@ -18,7 +18,10 @@ public enum Command {
     PING("ping"),
     READY("ready"),
     KILL_GAME("kill_game"),
-    INITIALISE_GAME("initialise_game");
+    INITIALISE_GAME("initialise_game"),
+    DRAW_CARD("draw_card"),
+    DEFEND("defend"),
+    SETUP("setup");
 	
 	
 	Command(String name) {

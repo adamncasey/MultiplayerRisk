@@ -1,6 +1,7 @@
 package networking;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import logic.Board;
 import logic.Card;
@@ -28,13 +29,10 @@ public class NetworkPlayer implements IPlayer {
 		
 	}
 
-	@Override
-	public void updatePlayer(Board board, ArrayList<Card> hand,
-			int currentPlayer, Move previousMove) {
-		
-		// This can probably be ignored for a NetworkPlayer
-		// TODO Evaluate this assumption		
-	}
+    @Override
+    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove) {
+
+    }
 
 	@Override
 	public Move getMove(Move move) {
@@ -89,17 +87,4 @@ public class NetworkPlayer implements IPlayer {
 		// return move
 		return null;
 	}
-
-	@Override
-	public int getUID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setUID(int uid) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

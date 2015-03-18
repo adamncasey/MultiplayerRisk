@@ -10,17 +10,19 @@ public class Territory {
 
     private Integer ID;
 
-    private String name = "";
-    private int owner = -1;
-    private int armies = 0;
+    private String name;
+    private int owner;
+    private int armies;
 
     // Stores the IDs of the territories linked to this territory
-    private List<Integer> links = new ArrayList<Integer>();
-
-    private Integer card;
+    private List<Integer> links;
 
     public Territory(Integer id){
-        ID = id;
+        this.ID = id;
+        this.name = "";
+        this.owner = -1;
+        this.armies = 0;
+        this.links = new ArrayList<Integer>();
     }
 
     public int getID(){
@@ -57,13 +59,5 @@ public class Territory {
 
     protected List<Integer> getLinks(){
         return links;
-    }
-
-    protected void setCard(Integer card){
-        this.card = card;
-    }
-
-    protected Integer getCard(){
-        return this.card;
     }
 }

@@ -61,7 +61,7 @@ public class Move {
 
     // PLACE_ARMIES, OCCUPY_TERRITORY, FORTIFY_TERRITORY
     private int currentArmies = 0;
-    protected void setCurrentArmies(int numArmies) throws WrongMoveException{
+    public void setCurrentArmies(int numArmies) throws WrongMoveException{
         checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
         checkPermissions();
         this.currentArmies = numArmies;
@@ -145,7 +145,7 @@ public class Move {
 
     // END_ATTACK
     private int attackerLosses = 0;
-    protected void setAttackerLosses(int numLosses) throws WrongMoveException{
+    public void setAttackerLosses(int numLosses) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
         checkPermissions();
         this.attackerLosses = numLosses;
@@ -157,7 +157,7 @@ public class Move {
 
     // END_ATTACK
     private int defenderLosses = 0;
-    protected void setDefenderLosses(int numLosses) throws WrongMoveException{
+    public void setDefenderLosses(int numLosses) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
         checkPermissions();
         this.defenderLosses = numLosses;
@@ -169,7 +169,7 @@ public class Move {
 
     // END_ATTACK
     private List<Integer> attackDiceRolls = null;
-    protected void setAttackDiceRolls(List<Integer> results) throws WrongMoveException{
+    public void setAttackDiceRolls(List<Integer> results) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
         checkPermissions();
         this.attackDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
@@ -181,7 +181,7 @@ public class Move {
 
     // END_ATTACK
     private List<Integer> defendDiceRolls = null;
-    protected void setDefendDiceRolls(List<Integer> results) throws WrongMoveException{
+    public void setDefendDiceRolls(List<Integer> results) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
         checkPermissions();
         this.defendDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
@@ -191,21 +191,21 @@ public class Move {
         return this.defendDiceRolls;
     }
 
-    // PLAYER_ELIMINATED, GAME_END
+    // SETUP_BEGIN, PLAYER_ELIMINATED, GAME_END
     private int player = -1;
-    protected void setPlayer(int player) throws WrongMoveException{
-        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+    public void setPlayer(int player) throws WrongMoveException{
+        checkStage(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
         checkPermissions();
         this.player = player;
     }
     public int getPlayer() throws WrongMoveException{
-        checkStage(Stage.PLAYER_ELIMINATED, Stage.GAME_END);
+        checkStage(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
         return this.player;
     }
 
     // GAME_END
     private int turns = -1;
-    protected void setTurns(int turns) throws WrongMoveException{
+    public void setTurns(int turns) throws WrongMoveException{
         checkStage(Stage.GAME_END);
         checkPermissions();
         this.turns = turns;
@@ -225,19 +225,19 @@ public class Move {
         }
         if(!ok){
             StackTraceElement[] ste = Thread.currentThread().getStackTrace();
-            String callingMethod = ste[ste.length - 8].getMethodName();
-            String message = String.format("%s cannot be accessed from stage %d.", callingMethod, stage);
+            String callingMethod = ste[2].getMethodName();
+            String message = String.format("%s cannot be accessed from stage %s.", callingMethod, Move.stageName(stage));
             throw new WrongMoveException(message);
         }
     }
 
-    protected void setReadOnly(){
+    public void setReadOnly(){
         this.readOnly = true;
     }
 
     private void checkPermissions() throws WrongMoveException{
         if(readOnly){
-            throw new WrongMoveException("Attempted to write to move while it is in read only mode.");
+            throw new WrongMoveException("Attempted to write to a read only move.");
         }
     }
 
@@ -339,7 +339,8 @@ public class Move {
                     message = String.format("Player %d has drawn a card.\n", uid);
                     return message;
                 case SETUP_BEGIN:
-                    message = String.format("Game setup is beginning with %d players.\n", uid);
+                    int numPlayers = move.getPlayer();
+                    message = String.format("Game setup is beginning with %d players, player %d is first to go.\n", uid, numPlayers);
                     return message;
                 case SETUP_END:
                     return "Game setup has ended.\n";
@@ -406,5 +407,50 @@ public class Move {
                 break;
         }
         return message;
+    }
+
+    // Returns a string describing what has just happened.
+    public static String stageName(Stage s){
+        switch(s){
+            case CLAIM_TERRITORY:
+                return "CLAIM_TERRITORY";
+            case REINFORCE_TERRITORY:
+                return "REINFORCE_TERRITORY";
+            case TRADE_IN_CARDS:
+                return "TRADE_IN_CARDS";
+            case PLACE_ARMIES:
+                return "PLACE_ARMIES";
+            case DECIDE_ATTACK:
+                return "DECIDE_ATTACK";
+            case START_ATTACK:
+                return "START_ATTACK";
+            case CHOOSE_ATTACK_DICE:
+                return "CHOOSE_ATTACK_DICE";
+            case CHOOSE_DEFEND_DICE:
+                return "CHOOSE_DEFEND_DICE";
+            case OCCUPY_TERRITORY:
+                return "OCCUPY_TERRITORY";
+            case DECIDE_FORTIFY:
+                return "DECIDE_FORTIFY";
+            case START_FORTIFY:
+                return "START_FORTIFY";
+            case FORTIFY_TERRITORY:
+                return "FORTIFY_TERRITORY";
+            case END_ATTACK:
+                return "END_ATTACK";
+            case PLAYER_ELIMINATED:
+                return "PLAYER_ELIMINATED";
+            case CARD_DRAWN:
+                return "CARD_DRAWN";
+            case SETUP_BEGIN:
+                return "SETUP_BEGIN";
+            case SETUP_END:
+                return "SETUP_END";
+            case GAME_BEGIN:
+                return "GAME_BEGIN";
+            case GAME_END:
+                return "GAME_END";
+        }
+        return null;
     }
 }

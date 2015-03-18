@@ -1,6 +1,5 @@
 package logic;
 
-import logic.Move.Stage;
 import static logic.Move.Stage.*;
 
 import java.util.List;
@@ -20,13 +19,11 @@ public class Game {
     private GameState state;
     private MoveChecker checker;
 
-
-
-    public Game(List<IPlayer> playerInterfaces, int seed, String boardFilename){
+    public Game(List<IPlayer> playerInterfaces, int seed){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();
 
-        this.state = new GameState(numPlayers, seed, boardFilename);
+        this.state = new GameState(numPlayers, seed);
         this.checker = new MoveChecker(state);
 
         for(int i = 0; i != this.numPlayers; ++i){
@@ -34,12 +31,13 @@ public class Game {
         }
     }
 
-
     public void setupGame() throws WrongMoveException{
         if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
-        updatePlayers(new Move(-1, SETUP_BEGIN));
+        Move setupMove = new Move(0, SETUP_BEGIN);
+        setupMove.setPlayer(numPlayers);
+        updatePlayers(setupMove);
 
         int setupValues[] = {35, 30, 25, 20};
         int armiesToPlace = numPlayers * setupValues[numPlayers-3];
@@ -75,6 +73,7 @@ public class Game {
         updatePlayers(new Move(-1, GAME_BEGIN));
 
         int turnCounter = 0;
+        int winner = 0;
 
         int currentPlayer = 0;
         while(state.getActivePlayerCount() != 1){
@@ -84,10 +83,14 @@ public class Game {
             }
             currentPlayer = ++currentPlayer % numPlayers;
         }
+        winner = --currentPlayer;
+        if(winner == -1){
+            winner += numPlayers;
+        }
 
         Move gameEnded = new Move(-1, GAME_END);
         gameEnded.setTurns(turnCounter);
-        gameEnded.setPlayer(--currentPlayer % numPlayers);
+        gameEnded.setPlayer(winner);
         updatePlayers(gameEnded);
     }
 
@@ -245,6 +248,7 @@ public class Game {
         while(!checker.checkMove(move)){
             player.getMove(move);
         }
+        move.setReadOnly();
     }
 
     public boolean isActive(int uid){

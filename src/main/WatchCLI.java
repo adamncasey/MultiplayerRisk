@@ -11,7 +11,6 @@ import player.*;
  * WatchCLI - Watch 2-6 AIs play out the game on the command line.
  */
 public class WatchCLI {
-    private static String boardFilename = "resources/risk_map.json";
     private static Random random = new Random();
 
     public static void main(String[] args){ 
@@ -46,7 +45,7 @@ public class WatchCLI {
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());
             players.add(ai);
         }
-        Game game = new Game(players, seed, boardFilename);
+        Game game = new Game(players, seed);
 
         try{
             game.setupGame();

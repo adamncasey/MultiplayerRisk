@@ -11,7 +11,6 @@ import player.*;
  * PlayCLI --- Sets up a game for 1 human to play on the command line vs a variable number of RandomPlayers.
  */
 public class PlayCLI {
-    private static String boardFilename = "resources/risk_map.json";
     private static Random random = new Random();
 
     public static void main(String[] args){
@@ -46,7 +45,7 @@ public class PlayCLI {
             ComputerPlayer ai = new ComputerPlayer(new SimpleAI());
             players.add(ai);
         }
-        Game game = new Game(players, seed, boardFilename);
+        Game game = new Game(players, seed);
 
         try{
             game.setupGame();

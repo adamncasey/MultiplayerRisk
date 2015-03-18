@@ -1,8 +1,10 @@
-package logic;
+package logic.state;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import logic.Card;
 
 /**
  * Player --- Stores information about a player.

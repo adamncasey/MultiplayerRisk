@@ -1,12 +1,16 @@
 package logic;
 
-import static logic.Move.Stage.*;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.move.WrongMoveException;
+import logic.state.GameState;
 import player.IPlayer;
 import settings.Settings;
+
+import static logic.move.Move.Stage.*;
 
 /**
  * Game --- The main game loop that lets each player take their turn, updating every player whenever anything happens.
@@ -55,10 +59,10 @@ public class Game {
             getMove(move);
             territory = move.getTerritory();
             if(territoriesToClaim > 0){
-                state.getBoard().claimTerritory(territory, currentPlayer);
+                state.claimTerritory(territory, currentPlayer);
                 territoriesToClaim--;
             }
-            state.getBoard().placeArmies(territory, 1);
+            state.placeArmies(territory, 1);
             updatePlayers(move);
             armiesToPlace--;
             currentPlayer = ++currentPlayer % numPlayers;
@@ -111,7 +115,7 @@ public class Game {
             move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);
             getMove(move);
-            state.getBoard().placeArmies(move.getTerritory(), move.getArmies());
+            state.placeArmies(move.getTerritory(), move.getArmies());
             armies -= move.getArmies();
             updatePlayers(move);
         }
@@ -150,8 +154,8 @@ public class Game {
             List<Integer> attackDiceRolls = state.rollDice(attackingDice);
             List<Integer> defendDiceRolls = state.rollDice(defendingDice);
             List<Integer> attackResult = state.decideAttackResult(attackDiceRolls, defendDiceRolls);
-            state.getBoard().placeArmies(attackFrom, -attackResult.get(0));
-            state.getBoard().placeArmies(attackTo, -attackResult.get(1));
+            state.placeArmies(attackFrom, -attackResult.get(0));
+            state.placeArmies(attackTo, -attackResult.get(1));
 
             move = new Move(uid, END_ATTACK);
             move.setAttackerLosses(attackResult.get(0));
@@ -168,9 +172,9 @@ public class Game {
                 move.setAttackDice(attackingDice);
                 getMove(move);
                 int occupyArmies = move.getArmies();
-                state.getBoard().placeArmies(attackFrom, -occupyArmies);
-                state.getBoard().placeArmies(attackTo, occupyArmies);
-                state.getBoard().claimTerritory(attackTo, uid);
+                state.placeArmies(attackFrom, -occupyArmies);
+                state.placeArmies(attackTo, occupyArmies);
+                state.claimTerritory(attackTo, uid);
                 updatePlayers(move);
             }
 
@@ -197,7 +201,7 @@ public class Game {
                             move = new Move(uid, PLACE_ARMIES);
                             move.setCurrentArmies(armies);
                             getMove(move);
-                            state.getBoard().placeArmies(move.getTerritory(), move.getArmies());
+                            state.placeArmies(move.getTerritory(), move.getArmies());
                             armies -= move.getArmies();
                             updatePlayers(move);
                         }
@@ -209,7 +213,7 @@ public class Game {
         if(territoryCaptured){
             Card newCard = state.getDeck().drawCard();
             if(newCard != null){
-                state.getPlayer(uid).addCard(newCard);
+                state.addCard(uid, newCard);
                 updatePlayers(new Move(uid, CARD_DRAWN));
             }
         }
@@ -231,8 +235,8 @@ public class Game {
                 move.setCurrentArmies(state.getBoard().getArmies(fortifyFrom));
                 getMove(move);
                 int numFortifyArmies = move.getArmies();
-                state.getBoard().placeArmies(fortifyFrom, -numFortifyArmies);
-                state.getBoard().placeArmies(fortifyTo, numFortifyArmies);
+                state.placeArmies(fortifyFrom, -numFortifyArmies);
+                state.placeArmies(fortifyTo, numFortifyArmies);
                 updatePlayers(move);
             }
         }
@@ -260,7 +264,6 @@ public class Game {
     }
 
     public boolean isActive(int uid){
-       Player p = state.getPlayer(uid);
-       return !p.isEliminated();
+       return !state.getPlayer(uid).isEliminated();
     }
 }

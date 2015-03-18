@@ -1,9 +1,11 @@
-package logic;
+package logic.state;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import org.apache.commons.math3.random.MersenneTwister;
+
+import logic.Card;
 
 /**
  * Deck --- Stores information about the deck of RISK cards.

@@ -1,11 +1,12 @@
-package test.logic;
+package test.logic.state.card;
 
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import logic.*;
+import logic.Card;
 
 public class IsSubsetTest{
 

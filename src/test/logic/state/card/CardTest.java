@@ -1,9 +1,9 @@
-package test.logic;
+package test.logic.state.card;
 
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import logic.*;
+import logic.Card;
 
 public class CardTest{
 

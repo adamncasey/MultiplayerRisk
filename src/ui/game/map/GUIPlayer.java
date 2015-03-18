@@ -3,11 +3,14 @@ package ui.game.map;
 import java.io.*;
 import java.util.*;
 
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.state.Board;
+import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
 import ui.game.GameController;
 import ui.game.Main;
-import logic.*;
 
 /**
  * GUIPlayer

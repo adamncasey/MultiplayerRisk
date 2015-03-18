@@ -17,14 +17,13 @@ ant test
 
 How to run the program:
 
-- ui test
-java -cp "bin/RiskyBusiness.jar:lib/*" ui.Main
+java -jar bin/RiskyBusiness.jar
 
 - game ui
-java -cp "bin/RiskyBusiness.jar:lib/*" gameUI.Main
+java -cp bin/RiskyBusiness.jar ui.game.Main
 
 - Watch AIs play from command line
-java -cp "bin/RiskyBusiness.jar:lib/*" main.WatchCLI
+java -cp bin/RiskyBusiness.jar main.WatchCLI
 
 - Play on command line with AI
-java -cp "bin/RiskyBusiness.jar:lib/*" main.PlayCLI
+java -cp bin/RiskyBusiness.jar main.PlayCLI

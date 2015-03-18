@@ -1,15 +1,17 @@
-package player;
+package ai;
 
-import logic.Player;
-import logic.Board;
-import logic.Move;
-import logic.MoveChecker;
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.state.Board;
+import logic.state.Player;
+import player.IPlayer;
+import player.PlayerController;
 
-public class ComputerPlayer implements IPlayer {
+public class AIPlayer implements IPlayer {
 
     private PlayerController controller;
 
-    public ComputerPlayer(PlayerController controller){
+    public AIPlayer(PlayerController controller){
         this.controller = controller;
     }
 

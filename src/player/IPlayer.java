@@ -1,9 +1,9 @@
 package player;
 
-import logic.Player;
-import logic.Board;
-import logic.Move;
-import logic.MoveChecker;
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.state.Board;
+import logic.state.Player;
 
 /**
  * IPlayer --- The common interface between players and game logic.

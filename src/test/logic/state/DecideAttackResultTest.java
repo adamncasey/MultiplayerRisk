@@ -1,12 +1,12 @@
-package test.logic;
+package test.logic.state;
 
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import logic.*;
-import player.*;
+import logic.state.GameState;
 
 public class DecideAttackResultTest{
 

@@ -1,12 +1,20 @@
-package player;
+package ui.commandline;
 
-import ai.*;
-import logic.*;
-import logic.Move.Stage;
-import player.*;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Random;
 
-import java.util.*;
-import java.io.*;
+import ai.DumbAI;
+import logic.Card;
+import logic.move.Move;
+import logic.move.Move.Stage;
+import logic.move.WrongMoveException;
+import logic.state.Board;
+import logic.state.Player;
+import player.IPlayer;
+import player.PlayerController;
 
 /**
  * CommandLineController --- Allows the user to control a player from the command line.
@@ -20,7 +28,7 @@ public class CommandLineController implements PlayerController {
     private Player player;
     private Board board;
 
-    private PlayerController testingAI = new DumbAI(); // Will fill in the blanks when I want to test a particular move stage.
+    private PlayerController testingAI; // Will fill in the blanks when I want to test a particular move stage.
     boolean testing = false;
     Stage testingStage = null;
 
@@ -33,6 +41,7 @@ public class CommandLineController implements PlayerController {
         this.player = player;
         this.board = board;
         if(testing){
+            this.testingAI = new DumbAI();
             this.testingAI.setup(player, board);
         }
     }

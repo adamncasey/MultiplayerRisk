@@ -1,8 +1,11 @@
-package logic;
+package logic.move;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import logic.Card;
+import logic.state.Board;
 
 public class Move {
     public final int uid;

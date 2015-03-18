@@ -1,7 +1,7 @@
-package logic;
+package logic.state;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Territory --- Stores information about a territory.

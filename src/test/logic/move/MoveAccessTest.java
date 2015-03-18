@@ -1,14 +1,18 @@
-package test.logic;
+package test.logic.move;
 
 import static org.junit.Assert.*;
 import org.junit.rules.*;
 import org.junit.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import logic.*;
-import logic.Move.Stage;
-import static logic.Move.Stage.*;
+import logic.Card;
+import logic.move.Move;
+import logic.move.Move.Stage;
+import logic.move.WrongMoveException;
+
+import static logic.move.Move.Stage.*;
 
 public class MoveAccessTest {
 

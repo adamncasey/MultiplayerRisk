@@ -1,11 +1,14 @@
-package player;
+package ui.commandline;
 
 import java.io.PrintWriter;
 import java.util.Scanner;
-import logic.Player;
-import logic.Board;
-import logic.Move;
-import logic.MoveChecker;
+
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.state.Board;
+import logic.state.Player;
+import player.IPlayer;
+import player.PlayerController;
 
 /**
  * CommandLinePlayer --- A player that outputs everything that happens to the console (So we can spectate AI vs AI games / play on the command line)

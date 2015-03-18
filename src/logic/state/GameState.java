@@ -1,8 +1,10 @@
-package logic;
+package logic.state;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import logic.Card;
 
 public class GameState {
     private Random random;
@@ -77,6 +79,14 @@ public class GameState {
             return true;
         }
         return false;
+    }
+
+    public void claimTerritory(int tid, int uid){
+        board.claimTerritory(tid, uid);
+    }
+
+    public void placeArmies(int tid, int numArmies){
+        board.placeArmies(tid, numArmies);
     }
 
     public int calculateTerritoryArmies(int uid){
@@ -207,5 +217,10 @@ public class GameState {
             }
         }
         return true;
+    }
+
+    public void addCard(int uid, Card newCard){
+        Player p = players.get(uid);
+        p.addCard(newCard);
     }
 }

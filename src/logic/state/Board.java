@@ -1,8 +1,10 @@
-package logic;
+package logic.state;
 
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import logic.Card;
 
 /**
  * Board --- Stores information about the game board.

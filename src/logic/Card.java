@@ -1,8 +1,8 @@
 package logic;
 
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Card --- Stores information about one of the RISK CARDS

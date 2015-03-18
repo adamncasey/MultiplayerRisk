@@ -1,14 +1,22 @@
 package main;
 
-import java.util.*;
-import java.io.*;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
-import ai.*;
-import logic.*;
-import player.*;
+import ai.AIPlayer;
+import ai.DumbAI;
+import ai.SimpleAI;
+import logic.Game;
+import logic.move.WrongMoveException;
+import player.IPlayer;
+import ui.commandline.CommandLineController;
+import ui.commandline.CommandLinePlayer;
 
 /**
- * WatchCLI - Watch 2-6 AIs play out the game on the command line.
+ * WatchCLI - Watch 3-6 AIs play out the game on the command line.
  */
 public class WatchCLI {
     private static Random random = new Random();
@@ -42,7 +50,7 @@ public class WatchCLI {
         CommandLinePlayer user = new CommandLinePlayer(new SimpleAI(), reader, writer);
         players.add(user);
         for(int i = 0; i != numAI-1; ++i){
-            ComputerPlayer ai = new ComputerPlayer(new SimpleAI());
+            AIPlayer ai = new AIPlayer(new SimpleAI());
             players.add(ai);
         }
         Game game = new Game(players, seed);

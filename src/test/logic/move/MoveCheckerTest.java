@@ -1,12 +1,17 @@
-package test.logic;
+package test.logic.move;
 
 import static org.junit.Assert.*;
 import org.junit.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import logic.*;
-import static logic.Move.Stage.*;
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.move.WrongMoveException;
+import logic.state.GameState;
+
+import static logic.move.Move.Stage.*;
 
 public class MoveCheckerTest {
 

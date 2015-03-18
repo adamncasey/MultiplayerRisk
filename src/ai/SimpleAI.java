@@ -1,16 +1,16 @@
 package ai;
 
-import logic.Player;
-import logic.Board;
-import logic.Card;
-import logic.Move;
-import logic.Move.Stage;
-import logic.WrongMoveException;
-import player.PlayerController;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import logic.Card;
+import logic.move.Move;
+import logic.move.Move.Stage;
+import logic.move.WrongMoveException;
+import logic.state.Board;
+import logic.state.Player;
+import player.PlayerController;
 
 /**
  * SimpleAI --- Takes moves with the aim of ending the game quickly.

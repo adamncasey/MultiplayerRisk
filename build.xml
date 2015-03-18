@@ -44,8 +44,9 @@
 
 		<!-- Put the final JAR file in the output directory -->
 		<jar jarfile="${out.jarname}" basedir="${build}">
+			<zipgroupfileset dir="lib" includes="*.jar"/>
 			<manifest>
-				<attribute name="Main-Class" value="gameUI.Main" />
+				<attribute name="Main-Class" value="ui.Main" />
 			</manifest>
 		</jar>
 	</target>

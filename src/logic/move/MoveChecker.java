@@ -1,7 +1,11 @@
-package logic;
+package logic.move;
 
 import java.util.List;
-import logic.Move.Stage;
+
+import logic.Card;
+import logic.move.Move.Stage;
+import logic.state.Board;
+import logic.state.GameState;
 
 public class MoveChecker {
     private GameState state;

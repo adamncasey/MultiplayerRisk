@@ -16,7 +16,7 @@ public class MoveAccessTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void territoryAccessTest(){
+    public void territoryWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -25,6 +25,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == CLAIM_TERRITORY || s == REINFORCE_TERRITORY || s == PLACE_ARMIES);
             }
+        }
+    }
+
+    @Test
+    public void territoryReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int territory = move.getTerritory();
                 assertTrue(s == CLAIM_TERRITORY || s == REINFORCE_TERRITORY || s == PLACE_ARMIES);
@@ -34,8 +41,23 @@ public class MoveAccessTest {
         }
     }
 
+
     @Test
-    public void armiesAccessTest(){
+    public void territoryInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setTerritory(1);
+                assertTrue(s == CLAIM_TERRITORY || s == REINFORCE_TERRITORY || s == PLACE_ARMIES);
+            }catch(WrongMoveException e){
+                assertFalse(s == CLAIM_TERRITORY || s == REINFORCE_TERRITORY || s == PLACE_ARMIES);
+            }
+        }
+    }
+
+    @Test
+    public void armiesWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -44,6 +66,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
             }
+        }
+    }
+
+    @Test
+    public void armiesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int armies = move.getArmies();
                 assertTrue(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
@@ -54,7 +83,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void currentArmiesAccessTest(){
+    public void armiesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setArmies(1);
+                assertTrue(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
+            }catch(WrongMoveException e){
+                assertFalse(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
+            }
+        }
+    }
+
+    @Test
+    public void currentArmiesWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -63,6 +106,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
             }
+        }
+    }
+
+    @Test
+    public void currentArmiesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int currentArmies = move.getCurrentArmies();
                 assertTrue(s == PLACE_ARMIES || s == OCCUPY_TERRITORY || s == FORTIFY_TERRITORY);
@@ -73,7 +123,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void toTradeInAccessTest(){
+    public void currentArmiesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setCurrentArmies(1);
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void toTradeInWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -82,7 +145,15 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == TRADE_IN_CARDS);
             }
+        }
+    }
+
+    @Test
+    public void toTradeInReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
+                move.setToTradeIn(new ArrayList<Card>());
                 List<Card> toTradeIn = move.getToTradeIn();
                 assertTrue(s == TRADE_IN_CARDS);
             }catch(WrongMoveException e){
@@ -92,7 +163,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void decisionAccessTest(){
+    public void toTradeInInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setToTradeIn(new ArrayList<Card>());
+                assertTrue(s == TRADE_IN_CARDS);
+            }catch(WrongMoveException e){
+                assertFalse(s == TRADE_IN_CARDS);
+            }
+        }
+    }
+
+    @Test
+    public void decisionWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -101,6 +186,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == DECIDE_ATTACK || s == DECIDE_FORTIFY);
             }
+        }
+    }
+
+    @Test
+    public void decisionReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 boolean decision = move.getDecision();
                 assertTrue(s == DECIDE_ATTACK || s == DECIDE_FORTIFY);
@@ -111,7 +203,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void fromAccessTest(){
+    public void decisionInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setDecision(true);
+                assertTrue(s == DECIDE_ATTACK || s == DECIDE_FORTIFY);
+            }catch(WrongMoveException e){
+                assertFalse(s == DECIDE_ATTACK || s == DECIDE_FORTIFY);
+            }
+        }
+    }
+
+    @Test
+    public void fromWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -120,6 +226,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == START_ATTACK || s == START_FORTIFY || s == CHOOSE_ATTACK_DICE || s == CHOOSE_DEFEND_DICE);
             }
+        }
+    }
+
+    @Test
+    public void fromReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int from = move.getFrom();
                 assertTrue(s == START_ATTACK || s == START_FORTIFY || s == CHOOSE_ATTACK_DICE || s == CHOOSE_DEFEND_DICE);
@@ -130,7 +243,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void toAccessTest(){
+    public void fromInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setFrom(1);
+                assertTrue(s == START_ATTACK || s == START_FORTIFY);
+            }catch(WrongMoveException e){
+                assertFalse(s == START_ATTACK || s == START_FORTIFY);
+            }
+        }
+    }
+
+    @Test
+    public void toWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -139,8 +266,15 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == START_ATTACK || s == START_FORTIFY || s == CHOOSE_ATTACK_DICE || s == CHOOSE_DEFEND_DICE);
             }
+        }
+    }
+
+    @Test
+    public void toReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
-                int from = move.getTo();
+                move.setTo(1);
                 assertTrue(s == START_ATTACK || s == START_FORTIFY || s == CHOOSE_ATTACK_DICE || s == CHOOSE_DEFEND_DICE);
             }catch(WrongMoveException e){
                 assertFalse(s == START_ATTACK || s == START_FORTIFY || s == CHOOSE_ATTACK_DICE || s == CHOOSE_DEFEND_DICE);
@@ -149,7 +283,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void attackDiceAccessTest(){
+    public void toInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setTo(1);
+                assertTrue(s == START_ATTACK || s == START_FORTIFY);
+            }catch(WrongMoveException e){
+                assertFalse(s == START_ATTACK || s == START_FORTIFY);
+            }
+        }
+    }
+
+    @Test
+    public void attackDiceWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -158,6 +306,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == CHOOSE_ATTACK_DICE || s == OCCUPY_TERRITORY);
             }
+        }
+    }
+
+    @Test
+    public void attackDiceReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int attackDice = move.getAttackDice();
                 assertTrue(s == CHOOSE_ATTACK_DICE || s == OCCUPY_TERRITORY);
@@ -168,7 +323,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void defendDiceAccessTest(){
+    public void attackDiceInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setAttackDice(1);
+                assertTrue(s == CHOOSE_ATTACK_DICE);
+            }catch(WrongMoveException e){
+                assertFalse(s == CHOOSE_ATTACK_DICE);
+            }
+        }
+    }
+
+    @Test
+    public void defendDiceWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -177,6 +346,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == CHOOSE_DEFEND_DICE);
             }
+        }
+    }
+
+    @Test
+    public void defendDiceReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int defendDice = move.getDefendDice();
                 assertTrue(s == CHOOSE_DEFEND_DICE);
@@ -187,7 +363,21 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void attackerLossesAccessTest(){
+    public void defendDiceInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setDefendDice(1);
+                assertTrue(s == CHOOSE_DEFEND_DICE);
+            }catch(WrongMoveException e){
+                assertFalse(s == CHOOSE_DEFEND_DICE);
+            }
+        }
+    }
+
+    @Test
+    public void attackerLossesWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -196,6 +386,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == END_ATTACK);
             }
+        }
+    }
+
+    @Test
+    public void attackerLossesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int attackerLosses = move.getAttackerLosses();
                 assertTrue(s == END_ATTACK);
@@ -206,7 +403,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void defenderLossesAccessTest(){
+    public void attackerLossesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setAttackerLosses(1);
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void defenderLossesWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -215,6 +425,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == END_ATTACK);
             }
+        }
+    }
+
+    @Test
+    public void defenderLossesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int defenderLosses = move.getDefenderLosses();
                 assertTrue(s == END_ATTACK);
@@ -225,7 +442,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void attackDiceRollsAccessTest(){
+    public void defenderLossesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setDefenderLosses(1);
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void attackDiceRollsWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -234,6 +464,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == END_ATTACK);
             }
+        }
+    }
+
+    @Test
+    public void attackDiceRollsReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 List<Integer> attackDiceRolls = move.getAttackDiceRolls();
                 assertTrue(s == END_ATTACK);
@@ -244,7 +481,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void defendDiceRollsAccessTest(){
+    public void attackDiceRollsInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setAttackDiceRolls(new ArrayList<Integer>());
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void defendDiceRollsWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -253,6 +503,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == END_ATTACK);
             }
+        }
+    }
+
+    @Test
+    public void defendDiceRollsReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 List<Integer> defendDiceRolls = move.getDefendDiceRolls();
                 assertTrue(s == END_ATTACK);
@@ -263,7 +520,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void playerAccessTest(){
+    public void defendDiceRollsInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setDefendDiceRolls(new ArrayList<Integer>());
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void playerAccessWriteTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -272,6 +542,13 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == SETUP_BEGIN ||s == PLAYER_ELIMINATED || s == GAME_END);
             }
+        }
+    }
+
+    @Test
+    public void playerAccessReadTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int player = move.getPlayer();
                 assertTrue(s == SETUP_BEGIN || s == PLAYER_ELIMINATED || s == GAME_END);
@@ -282,7 +559,20 @@ public class MoveAccessTest {
     }
 
     @Test
-    public void turnsAccessTest(){
+    public void playerInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setPlayer(1);
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void turnsAccessWriteTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
             try{
@@ -291,11 +581,31 @@ public class MoveAccessTest {
             }catch(WrongMoveException e){
                 assertFalse(s == GAME_END);
             }
+        }
+    }
+
+    @Test
+    public void turnsAccessReadTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
             try{
                 int turns = move.getTurns();
                 assertTrue(s == GAME_END);
             }catch(WrongMoveException e){
                 assertFalse(s == GAME_END);
+            }
+        }
+    }
+
+    @Test
+    public void turnsInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setTurns(1);
+                fail();
+            }catch(WrongMoveException e){
             }
         }
     }

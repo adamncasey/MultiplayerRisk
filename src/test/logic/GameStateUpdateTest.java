@@ -11,82 +11,112 @@ import player.*;
 public class GameStateUpdateTest{
 
     @Test
-    public void numArmies0Owned(){
+    public void territoryArmies0Owned(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
-        int result = game.calculatePlayerArmies(0, false, new ArrayList<Card>());
+        int result = game.calculateTerritoryArmies(0);
         assertEquals(3, result);
     }
 
     @Test
-    public void numArmies11Owned(){
+    public void territoryArmies11Owned(){
         int[] owners = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
-        int result = game.calculatePlayerArmies(0, false, new ArrayList<Card>());
-        assertEquals(10, result);
+        int result = game.calculateTerritoryArmies(0);
+        assertEquals(3, result);
     }
 
     @Test
-    public void numArmies12Owned(){
+    public void territoryArmies12Owned(){
         int[] owners = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
-        int result = game.calculatePlayerArmies(0, false, new ArrayList<Card>());
-        assertEquals(16, result);
+        int result = game.calculateTerritoryArmies(0);
+        assertEquals(4, result);
     }
 
     @Test
-    public void numArmiesSet(){
-        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    public void continentArmies0Owned(){
+        int[] owners = {0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
-        int result = game.calculatePlayerArmies(0, true, new ArrayList<Card>());
+        int result = game.calculateContinentArmies(0);
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void continentArmiesAOwned(){
+        int[] owners = {0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        int result = game.calculateContinentArmies(0);
+        assertEquals(3, result);
+    }
+
+    @Test
+    public void continentArmiesBOwned(){
+        int[] owners = {0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        int result = game.calculateContinentArmies(0);
+        assertEquals(4, result);
+    }
+
+    @Test
+    public void continentArmies2Owned(){
+        int[] owners = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        int result = game.calculateContinentArmies(0);
         assertEquals(7, result);
     }
 
     @Test
-    public void numArmiesNotMatching(){
+    public void setArmiesTest(){
+        GameState game = new GameState(0, 0); 
+        int expectedValues[] = {4, 6, 8, 10, 12, 15, 20, 25};
+        for(int i : expectedValues){
+            assertEquals(i, game.calculateSetArmies(true));
+        }
+    }
+
+    @Test
+    public void matchingArmiesBad(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(new Card(0, 1, "T0"));
-        int result = game.calculatePlayerArmies(0, true, toTradeIn);
-        assertEquals(7, result);
+        List<Integer> matches = game.calculateMatchingCards(0, toTradeIn);
+        int result = game.calculateMatchingArmies(matches);
+        assertEquals(result, 0);
     }
 
     @Test
-    public void numArmiesMatching(){
+    public void matchingArmiesGood1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(new Card(0, 1, "T0"));
-        int result = game.calculatePlayerArmies(0, true, toTradeIn);
-        assertEquals(9, result);
+        List<Integer> matches = game.calculateMatchingCards(0, toTradeIn);
+        int result = game.calculateMatchingArmies(matches);
+        assertEquals(result, 2);
     }
 
     @Test
-    public void numArmies2Matching(){
+    public void matchingArmiesGood2(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         GameState game = new GameState(true, 3, owners, armies);
         List<Card> toTradeIn = new ArrayList<Card>();
         toTradeIn.add(new Card(0, 1, "T0"));
         toTradeIn.add(new Card(1, 1, "T1"));
-        int result = game.calculatePlayerArmies(0, true, toTradeIn);
-        assertEquals(9, result);
-    }
-
-    @Test
-    public void setCounterTest(){
-        GameState game = new GameState(0, 0); 
-        int expectedValues[] = {4, 6, 8, 10, 12, 15, 20, 25};
-        for(int i : expectedValues){
-            assertEquals(i, game.incrementSetCounter());
-        }
+        List<Integer> matches = game.calculateMatchingCards(0, toTradeIn);
+        int result = game.calculateMatchingArmies(matches);
+        assertEquals(result, 2);
     }
 
     @Test

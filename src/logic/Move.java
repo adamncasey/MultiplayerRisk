@@ -19,11 +19,13 @@ public class Move {
 
     private final Stage stage;
     private boolean readOnly;
+    private boolean readOnlyInputs;
 
     public Move(int uid, Stage stage){
         this.uid = uid;
         this.stage = stage;
         this.readOnly = false;
+        this.readOnlyInputs = false;
     }
 
     public int getUID(){
@@ -63,7 +65,7 @@ public class Move {
     private int currentArmies = 0;
     public void setCurrentArmies(int numArmies) throws WrongMoveException{
         checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
-        checkPermissions();
+        checkPermissions(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
         this.currentArmies = numArmies;
     }
     public int getCurrentArmies() throws WrongMoveException{
@@ -99,7 +101,7 @@ public class Move {
     private int from = -1;
     public void setFrom(int territory) throws WrongMoveException{
         checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
-        checkPermissions();
+        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
         this.from = territory;
     }
     public int getFrom() throws WrongMoveException{
@@ -111,7 +113,7 @@ public class Move {
     private int to = -1;
     public void setTo(int territory) throws WrongMoveException{
         checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
-        checkPermissions();
+        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
         this.to = territory;
     }
     public int getTo() throws WrongMoveException{
@@ -123,7 +125,7 @@ public class Move {
     private int attackDice = 0;
     public void setAttackDice(int numDice) throws WrongMoveException{
         checkStage(Stage.CHOOSE_ATTACK_DICE, Stage.OCCUPY_TERRITORY);
-        checkPermissions();
+        checkPermissions(Stage.OCCUPY_TERRITORY);
         this.attackDice = numDice;
     }
     public int getAttackDice() throws WrongMoveException{
@@ -147,7 +149,7 @@ public class Move {
     private int attackerLosses = 0;
     public void setAttackerLosses(int numLosses) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
-        checkPermissions();
+        checkPermissions(Stage.END_ATTACK);
         this.attackerLosses = numLosses;
     }
     public int getAttackerLosses() throws WrongMoveException{
@@ -159,7 +161,7 @@ public class Move {
     private int defenderLosses = 0;
     public void setDefenderLosses(int numLosses) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
-        checkPermissions();
+        checkPermissions(Stage.END_ATTACK);
         this.defenderLosses = numLosses;
     }
     public int getDefenderLosses() throws WrongMoveException{
@@ -171,7 +173,7 @@ public class Move {
     private List<Integer> attackDiceRolls = null;
     public void setAttackDiceRolls(List<Integer> results) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
-        checkPermissions();
+        checkPermissions(Stage.END_ATTACK);
         this.attackDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
     }
     public List<Integer> getAttackDiceRolls() throws WrongMoveException{
@@ -183,7 +185,7 @@ public class Move {
     private List<Integer> defendDiceRolls = null;
     public void setDefendDiceRolls(List<Integer> results) throws WrongMoveException{
         checkStage(Stage.END_ATTACK);
-        checkPermissions();
+        checkPermissions(Stage.END_ATTACK);
         this.defendDiceRolls = Collections.unmodifiableList(new ArrayList<Integer>(results));
     }
     public List<Integer> getDefendDiceRolls() throws WrongMoveException{
@@ -195,7 +197,7 @@ public class Move {
     private int player = -1;
     public void setPlayer(int player) throws WrongMoveException{
         checkStage(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
-        checkPermissions();
+        checkPermissions(Stage.SETUP_BEGIN, Stage.PLAYER_ELIMINATED, Stage.GAME_END);
         this.player = player;
     }
     public int getPlayer() throws WrongMoveException{
@@ -207,7 +209,7 @@ public class Move {
     private int turns = -1;
     public void setTurns(int turns) throws WrongMoveException{
         checkStage(Stage.GAME_END);
-        checkPermissions();
+        checkPermissions(Stage.GAME_END);
         this.turns = turns;
     }
     public int getTurns() throws WrongMoveException{
@@ -235,9 +237,23 @@ public class Move {
         this.readOnly = true;
     }
 
-    private void checkPermissions() throws WrongMoveException{
+    public void setReadOnlyInputs(){
+        this.readOnlyInputs = true;
+    }
+
+    /**
+     * Stops players from writing to read only moves, and from editing the inputs received from Game.
+     */
+    private void checkPermissions(Stage... stages) throws WrongMoveException{
         if(readOnly){
             throw new WrongMoveException("Attempted to write to a read only move.");
+        }
+        if(readOnlyInputs){
+            for(Stage s : stages){
+                if(s == this.stage){
+                    throw new WrongMoveException("Attempted to write to an input only field.");
+                }
+            }
         }
     }
 
@@ -356,7 +372,7 @@ public class Move {
                      return "";
             }
         }catch(WrongMoveException e){
-            System.out.println("CommandLinePlayer is processing a move update incorrectly.");
+            System.out.println("Move is describing a move incorrectly.");
             return "";
         }
     }

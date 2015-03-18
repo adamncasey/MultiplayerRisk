@@ -79,37 +79,43 @@ public class GameState {
         return false;
     }
 
-    public int calculatePlayerArmies(int uid, boolean traded, List<Card> toTradeIn){
-        int armies = 0;
-
-        armies += board.calculatePlayerTerritoryArmies(uid);
-        armies += board.calculatePlayerContinentArmies(uid);
-
-        if(traded){
-            armies += incrementSetCounter();
-        }
-
-        int extraArmies = 0;
-        for(Card card : toTradeIn){
-            if(board.getOwner(card.getID()) == uid){
-                extraArmies = 2;
-            }
-        }
-        armies += extraArmies;
-
-        return armies;
+    public int calculateTerritoryArmies(int uid){
+        return board.calculatePlayerTerritoryArmies(uid);
     }
 
-    // returns the number of armies rewarded for trading in the set
-    public int incrementSetCounter(){
-        int reward = armyReward;
-        setCounter++;
-        if(setCounter > setValues.length-1){
-            armyReward = setValues[setValues.length-1] + (5 * (setCounter - (setValues.length-1)));
-        } else {
-            armyReward = setValues[setCounter];
+    public int calculateContinentArmies(int uid){
+        return board.calculatePlayerContinentArmies(uid);
+    }
+
+    public int calculateSetArmies(boolean traded){
+        if(traded){
+            int reward = armyReward;
+            setCounter++;
+            if(setCounter > setValues.length-1){
+                armyReward = setValues[setValues.length-1] + (5 * (setCounter - (setValues.length-1)));
+            } else {
+                armyReward = setValues[setCounter];
+            }
+            return reward;
         }
-        return reward; 
+        return 0;
+    }
+
+    public List<Integer> calculateMatchingCards(int uid, List<Card> toTradeIn){
+        List<Integer> matches = new ArrayList<Integer>();
+        for(Card card : toTradeIn){
+            if(board.getOwner(card.getID()) == uid){
+                matches.add(card.getID());
+            }
+        }
+        return matches;
+    }
+
+    public int calculateMatchingArmies(List<Integer> matchingCards){
+        if(matchingCards.size() > 0){
+            return 2;
+        }
+        return 0;
     }
 
     public boolean checkAttackPossible(int uid){

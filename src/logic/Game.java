@@ -101,7 +101,12 @@ public class Game {
         boolean traded = state.tradeInCards(uid, toTradeIn); 
         updatePlayers(move);
 
-        int armies = state.calculatePlayerArmies(uid, traded, toTradeIn);
+        int armies = state.calculateTerritoryArmies(uid);
+        armies += state.calculateContinentArmies(uid);
+        armies += state.calculateSetArmies(traded);
+        List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
+        armies += state.calculateMatchingArmies(matchingCards);
+
         while(armies != 0){
             move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);
@@ -185,7 +190,9 @@ public class Game {
                         state.tradeInCards(uid, toTradeIn); 
                         updatePlayers(move);
                     
-                        armies = state.incrementSetCounter();
+                        armies = state.calculateSetArmies(true);
+                        matchingCards = state.calculateMatchingCards(uid, toTradeIn);
+                        armies += state.calculateMatchingArmies(matchingCards);
                         while(armies != 0){
                             move = new Move(uid, PLACE_ARMIES);
                             move.setCurrentArmies(armies);
@@ -243,6 +250,7 @@ public class Game {
             p.nextMove(Move.describeStatus(move));
         }
 
+        move.setReadOnlyInputs();
         IPlayer player = playerInterfaces.get(move.getUID());
         player.getMove(move);
         while(!checker.checkMove(move)){

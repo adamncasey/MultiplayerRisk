@@ -18,12 +18,11 @@
     -fx-background-insets: 0;
 }*/
 
-#centerPane {
+.section {
     -fx-background-color: rgba(0, 0, 0, 0.2);
 }
 
 .text-area {
-    -fx-background-color: rgba(0, 0, 0, 0.2);
     -fx-text-fill: rgba(255, 255, 255, 0.6);
     -fx-font-family:'Open Sans', sans-serif;
 }

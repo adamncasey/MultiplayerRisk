@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
+
 <?import ui.game.dice.DiceRollControl?>
 <?import ui.game.map.MapControl?>
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" fx:controller="ui.game.GameController" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <GridPane hgap="20.0" vgap="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <columnConstraints>
@@ -20,6 +23,8 @@
         <RowConstraints minHeight="100.0" vgrow="SOMETIMES" />
       </rowConstraints>
       <children>
+
+
         <!-- Title -->
         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
           <image>
@@ -29,13 +34,15 @@
             <Insets left="10.0" />
           </GridPane.margin>
         </ImageView>
+
+
         <!-- Map -->
         <Label text="Map" GridPane.rowIndex="1" GridPane.valignment="TOP">
           <GridPane.margin>
             <Insets left="3.0" top="8.0" />
           </GridPane.margin>
         </Label>
-        <Pane fx:id="centerPane" GridPane.rowIndex="1">
+        <Pane fx:id="centerPane" styleClass="section" GridPane.rowIndex="1">
             <GridPane.margin>
               <Insets top="30.0" />
             </GridPane.margin>
@@ -46,17 +53,58 @@
             </MapControl>
           </children>
         </Pane>
-        <!-- Console -->
-        <TextArea fx:id="consoleTextArea" editable="false" style="-fx-background-radius: 0px;" text="This is some text&#10;and some more" GridPane.columnIndex="0" GridPane.rowIndex="2">
+
+
+        <!-- Players -->
+        <Label text="Players" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
           <GridPane.margin>
-            <Insets top="30.0" />
+            <Insets left="3.0" top="8.0" />
           </GridPane.margin>
-        </TextArea>
+        </Label>
+        <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="195.0" styleClass="section" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <GridPane.margin>
+              <Insets top="30.0" />
+            </GridPane.margin>
+        </Pane>
+
+
+        <!-- Actions -->
+        <Label text="Actions" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+          <GridPane.margin>
+            <Insets left="3.0" top="38.0" />
+          </GridPane.margin>
+        </Label>
+        <Pane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="195.0" styleClass="section" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <GridPane.margin>
+              <Insets />
+            </GridPane.margin>
+        </Pane>
+
+        <!-- Other -->
+        <Label text="Spare Panel" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
+          <GridPane.margin>
+            <Insets left="3.0" top="8.0" />
+          </GridPane.margin>
+        </Label>
+        <Pane styleClass="section" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane.margin>
+              <Insets top="30.0" />
+            </GridPane.margin>
+        </Pane>
+
+        <!-- Console -->
         <Label text="Console" GridPane.rowIndex="2" GridPane.valignment="TOP">
           <GridPane.margin>
             <Insets left="3.0" top="8.0" />
           </GridPane.margin>
         </Label>
+        <TextArea fx:id="consoleTextArea" editable="false" style="-fx-background-radius: 0px;" styleClass="section" text="This is some text&#10;and some more" GridPane.columnIndex="0" GridPane.rowIndex="2">
+          <GridPane.margin>
+            <Insets top="30.0" />
+          </GridPane.margin>
+        </TextArea>
+
+
       </children>
     </GridPane>
   </children>

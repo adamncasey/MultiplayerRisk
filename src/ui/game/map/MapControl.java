@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import ui.game.GameConsole;
+import ui.game.GameController;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,8 +14,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 public class MapControl extends Pane {
-
-	GameConsole console;
 
 	@FXML
 	public ImageView worldmap;
@@ -47,8 +46,7 @@ public class MapControl extends Pane {
 		}
 	}
 
-	public void initialise(GameConsole console) {
-		this.console = console;
+	public void initialise() {
 
 		territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
 				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
@@ -108,7 +106,7 @@ public class MapControl extends Pane {
 		double x = territory.getImage().getLayoutX() + sizex / 2;
 		double y = territory.getImage().getLayoutY() + sizey / 2;
 
-		console.write(territory.getImage().getId() + " " + x + " " + y + " "
+		GameController.console.write(territory.getImage().getId() + " " + x + " " + y + " "
 				+ sizex + " " + sizey);
 
 		if (armyMode == ArmyMode.ADD) {

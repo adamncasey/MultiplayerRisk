@@ -10,14 +10,6 @@
     -fx-font-size: 12px;
 }
 
-/*.text-area .content {
-    -fx-font-size: 14px;
-    -fx-background-color:#2e4477;
-    -fx-background-radius:0px;
-    -fx-font-family: "Arial";
-    -fx-background-insets: 0;
-}*/
-
 .section {
     -fx-background-color: rgba(0, 0, 0, 0.2);
 }
@@ -44,4 +36,21 @@
     -fx-font-size: 14;
     -fx-text-fill: rgba(255, 255, 255, 1);
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
+}
+
+.button .text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
+}
+
+.button {
+    -fx-background-color:rgba(0, 0, 0, 0.3);
+    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
+    -fx-font-family:'Open Sans', sans-serif;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:hover {
+    -fx-background-color:rgba(0, 0, 0, 0.5);
 }

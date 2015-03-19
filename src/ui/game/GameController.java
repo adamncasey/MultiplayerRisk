@@ -21,38 +21,21 @@ public class GameController implements Initializable {
 	public DiceRollControl diceRollControl;
 	@FXML
 	public TextArea consoleTextArea;
+	@FXML
+	public BorderPane popup;
 
 	
 	public enum CenterPaneMode {DICE, GAME}
 	private CenterPaneMode centerPaneMode = CenterPaneMode.GAME;
-	public GameConsole console;
+	public static GameConsole console;
 	
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		this.console = new GameConsole(consoleTextArea);
-		this.mapControl.initialise(console);
+		GameController.console = new GameConsole(consoleTextArea);
+		this.mapControl.initialise();
 	}
-
-	void setMode(CenterPaneMode newMode) {
-		if (centerPaneMode != newMode) {
-			centerPane.getChildren().clear();
-
-			switch (newMode) {
-			case DICE: {
-				centerPane.getChildren().setAll(diceRollControl);
-				diceRollControl.setVisible(true);
-				centerPaneMode = newMode;
-				break;
-			}
-			case GAME: {
-				centerPane.getChildren().setAll(mapControl);
-				centerPaneMode = newMode;
-				break;
-			}
-			}
-		}
-	}
+	
 
 	// ================================================================================
 	// Button Actions
@@ -72,10 +55,12 @@ public class GameController implements Initializable {
 		console.write("In army setting mode.");
 	}
 
-	public void rollDie(ActionEvent event) {
-		setMode(CenterPaneMode.DICE);
+	public void rollDice(ActionEvent event) {
+		diceRollControl.setVisible(true);
+		popup.setVisible(true);
+
 		
-		//diceRollController.rollDice(2, 3);
+		//diceRollControl.rollDice(2, 3);
 		
 		//setMode(CenterPaneMode.GAME);
 	}

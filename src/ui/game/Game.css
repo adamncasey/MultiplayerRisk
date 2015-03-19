@@ -5,13 +5,16 @@
         linear-gradient(#426ab7, #263e75),
         linear-gradient(#395cab, #223768);
     -fx-background-insets: 0,1,2,3;
-    -fx-padding: 20 20 20 20;
     -fx-text-fill: white;
     -fx-font-size: 12px;
 }
 
 .section {
     -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+.blackout {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
 }
 
 .text-area {

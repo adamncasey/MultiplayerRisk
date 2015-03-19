@@ -3,10 +3,14 @@ package ui.game;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+
 import java.net.URL;
 import java.util.ResourceBundle;
+
 import ui.game.dice.DiceRollControl;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
@@ -21,13 +25,14 @@ public class GameController implements Initializable {
 	public DiceRollControl diceRollControl;
 	@FXML
 	public TextArea consoleTextArea;
-	@FXML
-	public BorderPane popup;
-
 	
-	public enum CenterPaneMode {DICE, GAME}
-	private CenterPaneMode centerPaneMode = CenterPaneMode.GAME;
-	public static GameConsole console;
+	// Popup
+	@FXML
+	public GridPane popup;
+	@FXML
+	public Pane popupContent;
+
+	public static GameConsole console;	
 	
 	
 	@Override
@@ -35,11 +40,12 @@ public class GameController implements Initializable {
 		GameController.console = new GameConsole(consoleTextArea);
 		this.mapControl.initialise();
 	}
-	
+
 
 	// ================================================================================
 	// Button Actions
 	// ================================================================================
+	
 	public void addArmies(ActionEvent event) {
 		mapControl.setArmyMode(ArmyMode.ADD);
 		console.write("In army adding mode.");
@@ -54,15 +60,27 @@ public class GameController implements Initializable {
 		mapControl.setArmyMode(ArmyMode.SET);
 		console.write("In army setting mode.");
 	}
-
+	
 	public void rollDice(ActionEvent event) {
-		diceRollControl.setVisible(true);
+		openPopup(diceRollControl);
+	}
+	
+	
+	// ================================================================================
+	// Popup
+	// ================================================================================
+	
+	public void openPopup(Node child) {
+		child.setVisible(true);
 		popup.setVisible(true);
-
-		
-		//diceRollControl.rollDice(2, 3);
-		
-		//setMode(CenterPaneMode.GAME);
+	}
+	
+	public void closePopup(MouseEvent event) {
+		console.write("Closing popup");
+		popup.setVisible(false);
+		for(Node n : popupContent.getChildren()) {
+			n.setVisible(false);
+		}
 	}
 }
 

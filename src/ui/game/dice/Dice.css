@@ -1,7 +1,11 @@
 
-.background {
-    -fx-background-image: url("../../background.jpg");
-    -fx-background-repeat: repeat;}
+.background{
+    -fx-background-color:
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+}
 
 .label {
     -fx-font-family: "Arial";

@@ -71,7 +71,7 @@ public class GameState {
     }
 
     public boolean tradeInCards(int uid, List<Card> toTradeIn){
-        List<Card> hand = players.get(uid).getHand();
+        List<Card> hand = players.get(uid).modifyHand();
         for(Card c: toTradeIn){
             hand.remove(c);
         }
@@ -193,19 +193,6 @@ public class GameState {
         return result;
     }
 
-    public boolean eliminatePlayer(int currentUID, int eliminatedUID){
-        List<Card> eliminatedHand = players.get(eliminatedUID).getHand();
-        for(Card c : eliminatedHand){
-            players.get(currentUID).addCard((c));
-        }
-        players.get(eliminatedUID).eliminate();
-        activePlayerCount--;
-        if(activePlayerCount == 1){
-            return true;
-        }
-        return false;
-    }
-
     public boolean checkFortifyPossible(int uid){
         for(int i = 0; i != board.getNumTerritories(); ++i){
             if(board.getOwner(i) == uid && board.getArmies(i) >= 2){
@@ -228,8 +215,33 @@ public class GameState {
         return true;
     }
 
+    public boolean eliminatePlayer(int currentUID, int eliminatedUID){
+        if(eliminatedUID == -1){
+            return false;
+        }
+        List<Card> eliminatedHand = players.get(eliminatedUID).getHand();
+        for(Card c : eliminatedHand){
+            players.get(currentUID).addCard((c));
+        }
+        players.get(eliminatedUID).eliminate();
+        activePlayerCount--;
+        if(activePlayerCount == 1){
+            return true;
+        }
+        return false;
+    }
+
     public void addCard(int uid, Card newCard){
         Player p = players.get(uid);
         p.addCard(newCard);
+    }
+
+    public void disconnectPlayer(int uid){
+        for(int i = 0; i != board.getNumTerritories(); ++i){
+            if(board.getOwner(i) == uid){
+                claimTerritory(i, -1);
+            }
+        }
+        players.get(uid).eliminate();
     }
 }

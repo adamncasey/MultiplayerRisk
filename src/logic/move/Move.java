@@ -302,8 +302,12 @@ public class Move {
                     return message;
                 case TRADE_IN_CARDS:
                     List<Card> toTradeIn = move.getToTradeIn();
-                    String handMessage = Card.printHand(null, toTradeIn);
-                    message = String.format("Player %d has traded in %s", uid, handMessage);
+                    if(toTradeIn.size() > 0){
+                        String handMessage = Card.printHand(null, toTradeIn);
+                        message = String.format("Player %d has traded in %s", uid, handMessage);
+                    }else{
+                        message = String.format("Player %d has not traded in any cards.\n", uid);
+                    }
                     return message;
                 case PLACE_ARMIES:
                     int placeArmiesTerritory = move.getTerritory();

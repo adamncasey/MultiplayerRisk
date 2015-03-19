@@ -13,11 +13,13 @@ public class Player {
     private int uid;
     private List<Card> hand;
     private boolean eliminated;
+    private boolean disconnected;
 
     public Player(int uid){
         this.uid = uid;
         this.hand = new ArrayList<Card>();
         this.eliminated = false;
+        this.disconnected = false;
     }
 
     public int getUID(){
@@ -28,16 +30,28 @@ public class Player {
         return Collections.unmodifiableList(this.hand);
     }
 
+    protected List<Card> modifyHand(){
+        return this.hand;
+    }
+
     protected void addCard(Card card){
         this.hand.add(card);
     }
 
     public boolean isEliminated(){
-        this.hand.clear();
         return this.eliminated;
     }
 
-    public void eliminate(){
+    protected void eliminate(){
+        this.hand.clear();
         this.eliminated = true;
+    }
+
+    public boolean isDisconnected(){
+        return this.disconnected;
+    }
+
+    public void disconnect(){
+        this.disconnected = true;
     }
 }

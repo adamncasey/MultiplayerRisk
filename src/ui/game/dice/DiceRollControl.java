@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.*;
 
-public class DiceRollControl extends Pane {
+public class DiceRollControl extends BorderPane {
 	
 	@FXML
 	ChoiceBox<Integer> userDiceChoiceBox;

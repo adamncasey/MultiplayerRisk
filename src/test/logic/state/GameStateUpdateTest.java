@@ -122,6 +122,39 @@ public class GameStateUpdateTest{
     }
 
     @Test
+    public void updateExtraArmies1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        List<Integer> matches = new ArrayList<Integer>();
+        int result = game.updateExtraArmies(0, 1, 2, matches);
+        assertEquals(2, result);
+    }
+
+    @Test
+    public void updateExtraArmies2(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        List<Integer> matches = new ArrayList<Integer>();
+        matches.add(0);
+        matches.add(1);
+        int result = game.updateExtraArmies(1, 1, 2, matches);
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void updateExtraArmies3(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        GameState game = new GameState(true, 3, owners, armies);
+        List<Integer> matches = new ArrayList<Integer>();
+        matches.add(0);
+        int result = game.updateExtraArmies(0, 3, 2, matches);
+        assertEquals(0, result);
+    }
+
+    @Test
     public void attackIsPossible(){
         int[] owners = {0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2};
         int[] armies = {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2};

@@ -29,12 +29,14 @@ public class CommandLineController implements PlayerController {
     private Board board;
 
     private PlayerController testingAI; // Will fill in the blanks when I want to test a particular move stage.
-    boolean testing = false;
-    Stage testingStage = null;
+    boolean testing;
+    Stage testingStage;
 
     public CommandLineController(Scanner reader, PrintWriter writer){
         this.reader = reader;
         this.writer = writer;
+        this.testing = false;
+        this.testingStage = null;
     }
 
     public void setup(Player player, Board board){
@@ -50,6 +52,7 @@ public class CommandLineController implements PlayerController {
         try{
             if(testing && move.getStage() != testingStage){
                 testingAI.getMove(move);
+                return;
             }
             switch(move.getStage()){
                 case CLAIM_TERRITORY:
@@ -198,7 +201,19 @@ public class CommandLineController implements PlayerController {
     private void placeArmies(Move move) throws WrongMoveException{
         int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
-        writer.format("You have %d armies to place.\n", armiesToPlace);
+        int extraArmies = move.getExtraArmies();
+        List<Integer> matches = move.getMatches();
+        writer.format("You have %d armies to place.\n", armiesToPlace + extraArmies);
+        if(matches.size() == 1){
+            writer.format("This turn, you must place %d armies in %s.\n", extraArmies, board.getName(matches.get(0)));
+        }else if(matches.size() > 1){
+            String matchesString = String.format("This turn, you must placed %d armies in ", extraArmies);
+            for(int i = 0; i != matches.size()-1; ++i){
+                matchesString += String.format("%s, ", board.getName(matches.get(i)));
+            }
+            matchesString += String.format("or %s.\n", board.getName(matches.get(matches.size()-1)));
+            writer.print(matchesString);
+        }
         writer.println("In which territory would you like to place some armies?");
         board.printBoard(writer);
         writer.print("> ");

@@ -109,12 +109,15 @@ public class Game {
         armies += state.calculateContinentArmies(uid);
         armies += state.calculateSetArmies(traded);
         List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
-        armies += state.calculateMatchingArmies(matchingCards);
+        int extraArmies = state.calculateMatchingArmies(matchingCards);
 
         while(armies != 0){
             move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);
+            move.setExtraArmies(extraArmies);
+            move.setMatches(matchingCards);
             getMove(move);
+            extraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
             state.placeArmies(move.getTerritory(), move.getArmies());
             armies -= move.getArmies();
             updatePlayers(move);
@@ -196,11 +199,15 @@ public class Game {
                     
                         armies = state.calculateSetArmies(true);
                         matchingCards = state.calculateMatchingCards(uid, toTradeIn);
-                        armies += state.calculateMatchingArmies(matchingCards);
+                        extraArmies = state.calculateMatchingArmies(matchingCards);
+
                         while(armies != 0){
                             move = new Move(uid, PLACE_ARMIES);
                             move.setCurrentArmies(armies);
+                            move.setExtraArmies(extraArmies);
+                            move.setMatches(matchingCards);
                             getMove(move);
+                            extraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
                             state.placeArmies(move.getTerritory(), move.getArmies());
                             armies -= move.getArmies();
                             updatePlayers(move);

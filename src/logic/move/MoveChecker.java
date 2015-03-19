@@ -36,7 +36,9 @@ public class MoveChecker {
                 int placeArmiesTerritory = move.getTerritory();
                 int placeArmiesNum = move.getArmies();
                 int armiesToPlace = move.getCurrentArmies();
-                return checkPlaceArmies(currentPlayer, placeArmiesTerritory, placeArmiesNum, armiesToPlace);
+                int extraArmies = move.getExtraArmies();
+                List<Integer> matchingTerritories = move.getMatches();
+                return checkPlaceArmies(currentPlayer, placeArmiesTerritory, placeArmiesNum, armiesToPlace, extraArmies, matchingTerritories);
             case DECIDE_ATTACK:
                 return true;
             case START_ATTACK:
@@ -103,18 +105,31 @@ public class MoveChecker {
         return false;
     }
 
-    public boolean checkPlaceArmies(int uid, int territory, int armies, int armiesToPlace){
+    public boolean checkPlaceArmies(int uid, int territory, int armies, int currentArmies, int extraArmies, List<Integer> matches){
         if(checkBounds(territory)){
             return false;
         }
         if(armies < 1){
             return false;
         }
-        if(armies > armiesToPlace){
+        if(armies > (currentArmies + extraArmies)){
             return false;
         }
         if(board.getOwner(territory) != uid){
             return false;
+        }
+        int placedExtras = 0;
+        for(int match : matches){
+            if(territory == match){
+                placedExtras += armies;
+                placedExtras = Math.min(extraArmies, placedExtras);
+            } 
+        }
+        int extrasLeft = extraArmies - placedExtras;
+        if(extrasLeft > 0){
+            if(armies > currentArmies && placedExtras == 0){
+                return false;
+            }
         }
         return true;
     }

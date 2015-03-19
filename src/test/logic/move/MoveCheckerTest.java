@@ -112,6 +112,8 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(0); 
         move.setArmies(2);
         assertTrue(checker.checkMove(move));
@@ -124,8 +126,43 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(0); 
         move.setArmies(3);
+        assertTrue(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkPlaceArmiesGood3() throws WrongMoveException {
+        int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, PLACE_ARMIES);
+        move.setCurrentArmies(0);
+        move.setExtraArmies(2);
+        List<Integer> matches = new ArrayList<Integer>();
+        matches.add(0);
+        move.setMatches(matches);
+        move.setTerritory(0); 
+        move.setArmies(2);
+        assertTrue(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkPlaceArmiesGood4() throws WrongMoveException {
+        int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, PLACE_ARMIES);
+        move.setCurrentArmies(0);
+        move.setExtraArmies(2);
+        List<Integer> matches = new ArrayList<Integer>();
+        matches.add(0);
+        matches.add(1);
+        move.setMatches(matches);
+        move.setTerritory(1); 
+        move.setArmies(1);
         assertTrue(checker.checkMove(move));
     }
 
@@ -136,6 +173,8 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(0); 
         move.setArmies(4);
         assertFalse(checker.checkMove(move));
@@ -148,7 +187,25 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(1); 
+        move.setArmies(2);
+        assertFalse(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkPlaceArmiesBad3() throws WrongMoveException {
+        int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, PLACE_ARMIES);
+        move.setCurrentArmies(1);
+        move.setExtraArmies(2);
+        List<Integer> matches = new ArrayList<Integer>();
+        matches.add(1);
+        move.setMatches(matches);
+        move.setTerritory(0); 
         move.setArmies(2);
         assertFalse(checker.checkMove(move));
     }
@@ -160,6 +217,8 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(-1); 
         move.setArmies(2);
         assertFalse(checker.checkMove(move));
@@ -172,6 +231,8 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(3);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(12); 
         move.setArmies(2);
         assertFalse(checker.checkMove(move));
@@ -184,6 +245,8 @@ public class MoveCheckerTest {
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, PLACE_ARMIES);
         move.setCurrentArmies(1);
+        move.setExtraArmies(0);
+        move.setMatches(new ArrayList<Integer>());
         move.setTerritory(0); 
         move.setArmies(0);
         assertFalse(checker.checkMove(move));

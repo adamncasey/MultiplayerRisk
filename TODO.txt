@@ -1,6 +1,4 @@
 Logic:
-  Change place armies so that if a card traded in matches a territory that player owns, the 2 extra armies MUST be placed on the territory pictured.
-
   save/load GameState
 
   implement leave game functionality including neutral territories (in protocol)

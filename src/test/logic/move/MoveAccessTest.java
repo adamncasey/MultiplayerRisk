@@ -140,6 +140,85 @@ public class MoveAccessTest {
     }
 
     @Test
+    public void extraArmiesWriteAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setExtraArmies(1);
+                assertTrue(s == PLACE_ARMIES);
+            }catch(WrongMoveException e){
+                assertFalse(s == PLACE_ARMIES);
+            }
+        }
+    }
+
+    @Test
+    public void extraArmiesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                int extraArmies = move.getExtraArmies();
+                assertTrue(s == PLACE_ARMIES);
+            }catch(WrongMoveException e){
+                assertFalse(s == PLACE_ARMIES);
+            }
+        }
+    }
+
+    @Test
+    public void extraArmiesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setExtraArmies(1);
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
+    public void matchesWriteAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setMatches(new ArrayList<Integer>());
+                assertTrue(s == PLACE_ARMIES);
+            }catch(WrongMoveException e){
+                assertFalse(s == PLACE_ARMIES);
+            }
+        }
+    }
+
+    @Test
+    public void matchesReadAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setMatches(new ArrayList<Integer>());
+                List<Integer> matches = move.getMatches();
+                assertTrue(s == PLACE_ARMIES);
+            }catch(WrongMoveException e){
+                assertFalse(s == PLACE_ARMIES);
+            }
+        }
+    }
+
+    @Test
+    public void matchesInputsAccessTest(){
+        for(Stage s : Stage.values()){
+            Move move = new Move(0, s);
+            try{
+                move.setReadOnlyInputs();
+                move.setMatches(new ArrayList<Integer>());
+                fail();
+            }catch(WrongMoveException e){
+            }
+        }
+    }
+
+    @Test
     public void toTradeInWriteAccessTest(){
         for(Stage s : Stage.values()){
             Move move = new Move(0, s);
@@ -636,6 +715,22 @@ public class MoveAccessTest {
         move.setReadOnly();
         exception.expect(WrongMoveException.class);
         move.setCurrentArmies(1);
+    }
+
+    @Test
+    public void extraArmiesWriteTest() throws WrongMoveException{
+        Move move = new Move(0, PLACE_ARMIES);
+        move.setReadOnly();
+        exception.expect(WrongMoveException.class);
+        move.setExtraArmies(1);
+    }
+
+    @Test
+    public void matchesWriteTest() throws WrongMoveException{
+        Move move = new Move(0, PLACE_ARMIES);
+        move.setReadOnly();
+        exception.expect(WrongMoveException.class);
+        move.setMatches(new ArrayList<Integer>());
     }
 
     @Test

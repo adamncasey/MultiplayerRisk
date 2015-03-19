@@ -128,6 +128,15 @@ public class GameState {
         return 0;
     }
 
+    public int updateExtraArmies(int territory, int armies, int extraArmies, List<Integer> matches){
+        for(int match : matches){
+            if(territory == match){
+                return Math.max(extraArmies - armies, 0);
+            }
+        }
+        return extraArmies;
+    }
+
     public boolean checkAttackPossible(int uid){
         for(int i = 0; i != board.getNumTerritories(); ++i){
             if(board.getOwner(i) == uid && board.getArmies(i) >= 2){

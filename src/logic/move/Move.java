@@ -75,6 +75,30 @@ public class Move {
         checkStage(Stage.PLACE_ARMIES, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
         return this.currentArmies;
     }
+
+    // PLACE_ARMIES
+    private int extraArmies = 0;
+    public void setExtraArmies(int extraArmies) throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES);
+        checkPermissions(Stage.PLACE_ARMIES);
+        this.extraArmies = extraArmies;
+    }
+    public int getExtraArmies() throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES);
+        return this.extraArmies;
+    }
+
+    // PLACE_ARMIES
+    private List<Integer> matches = null;
+    public void setMatches(List<Integer> matches) throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES);
+        checkPermissions(Stage.PLACE_ARMIES);
+        this.matches = new ArrayList<Integer>(matches);
+    }
+    public List<Integer> getMatches() throws WrongMoveException{
+        checkStage(Stage.PLACE_ARMIES);
+        return Collections.unmodifiableList(this.matches);
+    }
     
     // TRADE_IN_CARDS
     private List<Card> toTradeIn = null;

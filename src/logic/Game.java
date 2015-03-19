@@ -148,12 +148,15 @@ public class Game {
             int attackingDice = move.getAttackDice();
             updatePlayers(move);
 
+
+            int defendingDice = 1;
             int enemyUID = state.getBoard().getOwner(attackTo);
+            checkDisconnect(enemyUID);
             move = new Move(enemyUID, CHOOSE_DEFEND_DICE);
             move.setFrom(attackFrom);
             move.setTo(attackTo);
             getMove(move);
-            int defendingDice = move.getDefendDice();
+            defendingDice = move.getDefendDice();
             updatePlayers(move);
  
             List<Integer> attackDiceRolls = state.rollDice(attackingDice);
@@ -261,6 +264,12 @@ public class Game {
     }
 
     public void getMove(Move move) throws WrongMoveException{
+        if(move.getUID() == -1){
+            neutralMove(move);
+            move.setReadOnly();
+            return;
+        }
+
         for(IPlayer p : playerInterfaces){
             p.nextMove(Move.describeStatus(move));
         }
@@ -274,7 +283,26 @@ public class Game {
         move.setReadOnly();
     }
 
+    public void neutralMove(Move move) throws WrongMoveException{
+        if(move.getStage() == CHOOSE_DEFEND_DICE){
+            int defendingDice = 1;
+            if(state.getBoard().getArmies(move.getTo()) > 1){
+                defendingDice = 2;
+            }
+            move.setDefendDice(defendingDice);
+        }
+    }
+
     public boolean isActive(int uid){
-       return !state.getPlayer(uid).isEliminated();
+       return !(state.getPlayer(uid).isEliminated() || state.getPlayer(uid).isDisconnected());
+    }
+
+    public void checkDisconnect(int uid){
+        if(uid == -1){
+            return;
+        }
+        if(state.getPlayer(uid).isDisconnected() && !state.getPlayer(uid).isEliminated()){
+            state.disconnectPlayer(uid);
+        }
     }
 }

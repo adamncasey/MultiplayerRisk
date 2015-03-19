@@ -117,9 +117,11 @@ public class Game {
             move.setExtraArmies(extraArmies);
             move.setMatches(matchingCards);
             getMove(move);
-            extraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
+            int newExtraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
+            int changeInExtraArmies = extraArmies - newExtraArmies;
+            extraArmies = newExtraArmies;
             state.placeArmies(move.getTerritory(), move.getArmies());
-            armies -= move.getArmies();
+            armies -= (move.getArmies() - changeInExtraArmies);
             updatePlayers(move);
         }
 
@@ -207,9 +209,11 @@ public class Game {
                             move.setExtraArmies(extraArmies);
                             move.setMatches(matchingCards);
                             getMove(move);
-                            extraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
+                            int newExtraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
+                            int changeInExtraArmies = extraArmies - newExtraArmies;
+                            extraArmies = newExtraArmies;
                             state.placeArmies(move.getTerritory(), move.getArmies());
-                            armies -= move.getArmies();
+                            armies -= (move.getArmies() - changeInExtraArmies);
                             updatePlayers(move);
                         }
                     }

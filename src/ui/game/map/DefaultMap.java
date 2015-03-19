@@ -89,9 +89,10 @@ public class DefaultMap {
 		list.add(new GUITerritory("EU0",0,2,EU0));
 		list.add(new GUITerritory("EU1",1,2,EU1));
 		list.add(new GUITerritory("EU2",2,2,EU2));
-		list.add(new GUITerritory("EU4",3,2,EU3));
-		list.add(new GUITerritory("EU5",4,2,EU4));
-		list.add(new GUITerritory("EU6",5,2,EU5));
+		list.add(new GUITerritory("EU3",2,2,EU3));
+		list.add(new GUITerritory("EU4",3,2,EU4));
+		list.add(new GUITerritory("EU5",4,2,EU5));
+		list.add(new GUITerritory("EU6",5,2,EU6));
 		list.add(new GUITerritory("NA0",0,0,NA0));
 		list.add(new GUITerritory("NA1",1,0,NA1));
 		list.add(new GUITerritory("NA2",2,0,NA2));

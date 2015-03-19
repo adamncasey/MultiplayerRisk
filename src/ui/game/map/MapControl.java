@@ -1,12 +1,19 @@
 package ui.game.map;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Random;
 
 import ui.game.GameConsole;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -23,16 +30,49 @@ public class MapControl extends Pane {
 			SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5, EU6, NA0, NA1, NA2,
 			NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1, AS2, AS3, AS4, AS5, AS6,
 			AS7, AS8, AS9, AS10, AS11;
-	
-	Image infantryImage = new Image(getClass().getResourceAsStream(
-			"army/infantry.png"));
-	Image cavalryImage = new Image(getClass().getResourceAsStream(
-			"army/cavalry.png"));
-	Image artilleryImage = new Image(getClass().getResourceAsStream(
-			"army/artillery.png"));
+
+	private float armyScalingFactor = (float) 0.25;
+	private ArrayList<GUITerritory> highlighted_all;
+
+	private EventHandler<MouseEvent> mouseOverFocus = new EventHandler<MouseEvent>() {
+		@Override
+		public void handle(MouseEvent mouseEvent) {
+			try {
+				for (Node child : getChildren()) {
+					for (GUITerritory territory : highlighted_all) {
+						if (territory.getArmyID() != null
+								&& child.getId() != null
+								&& child.getId().equals(territory.getArmyID())) {
+							child.toFront();
+						}
+
+					}
+				}
+			} catch (Exception e) {
+				// Do nothing, because it means nothing in this context.
+			}
+		}
+	};
+
+	private GUITerritory getTerritoryByImageView(ImageView img) {
+		for (GUITerritory territory : highlighted_all) {
+			if (territory.getImage().equals(img))
+				return territory;
+		}
+		return null;
+	}
+
+	private String generateRandomID() {
+		SecureRandom random = new SecureRandom();
+		return (new BigInteger(130, random).toString(32));
+	}
 
 	DefaultMap territories;
-	public enum ArmyMode { SET, ADD, REMOVE }
+
+	public enum ArmyMode {
+		SET, ADD, REMOVE
+	}
+
 	private ArmyMode armyMode;
 
 	public MapControl() {
@@ -54,11 +94,8 @@ public class MapControl extends Pane {
 				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
 				EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1,
 				AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
-		
-		ArrayList<GUITerritory> highlighted_all = territories
-				.getTerritoryList();
 
-		System.out.println(highlighted_all.get(0).getImage().getLayoutX());
+		highlighted_all = territories.getTerritoryList();
 
 		for (final GUITerritory territory : highlighted_all) {
 
@@ -83,8 +120,10 @@ public class MapControl extends Pane {
 					new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent mouseEvent) {
-
-							set_armies(1, 20, territory);
+							Random generator = new Random();
+							int x = generator.nextInt(6) + 1;
+							int y = generator.nextInt(25) + 1;
+							setArmies(x, y, territory);
 						}
 					});
 		}
@@ -100,8 +139,21 @@ public class MapControl extends Pane {
 				});
 
 	}
-	
-	public void set_armies(int playerID, int number, GUITerritory territory) {
+
+	public void setArmies(int playerID, int number, GUITerritory territory) {
+
+		removeArmy(territory);
+
+		Image infantryImage = new Image(getClass().getResourceAsStream(
+				"army/infantry_player" + playerID + ".png"));
+		Image cavalryImage = new Image(getClass().getResourceAsStream(
+				"army/cavalry_player" + playerID + ".png"));
+		Image artilleryImage = new Image(getClass().getResourceAsStream(
+				"army/artillery_player" + playerID + ".png"));
+		
+		Label army = new Label(Integer.toString(number));
+		ImageView currentImage = null;
+		
 		double sizex = territory.getImage().getImage().getWidth();
 		double sizey = territory.getImage().getImage().getHeight();
 
@@ -111,26 +163,66 @@ public class MapControl extends Pane {
 		console.write(territory.getImage().getId() + " " + x + " " + y + " "
 				+ sizex + " " + sizey);
 
-		if (armyMode == ArmyMode.ADD) {
-			ImageView army = null;
-			if (number < 5) {
-				army = new ImageView(infantryImage);
+		// if (armyMode == ArmyMode.ADD) {
+		if (true) {
+		
+			int labelOffset = 0;
+			if (number < 5) {			
+				currentImage = new ImageView(infantryImage);
+				labelOffset = -95;
 			}
-			if (number >= 5 && number < 20) {
-				army = new ImageView(cavalryImage);
+			if (number >= 5 && number < 20) {				
+				currentImage = new ImageView(cavalryImage);
+				labelOffset = -110;
 			}
 			if (number >= 20) {
-				army = new ImageView(artilleryImage);
+				currentImage = new ImageView(artilleryImage);
+				labelOffset = -162;
 			}
-			army.setScaleX(0.5);
-			army.setScaleY(0.5);
-			x -= army.getImage().getWidth() / 2;
-			y -= army.getImage().getHeight() / 2;
+
+			currentImage.setScaleX(armyScalingFactor);
+			currentImage.setScaleY(armyScalingFactor);
+			
+			x -= currentImage.getImage().getWidth() / 2;
+			y -= currentImage.getImage().getHeight() / 2;
+			
+			army.setGraphic(currentImage);
+			army.setGraphicTextGap(labelOffset);
+			
+			army.setContentDisplay(ContentDisplay.TOP);
+			System.out.println(army.getGraphicTextGap());
+			army.setMouseTransparent(true);
+			
+
 			army.relocate(x, y);
+
+			army.setId(generateRandomID());
+
+			territory.setArmyID(army.getId());
+			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
+					mouseOverFocus);
+
 			getChildren().add(army);
 		}
 	}
-	
+
+	public void removeArmy(GUITerritory territory) {
+		if (territory.getArmyID() == null) {
+			return;
+		}
+
+		ObservableList<Node> children = getChildren();
+		
+		for (Node child : children) {
+			if (territory.getArmyID() != null && child.getId() != null
+					&& child.getId().equals(territory.getArmyID())){
+				territory.setArmyID(null);
+				children.remove(child);
+				return;
+			}		
+		}
+	}
+
 	public ArmyMode getArmyMode() {
 		return armyMode;
 	}

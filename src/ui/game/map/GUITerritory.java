@@ -9,7 +9,16 @@ public class GUITerritory {
 	boolean selected;
 	ImageView image;
 	String imgPath;
+	String armyID; //id of the army node associated with the territory
 	
+	public String getArmyID() {
+		return armyID;
+	}
+
+	public void setArmyID(String string) {
+		this.armyID = string;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -36,3 +36,7 @@
     -fx-text-fill: rgba(255, 255, 255, 1);
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
 }
+
+.choice-box .label {
+    -fx-text-fill: black;
+}

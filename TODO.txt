@@ -1,13 +1,4 @@
 Logic:
-  Make tests for all methods that take in IPlayer input
-
-  implement leave game functionality including neutral territories (in protocol)
-
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
-
-  move board/deck/setcounter into its own class (maybe use this class to update game state rather than have game do it)
-
-Protocol:
-  What happens when the deck runs out of cards?

@@ -1,11 +1,16 @@
 package ai;
 
-import logic.*;
-import logic.Move.Stage;
-import player.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-import java.util.*;
-import java.io.*;
+import logic.Card;
+import logic.move.Move;
+import logic.move.Move.Stage;
+import logic.move.WrongMoveException;
+import logic.state.Board;
+import logic.state.Player;
+import player.PlayerController;
 
 /**
  * DumbAI --- Randomly decides what to do, will drag out games forever if there are no smarter players in the game.
@@ -13,65 +18,76 @@ import java.io.*;
 public class DumbAI implements PlayerController {
     private static Random random = new Random();
 
-    private List<Card> hand;
+    private Player player;
     private Board board;
 
     public DumbAI(){
     }
 
-    public void updateAI(List<Card> hand, Board board, int currentPlayer, Move previousMove){
-        this.hand = new ArrayList<Card>(hand);
+    public void setup(Player player, Board board){
+        this.player = player;
         this.board = board;
     }
 
-    public Move getMove(Move move){
+    public void getMove(Move move){
         try{
             switch(move.getStage()){
                 case CLAIM_TERRITORY:
-                    return claimTerritory(move);
+                    claimTerritory(move);
+                    return;
                 case REINFORCE_TERRITORY:
-                    return reinforceTerritory(move);
+                    reinforceTerritory(move);
+                    return;
                 case TRADE_IN_CARDS:
-                    return tradeInCards(move);
+                    tradeInCards(move);
+                    return;
                 case PLACE_ARMIES:
-                    return placeArmies(move);
+                    placeArmies(move);
+                    return;
                 case DECIDE_ATTACK:
-                    return decideAttack(move);
+                    decideAttack(move);
+                    return;
                 case START_ATTACK:
-                    return startAttack(move);
+                    startAttack(move);
+                    return;
                 case CHOOSE_ATTACK_DICE:
-                    return chooseAttackingDice(move);
+                    chooseAttackingDice(move);
+                    return;
                 case CHOOSE_DEFEND_DICE:
-                    return chooseDefendingDice(move);
+                    chooseDefendingDice(move);
+                    return;
                 case OCCUPY_TERRITORY:
-                    return occupyTerritory(move);
+                    occupyTerritory(move);
+                    return;
                 case DECIDE_FORTIFY:
-                    return decideFortify(move);
+                    decideFortify(move);
+                    return;
                 case START_FORTIFY:
-                    return startFortify(move);
+                    startFortify(move);
+                    return;
                 case FORTIFY_TERRITORY:
-                    return chooseFortifyArmies(move);
+                    chooseFortifyArmies(move);
+                    return;
                 default:
-                     return move;
+                    return;
             }
         }catch(WrongMoveException e){
             System.out.println("DumbAI is not choosing a move correctly");
             System.out.println(e.getMessage());
-            return null;
+            return;
         }
     }
 
-    private Move claimTerritory(Move move) throws WrongMoveException{
+    private void claimTerritory(Move move) throws WrongMoveException{
         int tid = random.nextInt(board.getNumTerritories());
         while(board.getOwner(tid) != -1){
             tid = random.nextInt(board.getNumTerritories());
         }
 
         move.setTerritory(tid);
-        return move;
     }
 
-    private Move reinforceTerritory(Move move) throws WrongMoveException{
+    private void reinforceTerritory(Move move) throws WrongMoveException{
         int uid = move.getUID();
         int tid = random.nextInt(board.getNumTerritories());
         while(board.getOwner(tid) != uid){
@@ -79,11 +95,11 @@ public class DumbAI implements PlayerController {
         }
 
         move.setTerritory(tid);
-        return move;
     }
 
-    private Move tradeInCards(Move move) throws WrongMoveException{ 
+    private void tradeInCards(Move move) throws WrongMoveException{ 
         List<Card> toTradeIn = new ArrayList<Card>();
+        List<Card> hand = player.getHand();
         if(hand.size() >= 5){
             for(int i = 0; i != 3; ++i){
                 int randomCard = random.nextInt(hand.size());
@@ -93,10 +109,9 @@ public class DumbAI implements PlayerController {
         }
 
         move.setToTradeIn(toTradeIn);
-        return move;
     }
 
-    private Move placeArmies(Move move) throws WrongMoveException{
+    private void placeArmies(Move move) throws WrongMoveException{
         int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
 
@@ -108,15 +123,13 @@ public class DumbAI implements PlayerController {
 
         move.setTerritory(randomTerritory);
         move.setArmies(randomArmies);
-        return move;
     }
 
-    private Move decideAttack(Move move) throws WrongMoveException{
+    private void decideAttack(Move move) throws WrongMoveException{
         move.setDecision(random.nextBoolean());
-        return move;
     }
 
-    private Move startAttack(Move move) throws WrongMoveException{
+    private void startAttack(Move move) throws WrongMoveException{
         int uid = move.getUID();
         int randomAlly = random.nextInt(board.getNumTerritories());
         while((board.getOwner(randomAlly) != uid) || board.getArmies(randomAlly) < 2){
@@ -127,31 +140,26 @@ public class DumbAI implements PlayerController {
 
         move.setFrom(randomAlly);
         move.setTo(randomEnemy);
-        return move;
     }
 
-    private Move chooseAttackingDice(Move move) throws WrongMoveException{
+    private void chooseAttackingDice(Move move) throws WrongMoveException{
         move.setAttackDice(random.nextInt(3)+1);
-        return move;
     }
 
-    private Move chooseDefendingDice(Move move) throws WrongMoveException{
+    private void chooseDefendingDice(Move move) throws WrongMoveException{
         move.setDefendDice(random.nextInt(2)+1);
-        return move;
     }
 
-    private Move occupyTerritory(Move move) throws WrongMoveException{
+    private void occupyTerritory(Move move) throws WrongMoveException{
         int currentArmies = move.getCurrentArmies();
         move.setArmies(random.nextInt(currentArmies));
-        return move;
     }
 
-    private Move decideFortify(Move move) throws WrongMoveException{
+    private void decideFortify(Move move) throws WrongMoveException{
         move.setDecision(random.nextBoolean());
-        return move;
     }
 
-    private Move startFortify(Move move) throws WrongMoveException{
+    private void startFortify(Move move) throws WrongMoveException{
         int uid = move.getUID();
         int randomAlly = 0;
         randomAlly = random.nextInt(board.getNumTerritories());
@@ -163,12 +171,10 @@ public class DumbAI implements PlayerController {
 
         move.setFrom(randomAlly);
         move.setTo(randomFortify);
-        return move;
     }
 
-    private Move chooseFortifyArmies(Move move) throws WrongMoveException{
+    private void chooseFortifyArmies(Move move) throws WrongMoveException{
         move.setArmies(random.nextInt(move.getCurrentArmies()));
-        return move;
     }
 }
 

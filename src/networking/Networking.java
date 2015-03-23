@@ -67,7 +67,13 @@ public class Networking {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this
 		String msgString = conn.receiveLine();
-		return Parser.parseMessage(msgString);
+		if(msgString == null) { 
+			throw new ParserException("Received null message");
+		}
+		else
+		{
+			return Parser.parseMessage(msgString);
+		}
 	}
 
     private static Callable<Message> readMessageAsync(NetworkClient client) {

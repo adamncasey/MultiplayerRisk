@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
-import ui.lobbyhost.LobbyHostController;
+import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 
 public class Main extends Application {
@@ -63,10 +63,10 @@ public class Main extends Application {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void gotoLobbyHost() {
+
+    public void gotoLobbyAsClient() {
         try {
-        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobbyhost/lobbyhost.fxml", WIDTH, HEIGHT);
+        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
         } catch (Exception ex) {
@@ -74,10 +74,13 @@ public class Main extends Application {
         }
     }
     
-    public void gotoLobbyFinder() {
+    public void gotoLobbyAsHost(int port, int maxPlayers) {
         try {
-//            LobbyFinderController lobby = (LobbyFinderController) replaceSceneContent("lobbyfinder.fxml");
-//            lobby.setApp(this);
+        	LobbyHostController lobby = (LobbyHostController) replaceSceneContent("lobby/lobby.fxml", WIDTH, HEIGHT);
+        	lobby.startLobby(port, maxPlayers);
+        	
+        	stage.setResizable(true);
+            lobby.setApp(this);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,8 +109,6 @@ public class Main extends Application {
         } 
         Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
-        //stage.sizeToScene();
-        //stage.centerOnScreen();
         return (Initializable) loader.getController();
     }
 }

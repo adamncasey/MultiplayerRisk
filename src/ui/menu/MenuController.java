@@ -1,10 +1,8 @@
 package ui.menu;
 
-import java.awt.Color;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
 import ui.*;
@@ -24,12 +22,6 @@ public class MenuController extends AnchorPane implements Initializable {
     public void createGame(ActionEvent event) {
         if (application != null) {
         	application.gotoCreateGame();
-        }
-    }
-
-    public void findGame(ActionEvent event) {
-        if (application != null) {
-            application.gotoLobbyFinder();
         }
     }
     

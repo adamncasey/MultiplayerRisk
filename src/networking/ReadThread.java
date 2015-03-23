@@ -36,7 +36,9 @@ public class ReadThread {
     private Runnable readTask = new Runnable() {
         @Override
         public void run() {
-
+        	// Remove the timeout for the read thread.
+        	conn.setTimeout(0);
+        	
             while(!interrupted()) {
                 Message msg = null;
                 try {
@@ -44,7 +46,6 @@ public class ReadThread {
                     msg = Networking.readMessage(conn);
 
                 } catch (TimeoutException e) {
-                    e.printStackTrace();
                 } catch (ParserException | ConnectionLostException e ) {
                     router.handleException(conn, e);
                     break;
@@ -54,7 +55,10 @@ public class ReadThread {
                     System.out.println("Received message from playerid " + msg.playerid);
                     router.handleMessage(conn, msg);
                 }
-                System.out.println("null message");
+                else
+                {
+                    System.out.println("null message");
+                }
             }
         }
     };

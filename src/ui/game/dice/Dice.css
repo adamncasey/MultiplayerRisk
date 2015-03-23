@@ -1,0 +1,38 @@
+
+.background{
+    -fx-background-color:
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+}
+
+.button .text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
+}
+
+.button {
+    -fx-background-color:rgba(0, 0, 0, 0.3);
+    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
+    -fx-font-family: "Arial";
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:focused, .button:hover {
+    -fx-background-color:rgba(0, 0, 0, 0.5);
+}
+
+.label {
+    -fx-font-family:'Open Sans', sans-serif;
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
+}
+
+.title {
+    -fx-font-size: 28;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.6), 0, 0.0 , 0 , 1 );
+}

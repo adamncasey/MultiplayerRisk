@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import ui.game.dice.DiceRollControl?>
+<?import ui.game.map.MapControl?>
+
+<AnchorPane prefHeight="600.0" prefWidth="867.0" xmlns:gamePane="http://javafx.com/javafx/8" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
+   <children>
+      <GridPane layoutX="4.0" layoutY="5.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="259.0" minWidth="10.0" prefWidth="86.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="668.0" minWidth="10.0" prefWidth="651.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="177.0" minWidth="10.0" prefWidth="129.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="193.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="485.0" minHeight="10.0" prefHeight="451.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="152.0" minHeight="10.0" prefHeight="119.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+               <children>
+                  <Button onAction="#addArmies" prefHeight="25.0" prefWidth="130.0" text="AddArmies" />
+                  <Button onAction="#removeArmies" prefHeight="25.0" prefWidth="130.0" text="RemoveArmies" />
+                  <Button onAction="#setArmies" prefHeight="25.0" prefWidth="130.0" text="SetArmies" />
+                  <Button onAction="#rollDie" prefHeight="25.0" prefWidth="130.0" text="DICE MODE" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="130.0" text="Button" />
+               </children>
+            </VBox>
+            <TextArea fx:id="consoleTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Pane fx:id="centerPane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <DiceRollControl fx:id="diceRollControl" visible="false">
+                  </DiceRollControl>
+                  <MapControl fx:id="mapControl">
+                  </MapControl>
+               </children>
+            </Pane>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

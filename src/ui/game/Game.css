@@ -1,0 +1,59 @@
+.background {
+    -fx-background-color:
+        #000000,
+        linear-gradient(#7ebcea, #2f4b8f),
+        linear-gradient(#426ab7, #263e75),
+        linear-gradient(#395cab, #223768);
+    -fx-background-insets: 0,1,2,3;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+}
+
+.section {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+}
+
+.blackout {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}
+
+.text-area {
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-family:'Open Sans', sans-serif;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+.label {
+    -fx-font-family:'Open Sans', sans-serif;
+    -fx-font-size: 14;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
+}
+
+.button .text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
+}
+
+.button {
+    -fx-background-color:rgba(0, 0, 0, 0.3);
+    -fx-background-insets: -3 -3 -4 -3, -3, 0, 1, 2, 0;
+    -fx-font-family:'Open Sans', sans-serif;
+    -fx-text-fill: white;
+    -fx-font-size: 14;
+    -fx-padding: 10 20 10 20;
+}
+
+.button:hover {
+    -fx-background-color:rgba(0, 0, 0, 0.5);
+}

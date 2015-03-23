@@ -1,7 +1,5 @@
 package networking.message.payload;
 
-import org.json.simple.JSONValue;
-
 public class RejectJoinGamePayload extends Payload {
     public final String message;
 
@@ -10,7 +8,7 @@ public class RejectJoinGamePayload extends Payload {
     }
 
     @Override
-    public JSONValue getJSONValue() {
-        return null;
+    public Object getJSONValue() {
+        return this.message;
     }
 }

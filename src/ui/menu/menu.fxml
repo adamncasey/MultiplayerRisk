@@ -14,7 +14,6 @@
       <HBox spacing="30.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0">
          <children>
                 <Button focusTraversable="false" onAction="#createGame" prefHeight="80.0" prefWidth="400.0" text="Create game" />
-                <Button focusTraversable="false" onAction="#findGame" prefHeight="80.0" prefWidth="400.0" text="Find game" />
                 <Button focusTraversable="false" onAction="#directConnect" prefHeight="80.0" prefWidth="400.0" text="Direct connect" />
                 <Button focusTraversable="false" onAction="#quit" prefHeight="80.0" prefWidth="400.0" text="Quit" />
          </children>

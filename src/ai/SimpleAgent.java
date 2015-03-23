@@ -10,12 +10,11 @@ import logic.move.Move.Stage;
 import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
-import player.PlayerController;
 
 /**
  * SimpleAI --- Takes moves with the aim of ending the game quickly.
  */
-public class SimpleAgent implements PlayerController, IAgent {
+public class SimpleAgent implements IAgent {
     private static Random random = new Random();
 
     private Player player;

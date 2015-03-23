@@ -4,3 +4,5 @@ Logic:
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
   Use assertions instead of exceptions for WrongMove
+
+  Add names to players / Fix UI to support this

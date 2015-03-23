@@ -1,17 +1,19 @@
 package ai;
 
+import player.PlayerController;
+
 /**
- * IAgent --- Information that all agents must describe.
+ * IAgent --- Adds information about an agent to PlayerController.
  */
-public interface IAgent {
+public interface IAgent extends PlayerController {
     public String getName();
     public String getDescription();
 }
 
 // Implemented
 
-// RandomAI
-// SimpleAI
+// Random
+// Simple
 
 // Ideas
 
@@ -22,4 +24,11 @@ public interface IAgent {
 // Boscoe - Boscoe is Yakool with a slowed down attack strategy
 // Bort - Bort is slow and steady, 1 attack per turn, slower than boscoe
 // Communist - Spreads armies evenly among all owned territories, attacks the weakest enemy territory
-//
+// Defendo - Tries to hold on to the territories it starts with, starts by trying to hold a small continent
+// Pixie - Attacks continents that have the fewest border points, fortifies to the front lines
+// Trotsky - Communist with some extra features
+// Vulture - Singles out weak opponents and focuses on eliminating them
+// EvilPixie - Pixie, does not fortify to places where it already has an advantage
+// KillBot - Combines EvilPixie and Vulture behaviour 
+// Shaft - Looks ahead and attacks into as few borders as possible
+// Quo - Shaft that tries to obtain a card every turn

@@ -21,7 +21,8 @@ public enum Command {
     INITIALISE_GAME("initialise_game"),
     DRAW_CARD("draw_card"),
     DEFEND("defend"),
-    SETUP("setup");
+    SETUP("setup"),
+    LEAVE_GAME("leave_game");
 	
 	
 	Command(String name) {

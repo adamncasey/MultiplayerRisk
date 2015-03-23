@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
+import networking.message.payload.*;
 import settings.Settings;
 import lobby.handler.JoinLobbyEventHandler;
 import lobby.handler.LobbyEventHandler;
@@ -321,7 +322,7 @@ public class RemoteGameLobby extends Thread {
     }
 
     private void acknowledgeMessage(Message msg, GameRouter router) {
-        Message response = Acknowledgement.acknowlegeMessage(msg, 0, null, this.playerid, false);
+        Message response = Acknowledgement.acknowledgeMessage(msg, 0, null, this.playerid, false);
 
         router.sendToAllPlayers(response);
     }

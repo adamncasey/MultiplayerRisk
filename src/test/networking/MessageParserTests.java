@@ -2,12 +2,12 @@ package test.networking;
 
 import static org.junit.Assert.*;
 import networking.Command;
-import networking.message.AcceptJoinGamePayload;
-import networking.message.AcknowledgementPayload;
-import networking.message.JoinGamePayload;
+import networking.message.payload.AcceptJoinGamePayload;
+import networking.message.payload.AcknowledgementPayload;
+import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
-import networking.message.PingPayload;
-import networking.message.RejectJoinGamePayload;
+import networking.message.payload.PingPayload;
+import networking.message.payload.RejectJoinGamePayload;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 

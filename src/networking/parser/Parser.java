@@ -1,6 +1,8 @@
 package networking.parser;
 
 import networking.message.*;
+import networking.message.payload.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
@@ -134,17 +136,42 @@ public class Parser {
             case READY:
                 return null;
 
-            case DEPLOY:
-            case ATTACK:
-            case ATTACK_CAPTURE:
-            case FORTIFY:
-                // payload can be null.
+            case SETUP: //territory ID
+            case DRAW_CARD: // card ID being drawn
+            case DEFEND: // Num Armies to defend 1/2
+            case ATTACK_CAPTURE: // TODO Single Int Payload Not yet in spec. S2 Week6 meeting this was decided though.
 
-            case PLAY_CARDS:
-                // payload can be null.
+                return singleIntegerPayload(payloadObj);
+
+            case FORTIFY: // Null or ArmyMovement
+                if(payloadObj == null) {
+                    return null;
+                }
+            case ATTACK: // ArmyMovement Payload
+                validatePayloadType(payloadObj, JSONArray.class);
+                return new ArmyMovementPayload((JSONArray) payloadObj);
+
+            case PLAY_CARDS: // Null or Array of Integer Triple
+                if(payloadObj == null) {
+                    return null;
+                }
+                validatePayloadType(payloadObj, JSONArray.class);
+                //return new PlayCardsPayload((JSONArray)payloadObj);
+
+            case DEPLOY: // Array of integer pair (Territory ID, Num Armies)
+                validatePayloadType(payloadObj, JSONArray.class);
+                //return new DeployPayload((JSONArray)payloadObj);
 
             default:
                 throw new ParserException("Unsupported Message type. " + command);
         }
+    }
+
+    private static Payload singleIntegerPayload(Object payloadObj) throws ParserException {
+
+        validatePayloadType(payloadObj, Long.class);
+        int value = ((Long)payloadObj).intValue();
+
+        return new IntegerPayload(value);
     }
 }

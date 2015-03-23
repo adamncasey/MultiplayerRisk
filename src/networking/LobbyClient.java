@@ -1,8 +1,8 @@
 package networking;
 
-import networking.message.AcceptJoinGamePayload;
+import networking.message.payload.AcceptJoinGamePayload;
 import networking.message.Message;
-import networking.message.RejectJoinGamePayload;
+import networking.message.payload.RejectJoinGamePayload;
 
 /**
  * Handles acception / rejection process.

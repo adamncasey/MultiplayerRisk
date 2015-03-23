@@ -1,6 +1,6 @@
 package networking;
 
-import networking.message.JoinGamePayload;
+import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;

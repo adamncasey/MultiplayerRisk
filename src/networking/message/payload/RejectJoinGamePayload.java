@@ -1,6 +1,5 @@
-package networking.message;
+package networking.message.payload;
 
-import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 public class RejectJoinGamePayload extends Payload {

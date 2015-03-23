@@ -1,6 +1,7 @@
 package networking.message;
 
 import networking.Command;
+import networking.message.payload.Payload;
 import org.json.simple.JSONValue;
 
 import java.util.HashMap;

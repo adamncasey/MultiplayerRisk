@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 
 import lobby.handler.HostLobbyEventHandler;
 import networking.*;
 import networking.message.Message;
-import networking.message.PingPayload;
+import networking.message.payload.PingPayload;
 
 /**
  * LocalGameLobby: A hosted game lobby to which network players can join.

@@ -1,4 +1,4 @@
-package networking.message;
+package networking.message.payload;
 
 import networking.parser.Parser;
 import networking.parser.ParserException;
@@ -9,7 +9,6 @@ import org.json.simple.JSONObject;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 

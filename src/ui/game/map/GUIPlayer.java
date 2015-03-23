@@ -5,6 +5,7 @@ import java.util.*;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
@@ -40,7 +41,7 @@ public class GUIPlayer implements IPlayer {
         writer.println(move); 
     }
 
-    public void updatePlayer(Move move){
+    public void updatePlayer(Move move) throws WrongMoveException {
         String message = Move.describeMove(move, board);
         
         GameController controller = (GameController) gui.getLoader().getController();
@@ -48,7 +49,7 @@ public class GUIPlayer implements IPlayer {
         controller.console.write(message);
     }
 
-    public void getMove(Move move){
+    public void getMove(Move move) throws WrongMoveException {
         controller.getMove(move); 
     }
 }

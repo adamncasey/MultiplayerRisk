@@ -59,7 +59,8 @@
           <Insets top="30.0" />
         </GridPane.margin>
         <children>
-          <Button onAction="#rollDice" text="Roll Dice" />
+          <Button onAction="#rollDiceAttack" text="Roll Dice - Attack" />
+          <Button onAction="#rollDiceDefend" text="Roll Dice - Defend" />
         </children>
         <padding>
           <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

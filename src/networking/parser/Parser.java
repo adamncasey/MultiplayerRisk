@@ -155,12 +155,12 @@ public class Parser {
                 if(payloadObj == null) {
                     return null;
                 }
-                validatePayloadType(payloadObj, JSONArray.class);
-                //return new PlayCardsPayload((JSONArray)payloadObj);
+                validatePayloadType(payloadObj, JSONObject.class);
+                return new PlayCardsPayload((JSONObject)payloadObj);
 
             case DEPLOY: // Array of integer pair (Territory ID, Num Armies)
                 validatePayloadType(payloadObj, JSONArray.class);
-                //return new DeployPayload((JSONArray)payloadObj);
+                return new DeployPayload((JSONArray)payloadObj);
 
             default:
                 throw new ParserException("Unsupported Message type. " + command);

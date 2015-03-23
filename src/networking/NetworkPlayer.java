@@ -1,15 +1,19 @@
 package networking;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import logic.Board;
 import logic.Card;
 import logic.Move;
+import networking.message.Message;
 import player.IPlayer;
-import player.PlayerController;
 
 public class NetworkPlayer implements IPlayer {
+    final NetworkClient client;
+
+    public NetworkPlayer(NetworkClient client) {
+        this.client = client;
+    }
 
 	@Override
 	public boolean isEliminated() {
@@ -31,6 +35,21 @@ public class NetworkPlayer implements IPlayer {
 
     @Override
     public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove) {
+        if(currentPlayer != client.playerid) {
+            // We don't want to broadcast an update if this isn't the local player.
+            return;
+        }
+
+        // convert Move into Message
+        Message msg = gameMoveToNetworkMessage(previousMove);
+
+        // Send Message
+        try {
+            client.sendMessage(msg);
+        } catch (ConnectionLostException e) {
+            // TODO Better way to handle disconnection.
+            throw new RuntimeException("Lost connection. No way of handling this right now");
+        }
 
     }
 
@@ -38,53 +57,17 @@ public class NetworkPlayer implements IPlayer {
 	public Move getMove(Move move) {
 		// Read a message from the network
 		
-		switch(move.getStage()) {
-		case CARD_DRAWN:
-			break;
-		case CHOOSE_ATTACK_DICE:
-			break;
-		case CHOOSE_DEFEND_DICE:
-			break;
-		case CLAIM_TERRITORY:
-			break;
-		case DECIDE_ATTACK:
-			break;
-		case DECIDE_FORTIFY:
-			break;
-		case END_ATTACK:
-			break;
-		case FORTIFY_TERRITORY:
-			break;
-		case GAME_BEGIN:
-			break;
-		case GAME_END:
-			break;
-		case OCCUPY_TERRITORY:
-			break;
-		case PLACE_ARMIES:
-			break;
-		case PLAYER_ELIMINATED:
-			break;
-		case REINFORCE_TERRITORY:
-			break;
-		case SETUP_BEGIN:
-			break;
-		case SETUP_END:
-			break;
-		case START_ATTACK:
-			break;
-		case START_FORTIFY:
-			break;
-		case TRADE_IN_CARDS:
-			break;
-		default:
-			break;
-			
-		}
-		
 		// Apply message information to the move object
 		
 		// return move
 		return null;
 	}
+
+    private Message gameMoveToNetworkMessage(Move move) {
+        switch(move.getStage()) {
+
+        }
+
+        throw new RuntimeException("Not implemented");
+    }
 }

@@ -1,12 +1,13 @@
 package networking;
 
-import java.util.List;
-
-import logic.Board;
-import logic.Card;
-import logic.Move;
+import logic.move.Move;
+import logic.move.MoveChecker;
+import logic.state.Board;
+import logic.state.Player;
 import networking.message.Message;
+import networking.parser.ParserException;
 import player.IPlayer;
+
 
 public class NetworkPlayer implements IPlayer {
     final NetworkClient client;
@@ -15,27 +16,9 @@ public class NetworkPlayer implements IPlayer {
         this.client = client;
     }
 
-	@Override
-	public boolean isEliminated() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void eliminate() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void nextMove(int currentPlayer, String currentMove) {
-		// TODO Auto-generated method stub
-		
-	}
-
     @Override
-    public void updatePlayer(Board board, List<Card> hand, int currentPlayer, Move previousMove) {
-        if(currentPlayer != client.playerid) {
+    public void updatePlayer(Move previousMove) {
+        if(previousMove.getUID() != client.playerid) {
             // We don't want to broadcast an update if this isn't the local player.
             return;
         }
@@ -44,30 +27,79 @@ public class NetworkPlayer implements IPlayer {
         Message msg = gameMoveToNetworkMessage(previousMove);
 
         // Send Message
-        try {
-            client.sendMessage(msg);
-        } catch (ConnectionLostException e) {
-            // TODO Better way to handle disconnection.
-            throw new RuntimeException("Lost connection. No way of handling this right now");
-        }
-
+        client.router.sendToAllPlayers(msg);
     }
 
 	@Override
-	public Move getMove(Move move) {
+	public void getMove(Move move) {
 		// Read a message from the network
-		
-		// Apply message information to the move object
-		
-		// return move
-		return null;
+        Message msg;
+        try {
+            msg = client.readMessage();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            throw new RuntimeException("TimeoutException unhandled");
+        } catch (ConnectionLostException e) {
+            e.printStackTrace();
+            throw new RuntimeException("ConnectionLostException unhandled");
+        } catch (ParserException e) {
+            e.printStackTrace();
+            throw new RuntimeException("ParserException unhandled");
+        }
+
+        // Apply message information to the move object
+        applyMessageAsMove(msg, move);
 	}
+
+    @Override
+    public void setup(Player player, Board board, MoveChecker checker) {
+
+    }
+
+    @Override
+    public void nextMove(String currentMove) {
+
+    }
 
     private Message gameMoveToNetworkMessage(Move move) {
         switch(move.getStage()) {
 
+            case CLAIM_TERRITORY:
+                break;
+            case REINFORCE_TERRITORY:
+                break;
+            case TRADE_IN_CARDS:
+                break;
+            case PLACE_ARMIES:
+                break;
+            case DECIDE_ATTACK:
+                break;
+            case START_ATTACK:
+                break;
+            case CHOOSE_ATTACK_DICE:
+                break;
+            case CHOOSE_DEFEND_DICE:
+                break;
+            case OCCUPY_TERRITORY:
+                break;
+            case DECIDE_FORTIFY:
+                break;
+            case START_FORTIFY:
+                break;
+            case FORTIFY_TERRITORY:
+                break;
         }
 
         throw new RuntimeException("Not implemented");
+    }
+
+
+
+    private void applyMessageAsMove(Message msg, Move move) {
+        // Change move object
+
+        // Validate move object
+
+        // Acknowledge / disconnect
     }
 }

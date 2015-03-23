@@ -39,20 +39,6 @@ public class Networking {
 	}
 
 	/**
-	 * 
-	 * @param
-	 * @return
-	 */
-	public static LobbyServer joinLobby(String ipAddress, int port) {
-		// Connect to IP address:port (TCP)
-
-		// Send Join Message
-
-		// Receive Accept (or reject) message
-		return null;
-	}
-
-	/**
 	 * Reads a line from conn, and parses it as a JSON Object in the protocol
 	 * format.
 	 * 

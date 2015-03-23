@@ -62,25 +62,18 @@ public class Parser {
             ackId = (Long)message.get("ack_id");
         }
 
-        // TODO Signature check
-        boolean signed = message.get("signature") != null;
-        // Forwarding messages will require storing signature in Message object.
-
-		return new Message(command, signed, playerid, payload, ackId);
+		return new Message(command, playerid, payload, ackId);
 	}
 	
 	/**
 	 * Checks the JSONObject conforms at a basic level to "2. Json communication structure"
-	 * Ensures existance of fields and correct type of fields
-	 * 
-	 * TODO: Here might be a good time to verify signatures
+	 * Ensures existence of fields and correct type of fields
 	 * 
 	 * @param object
 	 * @throws ParserException
 	 */
 	private static void validateObjectField(JSONObject object) throws ParserException {
 		validateType(object, "command", String.class);
-		validateType(object, "signature", String.class);
 
 		if(object.get("ack_id") != null) {
 			validateType(object, "ack_id", Number.class);

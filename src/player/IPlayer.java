@@ -2,6 +2,7 @@ package player;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
 
@@ -16,8 +17,8 @@ public interface IPlayer {
     public void nextMove(String currentMove);
 
     // Lets the player know when ever the gamestate changes, and describes how it changed
-    public void updatePlayer(Move move);
+    public void updatePlayer(Move move) throws WrongMoveException;
 
     // Asks the player to make their move
-    public void getMove(Move move);
+    public void getMove(Move move) throws WrongMoveException;
 }

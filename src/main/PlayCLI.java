@@ -7,8 +7,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 import ai.AIPlayer;
-import ai.DumbAI;
-import ai.SimpleAI;
+import ai.RandomAgent;
+import ai.SimpleAgent;
 import logic.Game;
 import logic.move.WrongMoveException;
 import player.IPlayer;
@@ -50,7 +50,7 @@ public class PlayCLI {
         CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer);
         players.add(user);
         for(int i = 0; i != numAI; ++i){
-            AIPlayer ai = new AIPlayer(new SimpleAI());
+            AIPlayer ai = new AIPlayer(new SimpleAgent());
             players.add(ai);
         }
         Game game = new Game(players, seed);

@@ -256,7 +256,7 @@ public class Game {
         }
     }
 
-    private void updatePlayers(Move move){
+    private void updatePlayers(Move move) throws WrongMoveException{
         move.setReadOnly();
         for(IPlayer pi : playerInterfaces){
             pi.updatePlayer(move);

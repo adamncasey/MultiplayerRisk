@@ -35,7 +35,7 @@ public class RemoteGameLobby extends Thread {
     int acknowledgement_timeout = 1000; // TODO: Move default values to settings
     int move_timeout = 10000;
 
-    public RemoteGameLobby(IPlayer localPlayer, InetAddress address, int port, JoinLobbyEventHandler handler) {
+    public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
         this.address = address;
         this.port = port;
         this.handler = handler;
@@ -66,20 +66,34 @@ public class RemoteGameLobby extends Thread {
         }
         // Now we have a playerid
 
+        int firstPlayer;
+        List<NetworkClient> otherPlayers;
         try {
-            Collection<NetworkClient> otherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
+            otherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
 
             addOtherPlayersToRouter(router, conn, otherPlayers);
 
             handleReady(router, host, otherPlayers); // callbacks: onReady + onReadyAcknowledge
 
-            //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
             //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
         } catch(InterruptedException e) {
             // TODO Tidy up logging: Log exception?
             handler.onFailure(e);
+            return;
         }
+        LinkedList<IPlayer> playersBefore = new LinkedList<>();
+        LinkedList<IPlayer> playersAfter = new LinkedList<>();
+        LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
+
+        // TODO Pass cards up to onLobbyComplete handler
+        handler.onLobbyComplete(playersBefore, playersAfter, null);
+
+    }
+
+    private int decidePlayerOrder() {
+        return 0;
     }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
@@ -148,7 +162,7 @@ public class RemoteGameLobby extends Thread {
      * @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
      * @throws InterruptedException
      */
-    private Collection<NetworkClient> handlePings(GameRouter router, NetworkClient host) throws InterruptedException {
+    private List<NetworkClient> handlePings(GameRouter router, NetworkClient host) throws InterruptedException {
 
         int numplayers = receiveHostPing(host);
         handler.onPingStart();
@@ -157,7 +171,7 @@ public class RemoteGameLobby extends Thread {
             throw new RuntimeException("Invalid number of players received from host. " + numplayers);
         }
 
-        Set<NetworkClient> players = setupOtherPlayers(router, numplayers);
+        List<NetworkClient> players = setupOtherPlayers(router, numplayers);
 
         // Send ping to all other players
         sendPing(router);
@@ -180,8 +194,8 @@ public class RemoteGameLobby extends Thread {
         return handlePingMessage(msg);
     }
 
-    private Set<NetworkClient> setupOtherPlayers(GameRouter router, int numplayers) {
-        Set<NetworkClient> clients = new HashSet<>();
+    private List<NetworkClient> setupOtherPlayers(GameRouter router, int numplayers) {
+        List<NetworkClient> clients = new LinkedList<>();
 
         for(int i=1; i<numplayers; i++) {
             if(i != this.playerid) {

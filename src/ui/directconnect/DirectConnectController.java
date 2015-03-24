@@ -187,12 +187,8 @@ public class DirectConnectController extends AnchorPane implements
 		}
 
 		@Override
-		public void onLobbyComplete(List<IPlayer> players, List<Object> cards,
-				Object board) {
+		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
 			status("onLobbyComplete: ");
-			status("\tplayers: " + players.toString());
-			status("\tcards: " + cards.toString());
-			status("\tboard: " + board.toString());
 		}
 
 		@Override

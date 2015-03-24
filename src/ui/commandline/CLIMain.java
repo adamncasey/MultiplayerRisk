@@ -114,11 +114,11 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
             System.out.println("onLobbyComplete: ");
-            System.out.println("\tplayers: " + players.toString());
+            System.out.println("\tplayers: " + playersBefore.toString());
+            System.out.println("\tplayers: " + playersAfter.toString());
             System.out.println("\tcards: " + cards.toString());
-            System.out.println("\tboard: " + board.toString());
 
             System.out.println("At this point, we should pass this data off to the Game Loop");
         }
@@ -223,11 +223,13 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
             System.out.println("onLobbyComplete: ");
-            System.out.println("\tplayers: " + players.toString());
+            System.out.println("\tplayers: " + playersBefore.toString());
+            System.out.println("\tplayers: " + playersAfter.toString());
             System.out.println("\tcards: " + cards.toString());
-            System.out.println("\tboard: " + board.toString());
+
+            System.out.println("At this point, we should pass this data off to the Game Loop");
         }
 
         @Override

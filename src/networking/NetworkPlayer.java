@@ -12,6 +12,8 @@ import networking.message.payload.StringPayload;
 import networking.parser.ParserException;
 import player.IPlayer;
 
+import java.util.List;
+
 
 public class NetworkPlayer implements IPlayer {
     final NetworkClient client;
@@ -72,7 +74,7 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void setup(Player player, Board board, MoveChecker checker) {
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker) {
         this.moveChecker = checker;
     }
 

@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
 import networking.message.payload.*;
+import player.IPlayer;
 import settings.Settings;
 import lobby.handler.JoinLobbyEventHandler;
 import lobby.handler.LobbyEventHandler;
@@ -29,10 +30,12 @@ public class RemoteGameLobby extends Thread {
     int port;
 
     int playerid = -1;
+
+    // TODO Implement timeouts in networking
     int acknowledgement_timeout = 1000; // TODO: Move default values to settings
     int move_timeout = 10000;
 
-    public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
+    public RemoteGameLobby(IPlayer localPlayer, InetAddress address, int port, JoinLobbyEventHandler handler) {
         this.address = address;
         this.port = port;
         this.handler = handler;

@@ -3,6 +3,7 @@ package lobby;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -11,6 +12,7 @@ import lobby.handler.HostLobbyEventHandler;
 import networking.*;
 import networking.message.Message;
 import networking.message.payload.PingPayload;
+import player.IPlayer;
 
 /**
  * LocalGameLobby: A hosted game lobby to which network players can join.
@@ -51,6 +53,7 @@ public class LocalGameLobby extends Thread {
 	public void run() {
         GameRouter router = new GameRouter();
         ArrayList<LobbyClient> lobbyClients = new ArrayList<>();
+        List<NetworkClient> netClients = new LinkedList<>();
 
         // Get Clients
         try {
@@ -68,7 +71,7 @@ public class LocalGameLobby extends Thread {
                     NetworkClient newPlayer = new NetworkClient(router, newplayerid);
                     router.addRoute(newPlayer, client.getConnection());
 
-                    //TODO Should also set up message mirroring connections
+                    netClients.add(newPlayer);
                 }
             }
 
@@ -84,12 +87,14 @@ public class LocalGameLobby extends Thread {
         // At this point the router should have all knowledge required to send messages to appropriate users.
         // lobbyClients is a weird mix (needs refactoring). Will only contain lobby-specific information
 
+        int firstPlayer;
+
         try {
             pingMessage(router);
 
             readyMessage(router);
 
-            decidePlayerOrder(router);
+            firstPlayer = decidePlayerOrder(router);
 
             shuffleCards(router);
 
@@ -99,8 +104,40 @@ public class LocalGameLobby extends Thread {
         } catch(InterruptedException e) {
             // TODO Log exception?
             handler.onFailure(e);
+            return;
         }
+
+        // collect the IPlayers together.
+        List<IPlayer> playersBefore = new LinkedList<>();
+        List<IPlayer> playersAfter = new LinkedList<>();
+
+        createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
+
+        handler.onLobbyComplete(playersBefore, playersAfter, null);
 	}
+
+    private void createIPlayersInOrder(List<NetworkClient> clients, int firstID, int ourPlayerID, List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
+
+        boolean after = false;
+        int lastID = firstID;
+
+        for(NetworkClient client : clients) {
+            // if we've skipped over our playerid, then after is now true.
+            if(lastID <= ourPlayerID && client.playerid > ourPlayerID) {
+                after = true;
+            }
+
+            NetworkPlayer player = new NetworkPlayer(client);
+
+            // If we've passed our playerid, add to playersAfter
+            if(!after) {
+                playersBefore.add(player);
+            }
+            else {
+                playersAfter.add(player);
+            }
+        }
+    }
 
     private void setupRouterForwarding(GameRouter router, List<LobbyClient> clients) {
         // Tells the GameRouter to forward messages received from clients to every other client
@@ -219,7 +256,7 @@ public class LocalGameLobby extends Thread {
         return msg;
     }
 
-    private void decidePlayerOrder(GameRouter router) {
+    private int decidePlayerOrder(GameRouter router) {
         // Roll Dice.
 
         // Number retrieved determines order
@@ -227,6 +264,8 @@ public class LocalGameLobby extends Thread {
 
         // Re-arrange for the correct play order
         //Collections.rotate(players, firstplayer);
+
+        return firstplayer;
     }
     private void shuffleCards(GameRouter router) {
         // Roll Dice

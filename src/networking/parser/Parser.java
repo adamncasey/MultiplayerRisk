@@ -1,6 +1,6 @@
 package networking.parser;
 
-import networking.message.*;
+import networking.message.Message;
 import networking.message.payload.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

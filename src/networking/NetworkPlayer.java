@@ -2,7 +2,6 @@ package networking;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
 import networking.message.Acknowledgement;
@@ -24,7 +23,7 @@ public class NetworkPlayer implements IPlayer {
     }
 
     @Override
-    public void updatePlayer(Move previousMove) throws WrongMoveException {
+    public void updatePlayer(Move previousMove) {
         if(previousMove.getUID() != client.playerid) {
             // We don't want to broadcast an update if this isn't the local player.
             return;
@@ -38,7 +37,7 @@ public class NetworkPlayer implements IPlayer {
     }
 
 	@Override
-	public void getMove(Move move) throws WrongMoveException {
+	public void getMove(Move move)  {
 		// Read a message from the network
         Message msg;
         try {
@@ -84,7 +83,7 @@ public class NetworkPlayer implements IPlayer {
     }
 
     /* Maps between game Move events and protocol Message */
-    private Message gameMoveToNetworkMessage(Move move) throws WrongMoveException
+    private Message gameMoveToNetworkMessage(Move move)
     {
         switch(move.getStage()) {
             case CLAIM_TERRITORY:
@@ -116,7 +115,7 @@ public class NetworkPlayer implements IPlayer {
         throw new RuntimeException("Not implemented");
     }
 
-    private void networkMessageToGameMove(Message msg, Move move) throws WrongMoveException {
+    private void networkMessageToGameMove(Message msg, Move move) {
         // Change move object
         switch(msg.command) {
 

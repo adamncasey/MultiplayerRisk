@@ -1,6 +1,8 @@
 package ai;
 
-import ai.Agents.Type;
+import ai.agents.RandomAgent;
+import ai.agents.SimpleAgent;
+import ai.AgentTypes.Type;
 import player.PlayerController;
 
 public class AgentFactory {

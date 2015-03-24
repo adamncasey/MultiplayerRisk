@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import ai.AgentPlayer;
 import ai.AgentFactory;
-import ai.Agents;
+import ai.AgentPlayer;
+import ai.AgentTypes;
 import ai.IAgent;
 import logic.Game;
-import logic.move.WrongMoveException;
 import player.IPlayer;
 import ui.commandline.CommandLineController;
 import ui.commandline.CommandLinePlayer;
@@ -49,24 +48,19 @@ public class WatchCLI {
         writer.format("Loading game with %d AIs\n", numAI);
         List<IPlayer> players = new ArrayList<IPlayer>();
         List<String> names = new ArrayList<String>();
-        IAgent userAgent = AgentFactory.buildAgent(Agents.randomType());
+        IAgent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
         CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer);
         players.add(user);
         names.add(String.format("%s 1", userAgent.getName()));
         for(int i = 0; i != numAI-1; ++i){
-            IAgent agent = AgentFactory.buildAgent(Agents.randomType());
+            IAgent agent = AgentFactory.buildAgent(AgentTypes.randomType());
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));
         }
         Game game = new Game(players, names, seed);
 
-        try{
-            game.setupGame();
-            game.playGame();
-        } catch(WrongMoveException e){
-            System.out.println("Game has crashed.");
-            System.out.println(e.getMessage());
-        }
+        game.setupGame();
+        game.playGame();
     }
 }

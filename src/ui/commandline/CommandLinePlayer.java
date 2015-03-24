@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
@@ -39,13 +38,13 @@ public class CommandLinePlayer implements IPlayer {
         writer.println(move); 
     }
 
-    public void updatePlayer(Move move) throws WrongMoveException {
+    public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
         writer.print(message);
         writer.flush();
     }
 
-    public void getMove(Move move) throws WrongMoveException {
+    public void getMove(Move move){
         controller.getMove(move); 
     }
 }

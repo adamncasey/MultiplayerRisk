@@ -5,7 +5,6 @@ import java.util.List;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.move.WrongMoveException;
 import logic.state.GameState;
 import player.IPlayer;
 import settings.Settings;
@@ -35,7 +34,7 @@ public class Game {
         }
     }
 
-    public void setupGame() throws WrongMoveException{
+    public void setupGame(){
         if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
@@ -70,7 +69,7 @@ public class Game {
         updatePlayers(new Move(-1, SETUP_END));
     }
 
-    public void playGame() throws WrongMoveException{
+    public void playGame(){
         if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
@@ -98,7 +97,7 @@ public class Game {
         updatePlayers(gameEnded);
     }
 
-    private void playerTurn(int uid) throws WrongMoveException{
+    private void playerTurn(int uid){
         Move move = new Move(uid, TRADE_IN_CARDS);
         getMove(move);
         List<Card> toTradeIn = move.getToTradeIn();
@@ -256,14 +255,14 @@ public class Game {
         }
     }
 
-    private void updatePlayers(Move move) throws WrongMoveException{
+    private void updatePlayers(Move move){
         move.setReadOnly();
         for(IPlayer pi : playerInterfaces){
             pi.updatePlayer(move);
         }
     }
 
-    public void getMove(Move move) throws WrongMoveException{
+    public void getMove(Move move){
         if(move.getUID() == -1){
             neutralMove(move);
             move.setReadOnly();
@@ -283,7 +282,7 @@ public class Game {
         move.setReadOnly();
     }
 
-    public void neutralMove(Move move) throws WrongMoveException{
+    public void neutralMove(Move move){
         if(move.getStage() == CHOOSE_DEFEND_DICE){
             int defendingDice = 1;
             if(state.getBoard().getArmies(move.getTo()) > 1){

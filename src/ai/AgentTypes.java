@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Agents {
+public class AgentTypes {
     public enum Type {
         RANDOM, SIMPLE
     }

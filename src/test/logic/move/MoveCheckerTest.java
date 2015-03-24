@@ -8,7 +8,6 @@ import java.util.List;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.move.WrongMoveException;
 import logic.state.GameState;
 
 import static logic.move.Move.Stage.*;
@@ -16,7 +15,7 @@ import static logic.move.Move.Stage.*;
 public class MoveCheckerTest {
 
     @Test
-    public void checkClaimTerritoryGood() throws WrongMoveException {
+    public void checkClaimTerritoryGood(){
         int[] owners = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -26,7 +25,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkClaimTerritoryBad1() throws WrongMoveException {
+    public void checkClaimTerritoryBad1(){
         int[] owners = {-1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -36,7 +35,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkClaimTerritoryBad2() throws WrongMoveException {
+    public void checkClaimTerritoryBad2(){
         int[] owners = {-1, -1,  1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -46,7 +45,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkClaimTerritoryInvalid1() throws WrongMoveException {
+    public void checkClaimTerritoryInvalid1(){
         int[] owners = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -56,7 +55,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkClaimTerritoryInvalid2() throws WrongMoveException {
+    public void checkClaimTerritoryInvalid2(){
         int[] owners = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -66,7 +65,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkReinforceTerritoryGood() throws WrongMoveException {
+    public void checkReinforceTerritoryGood(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -76,7 +75,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkReinforceTerritoryBad() throws WrongMoveException {
+    public void checkReinforceTerritoryBad(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -86,7 +85,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkReinforceTerritoryInvalid1() throws WrongMoveException {
+    public void checkReinforceTerritoryInvalid1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -96,7 +95,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkReinforceTerritoryInvalid2() throws WrongMoveException {
+    public void checkReinforceTerritoryInvalid2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -106,7 +105,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesGood1() throws WrongMoveException {
+    public void checkPlaceArmiesGood1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -120,7 +119,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesGood2() throws WrongMoveException {
+    public void checkPlaceArmiesGood2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -134,7 +133,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesGood3() throws WrongMoveException {
+    public void checkPlaceArmiesGood3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -150,7 +149,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesGood4() throws WrongMoveException {
+    public void checkPlaceArmiesGood4(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -167,7 +166,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesBad1() throws WrongMoveException {
+    public void checkPlaceArmiesBad1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -181,7 +180,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesBad2() throws WrongMoveException {
+    public void checkPlaceArmiesBad2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -195,7 +194,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesBad3() throws WrongMoveException {
+    public void checkPlaceArmiesBad3(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -211,7 +210,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesInvalid1() throws WrongMoveException {
+    public void checkPlaceArmiesInvalid1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -225,7 +224,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesInvalid2() throws WrongMoveException {
+    public void checkPlaceArmiesInvalid2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -239,7 +238,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkPlaceArmiesInvalid3() throws WrongMoveException {
+    public void checkPlaceArmiesInvalid3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -253,7 +252,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackGood() throws WrongMoveException {
+    public void checkStartAttackGood(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -264,7 +263,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackBad1() throws WrongMoveException {
+    public void checkStartAttackBad1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -275,7 +274,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackBad2() throws WrongMoveException {
+    public void checkStartAttackBad2(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -286,7 +285,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackBad3() throws WrongMoveException {
+    public void checkStartAttackBad3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -297,7 +296,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackBad4() throws WrongMoveException {
+    public void checkStartAttackBad4(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -308,7 +307,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackInvalid1() throws WrongMoveException {
+    public void checkStartAttackInvalid1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -319,7 +318,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackInvalid2() throws WrongMoveException {
+    public void checkStartAttackInvalid2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -330,7 +329,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackInvalid3() throws WrongMoveException {
+    public void checkStartAttackInvalid3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -341,7 +340,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartAttackInvalid4() throws WrongMoveException {
+    public void checkStartAttackInvalid4(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -352,7 +351,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceGood1() throws WrongMoveException {
+    public void checkChooseAttackDiceGood1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -363,7 +362,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceGood2() throws WrongMoveException {
+    public void checkChooseAttackDiceGood2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -374,7 +373,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceBad() throws WrongMoveException {
+    public void checkChooseAttackDiceBad(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -385,7 +384,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceInvalid1() throws WrongMoveException {
+    public void checkChooseAttackDiceInvalid1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -396,7 +395,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceInvalid2() throws WrongMoveException {
+    public void checkChooseAttackDiceInvalid2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -407,7 +406,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceInvalid3() throws WrongMoveException {
+    public void checkChooseAttackDiceInvalid3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -418,7 +417,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseAttackDiceInvalid4() throws WrongMoveException {
+    public void checkChooseAttackDiceInvalid4(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -429,7 +428,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceGood1() throws WrongMoveException {
+    public void checkChooseDefendDiceGood1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -440,7 +439,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceGood2() throws WrongMoveException {
+    public void checkChooseDefendDiceGood2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -451,7 +450,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceBad1() throws WrongMoveException {
+    public void checkChooseDefendDiceBad1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -462,7 +461,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceInvalid1() throws WrongMoveException {
+    public void checkChooseDefendDiceInvalid1(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -473,7 +472,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceInvalid2() throws WrongMoveException {
+    public void checkChooseDefendDiceInvalid2(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -484,7 +483,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceInvalid3() throws WrongMoveException {
+    public void checkChooseDefendDiceInvalid3(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -495,7 +494,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkChooseDefendDiceInvalid4() throws WrongMoveException {
+    public void checkChooseDefendDiceInvalid4(){
         int[] owners = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -506,7 +505,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryGood1() throws WrongMoveException {
+    public void checkOccupyTerritoryGood1(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -518,7 +517,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryGood2() throws WrongMoveException {
+    public void checkOccupyTerritoryGood2(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -530,7 +529,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryGood3() throws WrongMoveException {
+    public void checkOccupyTerritoryGood3(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -542,7 +541,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryBad1() throws WrongMoveException {
+    public void checkOccupyTerritoryBad1(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -554,7 +553,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryBad2() throws WrongMoveException {
+    public void checkOccupyTerritoryBad2(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -566,7 +565,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkOccupyTerritoryInvalid() throws WrongMoveException {
+    public void checkOccupyTerritoryInvalid(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -578,7 +577,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyGood() throws WrongMoveException {
+    public void checkStartFortifyGood(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -589,7 +588,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyBad1() throws WrongMoveException {
+    public void checkStartFortifyBad1(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -600,7 +599,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyBad2() throws WrongMoveException {
+    public void checkStartFortifyBad2(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -611,7 +610,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyBad3() throws WrongMoveException {
+    public void checkStartFortifyBad3(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -622,7 +621,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyBad4() throws WrongMoveException {
+    public void checkStartFortifyBad4(){
         int[] owners = {0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -633,7 +632,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyInvalid1() throws WrongMoveException {
+    public void checkStartFortifyInvalid1(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -644,7 +643,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyInvalid2() throws WrongMoveException {
+    public void checkStartFortifyInvalid2(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -655,7 +654,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyInvalid3() throws WrongMoveException {
+    public void checkStartFortifyInvalid3(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -666,7 +665,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkStartFortifyInvalid4() throws WrongMoveException {
+    public void checkStartFortifyInvalid4(){
         int[] owners = {0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -677,7 +676,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkFortifyTerritoryGood1() throws WrongMoveException {
+    public void checkFortifyTerritoryGood1(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -688,7 +687,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkFortifyTerritoryGood2() throws WrongMoveException {
+    public void checkFortifyTerritoryGood2(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -699,7 +698,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkFortifyTerritoryBad() throws WrongMoveException {
+    public void checkFortifyTerritoryBad(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
@@ -710,7 +709,7 @@ public class MoveCheckerTest {
     }
 
     @Test
-    public void checkFortifyTerritoryInvalid() throws WrongMoveException {
+    public void checkFortifyTerritoryInvalid(){
         int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));

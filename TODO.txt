@@ -3,4 +3,4 @@ Logic:
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
-  Use assertions instead of exceptions for WrongMove
+  Create logging system

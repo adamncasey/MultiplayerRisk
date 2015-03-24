@@ -16,7 +16,7 @@ public class MoveChecker {
         this.board = state.getBoard();
     }
 
-    public boolean checkMove(Move move) throws WrongMoveException{
+    public boolean checkMove(Move move){
         if(move == null){
             return false;
         }

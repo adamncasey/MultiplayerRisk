@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import ai.AgentPlayer;
 import ai.AgentFactory;
-import ai.Agents;
+import ai.AgentPlayer;
+import ai.AgentTypes;
 import ai.IAgent;
 import logic.Game;
-import logic.move.WrongMoveException;
 import player.IPlayer;
 import ui.commandline.CommandLineController;
 import ui.commandline.CommandLinePlayer;
@@ -55,20 +54,15 @@ public class PlayCLI {
         players.add(user);
         names.add("User 1");
         for(int i = 0; i != numAI; ++i){
-            IAgent agent = AgentFactory.buildAgent(Agents.randomType());
+            IAgent agent = AgentFactory.buildAgent(AgentTypes.randomType());
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));
         }
         Game game = new Game(players, names, seed);
 
-        try{
-            game.setupGame();
-            game.playGame();
-        } catch(WrongMoveException e){
-            System.out.println("Game has crashed.");
-            System.out.println(e.getMessage());
-        }
+        game.setupGame();
+        game.playGame();
     }
 }
 

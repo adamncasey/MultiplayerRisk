@@ -23,15 +23,15 @@ public class Game {
     private GameState state;
     private MoveChecker checker;
 
-    public Game(List<IPlayer> playerInterfaces, int seed){
+    public Game(List<IPlayer> playerInterfaces, List<String> names, int seed){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();
 
-        this.state = new GameState(numPlayers, seed);
+        this.state = new GameState(numPlayers, names, seed);
         this.checker = new MoveChecker(state);
 
         for(int i = 0; i != this.numPlayers; ++i){
-            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getBoard(), this.checker);
+            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getNames(), state.getBoard(), this.checker);
         }
     }
 

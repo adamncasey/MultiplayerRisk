@@ -1,5 +1,7 @@
 package ai;
 
+import java.util.List;
+
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.move.WrongMoveException;
@@ -16,7 +18,7 @@ public class AgentPlayer implements IPlayer {
         this.controller = controller;
     }
 
-    public void setup(Player player, Board board, MoveChecker checker){
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.controller.setup(player, board);
     }
 

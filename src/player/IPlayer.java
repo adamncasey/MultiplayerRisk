@@ -1,5 +1,7 @@
 package player;
 
+import java.util.List;
+
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.move.WrongMoveException;
@@ -11,7 +13,7 @@ import logic.state.Player;
  */
 public interface IPlayer {
     // Provides references to the board / player objects
-    public void setup(Player player, Board board, MoveChecker checker);
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker);
 
     // Lets the player know who is currently acting, and what they are doing
     public void nextMove(String currentMove);

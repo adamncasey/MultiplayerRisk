@@ -8,7 +8,7 @@ import logic.Card;
 import logic.state.Board;
 
 public class Move {
-    public final int uid;
+    private static List<String> names = null;
 
     public enum Stage {
         // Moves - Stages that IPlayers have to react to
@@ -20,6 +20,7 @@ public class Move {
         SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
     }
 
+    private final int uid;
     private final Stage stage;
     private boolean readOnly;
     private boolean readOnlyInputs;
@@ -286,41 +287,44 @@ public class Move {
 
     // Returns a string describing what has just happened.
     public static String describeMove(Move move, Board board){
-        int uid = move.getUID();
+        String name = "Computer";
+        if(move.getUID() != -1){
+            name = names.get(move.getUID());
+        }
         try{
             String message;
             switch(move.getStage()){
                 case CLAIM_TERRITORY:
                     int claimedTerritory = move.getTerritory();
                     String claimedTerritoryName = board.getName(claimedTerritory);
-                    message = String.format("Player %d has claimed territory [%d-%s].\n", uid, claimedTerritory, claimedTerritoryName);
+                    message = String.format("%s has claimed territory [%d-%s].\n", name, claimedTerritory, claimedTerritoryName);
                     return message;
                 case REINFORCE_TERRITORY:
                     int reinforcedTerritory = move.getTerritory();
                     String reinforcedTerritoryName = board.getName(reinforcedTerritory);
-                    message = String.format("Player %d has reinforced territory [%d-%s].\n", uid, reinforcedTerritory, reinforcedTerritoryName);
+                    message = String.format("%s has reinforced territory [%d-%s].\n", name, reinforcedTerritory, reinforcedTerritoryName);
                     return message;
                 case TRADE_IN_CARDS:
                     List<Card> toTradeIn = move.getToTradeIn();
                     if(toTradeIn.size() > 0){
                         String handMessage = Card.printHand(null, toTradeIn);
-                        message = String.format("Player %d has traded in %s", uid, handMessage);
+                        message = String.format("%s has traded in %s", name, handMessage);
                     }else{
-                        message = String.format("Player %d has not traded in any cards.\n", uid);
+                        message = String.format("%s has not traded in any cards.\n", name);
                     }
                     return message;
                 case PLACE_ARMIES:
                     int placeArmiesTerritory = move.getTerritory();
                     int placeArmiesNum = move.getArmies();
                     String placeArmiesName = board.getName(placeArmiesTerritory);
-                    message = String.format("Player %d has placed %d armies at [%d-%s].\n", uid, placeArmiesNum, placeArmiesTerritory, placeArmiesName); 
+                    message = String.format("%s has placed %d armies at [%d-%s].\n", name, placeArmiesNum, placeArmiesTerritory, placeArmiesName); 
                     return message;
                 case DECIDE_ATTACK:
                     boolean decideAttack = move.getDecision();
                     if(decideAttack){
-                        message = String.format("Player %d has chosen to attack.\n", uid);
+                        message = String.format("%s has chosen to attack.\n", name);
                     }else{
-                        message = String.format("Player %d has chosen not to attack.\n", uid);
+                        message = String.format("%s has chosen not to attack.\n", name);
                     }
                     return message;
                 case START_ATTACK:
@@ -328,27 +332,27 @@ public class Move {
                     int attackTo = move.getTo();
                     String attackFromName = board.getName(attackFrom);
                     String attackToName = board.getName(attackTo);
-                    int enemyUID = board.getOwner(attackTo);
-                    message = String.format("Player %d is attacking Player %d owned territory [%d-%s] from [%d-%s].\n", uid, enemyUID, attackTo, attackToName, attackFrom, attackFromName);
+                    String enemyName = names.get(board.getOwner(attackTo));
+                    message = String.format("%s is attacking %s owned territory [%d-%s] from [%d-%s].\n", name, enemyName, attackTo, attackToName, attackFrom, attackFromName);
                     return message;
                 case CHOOSE_ATTACK_DICE:
                     int numAttackingDice = move.getAttackDice();
-                    message = String.format("Player %d has chosen to attack with %d dice.\n", uid, numAttackingDice);
+                    message = String.format("%s has chosen to attack with %d dice.\n", name, numAttackingDice);
                     return message;
                 case CHOOSE_DEFEND_DICE:
                     int numDefendingDice = move.getDefendDice();
-                    message = String.format("Player %d has chosen to defend with %d dice.\n", uid, numDefendingDice);
+                    message = String.format("%s has chosen to defend with %d dice.\n", name, numDefendingDice);
                     return message;
                 case OCCUPY_TERRITORY:
                     int numOccupyArmies = move.getArmies();
-                    message = String.format("Player %d was successful in their attack and has moved %d armies forward.\n", uid, numOccupyArmies);
+                    message = String.format("%s was successful in their attack and has moved %d armies forward.\n", name, numOccupyArmies);
                     return message;
                 case DECIDE_FORTIFY:
                     boolean decideFortify = move.getDecision();
                     if(decideFortify){
-                        message = String.format("Player %d has chosen to fortify.\n", uid);
+                        message = String.format("%s has chosen to fortify.\n", name);
                     }else{
-                        message = String.format("Player %d has chosen not to fortify.\n", uid);
+                        message = String.format("%s has chosen not to fortify.\n", name);
                     }
                     return message;
                 case START_FORTIFY:
@@ -356,11 +360,11 @@ public class Move {
                     int fortifyTo = move.getTo();
                     String fortifyFromName = board.getName(fortifyFrom);
                     String fortifyToName = board.getName(fortifyTo);
-                    message = String.format("Player %d is fortifying [%d-%s] from [%d-%s].\n", uid, fortifyTo, fortifyToName, fortifyFrom, fortifyFromName);
+                    message = String.format("%s is fortifying [%d-%s] from [%d-%s].\n", name, fortifyTo, fortifyToName, fortifyFrom, fortifyFromName);
                     return message;
                 case FORTIFY_TERRITORY:
                     int numFortifyArmies = move.getArmies();
-                    message = String.format("Player %d has fortified with %d armies.\n", uid, numFortifyArmies);
+                    message = String.format("%s has fortified with %d armies.\n", name, numFortifyArmies);
                     return message;
                 case END_ATTACK:
                     int attackerLosses = move.getAttackerLosses();
@@ -379,25 +383,25 @@ public class Move {
                     message += String.format("The attacker lost %d armies, the defender lost %d armies.\n", attackerLosses, defenderLosses);
                     return message;
                 case PLAYER_ELIMINATED:
-                    int eliminatedPlayer = move.getPlayer();
-                    message = String.format("Player %d has just been eliminated by player %d.\n", eliminatedPlayer, uid);
+                    String eliminatedPlayer = names.get(move.getPlayer());
+                    message = String.format("%s has just been eliminated by %s.\n", eliminatedPlayer, name);
                     return message;
                 case CARD_DRAWN:
-                    message = String.format("Player %d has drawn a card.\n", uid);
+                    message = String.format("%s has drawn a card.\n", name);
                     return message;
                 case SETUP_BEGIN:
                     int numPlayers = move.getPlayer();
-                    message = String.format("Game setup is beginning with %d players, player %d is first to go.\n", uid, numPlayers);
+                    message = String.format("Game setup is beginning with %d players, %s is first to go.\n", numPlayers, name);
                     return message;
                 case SETUP_END:
                     return "Game setup has ended.\n";
                 case GAME_BEGIN:
-                    message = String.format("Game is beginning, player %d is first to go.\n", uid);
+                    message = String.format("Game is beginning, %s is first to go.\n", name);
                     return message;
                 case GAME_END:
                     int turns = move.getTurns();
-                    int winner = move.getPlayer();
-                    message = String.format("Game has ended after %d turns, player %d is the winner!\n", turns, winner);
+                    String winner = names.get(move.getPlayer());
+                    message = String.format("Game has ended after %d turns, %s is the winner!\n", turns, winner);
                     return message;
                 default:
                      return "";
@@ -410,45 +414,45 @@ public class Move {
 
     // Returns a string describe what the player is about to do. (To be displayed while waiting)
     public static String describeStatus(Move move){
-        int uid = move.getUID();
+        String name = names.get(move.getUID());
         Stage stage = move.getStage();
         String message = "";
         switch(stage){
             case CLAIM_TERRITORY:
-                message = String.format("Player %d is claiming a territory.", uid);
+                message = String.format("%s is claiming a territory.", name);
                 break;
             case REINFORCE_TERRITORY:
-                message = String.format("Player %d is reinforcing a territory.", uid);
+                message = String.format("%s is reinforcing a territory.", name);
                 break;
             case TRADE_IN_CARDS:
-                message = String.format("Player %d is trading in cards.", uid);
+                message = String.format("%s is trading in cards.", name);
                 break;
             case PLACE_ARMIES:
-                message = String.format("Player %d is placing armies.", uid);
+                message = String.format("%s is placing armies.", name);
                 break;
             case DECIDE_ATTACK:
-                message = String.format("Player %d is deciding whether or not to attack.", uid);
+                message = String.format("%s is deciding whether or not to attack.", name);
                 break;
             case START_ATTACK:
-                message = String.format("Player %d is choosing where to attack.", uid);
+                message = String.format("%s is choosing where to attack.", name);
                 break;
             case CHOOSE_ATTACK_DICE:
-                message = String.format("Player %d is deciding how many dice to attack with.", uid);
+                message = String.format("%s is deciding how many dice to attack with.", name);
                 break;
             case CHOOSE_DEFEND_DICE:
-                message = String.format("Player %d is deciding how many dice to defend with.", uid);
+                message = String.format("%s is deciding how many dice to defend with.", name);
                 break;
             case OCCUPY_TERRITORY:
-                message = String.format("Player %d is deciding how many armies to move into the captured territory.", uid);
+                message = String.format("%s is deciding how many armies to move into the captured territory.", name);
                 break;
             case DECIDE_FORTIFY:
-                message = String.format("Player %d is deciding whether or not to fortify.", uid);
+                message = String.format("%s is deciding whether or not to fortify.", name);
                 break;
             case START_FORTIFY:
-                message = String.format("Player %d is choosing where to fortify.", uid);
+                message = String.format("%s is choosing where to fortify.", name);
                 break;
             case FORTIFY_TERRITORY:
-                message = String.format("Player %d is deciding how many armies to fortify with.", uid);
+                message = String.format("%s is deciding how many armies to fortify with.", name);
                 break;
             default:
                 break;
@@ -499,5 +503,11 @@ public class Move {
                 return "GAME_END";
         }
         return null;
+    }
+
+    public static void setNames(List<String> playerNames){
+        if(names == null){
+            names = new ArrayList<String>(playerNames);
+        }
     }
 }

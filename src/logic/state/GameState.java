@@ -1,10 +1,12 @@
 package logic.state;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import logic.Card;
+import logic.move.Move;
 
 public class GameState {
     private Random random;
@@ -13,6 +15,7 @@ public class GameState {
 
     private Board board;
     private Deck deck;
+    private List<String> names;
 
     private static int setValues[] = {4, 6, 8, 10, 12, 15};
     private int setCounter = 0;
@@ -23,18 +26,21 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(int numPlayers, int seed){
+    public GameState(int numPlayers, List<String> names, int seed){
         this.random = new Random(seed);
 
         this.players = new ArrayList<Player>();
+        this.names = new ArrayList<String>();
         for(int i = 0; i != numPlayers; ++i){
             this.players.add(new Player(i));
+            this.names.add(names.get(i));
         }
         this.activePlayerCount = numPlayers;
         
         this.board = new Board();
         this.deck = board.getDeck();
         this.deck.shuffle(seed);
+        Move.setNames(this.names);
     }
 
     /**
@@ -60,6 +66,10 @@ public class GameState {
 
     public Deck getDeck(){
         return this.deck;
+    }
+
+    public List<String> getNames(){
+        return Collections.unmodifiableList(this.names);
     }
 
     public Player getPlayer(int uid){

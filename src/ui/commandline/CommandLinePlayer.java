@@ -1,6 +1,7 @@
 package ui.commandline;
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Scanner;
 
 import logic.move.Move;
@@ -28,7 +29,7 @@ public class CommandLinePlayer implements IPlayer {
         this.writer = writer;
     }
 
-    public void setup(Player player, Board board, MoveChecker checker){
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker){
        this.player = player;
        this.board = board;
        this.controller.setup(player, board);

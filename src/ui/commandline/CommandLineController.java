@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
-import ai.DumbAI;
+import ai.RandomAgent;
 import logic.Card;
 import logic.move.Move;
 import logic.move.Move.Stage;
@@ -43,7 +43,7 @@ public class CommandLineController implements PlayerController {
         this.player = player;
         this.board = board;
         if(testing){
-            this.testingAI = new DumbAI();
+            this.testingAI = new RandomAgent();
             this.testingAI.setup(player, board);
         }
     }

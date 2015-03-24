@@ -10,12 +10,11 @@ import logic.move.Move.Stage;
 import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
-import player.PlayerController;
 
 /**
  * RandomAgent --- Randomly decides what to do, will drag out games forever if there are no smarter players in the game.
  */
-public class RandomAgent implements PlayerController, IAgent {
+public class RandomAgent implements IAgent {
     private static Random random = new Random();
 
     private Player player;

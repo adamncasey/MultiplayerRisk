@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import ai.AIPlayer;
-import ai.RandomAgent;
-import ai.SimpleAgent;
+import ai.AgentPlayer;
+import ai.AgentFactory;
+import ai.Agents;
+import ai.IAgent;
 import logic.Game;
 import logic.move.WrongMoveException;
 import player.IPlayer;
@@ -46,14 +47,20 @@ public class PlayCLI {
         }
 
         writer.format("Loading game with %d AIs\n", numAI);
+
+
         List<IPlayer> players = new ArrayList<IPlayer>();
+        List<String> names = new ArrayList<String>();
         CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer);
         players.add(user);
+        names.add("User 1");
         for(int i = 0; i != numAI; ++i){
-            AIPlayer ai = new AIPlayer(new SimpleAgent());
+            IAgent agent = AgentFactory.buildAgent(Agents.randomType());
+            AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
+            names.add(String.format("%s %d", agent.getName(), i + 2));
         }
-        Game game = new Game(players, seed);
+        Game game = new Game(players, names, seed);
 
         try{
             game.setupGame();

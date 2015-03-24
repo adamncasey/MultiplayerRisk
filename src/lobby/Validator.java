@@ -3,16 +3,19 @@ package lobby;
 public class Validator {
 	
 	public static boolean isValidPort(String value) {
-		boolean isValid = false;
 
 		if (value != null && value.length() > 0) {
 			try {
-				Integer.parseInt(value);
-				isValid = true;
+				int port = Integer.parseInt(value);
+
+				if(port >=0 && port <= 65535) {
+					return true;
+				}
+
 			} catch (NumberFormatException e) {
 			}
 		}
 
-		return isValid;
+		return false;
 	}
 }

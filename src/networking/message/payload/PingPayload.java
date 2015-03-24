@@ -1,4 +1,4 @@
-package networking.message;
+package networking.message.payload;
 
 
 /**

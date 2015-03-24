@@ -1,4 +1,4 @@
-package networking.message;
+package networking.message.payload;
 
 import networking.parser.Parser;
 import networking.parser.ParserException;

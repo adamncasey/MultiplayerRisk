@@ -1,4 +1,4 @@
-package networking.message;
+package networking.message.payload;
 
 public class RejectJoinGamePayload extends Payload {
     public final String message;

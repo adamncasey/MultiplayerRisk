@@ -10,47 +10,48 @@ public interface LobbyEventHandler {
         TODO: Only called on Lobby Host. Protocol may change to allow these to be called for lobby joiners as well.
         onPlayerJoin to be called when a player has been accepted by the Host into the lobby.
     */
-    public void onPlayerJoin(int playerid);
-    public void onPlayerLeave(int playerid);
+    void onPlayerJoin(int playerid);
+    void onPlayerLeave(int playerid);
 
     /*
         Indicate progress of ping messages, could be used to show in UI who is holding up the game.
      */
-    public void onPingStart(); /* indicates host has started game */
-    public void onPingReceive(int playerid);
+    void onPingStart(); /* indicates host has started game */
+    void onPingReceive(int playerid);
 
     /*
         Indicate progress of ready message/acknowledgements. Again, could be used to show who's holding it up.
 
         TODO: Could have a more generic system for acknowledgment callbacks.
      */
-    public void onReady();
-    public void onReadyAcknowledge(int playerid);
+    void onReady();
+    void onReadyAcknowledge(int playerid);
 
     /*
         Indicate start of player order dice roll.
      */
-    public void onDicePlayerOrder();
+    void onDicePlayerOrder();
 
     /*
         Indicate progress of a dice roll. Used for both player order and card shuffle dice roll.
      */
-    public void onDiceHash(int playerid);
-    public void onDiceNumber(int playerid);
+    void onDiceHash(int playerid);
+    void onDiceNumber(int playerid);
 
     /*
         Indicate start of card shuffle dice roll.
      */
-    public void onDiceCardShuffle();
+    void onDiceCardShuffle();
 
     /**
      * Called when the lobby is complete.
      * The next step should be the "setup" phase of the Risk game.
-     * @param players - List of players in play order.
+     * @param playersBefore - List of players whose turn comes before the local turn
+     * @param playersAfter - List of players whose turn comes after the local turn
      * @param cards - List of cards used in game, shuffled. TODO: Card format etc needs thinking about. These will be encrypted in future too..
-     * @param board - Some board format. TODO: Look at logic.Board
+     *              TODO It seems unlikely that encrypted cards will happen anymore
      */
-    public void onLobbyComplete(List<IPlayer> players, List<Object> cards, Object board);
+    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards);
 
     /**
      * Called on Error / Exception which causes joining or hosting the lobby to fail.
@@ -58,5 +59,5 @@ public interface LobbyEventHandler {
      *
      * @note thread will exit after this has occured.
      */
-    public void onFailure(Throwable e);
+    void onFailure(Throwable e);
 }

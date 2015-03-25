@@ -67,13 +67,15 @@ public class RemoteGameLobby extends Thread {
         // Now we have a playerid
 
         int firstPlayer;
-        List<NetworkClient> otherPlayers;
+        List<NetworkClient> otherPlayers = new LinkedList<>();
+        otherPlayers.add(host);
         try {
-            otherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
+            List<NetworkClient> nonHostOtherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
+            otherPlayers.addAll(nonHostOtherPlayers);
 
-            addOtherPlayersToRouter(router, conn, otherPlayers);
+            addOtherPlayersToRouter(router, conn, nonHostOtherPlayers);
 
-            handleReady(router, host, otherPlayers); // callbacks: onReady + onReadyAcknowledge
+            handleReady(router, host, nonHostOtherPlayers); // callbacks: onReady + onReadyAcknowledge
 
             firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
@@ -83,13 +85,13 @@ public class RemoteGameLobby extends Thread {
             handler.onFailure(e);
             return;
         }
+
         LinkedList<IPlayer> playersBefore = new LinkedList<>();
         LinkedList<IPlayer> playersAfter = new LinkedList<>();
         LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
 
         // TODO Pass cards up to onLobbyComplete handler
         handler.onLobbyComplete(playersBefore, playersAfter, null);
-
     }
 
     private int decidePlayerOrder() {
@@ -199,6 +201,7 @@ public class RemoteGameLobby extends Thread {
 
         for(int i=1; i<numplayers; i++) {
             if(i != this.playerid) {
+                System.out.println("Added playerid " + i);
                 clients.add(new NetworkClient(router, i));
             }
         }

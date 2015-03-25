@@ -9,7 +9,7 @@ import java.util.Scanner;
 import ai.AgentFactory;
 import ai.AgentPlayer;
 import ai.AgentTypes;
-import ai.IAgent;
+import ai.agent.Agent;
 import logic.Game;
 import player.IPlayer;
 import ui.commandline.CommandLineController;
@@ -54,7 +54,7 @@ public class PlayCLI {
         players.add(user);
         names.add("User 1");
         for(int i = 0; i != numAI; ++i){
-            IAgent agent = AgentFactory.buildAgent(AgentTypes.randomType());
+            Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));

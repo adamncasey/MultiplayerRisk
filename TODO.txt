@@ -4,3 +4,5 @@ Logic:
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
 
   Create logging system
+
+  Add a timeout feature to stop AIs from taking too long

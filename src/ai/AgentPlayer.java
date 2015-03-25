@@ -2,6 +2,7 @@ package ai;
 
 import java.util.List;
 
+import ai.agent.Agent;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -11,9 +12,9 @@ import player.PlayerController;
 
 public class AgentPlayer implements IPlayer {
 
-    private PlayerController controller;
+    private Agent controller;
 
-    public AgentPlayer(PlayerController controller){
+    public AgentPlayer(Agent controller){
         this.controller = controller;
     }
 

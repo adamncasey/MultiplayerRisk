@@ -7,14 +7,14 @@ import java.util.Random;
 
 public class AgentTypes {
     public enum Type {
-        RANDOM, SIMPLE
+        RANDOM, ANGRY
     }
 
-    private static final List<Type> VALUES = Collections.unmodifiableList(Arrays.asList(Type.values()));
-    private static final int SIZE = VALUES.size();
-    private static final Random RANDOM = new Random();
+    private static final List<Type> values = Collections.unmodifiableList(Arrays.asList(Type.values()));
+    private static final int size = values.size();
+    private static final Random random = new Random();
 
     public static Type randomType(){
-        return VALUES.get(RANDOM.nextInt(SIZE));
+        return values.get(random.nextInt(size));
     }
 }

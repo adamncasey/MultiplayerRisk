@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
-import ai.agents.RandomAgent;
+import ai.agent.Agent;
+import ai.agent.RandomAgent;
 import logic.Card;
 import logic.move.Move;
 import logic.move.Move.Stage;
@@ -27,7 +28,7 @@ public class CommandLineController implements PlayerController {
     private Player player;
     private Board board;
 
-    private PlayerController testingAI; // Will fill in the blanks when I want to test a particular move stage.
+    private Agent testingAI; // Will fill in the blanks when I want to test a particular move stage.
     boolean testing;
     Stage testingStage;
 

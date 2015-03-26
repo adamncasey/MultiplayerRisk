@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
-import ai.agent.Agent;
-import ai.agent.RandomAgent;
+import ai.agents.Agent;
+import ai.agents.RandomAgent;
 import logic.Card;
 import logic.move.Move;
 import logic.move.Move.Stage;

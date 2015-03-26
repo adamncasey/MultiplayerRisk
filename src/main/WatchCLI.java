@@ -9,7 +9,7 @@ import java.util.Scanner;
 import ai.AgentFactory;
 import ai.AgentPlayer;
 import ai.AgentTypes;
-import ai.agent.Agent;
+import ai.agents.Agent;
 import logic.Game;
 import player.IPlayer;
 import ui.commandline.CommandLineController;

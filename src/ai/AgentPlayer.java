@@ -2,13 +2,12 @@ package ai;
 
 import java.util.List;
 
-import ai.agent.Agent;
+import ai.agents.Agent;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
-import player.PlayerController;
 
 public class AgentPlayer implements IPlayer {
 

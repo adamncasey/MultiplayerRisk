@@ -1,4 +1,4 @@
-package ai.agent;
+package ai.agents;
 
 import ai.strategy.AggressiveStrategy;
 import ai.strategy.RandomStrategy;

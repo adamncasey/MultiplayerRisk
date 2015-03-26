@@ -1,8 +1,8 @@
 package ai;
 
-import ai.agent.Agent;
-import ai.agent.RandomAgent;
-import ai.agent.AngryAgent;
+import ai.agents.Agent;
+import ai.agents.RandomAgent;
+import ai.agents.AngryAgent;
 import ai.AgentTypes.Type;
 import player.PlayerController;
 

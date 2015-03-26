@@ -12,6 +12,7 @@ public class LobbyUtil {
 
         boolean after = false;
         int lastID = firstID;
+        int delegatedPlayerID = ourPlayerID;
 
         for(NetworkClient client : clients) {
             // if we've skipped over our playerid, then after is now true.
@@ -19,7 +20,8 @@ public class LobbyUtil {
                 after = true;
             }
 
-            NetworkPlayer player = new NetworkPlayer(client);
+            NetworkPlayer player = new NetworkPlayer(client, delegatedPlayerID);
+            delegatedPlayerID = -1;
 
             // If we've passed our playerid, add to playersAfter
             if(!after) {

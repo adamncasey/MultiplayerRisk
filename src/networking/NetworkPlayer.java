@@ -16,21 +16,30 @@ import java.util.List;
 
 public class NetworkPlayer implements IPlayer {
     final NetworkClient client;
+    // The Playerid whose moves this NetworkPlayer is delegated to broadcast.
+    // Used to send the local player's moves over the network.
+    // TODO Consider whether wrapping the local IPlayer in a "NetworkBroadcastPlayer" might be cleaner.
+    final int broadcastPlayerID;
     MoveChecker moveChecker;
 
-    public NetworkPlayer(NetworkClient client) {
+    public NetworkPlayer(NetworkClient client, int broadcastPlayerID) {
         this.client = client;
+        this.broadcastPlayerID = broadcastPlayerID;
     }
 
     @Override
     public void updatePlayer(Move previousMove) {
-        if(previousMove.getUID() != client.playerid) {
+        if(previousMove.getUID() != broadcastPlayerID) {
             // We don't want to broadcast an update if this isn't the local player.
             return;
         }
 
         // convert Move into Message
         Message msg = gameMoveToNetworkMessage(previousMove);
+
+        if(msg == null) {
+            return;
+        }
 
         // Send Message
         client.router.sendToAllPlayers(msg);
@@ -87,7 +96,7 @@ public class NetworkPlayer implements IPlayer {
     {
         switch(move.getStage()) {
             case CLAIM_TERRITORY:
-                return new Message(Command.SETUP, client.playerid, new IntegerPayload(move.getTerritory()), true);
+                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
             case REINFORCE_TERRITORY:
                 break;
             case TRADE_IN_CARDS:
@@ -110,6 +119,17 @@ public class NetworkPlayer implements IPlayer {
                 break;
             case FORTIFY_TERRITORY:
                 break;
+            case END_ATTACK:
+            case PLAYER_ELIMINATED:
+            case CARD_DRAWN:
+            case SETUP_BEGIN:
+            case SETUP_END:
+            case GAME_BEGIN:
+            case GAME_END:
+                return null;
+            default:
+                System.out.println("Unknown move stage: " + move.getStage().name());
+                return null;
         }
 
         throw new RuntimeException("Not implemented");
@@ -159,6 +179,8 @@ public class NetworkPlayer implements IPlayer {
                 int territoryID = ((IntegerPayload)msg.payload).value;
                 move.setTerritory(territoryID);
                 break;
+            default:
+                 throw new RuntimeException("Received unknown message command.");
         }
     }
 }

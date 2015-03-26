@@ -15,7 +15,6 @@ import org.junit.Test;
 
 public class MessageParserTests {
 
-    // TODO: Reenable tests as parsing progresses
 	@Test
 	public void testAcknowledgeMessage() throws ParserException {
 		/*

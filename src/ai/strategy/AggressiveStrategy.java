@@ -73,7 +73,7 @@ public class AggressiveStrategy extends Strategy {
     private void decideFortify(Move move){
         int uid = move.getUID();
         for(int i = 0; i != board.getNumTerritories(); ++i){
-            if(board.getOwner(i) != uid || board.getArmies(uid) < 2){
+            if(board.getOwner(i) != uid || board.getArmies(i) < 2){
                 continue;
             }
             List<Integer> adjacents = board.getLinks(i);
@@ -94,15 +94,15 @@ public class AggressiveStrategy extends Strategy {
     // Fortify to the front lines
     private void startFortify(Move move){
         int uid = move.getUID();
-        int randomAlly = 0;;
+        int from = 0;
         int enemyCounter = -1;
         List<Integer> adjacents = new ArrayList<Integer>();
         while(enemyCounter != 0){
-            randomAlly = random.nextInt(board.getNumTerritories());
-            while(board.getOwner(randomAlly) != uid){
-                randomAlly = random.nextInt(board.getNumTerritories());
+            from = random.nextInt(board.getNumTerritories());
+            while(board.getOwner(from) != uid && board.getArmies(from) < 2){
+                from = random.nextInt(board.getNumTerritories());
             }
-            adjacents = board.getLinks(randomAlly);
+            adjacents = board.getLinks(from);
             enemyCounter = 0;
             for(int i : adjacents){
                 if(board.getOwner(i) != uid){
@@ -110,11 +110,11 @@ public class AggressiveStrategy extends Strategy {
                 }
             }
         }
-        int randomFortify = adjacents.get(random.nextInt(adjacents.size()));
-        while(board.getOwner(randomFortify) != uid){
-            randomFortify = adjacents.get(random.nextInt(adjacents.size()));
+        int to = adjacents.get(random.nextInt(adjacents.size()));
+        while(board.getOwner(to) != uid){
+            to = adjacents.get(random.nextInt(adjacents.size()));
         }
-        move.setFrom(randomAlly);
-        move.setTo(randomFortify);
+        move.setFrom(from);
+        move.setTo(to);
     }
 }

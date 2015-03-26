@@ -3,6 +3,7 @@ package ai;
 import ai.agents.Agent;
 import ai.agents.RandomAgent;
 import ai.agents.AngryAgent;
+import ai.agents.GreedyAgent;
 import ai.AgentTypes.Type;
 import player.PlayerController;
 
@@ -10,10 +11,12 @@ public class AgentFactory {
 
     public static Agent buildAgent(Type type){
         switch(type){
-            case RANDOM:
-                return new RandomAgent();
+//            case RANDOM:
+//                return new RandomAgent();
             case ANGRY:
                 return new AngryAgent();
+            case GREEDY:
+                return new GreedyAgent();
             default:
                 assert false : type;
         }
@@ -24,12 +27,13 @@ public class AgentFactory {
 
 // Random - Randomly decides what to do
 // Angry - Always attacks
+// Greedy - Tries to draw a card every turn. Trades in cards ASAP
 
 // Ideas
 
+// PlaceArmies - Place initial armies in a sensible way
 // Continents - Place inital armies in the smallest continent
 // Continents2 - Focus efforts towards capturing whole continents
-// Cards - Tries to always draw a card each turn
 // Outwards - Always fortifies to the front lines
 // Cluster - Cluster expands from his biggest set of armies
 // Yakool - Yakool builds on Cluster by, focusing on enemies that are too strong, slower attacks than cluster, tries to get a card every turn.

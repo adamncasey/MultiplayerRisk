@@ -36,6 +36,7 @@ public class CommandLinePlayer implements IPlayer {
 
     public void nextMove(String move){
         writer.println(move); 
+        writer.flush();
     }
 
     public void updatePlayer(Move move){

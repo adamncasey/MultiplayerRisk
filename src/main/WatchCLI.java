@@ -62,5 +62,13 @@ public class WatchCLI {
 
         game.setupGame();
         game.playGame();
+
+        String nameSummary = "Players were ";
+        for(String s : names){
+            nameSummary += String.format("%s, ", s);
+        }
+        nameSummary = nameSummary.substring(0, nameSummary.length() - 2);
+        writer.println(nameSummary); 
+        writer.flush();
     }
 }

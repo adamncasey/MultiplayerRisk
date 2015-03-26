@@ -16,10 +16,12 @@ import settings.Settings;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -67,7 +69,7 @@ public class CLIMain {
         }
         System.out.println("Starting game");
         IAgent agent = AgentFactory.buildAgent(AgentTypes.randomType());
-        IPlayer localPlayer = new AgentPlayer(agent);
+        IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out));
 
         List<IPlayer> players = new LinkedList<>();
         players.addAll(playersBefore);

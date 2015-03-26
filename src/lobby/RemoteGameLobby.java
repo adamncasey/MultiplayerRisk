@@ -32,8 +32,6 @@ public class RemoteGameLobby extends Thread {
     int playerid = -1;
 
     // TODO Implement timeouts in networking
-    int acknowledgement_timeout = 1000; // TODO: Move default values to settings
-    int move_timeout = 10000;
 
     public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
         this.address = address;
@@ -70,10 +68,8 @@ public class RemoteGameLobby extends Thread {
         List<NetworkClient> otherPlayers = new LinkedList<>();
         otherPlayers.add(host);
         try {
-            List<NetworkClient> nonHostOtherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
+            List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingStart + onPingReceive
             otherPlayers.addAll(nonHostOtherPlayers);
-
-            addOtherPlayersToRouter(router, conn, nonHostOtherPlayers);
 
             handleReady(router, host, nonHostOtherPlayers); // callbacks: onReady + onReadyAcknowledge
 
@@ -160,11 +156,11 @@ public class RemoteGameLobby extends Thread {
     /**
      *
      * @param router
-     * @param host
-     * @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
+     * @param conn
+     *@param host  @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
      * @throws InterruptedException
      */
-    private List<NetworkClient> handlePings(GameRouter router, NetworkClient host) throws InterruptedException {
+    private List<NetworkClient> handlePings(GameRouter router, IConnection conn, NetworkClient host) throws InterruptedException {
 
         int numplayers = receiveHostPing(host);
         handler.onPingStart();
@@ -173,7 +169,7 @@ public class RemoteGameLobby extends Thread {
             throw new RuntimeException("Invalid number of players received from host. " + numplayers);
         }
 
-        List<NetworkClient> players = setupOtherPlayers(router, numplayers);
+        List<NetworkClient> players = setupOtherPlayers(router, conn, numplayers);
 
         // Send ping to all other players
         sendPing(router);
@@ -196,7 +192,7 @@ public class RemoteGameLobby extends Thread {
         return handlePingMessage(msg);
     }
 
-    private List<NetworkClient> setupOtherPlayers(GameRouter router, int numplayers) {
+    private List<NetworkClient> setupOtherPlayers(GameRouter router, IConnection conn, int numplayers) {
         List<NetworkClient> clients = new LinkedList<>();
 
         for(int i=1; i<numplayers; i++) {
@@ -205,6 +201,8 @@ public class RemoteGameLobby extends Thread {
                 clients.add(new NetworkClient(router, i));
             }
         }
+
+        addOtherPlayersToRouter(router, conn, clients);
 
         return clients;
     }

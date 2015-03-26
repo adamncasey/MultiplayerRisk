@@ -1,9 +1,8 @@
 package ui.commandline;
 
 import ai.AgentFactory;
-import ai.AgentPlayer;
 import ai.AgentTypes;
-import ai.IAgent;
+import ai.agents.Agent;
 import lobby.LocalGameLobby;
 import lobby.RemoteGameLobby;
 import lobby.handler.HostLobbyEventHandler;
@@ -68,7 +67,7 @@ public class CLIMain {
             return;
         }
         System.out.println("Starting game");
-        IAgent agent = AgentFactory.buildAgent(AgentTypes.randomType());
+        Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
         IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out));
 
         List<IPlayer> players = new LinkedList<>();

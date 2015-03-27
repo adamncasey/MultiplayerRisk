@@ -6,5 +6,3 @@ Logic:
   Create logging system
 
   Add a timeout feature to stop AIs from taking too long
-
-  In cardsstrategy, make cards be handed in ASAP

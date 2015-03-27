@@ -1,11 +1,11 @@
 package networking;
 
-import networking.message.AcceptJoinGamePayload;
+import networking.message.payload.AcceptJoinGamePayload;
 import networking.message.Message;
-import networking.message.RejectJoinGamePayload;
+import networking.message.payload.RejectJoinGamePayload;
 
 /**
- * Handles acception / rejection process.
+ * Handles accept / reject process.
  *
  * On accepting LobbyClient, a NetworkClient object is generated.
  * This is to be used for all future communication with this player.

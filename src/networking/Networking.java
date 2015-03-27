@@ -1,6 +1,6 @@
 package networking;
 
-import networking.message.JoinGamePayload;
+import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
@@ -36,20 +36,6 @@ public class Networking {
 
 		return new LobbyClient(socket, payload.supportedVersions,
 				payload.supportedFeatures, hostPlayerid);
-	}
-
-	/**
-	 * 
-	 * @param
-	 * @return
-	 */
-	public static LobbyServer joinLobby(String ipAddress, int port) {
-		// Connect to IP address:port (TCP)
-
-		// Send Join Message
-
-		// Receive Accept (or reject) message
-		return null;
 	}
 
 	/**

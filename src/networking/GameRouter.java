@@ -152,6 +152,7 @@ public class GameRouter {
         if(client == null) {
             //Log received message with playerid for which we have no client registered in the router
             System.out.println("Cannot route message to NetworkClient: Received msg.playerid=" + msg.playerid);
+            return;
         }
 
         client.addMessageToQueue(msg);

@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
+import networking.message.payload.*;
+import player.IPlayer;
 import settings.Settings;
 import lobby.handler.JoinLobbyEventHandler;
 import lobby.handler.LobbyEventHandler;
@@ -28,8 +30,8 @@ public class RemoteGameLobby extends Thread {
     int port;
 
     int playerid = -1;
-    int acknowledgement_timeout = 1000; // TODO: Move default values to settings
-    int move_timeout = 10000;
+
+    // TODO Implement timeouts in networking
 
     public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
         this.address = address;
@@ -62,20 +64,34 @@ public class RemoteGameLobby extends Thread {
         }
         // Now we have a playerid
 
+        int firstPlayer;
+        List<NetworkClient> otherPlayers = new LinkedList<>();
+        otherPlayers.add(host);
         try {
-            Collection<NetworkClient> otherPlayers = handlePings(router, host); // callbacks: onPingStart + onPingReceive
+            List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingStart + onPingReceive
+            otherPlayers.addAll(nonHostOtherPlayers);
 
-            addOtherPlayersToRouter(router, conn, otherPlayers);
+            handleReady(router, host, nonHostOtherPlayers); // callbacks: onReady + onReadyAcknowledge
 
-            handleReady(router, host, otherPlayers); // callbacks: onReady + onReadyAcknowledge
-
-            //decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
             //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
         } catch(InterruptedException e) {
             // TODO Tidy up logging: Log exception?
             handler.onFailure(e);
+            return;
         }
+
+        LinkedList<IPlayer> playersBefore = new LinkedList<>();
+        LinkedList<IPlayer> playersAfter = new LinkedList<>();
+        LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
+
+        // TODO Pass cards up to onLobbyComplete handler
+        handler.onLobbyComplete(playersBefore, playersAfter, null);
+    }
+
+    private int decidePlayerOrder() {
+        return 0;
     }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
@@ -140,11 +156,11 @@ public class RemoteGameLobby extends Thread {
     /**
      *
      * @param router
-     * @param host
-     * @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
+     * @param conn
+     *@param host  @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
      * @throws InterruptedException
      */
-    private Collection<NetworkClient> handlePings(GameRouter router, NetworkClient host) throws InterruptedException {
+    private List<NetworkClient> handlePings(GameRouter router, IConnection conn, NetworkClient host) throws InterruptedException {
 
         int numplayers = receiveHostPing(host);
         handler.onPingStart();
@@ -153,7 +169,7 @@ public class RemoteGameLobby extends Thread {
             throw new RuntimeException("Invalid number of players received from host. " + numplayers);
         }
 
-        Set<NetworkClient> players = setupOtherPlayers(router, numplayers);
+        List<NetworkClient> players = setupOtherPlayers(router, conn, numplayers);
 
         // Send ping to all other players
         sendPing(router);
@@ -176,14 +192,17 @@ public class RemoteGameLobby extends Thread {
         return handlePingMessage(msg);
     }
 
-    private Set<NetworkClient> setupOtherPlayers(GameRouter router, int numplayers) {
-        Set<NetworkClient> clients = new HashSet<>();
+    private List<NetworkClient> setupOtherPlayers(GameRouter router, IConnection conn, int numplayers) {
+        List<NetworkClient> clients = new LinkedList<>();
 
         for(int i=1; i<numplayers; i++) {
             if(i != this.playerid) {
+                System.out.println("Added playerid " + i);
                 clients.add(new NetworkClient(router, i));
             }
         }
+
+        addOtherPlayersToRouter(router, conn, clients);
 
         return clients;
     }
@@ -321,7 +340,7 @@ public class RemoteGameLobby extends Thread {
     }
 
     private void acknowledgeMessage(Message msg, GameRouter router) {
-        Message response = Acknowledgement.acknowlegeMessage(msg, 0, null, this.playerid, false);
+        Message response = Acknowledgement.acknowledgeMessage(msg, 0, null, this.playerid, false);
 
         router.sendToAllPlayers(response);
     }

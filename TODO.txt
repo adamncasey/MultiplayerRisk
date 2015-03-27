@@ -2,3 +2,9 @@ Logic:
   RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
 
   Abstract the randomness, (put all randomness into classes with its own interface/implementation)
+
+  Create logging system
+
+  Add a timeout feature to stop AIs from taking too long
+
+  Add simple documentation describing how agents/strategies work, what each strategy does, and what strategies each agent emplots.

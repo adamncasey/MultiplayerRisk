@@ -1,11 +1,31 @@
 package ui.game.map;
 
 import javafx.scene.image.ImageView;
+import logic.state.Territory;
 
 public class GUITerritory {
 	String name;
 	int id;
 	int continent_id;
+
+	public Territory getTerritory() {
+		return territory;
+	}
+
+	public void setTerritory(Territory territory) {
+		this.territory = territory;
+	}
+
+	Territory territory;
+
+	public int getContinent_id() {
+		return continent_id;
+	}
+
+	public void setContinent_id(int continent_id) {
+		this.continent_id = continent_id;
+	}
+
 	boolean selected;
 	ImageView image;
 	String imgPath;

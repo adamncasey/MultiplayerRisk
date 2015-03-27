@@ -1,6 +1,8 @@
 package networking.parser;
 
-import networking.message.*;
+import networking.message.Message;
+import networking.message.payload.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
@@ -62,25 +64,18 @@ public class Parser {
             ackId = (Long)message.get("ack_id");
         }
 
-        // TODO Signature check
-        boolean signed = message.get("signature") != null;
-        // Forwarding messages will require storing signature in Message object.
-
-		return new Message(command, signed, playerid, payload, ackId);
+		return new Message(command, playerid, payload, ackId);
 	}
 	
 	/**
 	 * Checks the JSONObject conforms at a basic level to "2. Json communication structure"
-	 * Ensures existance of fields and correct type of fields
-	 * 
-	 * TODO: Here might be a good time to verify signatures
+	 * Ensures existence of fields and correct type of fields
 	 * 
 	 * @param object
 	 * @throws ParserException
 	 */
 	private static void validateObjectField(JSONObject object) throws ParserException {
 		validateType(object, "command", String.class);
-		validateType(object, "signature", String.class);
 
 		if(object.get("ack_id") != null) {
 			validateType(object, "ack_id", Number.class);
@@ -141,17 +136,42 @@ public class Parser {
             case READY:
                 return null;
 
-            case DEPLOY:
-            case ATTACK:
-            case ATTACK_CAPTURE:
-            case FORTIFY:
-                // payload can be null.
+            case SETUP: //territory ID
+            case DRAW_CARD: // card ID being drawn
+            case DEFEND: // Num Armies to defend 1/2
+            case ATTACK_CAPTURE: // TODO Single Int Payload Not yet in spec. S2 Week6 meeting this was decided though.
 
-            case PLAY_CARDS:
-                // payload can be null.
+                return singleIntegerPayload(payloadObj);
+
+            case FORTIFY: // Null or ArmyMovement
+                if(payloadObj == null) {
+                    return null;
+                }
+            case ATTACK: // ArmyMovement Payload
+                validatePayloadType(payloadObj, JSONArray.class);
+                return new ArmyMovementPayload((JSONArray) payloadObj);
+
+            case PLAY_CARDS: // Null or Array of Integer Triple
+                if(payloadObj == null) {
+                    return null;
+                }
+                validatePayloadType(payloadObj, JSONObject.class);
+                return new PlayCardsPayload((JSONObject)payloadObj);
+
+            case DEPLOY: // Array of integer pair (Territory ID, Num Armies)
+                validatePayloadType(payloadObj, JSONArray.class);
+                return new DeployPayload((JSONArray)payloadObj);
 
             default:
                 throw new ParserException("Unsupported Message type. " + command);
         }
+    }
+
+    private static Payload singleIntegerPayload(Object payloadObj) throws ParserException {
+
+        validatePayloadType(payloadObj, Long.class);
+        int value = ((Long)payloadObj).intValue();
+
+        return new IntegerPayload(value);
     }
 }

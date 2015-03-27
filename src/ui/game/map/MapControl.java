@@ -34,25 +34,49 @@ public class MapControl extends Pane {
 	private float armyScalingFactor = (float) 0.25;
 	private ArrayList<GUITerritory> highlighted_all;
 
-	private EventHandler<MouseEvent> mouseOverFocus = new EventHandler<MouseEvent>() {
-		@Override
-		public void handle(MouseEvent mouseEvent) {
-			try {
-				for (Node child : getChildren()) {
-					for (GUITerritory territory : highlighted_all) {
-						if (territory.getArmyID() != null
-								&& child.getId() != null
-								&& child.getId().equals(territory.getArmyID())) {
-							child.toFront();
-						}
+	private EventHandler<MouseEvent> mouseOverFocus;
 
+	{
+		mouseOverFocus = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				try {
+
+					ImageView source = (ImageView) mouseEvent.getSource();
+					GUITerritory territory = getTerritoryByImageView(source);
+
+					for (Node child : getChildren()) {
+							if (territory.getArmyID() != null
+									&& child.getId() != null
+									&& child.getId().equals(territory.getArmyID())) {
+								child.toFront();
+							}
 					}
+				} catch (Exception e) {
+					// Do nothing, because it means nothing in this context.
 				}
-			} catch (Exception e) {
-				// Do nothing, because it means nothing in this context.
 			}
+		};
+	}
+
+	public boolean selectTerritory(GUITerritory t){
+
+		if (t.isSelected()){
+			unselectTerritory(t);
+			return false;
 		}
-	};
+		else{
+			t.getImage().setOpacity(100);
+			t.setSelected(true);
+		}
+		return true;
+	}
+
+	public boolean unselectTerritory(GUITerritory t){
+		t.getImage().setOpacity(0);
+		t.setSelected(false);
+		return true;
+	}
 
 	private GUITerritory getTerritoryByImageView(ImageView img) {
 		for (GUITerritory territory : highlighted_all) {
@@ -169,7 +193,7 @@ public class MapControl extends Pane {
 			int labelOffset = 0;
 			if (number < 5) {			
 				currentImage = new ImageView(infantryImage);
-				labelOffset = -95;
+				labelOffset = -95; //ignore_this
 			}
 			if (number >= 5 && number < 20) {				
 				currentImage = new ImageView(cavalryImage);

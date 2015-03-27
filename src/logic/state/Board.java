@@ -2,6 +2,7 @@ package logic.state;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import logic.Card;
@@ -67,6 +68,14 @@ public class Board {
 
     public List<Integer> getLinks(int territory){
         return territories.get(territory).getLinks();
+    }
+
+    public int getNumContinents(){
+        return continents.size();
+    }
+
+    public List<Integer> getContinent(int continent){
+        return Collections.unmodifiableList(continents.get(continent).getTerritories());
     }
 
     // Prints a representation of the board to writer, or returns the representation as a string (if writer is null)

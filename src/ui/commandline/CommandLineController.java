@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
-import ai.DumbAI;
+import ai.agents.Agent;
+import ai.agents.RandomAgent;
 import logic.Card;
 import logic.move.Move;
 import logic.move.Move.Stage;
-import logic.move.WrongMoveException;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
@@ -28,7 +28,7 @@ public class CommandLineController implements PlayerController {
     private Player player;
     private Board board;
 
-    private PlayerController testingAI; // Will fill in the blanks when I want to test a particular move stage.
+    private Agent testingAI; // Will fill in the blanks when I want to test a particular move stage.
     boolean testing;
     Stage testingStage;
 
@@ -43,65 +43,59 @@ public class CommandLineController implements PlayerController {
         this.player = player;
         this.board = board;
         if(testing){
-            this.testingAI = new DumbAI();
+            this.testingAI = new RandomAgent();
             this.testingAI.setup(player, board);
         }
     }
 
     public void getMove(Move move){
-        try{
-            if(testing && move.getStage() != testingStage){
-                testingAI.getMove(move);
-                return;
-            }
-            switch(move.getStage()){
-                case CLAIM_TERRITORY:
-                    claimTerritory(move);
-                    return;
-                case REINFORCE_TERRITORY:
-                    reinforceTerritory(move);
-                    return;
-                case TRADE_IN_CARDS:
-                    tradeInCards(move);
-                    return;
-                case PLACE_ARMIES:
-                    placeArmies(move);
-                    return;
-                case DECIDE_ATTACK:
-                    decideAttack(move);
-                    return;
-                case START_ATTACK:
-                    startAttack(move);
-                    return;
-                case CHOOSE_ATTACK_DICE:
-                    chooseAttackingDice(move);
-                    return;
-                case CHOOSE_DEFEND_DICE:
-                    chooseDefendingDice(move);
-                    return;
-                case OCCUPY_TERRITORY:
-                    occupyTerritory(move);
-                    return;
-                case DECIDE_FORTIFY:
-                    decideFortify(move);
-                    return;
-                case START_FORTIFY:
-                    startFortify(move);
-                    return;
-                case FORTIFY_TERRITORY:
-                    chooseFortifyArmies(move);
-                    return;
-                default:
-                    return;
-            }
-        }catch(WrongMoveException e){
-            System.out.println("CommandLineController is not choosing a move correctly");
-            System.out.println(e.getMessage());
+        if(testing && move.getStage() != testingStage){
+            testingAI.getMove(move);
             return;
+        }
+        switch(move.getStage()){
+            case CLAIM_TERRITORY:
+                claimTerritory(move);
+                return;
+            case REINFORCE_TERRITORY:
+                reinforceTerritory(move);
+                return;
+            case TRADE_IN_CARDS:
+                tradeInCards(move);
+                return;
+            case PLACE_ARMIES:
+                placeArmies(move);
+                return;
+            case DECIDE_ATTACK:
+                decideAttack(move);
+                return;
+            case START_ATTACK:
+                startAttack(move);
+                return;
+            case CHOOSE_ATTACK_DICE:
+                chooseAttackingDice(move);
+                return;
+            case CHOOSE_DEFEND_DICE:
+                chooseDefendingDice(move);
+                return;
+            case OCCUPY_TERRITORY:
+                occupyTerritory(move);
+                return;
+            case DECIDE_FORTIFY:
+                decideFortify(move);
+                return;
+            case START_FORTIFY:
+                startFortify(move);
+                return;
+            case FORTIFY_TERRITORY:
+                chooseFortifyArmies(move);
+                return;
+            default:
+                return;
         }
     }
 
-    private void claimTerritory(Move move) throws WrongMoveException{
+    private void claimTerritory(Move move){
         writer.println("Which territory do you want to claim?");
         board.printBoard(writer);
         writer.print("> ");
@@ -109,7 +103,7 @@ public class CommandLineController implements PlayerController {
         move.setTerritory(territory);
     }
 
-    private void reinforceTerritory(Move move) throws WrongMoveException{
+    private void reinforceTerritory(Move move){
         int uid = move.getUID();
         writer.println("Which territory do you want to reinforce?");
         board.printBoard(writer);
@@ -118,7 +112,7 @@ public class CommandLineController implements PlayerController {
         move.setTerritory(territory);
     }
 
-    private void tradeInCards(Move move) throws WrongMoveException{ 
+    private void tradeInCards(Move move){
         boolean tradingInCards = false;
         List<Card> hand = player.getHand();
         if(Card.containsSet(hand)){
@@ -198,7 +192,7 @@ public class CommandLineController implements PlayerController {
         return toTradeIn;
     }
 
-    private void placeArmies(Move move) throws WrongMoveException{
+    private void placeArmies(Move move){
         int uid = move.getUID();
         int armiesToPlace = move.getCurrentArmies();
         int extraArmies = move.getExtraArmies();
@@ -245,7 +239,7 @@ public class CommandLineController implements PlayerController {
         move.setArmies(numArmies);
     }
 
-    private void decideAttack(Move move) throws WrongMoveException{
+    private void decideAttack(Move move){
         writer.println("Do you want to attack? (y or n)");
         board.printBoard(writer);
         writer.print("> ");
@@ -253,7 +247,7 @@ public class CommandLineController implements PlayerController {
         move.setDecision(attack);
     }
 
-    private void startAttack(Move move) throws WrongMoveException{
+    private void startAttack(Move move){
         int uid = move.getUID();
         writer.println("Choose the territory to attack from.");
         board.printBoard(writer);
@@ -300,7 +294,7 @@ public class CommandLineController implements PlayerController {
         move.setTo(enemy);
     }
 
-    private void chooseAttackingDice(Move move) throws WrongMoveException{
+    private void chooseAttackingDice(Move move){
         int numArmies = board.getArmies(move.getFrom());
         String attackingName = board.getName(move.getFrom());
         String defendingName = board.getName(move.getTo());
@@ -329,7 +323,7 @@ public class CommandLineController implements PlayerController {
         move.setAttackDice(numDice);
     }
 
-    private void chooseDefendingDice(Move move) throws WrongMoveException{
+    private void chooseDefendingDice(Move move){
         int numArmies = board.getArmies(move.getTo());
         String defendingName = board.getName(move.getTo());
         String attackingName = board.getName(move.getFrom());
@@ -358,7 +352,7 @@ public class CommandLineController implements PlayerController {
         move.setDefendDice(numDice);
     }
 
-    private void occupyTerritory(Move move) throws WrongMoveException{
+    private void occupyTerritory(Move move){
         int currentArmies = move.getCurrentArmies();
         int numDice = move.getAttackDice();
         writer.format("Choose how many armies to occupy with. The attacking territory has %d armies remaining.\n> ", currentArmies);
@@ -384,7 +378,7 @@ public class CommandLineController implements PlayerController {
         move.setArmies(numArmies);
     }
 
-    private void decideFortify(Move move) throws WrongMoveException{
+    private void decideFortify(Move move){
         writer.println("Do you want to fortify? (y or n)");
         board.printBoard(writer);
         writer.print("> ");
@@ -392,7 +386,7 @@ public class CommandLineController implements PlayerController {
         move.setDecision(fortifying);
     }
 
-    private void startFortify(Move move) throws WrongMoveException{
+    private void startFortify(Move move){
         int uid = move.getUID();
         writer.println("Choose the territory to fortify from.");
         board.printBoard(writer);
@@ -439,7 +433,7 @@ public class CommandLineController implements PlayerController {
         move.setTo(fortify);
     }
 
-    private void chooseFortifyArmies(Move move) throws WrongMoveException{
+    private void chooseFortifyArmies(Move move){
         int currentArmies = move.getCurrentArmies();
         writer.format("Choose how many armies to fortify with. The fortifying territory has %d armies remaining.\n> ", currentArmies);
         int numArmies = -1; boolean correct = false;

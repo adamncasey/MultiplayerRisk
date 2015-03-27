@@ -36,7 +36,6 @@ public class NetworkClient {
             throw ex;
         }
 
-
         if(obj instanceof Message) {
             return (Message)obj;
         }

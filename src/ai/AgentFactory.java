@@ -1,10 +1,12 @@
 package ai;
 
 import ai.agents.Agent;
+import ai.agents.PassiveAgent;
 import ai.agents.RandomAgent;
 import ai.agents.AngryAgent;
 import ai.agents.GreedyAgent;
 import ai.agents.ContinentalAgent;
+import ai.agents.FuriousAgent;
 import ai.AgentTypes.Type;
 import player.PlayerController;
 
@@ -12,6 +14,8 @@ public class AgentFactory {
 
     public static Agent buildAgent(Type type){
         switch(type){
+//            case PASSIVE:
+//                return new PassiveAgent();
 //            case RANDOM:
 //                return new RandomAgent();
             case ANGRY:
@@ -20,6 +24,8 @@ public class AgentFactory {
                 return new GreedyAgent();
             case CONTINENTAL:
                 return new ContinentalAgent();
+            case FURIOUS:
+                return new FuriousAgent();
             default:
                 assert false : type;
         }
@@ -30,9 +36,10 @@ public class AgentFactory {
 
 // Random - Randomly decides what to do
 // Angry - Always attacks, fortifies outwards
-// Greedy - Tries to draw a card every turn. Trades in cards ASAP
-// Continental - Place initial armies to fill up small continents first
-
+// Greedy - Tries to draw a card every turn (and no more) Trades in cards ASAP
+// Continental - Place initial armies to fill up small continents first,
+// Furious - Always attacks if it has an advantage, also continental
+//
 // Ideas
 
 // Continents2 - Focus efforts towards capturing whole continents

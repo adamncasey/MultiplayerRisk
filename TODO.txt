@@ -6,3 +6,5 @@ Logic:
   Create logging system
 
   Add a timeout feature to stop AIs from taking too long
+
+  Add simple documentation describing how agents/strategies work, what each strategy does, and what strategies each agent emplots.

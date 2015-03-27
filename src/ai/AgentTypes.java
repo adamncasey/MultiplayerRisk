@@ -7,8 +7,9 @@ import java.util.Random;
 
 public class AgentTypes {
     public enum Type {
-        ANGRY, GREEDY, CONTINENTAL
+        ANGRY, GREEDY, CONTINENTAL, FURIOUS
     }
+// RANDOM, PASSIVE
 
     private static final List<Type> values = Collections.unmodifiableList(Arrays.asList(Type.values()));
     private static final int size = values.size();

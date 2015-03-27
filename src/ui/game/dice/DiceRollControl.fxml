@@ -38,7 +38,7 @@
             <Insets />
           </GridPane.margin>
         </Label>
-        <ChoiceBox fx:id="userDiceChoiceBox" prefWidth="60.0">
+        <ChoiceBox fx:id="userDiceChoiceBox" disable="true" prefWidth="60.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <Integer fx:value="1" />
@@ -126,7 +126,7 @@
               </rowConstraints>
                <children>
                   <Label text="Winner:" />
-                  <Label layoutX="10.0" layoutY="13.0" text="Your armies lost:" GridPane.rowIndex="1" />
+                  <Label layoutX="10.0" layoutY="13.0" text="Armies lost" GridPane.rowIndex="1" />
                   <Label text="Enemy armies lost:" GridPane.rowIndex="2" />
                   <Label text="winner" GridPane.columnIndex="1" />
                   <Label text="armies_lost" GridPane.columnIndex="1" GridPane.rowIndex="1" />

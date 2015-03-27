@@ -4,6 +4,7 @@ import ai.agents.Agent;
 import ai.agents.RandomAgent;
 import ai.agents.AngryAgent;
 import ai.agents.GreedyAgent;
+import ai.agents.ContinentalAgent;
 import ai.AgentTypes.Type;
 import player.PlayerController;
 
@@ -17,6 +18,8 @@ public class AgentFactory {
                 return new AngryAgent();
             case GREEDY:
                 return new GreedyAgent();
+            case CONTINENTAL:
+                return new ContinentalAgent();
             default:
                 assert false : type;
         }
@@ -26,15 +29,13 @@ public class AgentFactory {
 // Implemented
 
 // Random - Randomly decides what to do
-// Angry - Always attacks
+// Angry - Always attacks, fortifies outwards
 // Greedy - Tries to draw a card every turn. Trades in cards ASAP
+// Continental - Place initial armies to fill up small continents first
 
 // Ideas
 
-// PlaceArmies - Place initial armies in a sensible way
-// Continents - Place inital armies in the smallest continent
 // Continents2 - Focus efforts towards capturing whole continents
-// Outwards - Always fortifies to the front lines
 // Cluster - Cluster expands from his biggest set of armies
 // Yakool - Yakool builds on Cluster by, focusing on enemies that are too strong, slower attacks than cluster, tries to get a card every turn.
 // Boscoe - Boscoe is Yakool with a slowed down attack strategy

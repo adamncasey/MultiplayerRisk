@@ -17,35 +17,42 @@ import ui.game.Main;
  */
 public class GUIPlayer implements IPlayer {
     private PlayerController controller;
-    private Scanner reader;
-    private PrintWriter writer;
 
-    public Main gui = new Main();
+    private Main gui;
+    GameController guiController;
 
     private Board board;
     private Player player;
 
-    public GUIPlayer(PlayerController controller, Scanner reader, PrintWriter writer){
+    public GUIPlayer(PlayerController controller){
         this.controller = controller;
-        this.reader = reader;
-        this.writer = writer;
     }
 
     public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
-    } 
+        gui = new Main();
+        guiController = (GameController) gui.getLoader().getController();
+        guiController.setGUIPlayer(this);
+    }
 
     public void nextMove(String move){
-        writer.println(move); 
+        guiController.console.write(move);
     }
 
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
-        
-        GameController controller = (GameController) gui.getLoader().getController();
-        
-        controller.console.write(message);
+        guiController.console.write(message);
+        MapControl mapController = guiController.getMapControl();
+
+        int number = board.getNumTerritories();
+        for(int i = 0 ; i < number ; i++){
+            int armies = board.getArmies(i);
+            int owner = board.getOwner(i);
+            String name = board.getName(i);
+            if (owner >= 0)
+                mapController.setArmies(owner+1,armies,mapController.getTerritoryByName(name));
+        }
     }
 
     public void getMove(Move move){

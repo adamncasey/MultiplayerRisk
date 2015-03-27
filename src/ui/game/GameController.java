@@ -13,6 +13,7 @@ import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
 import ui.game.dice.DiceRollResult;
+import ui.game.map.GUIPlayer;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
 
@@ -20,6 +21,15 @@ public class GameController implements Initializable {
 
 	@FXML
 	public Pane centerPane;
+
+	public MapControl getMapControl() {
+		return mapControl;
+	}
+
+	public void setMapControl(MapControl mapControl) {
+		this.mapControl = mapControl;
+	}
+
 	@FXML
 	public MapControl mapControl;
 	@FXML
@@ -33,14 +43,17 @@ public class GameController implements Initializable {
 	public Pane popupContent;
 
 	public static GameConsole console;
-
+	public static GUIPlayer player;
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		GameController.console = new GameConsole(consoleTextArea);
-		this.mapControl.initialise(console);
+		this.mapControl.initialise(console, player);
 	}
 
+	public void setGUIPlayer(GUIPlayer player){
+		this.player = player;
+	}
 
 	// ================================================================================
 	// Button Actions

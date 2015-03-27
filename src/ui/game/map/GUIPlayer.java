@@ -3,6 +3,8 @@ package ui.game.map;
 import java.io.*;
 import java.util.*;
 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -11,6 +13,9 @@ import player.IPlayer;
 import player.PlayerController;
 import ui.game.GameController;
 import ui.game.Main;
+import javafx.stage.Stage;
+
+import static java.lang.Thread.sleep;
 
 /**
  * GUIPlayer
@@ -31,8 +36,16 @@ public class GUIPlayer implements IPlayer {
     public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
-        gui = new Main();
-        guiController = (GameController) gui.getLoader().getController();
+        System.out.println("1");
+        gui = new Main().getSelf();
+        System.out.println("2");
+
+        gui.launch(gui.getClass());
+
+        FXMLLoader loader = gui.getLoader();
+        System.out.println("3");
+        guiController = (GameController) loader.getController();
+        System.out.println("4");
         guiController.setGUIPlayer(this);
     }
 
@@ -52,6 +65,12 @@ public class GUIPlayer implements IPlayer {
             String name = board.getName(i);
             if (owner >= 0)
                 mapController.setArmies(owner+1,armies,mapController.getTerritoryByName(name));
+        }
+
+        try {
+            sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

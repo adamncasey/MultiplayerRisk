@@ -59,6 +59,25 @@ public class MapControl extends Pane {
 		};
 	}
 
+	public boolean selectTerritory(GUITerritory t){
+
+		if (t.isSelected()){
+			unselectTerritory(t);
+			return false;
+		}
+		else{
+			t.getImage().setOpacity(100);
+			t.setSelected(true);
+		}
+		return true;
+	}
+
+	public boolean unselectTerritory(GUITerritory t){
+		t.getImage().setOpacity(0);
+		t.setSelected(false);
+		return true;
+	}
+
 	private GUITerritory getTerritoryByImageView(ImageView img) {
 		for (GUITerritory territory : highlighted_all) {
 			if (territory.getImage().equals(img))

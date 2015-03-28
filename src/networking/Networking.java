@@ -1,14 +1,18 @@
 package networking;
 
+import lobby.handler.LobbyEventHandler;
+import networking.message.payload.AcknowledgementPayload;
 import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.*;
 
-// Interface used by GameManager / NetworkPlayer?
+// General "Networking Utilities" class.
 public class Networking {
 	/**
 	 * Gets a risk player connection from the socket
@@ -91,5 +95,70 @@ public class Networking {
         }
 
         return ecs;
+    }
+
+    /* Return list of players which acknowledged message */
+    public static List<Integer> readAcknowledgementsForMessageFromPlayers(GameRouter router, Message message, Collection<NetworkClient> players) {
+        List<Integer> result = new LinkedList<>();
+        if(players.size() == 0) {
+            return result;
+        }
+        ExecutorCompletionService<Message> ecs = Networking.readMessageFromConnections(players);
+
+        // TODO Timeout for ecs.take()
+
+        for(NetworkClient client : players) {
+            try {
+                Future<Message> ack = ecs.take();
+
+                System.out.println("Message from " + client.playerid);
+
+                if(processAcknowledgement(message, ack)) {
+                    result.add(client.playerid);
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Timeout?");
+            }
+        }
+
+        return result;
+    }
+
+    protected static boolean processAcknowledgement(Message message, Future<Message> futureAck) throws InterruptedException {
+        Message ack;
+        try {
+            ack = futureAck.get();
+        } catch (ExecutionException e) {
+            Throwable e2 = e.getCause();
+
+            if(e2 instanceof ConnectionLostException
+                    || e2 instanceof TimeoutException
+                    || e2 instanceof ParserException) {
+                throw new RuntimeException("Unable to receive acknowledgement: " + e2.getClass().toString() + e2.getMessage());
+            }
+            // TODO tidy up logging
+            e.printStackTrace();
+            e2.printStackTrace();
+            System.out.println("Unable to receive acknowledgement: " + e.getClass().toString() + e.getMessage());
+            return false;
+        }
+
+        System.out.println("\tMessage::playerid " + ack.playerid);
+
+        if(ack.command != Command.ACKNOWLEDGEMENT) {
+            throw new RuntimeException("invalid message received: " + ack.command);
+        }
+
+        if(!(ack.payload instanceof AcknowledgementPayload)) {
+            throw new RuntimeException("invalid message");
+        }
+
+        AcknowledgementPayload payload = (AcknowledgementPayload)ack.payload;
+        if(payload.ack_id != message.ackId) {
+            throw new RuntimeException("Bad acknowledgement");
+        }
+
+        // Otherwise ALL OK.
+        return true;
     }
 }

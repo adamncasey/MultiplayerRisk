@@ -20,36 +20,17 @@ public class PassiveStrategy extends Strategy {
 
     public void getMove(Move move){
         switch(move.getStage()){
-            case CLAIM_TERRITORY:
-                pickTerritory(move);
-                return;
-            case REINFORCE_TERRITORY:
-                pickTerritory(move);
-                return;
             case TRADE_IN_CARDS:
                 tradeInCards(move);
-                return;
-            case PLACE_ARMIES:
-                placeArmies(move);
                 return;
             case DECIDE_ATTACK:
                 decide(move);
                 return;
-            case START_ATTACK:
-                return;
-            case CHOOSE_ATTACK_DICE:
-                return;
             case CHOOSE_DEFEND_DICE:
                 chooseDefendingDice(move);
                 return;
-            case OCCUPY_TERRITORY:
-                return;
             case DECIDE_FORTIFY:
                 decide(move);
-                return;
-            case START_FORTIFY:
-                return;
-            case FORTIFY_TERRITORY:
                 return;
             default:
                 assert false : move.getStage();

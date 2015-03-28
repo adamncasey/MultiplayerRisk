@@ -26,9 +26,6 @@ public class RandomStrategy extends Strategy {
             case REINFORCE_TERRITORY:
                 pickTerritory(move);
                 return;
-            case TRADE_IN_CARDS:
-                tradeInCards(move);
-                return;
             case PLACE_ARMIES:
                 placeArmies(move);
                 return;
@@ -84,18 +81,6 @@ public class RandomStrategy extends Strategy {
 
     private void pickArmies(Move move){
         move.setArmies(random.nextInt(move.getCurrentArmies()));
-    }
-
-    private void tradeInCards(Move move){
-        List<Card> hand = player.getHand();
-        List<Card> toTradeIn = new ArrayList<Card>();
-        if(hand.size() >= 5){
-            for(int i = 0; i != 3; ++i){
-                Card c = hand.get(random.nextInt(hand.size()));
-                toTradeIn.add(c);
-            } 
-        }
-        move.setToTradeIn(toTradeIn);
     }
 
     private void chooseAttackingDice(Move move){

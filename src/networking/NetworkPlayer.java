@@ -12,6 +12,7 @@ import networking.parser.ParserException;
 import player.IPlayer;
 
 import java.util.List;
+import java.util.Set;
 
 
 public class NetworkPlayer implements IPlayer {
@@ -19,17 +20,23 @@ public class NetworkPlayer implements IPlayer {
     // The Playerid whose moves this NetworkPlayer is delegated to broadcast.
     // Used to send the local player's moves over the network.
     // TODO Consider whether wrapping the local IPlayer in a "NetworkBroadcastPlayer" might be cleaner.
-    final int broadcastPlayerID;
+    final int localPlayerID;
+    final boolean delegatedLocalBroadcast;
     MoveChecker moveChecker;
+    Set<NetworkClient> players;
 
-    public NetworkPlayer(NetworkClient client, int broadcastPlayerID) {
+    public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
-        this.broadcastPlayerID = broadcastPlayerID;
+        this.localPlayerID = localPlayerID;
+
+        delegatedLocalBroadcast = broadcastLocalPlayer;
+
+        players = client.router.getAllPlayers();
     }
 
     @Override
     public void updatePlayer(Move previousMove) {
-        if(previousMove.getUID() != broadcastPlayerID) {
+        if(!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID) {
             // We don't want to broadcast an update if this isn't the local player.
             return;
         }
@@ -43,6 +50,27 @@ public class NetworkPlayer implements IPlayer {
 
         // Send Message
         client.router.sendToAllPlayers(msg);
+
+        // Receive acknowledgements from all players but broadcastPlayerID.
+
+
+        NetworkClient removed = null;
+
+        for(NetworkClient player : players) {
+            if(client.playerid == localPlayerID) {
+                players.remove(player);
+                removed = player;
+                break;
+            }
+        }
+
+        System.out.println("Waiting for acknowledgements from " + players.size() + "players");
+
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(client.router, msg, players);
+        System.out.println("Received acknowledgement from " + responses.size() + "players");
+
+        if(removed != null)
+            players.add(removed);
     }
 
 	@Override
@@ -71,14 +99,22 @@ public class NetworkPlayer implements IPlayer {
         // Acknowledge / disconnect
         Message response;
 
-        if(acceptedMove) {
-            response = Acknowledgement.acknowledgeMessage(msg, 0, null, client.playerid, false);
-        } else {
+        if(!acceptedMove) {
             // We should send a leave_game and disconnect.
-            response = new Message(Command.LEAVE_GAME, client.playerid, new StringPayload("Received invalid move. Disconnecting"));
+            response = new Message(Command.LEAVE_GAME, localPlayerID, new StringPayload("Received invalid move. Disconnecting"));
+
+            client.router.sendToAllPlayers(response);
+            // TODO Discuss how to handle this with Nathan
+            throw new RuntimeException("NetworkPlayer sent move we consider invalid.");
         }
+        response = Acknowledgement.acknowledgeMessage(msg, null, localPlayerID);
 
         client.router.sendToAllPlayers(response);
+        System.out.println("Sent acknowledgement");
+
+        // receive acknowledgements from all players but us and the person who sent the message.
+        List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
+        System.out.println("Received acknowledgement from " + responses.size() + "players");
 	}
 
     @Override
@@ -182,5 +218,27 @@ public class NetworkPlayer implements IPlayer {
             default:
                  throw new RuntimeException("Received unknown message command.");
         }
+    }
+
+    private List<Integer> readAcknowledgementsIgnorePlayerid(Message message, int ignoredPlayerID) {
+        NetworkClient removed = null;
+
+        for(NetworkClient player : players) {
+            if(player.playerid == ignoredPlayerID) {
+                players.remove(player);
+                removed = player;
+                break;
+            }
+        }
+
+        System.out.println("Waiting for acknowledgements from " + players.size() + "players");
+
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(client.router, message, players);
+        System.out.println("Received acknowledgement from " + responses.size() + "players");
+
+        if(removed != null)
+            players.add(removed);
+
+        return responses;
     }
 }

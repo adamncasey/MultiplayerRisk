@@ -132,9 +132,9 @@ public class NetworkPlayer implements IPlayer {
     {
         switch(move.getStage()) {
             case CLAIM_TERRITORY:
-                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
             case REINFORCE_TERRITORY:
-                break;
+                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
+
             case TRADE_IN_CARDS:
                 break;
             case PLACE_ARMIES:

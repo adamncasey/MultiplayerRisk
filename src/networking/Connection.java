@@ -1,5 +1,7 @@
 package networking;
 
+import settings.Settings;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -47,12 +49,22 @@ public class Connection implements IConnection {
 
 		if (out.checkError())
 			throw new ConnectionLostException();
+
+		if(Settings.printNetworkMessages) {
+			System.out.println("Sent: " + message);
+		}
 	}
 
 	@Override
 	public String receiveLine() throws ConnectionLostException, TimeoutException {
 		try {
-			return in.readLine();
+			String message = in.readLine();
+
+			if(Settings.printNetworkMessages) {
+				System.out.println("Received: " + message);
+			}
+
+			return message;
 		} catch(SocketTimeoutException e1) {
 			throw new TimeoutException();
 		} catch (IOException e2) {

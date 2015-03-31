@@ -77,7 +77,8 @@ public class GameRouter {
         destinations.add(resendDest);
 
         connectionBridges.put(msgSource, destinations);
-        System.out.println("Router addBridge(" + msgSource.getPort() + ", " + resendDest.getPort() + ")");
+        // TODO Verbose log level
+        //System.out.println("Router addBridge(" + msgSource.getPort() + ", " + resendDest.getPort() + ")");
     }
 
     public int getNumPlayers() {

@@ -1,5 +1,6 @@
 package ai.agents;
 
+import ai.strategy.PassiveStrategy;
 import ai.strategy.AggressiveStrategy;
 import ai.strategy.RandomStrategy;
 import logic.move.Move;
@@ -10,6 +11,7 @@ public class AngryAgent extends Agent {
 
     private AggressiveStrategy as;
     private RandomStrategy rs;
+    private PassiveStrategy ps;
 
     public AngryAgent(){
     }
@@ -18,6 +20,7 @@ public class AngryAgent extends Agent {
         super.setup(player, board);
         as = new AggressiveStrategy(player, board, random);
         rs = new RandomStrategy(player, board, random);
+        ps = new PassiveStrategy(player, board, random);
     }
 
     public String getName(){
@@ -37,7 +40,7 @@ public class AngryAgent extends Agent {
                 rs.getMove(move);
                 return;
             case TRADE_IN_CARDS:
-                rs.getMove(move);
+                ps.getMove(move);
                 return;
             case PLACE_ARMIES:
                 rs.getMove(move);

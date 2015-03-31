@@ -298,7 +298,7 @@ public class RemoteGameLobby extends Thread {
     }
 
     private void acknowledgeMessage(Message msg, GameRouter router) {
-        Message response = Acknowledgement.acknowledgeMessage(msg, null, this.playerid);
+        Message response = Acknowledgement.acknowledgeMessage(msg, this.playerid);
 
         router.sendToAllPlayers(response);
     }

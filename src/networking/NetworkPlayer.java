@@ -1,18 +1,18 @@
 package networking;
 
+import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
 import logic.state.Player;
 import networking.message.Acknowledgement;
 import networking.message.Message;
-import networking.message.payload.IntegerPayload;
-import networking.message.payload.StringPayload;
+import networking.message.payload.*;
 import networking.parser.ParserException;
+import org.apache.commons.lang3.ArrayUtils;
 import player.IPlayer;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class NetworkPlayer implements IPlayer {
@@ -107,7 +107,7 @@ public class NetworkPlayer implements IPlayer {
             // TODO Discuss how to handle this with Nathan
             throw new RuntimeException("NetworkPlayer sent move we consider invalid.");
         }
-        response = Acknowledgement.acknowledgeMessage(msg, null, localPlayerID);
+        response = Acknowledgement.acknowledgeMessage(msg, localPlayerID);
 
         client.router.sendToAllPlayers(response);
         System.out.println("Sent acknowledgement");
@@ -132,11 +132,30 @@ public class NetworkPlayer implements IPlayer {
     {
         switch(move.getStage()) {
             case CLAIM_TERRITORY:
-                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
             case REINFORCE_TERRITORY:
-                break;
+                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
+
             case TRADE_IN_CARDS:
-                break;
+                List<Card> cardSet = move.getToTradeIn();
+                Payload payload;
+                if(cardSet.size() > 0) {
+                    int numSets = 1; // TODO Handle multiple sets when logic supports that
+
+                    int[][] setsTradedIn = new int[numSets][];
+                    for(int i=0; i<numSets; i++) {
+
+                        setsTradedIn[i] = new int[cardSet.size()];
+                        for(int j=0; j<cardSet.size(); j++) {
+                            setsTradedIn[i][j] = cardSet.get(j).getID();
+                        }
+                    }
+                    payload = new PlayCardsPayload(setsTradedIn);
+                }
+                else {
+                    payload = null;
+                }
+
+                return new Message(Command.PLAY_CARDS, move.getUID(), payload, true);
             case PLACE_ARMIES:
                 break;
             case DECIDE_ATTACK:
@@ -174,46 +193,61 @@ public class NetworkPlayer implements IPlayer {
     private void networkMessageToGameMove(Message msg, Move move) {
         // Change move object
         switch(msg.command) {
-
-            case JOIN_GAME:
+            case SETUP:
+                int territoryID = ((IntegerPayload)msg.payload).value;
+                move.setTerritory(territoryID);
                 break;
-            case JOIN_ACCEPT:
-                break;
-            case JOIN_REJECT:
-                break;
-            case ACKNOWLEDGEMENT:
+            case DRAW_CARD:
                 break;
             case PLAY_CARDS:
+                // No cards traded in
+                if(msg.payload == null) {
+                    move.setToTradeIn(new ArrayList<>());
+                    break;
+                }
+
+                PlayCardsPayload cards = (PlayCardsPayload)msg.payload;
+                // TODO handle multiple card sets played.
+                // TODO Get Card Object from Player.getHand()
+                if(cards.cardSetsPlayed.length > 0) {
+                    Integer[] set = ArrayUtils.toObject(cards.cardSetsPlayed[0]);
+                    // Need a way to get Card objects from IDs
+                    //move.setToTradeIn(Arrays.asList(set));
+                }
                 break;
             case DEPLOY:
+                DeployPayload payload = (DeployPayload)msg.payload;
+                for(int[] deployment : payload.deployments) {
+                    move.setTerritory(deployment[0]);
+                    move.setArmies(deployment[1]);
+                }
                 break;
             case ATTACK:
+                break;
+            case DEFEND:
                 break;
             case ATTACK_CAPTURE:
                 break;
             case FORTIFY:
                 break;
+
+            case JOIN_GAME:
+            case JOIN_ACCEPT:
+            case JOIN_REJECT:
+            case PING:
+            case READY:
+            case INITIALISE_GAME:
+            case ACKNOWLEDGEMENT:
+                break;
             case DICE_ROLL:
-                break;
             case DICE_HASH:
-                break;
             case DICE_ROLL_NUM:
                 break;
-            case PING:
-                break;
-            case READY:
-                break;
             case KILL_GAME:
+                // TODO End the game.
                 break;
-            case INITIALISE_GAME:
-                break;
-            case DRAW_CARD:
-                break;
-            case DEFEND:
-                break;
-            case SETUP:
-                int territoryID = ((IntegerPayload)msg.payload).value;
-                move.setTerritory(territoryID);
+            case LEAVE_GAME:
+                // TODO Turn this player into a neutral player.
                 break;
             default:
                  throw new RuntimeException("Received unknown message command.");

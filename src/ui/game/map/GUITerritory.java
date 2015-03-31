@@ -1,6 +1,7 @@
 package ui.game.map;
 
 import javafx.scene.image.ImageView;
+import logic.state.Board;
 import logic.state.Territory;
 
 public class GUITerritory {
@@ -8,15 +9,23 @@ public class GUITerritory {
 	int id;
 	int continent_id;
 
-	public Territory getTerritory() {
-		return territory;
+	public GUIPlayer getPlayer() {
+		return player;
 	}
 
-	public void setTerritory(Territory territory) {
-		this.territory = territory;
+	public void setPlayer(GUIPlayer player) {
+		this.player = player;
 	}
 
-	Territory territory;
+	GUIPlayer player;
+	int logicTerritoryNumber;
+
+	public int getLogicTerritoryNnumber(Board board){
+		for(int i = 0 ; i < board.getNumTerritories() ; i++)
+			if (board.getName(i) == this.name)
+				return i;
+		return -1;
+	}
 
 	public int getContinent_id() {
 		return continent_id;

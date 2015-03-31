@@ -23,6 +23,16 @@ public class MapControl extends Pane {
 
 	GameConsole console;
 
+	public GUIPlayer getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(GUIPlayer player) {
+		this.player = player;
+	}
+
+	GUIPlayer player;
+
 	@FXML
 	public ImageView worldmap;
 	@FXML
@@ -86,6 +96,14 @@ public class MapControl extends Pane {
 		return null;
 	}
 
+	public GUITerritory getTerritoryByName(String name) {
+		for (GUITerritory territory : highlighted_all) {
+			if (territory.getName().equals(name))
+				return territory;
+		}
+		return null;
+	}
+
 	private String generateRandomID() {
 		SecureRandom random = new SecureRandom();
 		return (new BigInteger(130, random).toString(32));
@@ -111,8 +129,9 @@ public class MapControl extends Pane {
 		}
 	}
 
-	public void initialise(GameConsole console) {
+	public void initialise(GameConsole console, GUIPlayer player) {
 		this.console = console;
+		this.player = player;
 
 		territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
 				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
@@ -122,6 +141,8 @@ public class MapControl extends Pane {
 		highlighted_all = territories.getTerritoryList();
 
 		for (final GUITerritory territory : highlighted_all) {
+
+			territory.setPlayer(player);
 
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
 					new EventHandler<MouseEvent>() {

@@ -1,20 +1,19 @@
 package networking;
 
+import com.sun.deploy.util.ArrayUtil;
+import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
 import logic.state.Player;
 import networking.message.Acknowledgement;
 import networking.message.Message;
-import networking.message.payload.IntegerPayload;
-import networking.message.payload.PlayCardsPayload;
-import networking.message.payload.StringPayload;
+import networking.message.payload.*;
 import networking.parser.ParserException;
+import org.apache.commons.lang3.ArrayUtils;
 import player.IPlayer;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 public class NetworkPlayer implements IPlayer {
@@ -109,7 +108,7 @@ public class NetworkPlayer implements IPlayer {
             // TODO Discuss how to handle this with Nathan
             throw new RuntimeException("NetworkPlayer sent move we consider invalid.");
         }
-        response = Acknowledgement.acknowledgeMessage(msg, null, localPlayerID);
+        response = Acknowledgement.acknowledgeMessage(msg, localPlayerID);
 
         client.router.sendToAllPlayers(response);
         System.out.println("Sent acknowledgement");
@@ -138,7 +137,26 @@ public class NetworkPlayer implements IPlayer {
                 return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
 
             case TRADE_IN_CARDS:
-                break;
+                List<Card> cardSet = move.getToTradeIn();
+                Payload payload;
+                if(cardSet.size() > 0) {
+                    int numSets = 1; // TODO Handle multiple sets when logic supports that
+
+                    int[][] setsTradedIn = new int[numSets][];
+                    for(int i=0; i<numSets; i++) {
+
+                        setsTradedIn[i] = new int[cardSet.size()];
+                        for(int j=0; j<cardSet.size(); j++) {
+                            setsTradedIn[i][j] = cardSet.get(j).getID();
+                        }
+                    }
+                    payload = new PlayCardsPayload(setsTradedIn);
+                }
+                else {
+                    payload = null;
+                }
+
+                return new Message(Command.PLAY_CARDS, move.getUID(), payload, true);
             case PLACE_ARMIES:
                 break;
             case DECIDE_ATTACK:
@@ -183,13 +201,27 @@ public class NetworkPlayer implements IPlayer {
             case DRAW_CARD:
                 break;
             case PLAY_CARDS:
+                // No cards traded in
+                if(msg.payload == null) {
+                    move.setToTradeIn(new ArrayList<>());
+                    break;
+                }
+
                 PlayCardsPayload cards = (PlayCardsPayload)msg.payload;
+                // TODO handle multiple card sets played.
+                // TODO Get Card Object from Player.getHand()
                 if(cards.cardSetsPlayed.length > 0) {
-                    int[] set = cards.cardSetsPlayed[0];
+                    Integer[] set = ArrayUtils.toObject(cards.cardSetsPlayed[0]);
+                    // Need a way to get Card objects from IDs
                     //move.setToTradeIn(Arrays.asList(set));
                 }
                 break;
             case DEPLOY:
+                DeployPayload payload = (DeployPayload)msg.payload;
+                for(int[] deployment : payload.deployments) {
+                    move.setTerritory(deployment[0]);
+                    move.setArmies(deployment[1]);
+                }
                 break;
             case ATTACK:
                 break;

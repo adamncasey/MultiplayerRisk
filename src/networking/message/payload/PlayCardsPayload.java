@@ -12,6 +12,12 @@ public class PlayCardsPayload extends Payload {
     public final int armiesExpected;
     public final int[][] cardSetsPlayed;
 
+    public PlayCardsPayload(int[][] cardSetsPlayed) {
+        this.cardSetsPlayed = cardSetsPlayed;
+        // TODO Get this in NetworkPlayer
+        this.armiesExpected = -1;
+    }
+
     public PlayCardsPayload(JSONObject payloadObj) throws ParserException {
         // armies: integer
         Parser.validateType(payloadObj, "armies", Long.class);

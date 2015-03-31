@@ -1,0 +1,19 @@
+package logic;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class RNG {
+
+
+    public RNG(List< > bigints){
+
+    }
+
+    public List<Integer> getDiceRolls(int num){
+    
+
+    }
+
+
+}

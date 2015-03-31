@@ -7,4 +7,22 @@ Logic:
 
   Add a timeout feature to stop AIs from taking too long
 
-  Add simple documentation describing how agents/strategies work, what each strategy does, and what strategies each agent emplots.
+  Add DICEROll stage for each move that returns 256 bit int
+
+  Each IPlayer implementation should call a method from some networking somewhere
+
+  logic creates new RNG(256bitint)
+  rng.getDiceRolls(5);
+
+  Trade in cards positioning might have to be changed
+
+  When should threads exit
+
+Things:
+  Decided how threading will work between UI / Lobby / Logic / Network
+  Decided how card shuffling will work
+  Decided how dice rolls will work
+  Talk about Lobby -> Map UI integration
+  How to send messages on behalf of local player
+
+

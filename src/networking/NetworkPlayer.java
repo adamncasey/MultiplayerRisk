@@ -7,10 +7,12 @@ import logic.state.Player;
 import networking.message.Acknowledgement;
 import networking.message.Message;
 import networking.message.payload.IntegerPayload;
+import networking.message.payload.PlayCardsPayload;
 import networking.message.payload.StringPayload;
 import networking.parser.ParserException;
 import player.IPlayer;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -174,46 +176,47 @@ public class NetworkPlayer implements IPlayer {
     private void networkMessageToGameMove(Message msg, Move move) {
         // Change move object
         switch(msg.command) {
-
-            case JOIN_GAME:
+            case SETUP:
+                int territoryID = ((IntegerPayload)msg.payload).value;
+                move.setTerritory(territoryID);
                 break;
-            case JOIN_ACCEPT:
-                break;
-            case JOIN_REJECT:
-                break;
-            case ACKNOWLEDGEMENT:
+            case DRAW_CARD:
                 break;
             case PLAY_CARDS:
+                PlayCardsPayload cards = (PlayCardsPayload)msg.payload;
+                if(cards.cardSetsPlayed.length > 0) {
+                    int[] set = cards.cardSetsPlayed[0];
+                    //move.setToTradeIn(Arrays.asList(set));
+                }
                 break;
             case DEPLOY:
                 break;
             case ATTACK:
                 break;
+            case DEFEND:
+                break;
             case ATTACK_CAPTURE:
                 break;
             case FORTIFY:
                 break;
+
+            case JOIN_GAME:
+            case JOIN_ACCEPT:
+            case JOIN_REJECT:
+            case PING:
+            case READY:
+            case INITIALISE_GAME:
+            case ACKNOWLEDGEMENT:
+                break;
             case DICE_ROLL:
-                break;
             case DICE_HASH:
-                break;
             case DICE_ROLL_NUM:
                 break;
-            case PING:
-                break;
-            case READY:
-                break;
             case KILL_GAME:
+                // TODO End the game.
                 break;
-            case INITIALISE_GAME:
-                break;
-            case DRAW_CARD:
-                break;
-            case DEFEND:
-                break;
-            case SETUP:
-                int territoryID = ((IntegerPayload)msg.payload).value;
-                move.setTerritory(territoryID);
+            case LEAVE_GAME:
+                // TODO Turn this player into a neutral player.
                 break;
             default:
                  throw new RuntimeException("Received unknown message command.");

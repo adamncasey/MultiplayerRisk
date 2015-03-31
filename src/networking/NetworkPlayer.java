@@ -1,6 +1,5 @@
 package networking;
 
-import com.sun.deploy.util.ArrayUtil;
 import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;

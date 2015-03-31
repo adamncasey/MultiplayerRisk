@@ -1,9 +1,11 @@
 package ui;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import player.IPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
+import ui.game.GameController;
 import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 
@@ -91,6 +94,17 @@ public class Main extends Application {
         	DirectConnectController lobby = (DirectConnectController) replaceSceneContent("directconnect/directconnect.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);
             lobby.setApp(this);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void goToGame(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+        try {
+        	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
+        	
+        	stage.setResizable(true);
+        	game.setApp(this, playersBefore, playersAfter, cards);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

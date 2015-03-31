@@ -175,16 +175,21 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         @Override
         public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
             writeToConsole("onLobbyComplete: ");
-			writeToConsole("\tplayers: " + playersBefore.toString());
-			writeToConsole("\tplayers: " + playersAfter.toString());
-
-            writeToConsole("At this point, we should pass this data off to the Game Loop");
+			writeToConsole("\tplayers before: " + playersBefore.toString());
+			writeToConsole("\tplayers after: " + playersAfter.toString());
+			
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					application.goToGame(playersBefore, playersAfter, cards);
+				}
+			});
+			
         }
 
         @Override
         public void onFailure(Throwable e) {
             writeToConsole("ERROR: " + e.getMessage());
-
             e.printStackTrace();
         }
     };

@@ -56,7 +56,7 @@ public class GUIPlayer implements IPlayer {
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
         guiController.console.write(message);
-        MapControl mapController = guiController.getMapControl();
+        MapControl mapController = guiController.mapControl;
 
         int number = board.getNumTerritories();
         for(int i = 0 ; i < number ; i++){

@@ -8,7 +8,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import player.IPlayer;
+import ui.Main;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -21,10 +24,6 @@ public class GameController implements Initializable {
 
 	@FXML
 	public Pane centerPane;
-
-	public MapControl getMapControl() {
-		return mapControl;
-	}
 
 	public void setMapControl(MapControl mapControl) {
 		this.mapControl = mapControl;
@@ -43,6 +42,19 @@ public class GameController implements Initializable {
 	public Pane popupContent;
 
 	public static GameConsole console;
+
+	private Main application;
+	List<IPlayer> playersBefore;
+	List<IPlayer> playersAfter;
+	List<Object> cards;
+	
+
+	public void setApp(Main application, List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+		this.application = application;
+		this.playersBefore = playersBefore;
+		this.playersAfter = playersAfter;
+	}
+	
 	public static GUIPlayer player;
 
 	@Override

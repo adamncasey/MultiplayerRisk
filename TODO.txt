@@ -7,4 +7,4 @@ Logic:
 
   Add a timeout feature to stop AIs from taking too long
 
-  In cardsstrategy, make cards be handed in ASAP
+  Add simple documentation describing how agents/strategies work, what each strategy does, and what strategies each agent emplots.

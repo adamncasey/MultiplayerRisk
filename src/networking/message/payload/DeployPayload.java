@@ -1,6 +1,9 @@
-package networking.parser;
+package networking.message.payload;
 
 import networking.message.payload.Payload;
+import networking.parser.Parser;
+import networking.parser.ParserException;
+import networking.parser.PayloadParser;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 

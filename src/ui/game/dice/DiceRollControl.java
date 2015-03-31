@@ -52,7 +52,7 @@ public class DiceRollControl extends BorderPane {
 
 	public void initialiseAttack(String defendingPlayerName,
 			AttackingDiceRollControlEventHandler attackHandler) {
-		title.setText(String.format("You are attacking %s!",
+		title.setText(String.format("Attacking %s!",
 				defendingPlayerName));
 		this.attackHandler = attackHandler;
 		this.mode = Mode.ATTACKING;
@@ -67,7 +67,7 @@ public class DiceRollControl extends BorderPane {
 	public void initialiseDefend(String attackingPlayerName,
 			int numberOfAttackingDice,
 			DefendingDiceRollControlEventHandler defendHandler) {
-		title.setText(String.format("You are being attacked by %s!",
+		title.setText(String.format("Attacked by %s!",
 				attackingPlayerName));
 		this.defendHandler = defendHandler;
 		this.mode = Mode.DEFENDING;

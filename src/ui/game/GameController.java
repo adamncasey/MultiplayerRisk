@@ -85,7 +85,6 @@ public class GameController implements Initializable {
 	}
 
 	public void closePopup(MouseEvent event) {
-		console.write("Closing popup");
 		popup.setVisible(false);
 		for(Node n : popupContent.getChildren()) {
 			n.setVisible(false);

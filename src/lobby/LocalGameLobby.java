@@ -221,9 +221,7 @@ public class LocalGameLobby extends Thread {
     private boolean receiveReadyFromAll(GameRouter router, Message msg) throws InterruptedException {
         // Ensure we receive an acknowledgement from all players for that ready message
 
-        RemoteGameLobby.readAcknowledgementsForMessageFromPlayers(router, msg, router.getAllPlayers(), handler);
-
-        return true;
+        return RemoteGameLobby.readyAcknowledgements(router, router.getAllPlayers(), msg, handler);
     }
 
     private Message sendReadyToAll(GameRouter router) {

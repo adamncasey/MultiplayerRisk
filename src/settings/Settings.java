@@ -12,4 +12,7 @@ public class Settings {
     public static String boardFilename = "resources/risk_map.json";
     public static final int MaxNumberOfPlayers = 6;
     public static final int MinNumberOfPlayers = 3;
+
+
+    public static boolean printNetworkMessages = false;
 }

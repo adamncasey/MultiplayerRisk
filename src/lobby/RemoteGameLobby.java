@@ -71,7 +71,9 @@ public class RemoteGameLobby extends Thread {
             List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingStart + onPingReceive
             otherPlayers.addAll(nonHostOtherPlayers);
 
-            handleReady(router, host, nonHostOtherPlayers); // callbacks: onReady + onReadyAcknowledge
+            if(!handleReady(router, host, nonHostOtherPlayers)) {
+                return; // callbacks: onReady + onReadyAcknowledge
+            }
 
             firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
 
@@ -268,7 +270,7 @@ public class RemoteGameLobby extends Thread {
         router.sendToAllPlayers(ping);
     }
 
-    private void handleReady(GameRouter router, NetworkClient host, Collection<NetworkClient> players) {
+    private boolean handleReady(GameRouter router, NetworkClient host, Collection<NetworkClient> players) {
         // receive Ready Message
         Message msg = receiveReadyFromHost(host);
 
@@ -276,71 +278,27 @@ public class RemoteGameLobby extends Thread {
         acknowledgeMessage(msg, router);
 
         // receive all other acknowledgements
-
-        //TODO Finish this
-        readAcknowledgementsForMessageFromPlayers(router, msg, players, handler);
+        return readyAcknowledgements(router, players, msg, handler);
     }
 
-    protected static void readAcknowledgementsForMessageFromPlayers(GameRouter router, Message message, Collection<NetworkClient> players, LobbyEventHandler handler) {
-        if(players.size() == 0) { // TODO this zero check should be somewhere else. Duplicated currently.
-            return;
-        }
-        ExecutorCompletionService<Message> ecs = Networking.readMessageFromConnections(players);
+    protected static boolean readyAcknowledgements(GameRouter router, Collection<NetworkClient> players, Message msg, LobbyEventHandler handler) {
 
-        for(NetworkClient client : players) {
-            try {
-                Future<Message> ack = ecs.take();
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(router, msg, players);
 
-                processAcknowledgement(message, ack, handler);
-            } catch (InterruptedException e) {
-                throw new RuntimeException("Timeout?");
-            }
-        }
-    }
-
-    // TODO refactor somewhere useful (Used across Local/Remote GameLobby)
-    protected static void processAcknowledgement(Message message, Future<Message> futureAck, LobbyEventHandler handler) throws InterruptedException {
-        Message ack;
-        try {
-            ack = futureAck.get();
-        } catch (ExecutionException e) {
-            Throwable e2 = e.getCause();
-
-            if(e2 instanceof ConnectionLostException
-                    || e2 instanceof TimeoutException
-                    || e2 instanceof ParserException) {
-                throw new RuntimeException("Unable to receive ping message: " + e2.getClass().toString() + e2.getMessage());
-            }
-            // TODO tidy up logging
-            e.printStackTrace();
-            e2.printStackTrace();
-            handler.onFailure(e2);
-            throw new RuntimeException("Unable to receive ping message: " + e.getClass().toString() + e.getMessage());
+        for(int playerid : responses) {
+            handler.onReadyAcknowledge(playerid);
         }
 
-        if(ack.command != Command.ACKNOWLEDGEMENT) {
-            throw new RuntimeException("invalid message");
+        if(responses.size() != players.size()) {
+            handler.onFailure(new IOException("Did not receive acknowledgement from all players"));
+            return false;
         }
 
-        if(!(ack.payload instanceof AcknowledgementPayload)) {
-            throw new RuntimeException("invalid message");
-        }
-
-        AcknowledgementPayload payload = (AcknowledgementPayload)ack.payload;
-        if(payload.ack_id != message.ackId) {
-            throw new RuntimeException("Bad acknowledgement");
-        }
-
-        if(payload.response_code != 0 ) {
-            throw new RuntimeException("Bad response code. Error!");
-        }
-
-        // Otherwise ALL OK.
-        handler.onReadyAcknowledge(ack.playerid);
+        return true;
     }
 
     private void acknowledgeMessage(Message msg, GameRouter router) {
-        Message response = Acknowledgement.acknowledgeMessage(msg, 0, null, this.playerid, false);
+        Message response = Acknowledgement.acknowledgeMessage(msg, this.playerid);
 
         router.sendToAllPlayers(response);
     }

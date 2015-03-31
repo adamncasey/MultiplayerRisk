@@ -8,11 +8,10 @@ import networking.message.payload.Payload;
  * Created by Adam on 10/02/2015.
  */
 public class Acknowledgement {
-    public static Message acknowledgeMessage(Message message, int responseCode, Payload data, int ourPlayerid,
-                                             boolean acknowledgementRequired) {
-        AcknowledgementPayload newPayload = new AcknowledgementPayload(message.ackId, responseCode, data);
+    public static Message acknowledgeMessage(Message message, int ourPlayerid) {
+        AcknowledgementPayload newPayload = new AcknowledgementPayload(message.ackId);
 
-        Message response = new Message(Command.ACKNOWLEDGEMENT, ourPlayerid, newPayload, acknowledgementRequired);
+        Message response = new Message(Command.ACKNOWLEDGEMENT, ourPlayerid, newPayload, false);
 
         return response;
     }

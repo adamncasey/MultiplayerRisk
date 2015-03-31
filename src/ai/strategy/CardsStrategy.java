@@ -37,11 +37,11 @@ public class CardsStrategy extends Strategy {
         }
     }
 
-// change this to hand in sets of 3 ASAP
+    // Trade in cards immediately
     private void tradeInCards(Move move){
         List<Card> hand = player.getHand();
         List<Card> toTradeIn = new ArrayList<Card>();
-        if(hand.size() >= 5){
+        if(Card.containsSet(hand)){
             for(int i = 0; i != 3; ++i){
                 Card c = hand.get(random.nextInt(hand.size()));
                 toTradeIn.add(c);

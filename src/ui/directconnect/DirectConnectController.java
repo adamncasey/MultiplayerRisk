@@ -5,6 +5,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import player.IPlayer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -189,6 +190,12 @@ public class DirectConnectController extends AnchorPane implements
 		@Override
 		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
 			status("onLobbyComplete: ");
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					application.goToGame(playersBefore, playersAfter, cards);
+				}
+			});
 		}
 
 		@Override

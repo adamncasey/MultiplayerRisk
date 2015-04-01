@@ -1,19 +1,26 @@
 package ui.game.dice;
 
 import java.io.IOException;
+import java.io.InputStream;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
 public class DiceRollControl extends BorderPane {
 
 	@FXML
-	public Label title;
+	Label title;
 	@FXML
 	ChoiceBox<Integer> userDiceChoiceBox;
+	@FXML
+	HBox userDiceHBox;
+	@FXML
+	HBox enemyDiceHBox;
 
 	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
 	public boolean getIsResultsVisible() {
@@ -37,13 +44,7 @@ public class DiceRollControl extends BorderPane {
 			throw new RuntimeException(exception);
 		}
 	}
-
-	private enum Mode {
-		ATTACKING, DEFENDING
-	}
-
-	private Mode mode;
-
+	
 	@FXML
 	protected void submit() {
 		int selectedNumberOfDice = (int) userDiceChoiceBox.getSelectionModel()
@@ -58,6 +59,7 @@ public class DiceRollControl extends BorderPane {
 		setIsResultsVisible(true);
 	}
 
+	
 	// ================================================================================
 	// Attack Mode
 	// ================================================================================
@@ -71,6 +73,7 @@ public class DiceRollControl extends BorderPane {
 		this.mode = Mode.ATTACKING;
 	}
 
+	
 	// ================================================================================
 	// Defend Mode
 	// ================================================================================
@@ -84,20 +87,53 @@ public class DiceRollControl extends BorderPane {
 		this.defendHandler = defendHandler;
 		this.mode = Mode.DEFENDING;
 	}
+	
+	
+	// ================================================================================
+	// Results
+	// ================================================================================
+	
+	public void visualiseResults(DiceRollResult results) {
+		HBox attackerHBox = mode.equals(Mode.ATTACKING) ? userDiceHBox : enemyDiceHBox;
+		HBox defenderHBox = mode.equals(Mode.DEFENDING) ? userDiceHBox : enemyDiceHBox;
+		
+		for(int attackDie : results.attackingDice) {
+			attackerHBox.getChildren().add(getDie(attackDie));
+		}
+		for(int defendDie : results.defendingDice) {
+			defenderHBox.getChildren().add(getDie(defendDie));
+		}
+	}
+	
+	public ImageView getDie(int number) {
+		ImageView result = new ImageView();
+		result.setFitHeight(50.0);
+		result.setPreserveRatio(true);
+		InputStream in = DiceRollControl.class.getResourceAsStream("resources/die_" + number + ".png");
+		result.setImage(new Image(in));
+		return result;
+	}
 
+	
 	// ================================================================================
 	// Utils
 	// ================================================================================
-
-	public void visualiseResults(DiceRollResult results) {
-
+	
+	private enum Mode {
+		ATTACKING, DEFENDING
 	}
+
+	private Mode mode;
 
 	public void reset() {
+		setIsResultsVisible(false);
 		title.setText("");
-		this.attackHandler = null;
-		this.defendHandler = null;
-		this.mode = null;
-		this.userDiceChoiceBox.getSelectionModel().selectFirst();
+		mode = null;
+		userDiceChoiceBox.getSelectionModel().selectFirst();
+		userDiceHBox.getChildren().clear();
+		enemyDiceHBox.getChildren().clear();
 	}
 }
+
+
+

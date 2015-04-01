@@ -63,25 +63,7 @@
         <Label visible="${controller.isResultsVisible}" styleClass="popup_subtitle" text="You rolled:" GridPane.rowIndex="2" GridPane.valignment="TOP" />
         <ScrollPane visible="${controller.isResultsVisible}" prefViewportHeight="95.0" prefViewportWidth="590.0" style="-fx-background-color: transparent;" vbarPolicy="NEVER" GridPane.rowIndex="2">
           <content>
-            <HBox spacing="5.0">
-              <children>
-                <ImageView fitHeight="50.0" preserveRatio="true">
-                  <image>
-                    <Image url="@resources/die_1.png" />
-                  </image>
-                </ImageView>
-                <ImageView fitHeight="50.0" layoutX="10.0" layoutY="10.0" preserveRatio="true">
-                  <image>
-                    <Image url="@resources/die_2.png" />
-                  </image>
-                </ImageView>
-                <ImageView fitHeight="50.0" preserveRatio="true">
-                  <image>
-                    <Image url="@resources/die_3.png" />
-                  </image>
-                </ImageView>
-              </children>
-            </HBox>
+            <HBox fx:id="userDiceHBox" spacing="5.0"/>
           </content>
           <GridPane.margin>
             <Insets top="25.0" />
@@ -90,20 +72,7 @@
         <Label visible="${controller.isResultsVisible}" styleClass="popup_subtitle" text="Opponent rolled:" GridPane.rowIndex="3" GridPane.valignment="TOP" />
         <ScrollPane visible="${controller.isResultsVisible}" prefViewportHeight="95.0" prefViewportWidth="590.0" style="-fx-background-color: transparent;" vbarPolicy="NEVER" GridPane.rowIndex="3">
           <content>
-            <HBox spacing="5.0">
-              <children>
-                <ImageView fitHeight="50.0" preserveRatio="true">
-                  <image>
-                    <Image url="@resources/die_4.png" />
-                  </image>
-                </ImageView>
-                <ImageView fitHeight="50.0" layoutX="10.0" layoutY="10.0" preserveRatio="true">
-                  <image>
-                    <Image url="@resources/die_5.png" />
-                  </image>
-                </ImageView>
-              </children>
-            </HBox>
+            <HBox fx:id="enemyDiceHBox" spacing="5.0"/>
           </content>
           <GridPane.margin>
             <Insets top="25.0" />

@@ -34,6 +34,7 @@ public class GUIPlayer implements IPlayer {
     public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
+        playerController.setup(player, board);
     }
 
     public void nextMove(String move){
@@ -43,22 +44,19 @@ public class GUIPlayer implements IPlayer {
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
         GameController.console.write(message);
+        System.out.print(message);
         MapControl mapController = gameController.mapControl;
 
         int number = board.getNumTerritories();
         for(int i = 0 ; i < number ; i++){
-            int armies = board.getArmies(i);
             int owner = board.getOwner(i);
-            String name = board.getName(i);
-            if (owner >= 0)
-                mapController.setArmies(owner+1,armies,mapController.getTerritoryByName(name));
+            if (owner >= 0) {
+                int armies = board.getArmies(i);
+                String name = board.getName(i);
+                mapController.setArmies(owner + 1, armies, mapController.getTerritoryByName(name));
+            }
         }
 
-        try {
-            sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void getMove(Move move){

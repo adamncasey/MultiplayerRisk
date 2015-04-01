@@ -87,9 +87,9 @@ public class GameController implements Initializable {
 			System.out.println(name);
 		}
 
-		System.out.print("setting up game");
+		System.out.println("Setting up game...");
 		game.setupGame();
-		System.out.print("playing game");
+		System.out.println("Playing game...");
 		game.playGame();
 	}
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
-
 import ui.game.GameConsole;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -30,6 +30,8 @@ public class MapControl extends Pane {
 	public void setPlayer(GUIPlayer player) {
 		this.player = player;
 	}
+
+	HashMap<String, GUITerritory> nameIndex = new HashMap<>();
 
 	GUIPlayer player;
 
@@ -97,11 +99,7 @@ public class MapControl extends Pane {
 	}
 
 	public GUITerritory getTerritoryByName(String name) {
-		for (GUITerritory territory : highlighted_all) {
-			if (territory.getName().equals(name))
-				return territory;
-		}
-		return null;
+		return nameIndex.get(name);
 	}
 
 	private String generateRandomID() {
@@ -143,6 +141,7 @@ public class MapControl extends Pane {
 		for (final GUITerritory territory : highlighted_all) {
 
 			territory.setPlayer(player);
+			nameIndex.put(territory.getName(), territory);
 
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
 					new EventHandler<MouseEvent>() {
@@ -187,6 +186,9 @@ public class MapControl extends Pane {
 
 	public void setArmies(int playerID, int number, GUITerritory territory) {
 
+		if(territory == null)
+			return;
+
 		removeArmy(territory);
 
 		Image infantryImage = new Image(getClass().getResourceAsStream(
@@ -204,9 +206,6 @@ public class MapControl extends Pane {
 
 		double x = territory.getImage().getLayoutX() + sizex / 2;
 		double y = territory.getImage().getLayoutY() + sizey / 2;
-
-		console.write(territory.getImage().getId() + " " + x + " " + y + " "
-				+ sizex + " " + sizey);
 
 		// if (armyMode == ArmyMode.ADD) {
 		if (true) {
@@ -235,7 +234,6 @@ public class MapControl extends Pane {
 			army.setGraphicTextGap(labelOffset);
 			
 			army.setContentDisplay(ContentDisplay.TOP);
-			System.out.println(army.getGraphicTextGap());
 			army.setMouseTransparent(true);
 			
 
@@ -252,6 +250,10 @@ public class MapControl extends Pane {
 	}
 
 	public void removeArmy(GUITerritory territory) {
+
+		if(territory == null)
+			return;
+
 		if (territory.getArmyID() == null) {
 			return;
 		}

@@ -66,6 +66,7 @@ public class Game {
             armiesToPlace--;
             currentPlayer = ++currentPlayer % numPlayers;
         }
+        System.out.println();
         updatePlayers(new Move(-1, SETUP_END));
     }
 

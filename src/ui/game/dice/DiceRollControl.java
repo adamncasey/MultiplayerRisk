@@ -17,10 +17,15 @@ public class DiceRollControl extends BorderPane {
 	Label title;
 	@FXML
 	ChoiceBox<Integer> userDiceChoiceBox;
+	
+	// Results Properties
 	@FXML
 	HBox userDiceHBox;
 	@FXML
 	HBox enemyDiceHBox;
+	
+	@FXML
+	Label winnerName;
 
 	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
 	public boolean getIsResultsVisible() {
@@ -103,6 +108,8 @@ public class DiceRollControl extends BorderPane {
 		for(int defendDie : results.defendingDice) {
 			defenderHBox.getChildren().add(getDie(defendDie));
 		}
+		
+		//winnerName.setText("");
 	}
 	
 	public ImageView getDie(int number) {
@@ -132,6 +139,8 @@ public class DiceRollControl extends BorderPane {
 		userDiceChoiceBox.getSelectionModel().selectFirst();
 		userDiceHBox.getChildren().clear();
 		enemyDiceHBox.getChildren().clear();
+		
+		winnerName.setText("");
 	}
 }
 

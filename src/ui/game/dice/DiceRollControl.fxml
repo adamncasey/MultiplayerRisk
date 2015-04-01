@@ -90,11 +90,11 @@
           </rowConstraints>
           <children>
             <Label text="Winner:" />
-            <Label layoutX="10.0" layoutY="13.0" text="Armies lost" GridPane.rowIndex="1" />
+            <Label text="Armies lost" GridPane.rowIndex="1" />
             <Label text="Enemy armies lost:" GridPane.rowIndex="2" />
-            <Label text="winner" GridPane.columnIndex="1" />
-            <Label text="armies_lost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="enemy_armies_lost" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="winnerName" GridPane.columnIndex="1" />
+            <Label fx:id="userArmiesLost" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="enemyArmiesLost" GridPane.columnIndex="1" GridPane.rowIndex="2" />
           </children>
           <GridPane.margin>
             <Insets left="170.0" />

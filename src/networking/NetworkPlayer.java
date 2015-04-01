@@ -25,6 +25,9 @@ public class NetworkPlayer implements IPlayer {
     MoveChecker moveChecker;
     Set<NetworkClient> players;
 
+    // Used to store a message which is referred to in multiple Move Stages.
+    private Message unprocessedMessage;
+
     public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
         this.localPlayerID = localPlayerID;
@@ -32,6 +35,7 @@ public class NetworkPlayer implements IPlayer {
         delegatedLocalBroadcast = broadcastLocalPlayer;
 
         players = client.router.getAllPlayers();
+        unprocessedMessage = null;
     }
 
     @Override
@@ -77,17 +81,22 @@ public class NetworkPlayer implements IPlayer {
 	public void getMove(Move move)  {
 		// Read a message from the network
         Message msg;
-        try {
-            msg = client.readMessage();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
-            throw new RuntimeException("TimeoutException unhandled");
-        } catch (ConnectionLostException e) {
-            e.printStackTrace();
-            throw new RuntimeException("ConnectionLostException unhandled");
-        } catch (ParserException e) {
-            e.printStackTrace();
-            throw new RuntimeException("ParserException unhandled");
+        if(unprocessedMessage == null) {
+            try {
+                msg = client.readMessage();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+                throw new RuntimeException("TimeoutException unhandled");
+            } catch (ConnectionLostException e) {
+                e.printStackTrace();
+                throw new RuntimeException("ConnectionLostException unhandled");
+            } catch (ParserException e) {
+                e.printStackTrace();
+                throw new RuntimeException("ParserException unhandled");
+            }
+        } else {
+            msg = unprocessedMessage;
+            unprocessedMessage = null;
         }
 
         // Apply message information to the move object
@@ -107,14 +116,18 @@ public class NetworkPlayer implements IPlayer {
             // TODO Discuss how to handle this with Nathan
             throw new RuntimeException("NetworkPlayer sent move we consider invalid.");
         }
-        response = Acknowledgement.acknowledgeMessage(msg, localPlayerID);
 
-        client.router.sendToAllPlayers(response);
-        System.out.println("Sent acknowledgement");
+        // If we finished processing that message and the message had an ackId:
+        if(unprocessedMessage == null && msg.ackId != null) {
+            response = Acknowledgement.acknowledgeMessage(msg, localPlayerID);
 
-        // receive acknowledgements from all players but us and the person who sent the message.
-        List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
-        System.out.println("Received acknowledgement from " + responses.size() + "players");
+            client.router.sendToAllPlayers(response);
+            System.out.println("Sent acknowledgement");
+
+            // receive acknowledgements from all players but us and the person who sent the message.
+            List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
+            System.out.println("Received acknowledgement from " + responses.size() + "players");
+        }
 	}
 
     @Override
@@ -156,24 +169,39 @@ public class NetworkPlayer implements IPlayer {
                 }
 
                 return new Message(Command.PLAY_CARDS, move.getUID(), payload, true);
+
             case PLACE_ARMIES:
+                // We need to save up these message until getExtraArmies == 0. Then create new Command.DEPLOY
                 break;
+
             case DECIDE_ATTACK:
+                // If no, send null ATTACK command
                 break;
             case START_ATTACK:
+                // Store from / to values
                 break;
             case CHOOSE_ATTACK_DICE:
+                // Send Command.ATTACK with from/to and numArmies.
                 break;
+
             case CHOOSE_DEFEND_DICE:
+                // Send Command.DEFNED with numArmies
                 break;
+
             case OCCUPY_TERRITORY:
+                // Send ATTACK_CAPTURE with numArmies.
                 break;
+
             case DECIDE_FORTIFY:
+                // If no, send null Command.FORTIFY.
                 break;
             case START_FORTIFY:
+                // Store from/to parameters.
                 break;
             case FORTIFY_TERRITORY:
+                // Send Command.FORTIFY with from/to and numArmies.
                 break;
+
             case END_ATTACK:
             case PLAYER_ELIMINATED:
             case CARD_DRAWN:
@@ -221,14 +249,58 @@ public class NetworkPlayer implements IPlayer {
                     move.setTerritory(deployment[0]);
                     move.setArmies(deployment[1]);
                 }
+                // If this is the first time we're being called:
+                // Parse message:
+                // Store armies to be traded in locally:
+                // continue below..
+
+                // Check that move.getExtraArmies() is the same as the total number of armies we still want to deploy.
+                // Else leave_game something's broken.
+
+                // Pick the first deployment in the list and execute it.
                 break;
             case ATTACK:
+                switch(move.getStage()) {
+                    case DECIDE_ATTACK:
+                        // Did this player decide to attack?
+                        // This message isn't entirely processed yet.
+                        unprocessedMessage = msg;
+                        break;
+                    case START_ATTACK:
+                        // Apply the from and to parameters of the attack message we received in DECIDE_ATTACK
+                        // This message still isn't entirely processed yet.
+                        unprocessedMessage = msg;
+                        break;
+                    case CHOOSE_ATTACK_DICE:
+                        // Apply the numArmies paramter of the attack message received in DECIDE_ATTACK
+                        break;
+                }
                 break;
             case DEFEND:
+                // Apply num armies parameter
                 break;
             case ATTACK_CAPTURE:
+                // apply numarmies from attack_capture.
                 break;
             case FORTIFY:
+                switch(move.getStage()) {
+                    case DECIDE_FORTIFY:
+                        // Is this player fortifying?
+
+                        // This message isn't entirely processed yet.
+                        unprocessedMessage = msg;
+                        break;
+                    case START_FORTIFY:
+                        // Apply the from and to parameters of the fortify message received in DECIDE_FORTIFY
+
+                        // This message still isn't entirely processed yet.
+                        unprocessedMessage = msg;
+                        break;
+                    case FORTIFY_TERRITORY:
+                        // Apply the num armies parameters of the fortify message we recived back in DECIDE_FORTIFY.
+                        break;
+                }
+
                 break;
 
             case JOIN_GAME:

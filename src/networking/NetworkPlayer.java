@@ -3,6 +3,7 @@ package networking;
 import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.rng.RNG;
 import logic.state.Board;
 import logic.state.Player;
 import networking.message.Acknowledgement;
@@ -136,7 +137,6 @@ public class NetworkPlayer implements IPlayer {
     @Override
     public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
         this.moveChecker = checker;
-        this.localPlayerHandler = localPlayerHandler;
     }
 
     @Override
@@ -204,9 +204,6 @@ public class NetworkPlayer implements IPlayer {
                 break;
             case FORTIFY_TERRITORY:
                 // Send Command.FORTIFY with from/to and numArmies.
-                break;
-            case ROLL_HASH:
-                localPlayerHandler.getRollHash(move);
                 break;
             case END_ATTACK:
             case PLAYER_ELIMINATED:
@@ -320,7 +317,6 @@ public class NetworkPlayer implements IPlayer {
             case DICE_ROLL:
             case DICE_HASH:
             case DICE_ROLL_NUM:
-                break;
             case KILL_GAME:
                 // TODO End the game.
                 break;

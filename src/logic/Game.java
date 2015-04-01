@@ -156,6 +156,8 @@ public class Game implements Runnable{
             int attackingDice = move.getAttackDice();
             updatePlayers(move);
 
+            List<Integer> attackDiceRolls = performDiceRolls(attackingDice);
+
             int defendingDice = 1;
             int enemyUID = state.getBoard().getOwner(attackTo);
             checkDisconnect(enemyUID);
@@ -166,19 +168,7 @@ public class Game implements Runnable{
             defendingDice = move.getDefendDice();
             updatePlayers(move);
 
-            List<Int256> int256s = new ArrayList<Int256>();
-            for(int i = 0; i != numPlayers; ++i){
-                if(isActive(i)){
-                    move = new Move(i, ROLL_HASH);
-                    getMove(move);
-                    int256s.add(move.getRollHash());
-                    updatePlayers(move);
-                }
-            }
-
-            List<Integer> diceRolls = RNG.getDiceRolls(int256s, attackingDice + defendingDice, 6);
-            List<Integer> attackDiceRolls = diceRolls.subList(0, attackingDice);
-            List<Integer> defendDiceRolls = diceRolls.subList(attackingDice, diceRolls.size());
+            List<Integer> defendDiceRolls = performDiceRolls(defendingDice);
  
             List<Integer> attackResult = state.decideAttackResult(attackDiceRolls, defendDiceRolls);
             state.placeArmies(attackFrom, -attackResult.get(0));
@@ -323,5 +313,39 @@ public class Game implements Runnable{
         if(state.getPlayer(uid).isDisconnected() && !state.getPlayer(uid).isEliminated()){
             state.disconnectPlayer(uid);
         }
+    }
+
+    public List<Integer> performDiceRolls(int numDice){
+        List<RNG> rngs = new ArrayList<RNG>();
+        for(int i = 0; i != numPlayers; ++i){
+            rngs.add(new RNG());
+        }
+
+        List<Int256> rollHashes = new ArrayList<Int256>();
+        for(int i = 0; i != numPlayers; ++i){
+            if(isActive(i)){
+                Move move = new Move(i, ROLL_HASH);
+                move.setRNG(rngs.get(i));
+                getMove(move);
+                rollHashes.add(move.getRollHash());
+                updatePlayers(move);
+            }else{
+                rollHashes.add(null);
+            }
+        }
+
+        List<Int256> rollNumbers = new ArrayList<Int256>();
+        for(int i = 0; i != numPlayers; ++i){
+            if(isActive(i)){
+                Move move = new Move(i, ROLL_NUMBER);
+                move.setRNG(rngs.get(i));
+                move.setRollHash(rollHashes.get(i));
+                getMove(move);
+                rollNumbers.add(move.getRollNumber());
+                updatePlayers(move);
+            }
+        }
+
+        return RNG.getDiceRolls(rollNumbers, numDice);
     }
 }

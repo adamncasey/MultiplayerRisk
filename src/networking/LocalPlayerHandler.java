@@ -2,6 +2,7 @@ package networking;
 
 import logic.move.Move;
 import logic.rng.Int256;
+import logic.rng.RNG;
 
 public class LocalPlayerHandler {
 
@@ -13,7 +14,12 @@ public class LocalPlayerHandler {
 
     }
 
-    public void getRollHash(Move move){
-        move.setRollHash(new Int256());
+    public void handleRoll(Move move){
+        if(move.getStage() == Move.Stage.ROLL_HASH){
+             move.setRollHash(move.getRNG().getHash());
+        }
+        if(move.getStage() == Move.Stage.ROLL_NUMBER){
+             move.setRollNumber(move.getRNG().getNumber());
+        }
     }
 }

@@ -1,4 +1,6 @@
 Logic:
+  Add unit tests / MoveChecker stuff ROLL_HASH and ROLL_NUMBER
+
   Implement generation of Int256()
 
   Do the xor stuff with Int256s in logic.rng.RNG

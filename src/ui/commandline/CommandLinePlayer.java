@@ -53,8 +53,8 @@ public class CommandLinePlayer implements IPlayer {
     }
 
     public void getMove(Move move){
-        if(move.getStage() == Move.Stage.ROLL_HASH){
-            handler.getRollHash(move);
+        if(move.getStage() == Move.Stage.ROLL_HASH || move.getStage() == Move.Stage.ROLL_NUMBER){
+            handler.handleRoll(move);
         }else{
             controller.getMove(move);
         }

@@ -53,6 +53,10 @@ public class MoveChecker {
                 int defendingDice = move.getDefendDice();
                 int defendingTo = move.getTo();
                 return checkDefendingDice(defendingDice, defendingTo);
+            case ROLL_HASH:
+                return true;
+            case ROLL_NUMBER:
+                return true;
             case OCCUPY_TERRITORY:
                 int occupyArmies = move.getArmies();
                 int occupyDice = move.getAttackDice();
@@ -68,8 +72,6 @@ public class MoveChecker {
                 int fortifyArmies = move.getArmies();
                 int fortifyCurrentArmies = move.getCurrentArmies();
                 return checkFortifyArmies(fortifyArmies, fortifyCurrentArmies);
-            case ROLL_HASH:
-                return true;
             default:
                 return false;
         }

@@ -1,6 +1,7 @@
 package ui.game.dice;
 
 import java.io.IOException;
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
@@ -13,6 +14,17 @@ public class DiceRollControl extends BorderPane {
 	public Label title;
 	@FXML
 	ChoiceBox<Integer> userDiceChoiceBox;
+
+	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
+	public boolean getIsResultsVisible() {
+		return isResultsVisible.get();
+	}
+	public void setIsResultsVisible(boolean value) {
+		isResultsVisible.set(value);
+	}
+	public final BooleanProperty isResultsVisibleProperty() {
+		return isResultsVisible;
+	}
 
 	public DiceRollControl() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -42,6 +54,8 @@ public class DiceRollControl extends BorderPane {
 		} else {
 			defendHandler.onReadyToRoll(selectedNumberOfDice);
 		}
+
+		setIsResultsVisible(true);
 	}
 
 	// ================================================================================
@@ -52,8 +66,7 @@ public class DiceRollControl extends BorderPane {
 
 	public void initialiseAttack(String defendingPlayerName,
 			AttackingDiceRollControlEventHandler attackHandler) {
-		title.setText(String.format("Attacking %s!",
-				defendingPlayerName));
+		title.setText(String.format("Attacking %s!", defendingPlayerName));
 		this.attackHandler = attackHandler;
 		this.mode = Mode.ATTACKING;
 	}
@@ -67,19 +80,17 @@ public class DiceRollControl extends BorderPane {
 	public void initialiseDefend(String attackingPlayerName,
 			int numberOfAttackingDice,
 			DefendingDiceRollControlEventHandler defendHandler) {
-		title.setText(String.format("Attacked by %s!",
-				attackingPlayerName));
+		title.setText(String.format("Attacked by %s!", attackingPlayerName));
 		this.defendHandler = defendHandler;
 		this.mode = Mode.DEFENDING;
 	}
-
 
 	// ================================================================================
 	// Utils
 	// ================================================================================
 
 	public void visualiseResults(DiceRollResult results) {
-		
+
 	}
 
 	public void reset() {

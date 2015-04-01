@@ -1,7 +1,13 @@
-package logic;
+package logic.rng;
 
 public class Int256 {
     public final int[] value;
+
+// REMOVE LATER
+    public Int256(){
+        value = null;
+    }
+//
 
     public Int256(int[] value) {
         if(value.length != 8) {

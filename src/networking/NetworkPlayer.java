@@ -25,6 +25,9 @@ public class NetworkPlayer implements IPlayer {
     MoveChecker moveChecker;
     Set<NetworkClient> players;
 
+    private LocalPlayerHandler localPlayerHandler;
+
+
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
 
@@ -131,8 +134,9 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker) {
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
         this.moveChecker = checker;
+        this.localPlayerHandler = localPlayerHandler;
     }
 
     @Override
@@ -201,7 +205,9 @@ public class NetworkPlayer implements IPlayer {
             case FORTIFY_TERRITORY:
                 // Send Command.FORTIFY with from/to and numArmies.
                 break;
-
+            case ROLL_HASH:
+                localPlayerHandler.getRollHash(move);
+                break;
             case END_ATTACK:
             case PLAYER_ELIMINATED:
             case CARD_DRAWN:

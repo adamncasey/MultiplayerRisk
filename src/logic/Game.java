@@ -5,8 +5,11 @@ import java.util.List;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.rng.Int256;
+import logic.rng.RNG;
 import logic.state.GameState;
 import player.IPlayer;
+import networking.LocalPlayerHandler;
 import settings.Settings;
 
 import static logic.move.Move.Stage.*;
@@ -28,14 +31,16 @@ public class Game implements Runnable{
     }
 
     public Game(List<IPlayer> playerInterfaces, List<String> names, int seed){
+
+    public Game(List<IPlayer> playerInterfaces, List<String> names, LocalPlayerHandler handler){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();
 
-        this.state = new GameState(numPlayers, names, seed);
+        this.state = new GameState(numPlayers, names);
         this.checker = new MoveChecker(state);
 
         for(int i = 0; i != this.numPlayers; ++i){
-            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getNames(), state.getBoard(), this.checker);
+            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getNames(), state.getBoard(), this.checker, handler);
         }
     }
 
@@ -153,7 +158,6 @@ public class Game implements Runnable{
             int attackingDice = move.getAttackDice();
             updatePlayers(move);
 
-
             int defendingDice = 1;
             int enemyUID = state.getBoard().getOwner(attackTo);
             checkDisconnect(enemyUID);
@@ -163,9 +167,21 @@ public class Game implements Runnable{
             getMove(move);
             defendingDice = move.getDefendDice();
             updatePlayers(move);
+
+            List<Int256> int256s = new ArrayList<Int256>();
+            for(int i = 0; i != numPlayers; ++i){
+                if(isActive(i)){
+                    move = new Move(i, ROLL_HASH);
+                    getMove(move);
+                    int256s.add(move.getRollHash());
+                    updatePlayers(move);
+                }
+            }
+
+            List<Integer> diceRolls = RNG.getDiceRolls(int256s, attackingDice + defendingDice, 6);
+            List<Integer> attackDiceRolls = diceRolls.subList(0, attackingDice);
+            List<Integer> defendDiceRolls = diceRolls.subList(attackingDice, diceRolls.size());
  
-            List<Integer> attackDiceRolls = state.rollDice(attackingDice);
-            List<Integer> defendDiceRolls = state.rollDice(defendingDice);
             List<Integer> attackResult = state.decideAttackResult(attackDiceRolls, defendDiceRolls);
             state.placeArmies(attackFrom, -attackResult.get(0));
             state.placeArmies(attackTo, -attackResult.get(1));

@@ -77,7 +77,7 @@ public class GameStateUpdateTest{
 
     @Test
     public void setArmiesTest(){
-        GameState game = new GameState(0, new ArrayList<String>(), 0); 
+        GameState game = new GameState(0, new ArrayList<String>()); 
         int expectedValues[] = {4, 6, 8, 10, 12, 15, 20, 25};
         for(int i : expectedValues){
             assertEquals(i, game.calculateSetArmies(true));

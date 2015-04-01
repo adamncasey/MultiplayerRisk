@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import logic.Card;
+import logic.rng.Int256;
 import logic.state.Board;
 
 public class Move {
@@ -14,7 +15,7 @@ public class Move {
         // Moves - Stages that IPlayers have to react to
         CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
         DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, OCCUPY_TERRITORY,
-        DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
+        DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY, ROLL_HASH,
         // Events - Stages used by Game (IPlayers are only updated with these)
         END_ATTACK, PLAYER_ELIMINATED, CARD_DRAWN,
         SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
@@ -221,6 +222,18 @@ public class Move {
         return this.defendDiceRolls;
     }
 
+    // ROLL_HASH
+    private Int256 rollHash = null;
+    public void setRollHash(Int256 int256){
+        checkStage(Stage.ROLL_HASH);
+        checkPermissions();
+        this.rollHash = int256;
+    }
+    public Int256 getRollHash(){
+        checkStage(Stage.ROLL_HASH);
+        return this.rollHash;
+    }
+
     // SETUP_BEGIN, PLAYER_ELIMINATED, GAME_END
     private int player = -1;
     public void setPlayer(int player){
@@ -368,6 +381,9 @@ public class Move {
                 int numFortifyArmies = move.getArmies();
                 message = String.format("%s has fortified with %d armies.\n", name, numFortifyArmies);
                 return message;
+            case ROLL_HASH:
+                message = String.format("%s has contributed towards the dice roll.\n", name);
+                return message;
             case END_ATTACK:
                 int attackerLosses = move.getAttackerLosses();
                 int defenderLosses = move.getDefenderLosses();
@@ -452,6 +468,9 @@ public class Move {
             case FORTIFY_TERRITORY:
                 message = String.format("%s is deciding how many armies to fortify with.", name);
                 break;
+            case ROLL_HASH:
+                message = String.format("%s is contributing towards the dice roll.", name);
+                break;
             default:
                 break;
         }
@@ -485,6 +504,8 @@ public class Move {
                 return "START_FORTIFY";
             case FORTIFY_TERRITORY:
                 return "FORTIFY_TERRITORY";
+            case ROLL_HASH:
+                return "ROLL_HASH";
             case END_ATTACK:
                 return "END_ATTACK";
             case PLAYER_ELIMINATED:

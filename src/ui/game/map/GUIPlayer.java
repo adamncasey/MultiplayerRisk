@@ -12,6 +12,7 @@ import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
+import networking.LocalPlayerHandler;
 import ui.game.GameController;
 import ui.game.Main;
 import javafx.stage.Stage;
@@ -27,15 +28,18 @@ public class GUIPlayer implements IPlayer {
     private Board board;
     private Player player;
 
+    private LocalPlayerHandler handler;
+
     public GUIPlayer(GameController gameController, PlayerController playerController){
         this.playerController = playerController;
         this.gameController = gameController;
     }
 
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker){
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
         this.board = board;
         this.player = player;
         playerController.setup(player, board);
+        this.handler = handler;
     }
 
     public void nextMove(String move){
@@ -59,10 +63,23 @@ public class GUIPlayer implements IPlayer {
             }
         }
 
+        if(move.getUID() == player.getUID()){
+            handler.sendMove(move);
+        }
+
+        try {
+            sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void getMove(Move move){
-    	playerController.getMove(move); 
+        if(move.getStage() == Move.Stage.ROLL_HASH){
+            handler.getRollHash(move);
+        }else{
+    	    playerController.getMove(move);
+        }
     }
 }
 

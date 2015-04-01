@@ -11,6 +11,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import logic.Game;
 import player.IPlayer;
+import networking.LocalPlayerHandler;
+import ui.Main;
+import ui.commandline.CommandLinePlayer;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -86,6 +89,13 @@ public class GameController implements Initializable {
 				return 0;
 			}
 		};
+
+		Game game = new Game(players, names, new LocalPlayerHandler());
+
+		System.out.println("Players: ");
+		for(String name : names) {
+			System.out.println(name);
+		}
 
 		Thread th = new Thread(task);
 		th.setDaemon(true);

@@ -1,29 +1,17 @@
 Logic:
-  RC4 dice roll stream (Dice rolls all done server side, don't get dice rolls from user) (in protocol, need more info)
+  Implement generation of Int256()
 
-  Abstract the randomness, (put all randomness into classes with its own interface/implementation)
-
-  Create logging system
+  Do the xor stuff with Int256s in logic.rng.RNG
 
   Add a timeout feature to stop AIs from taking too long
-
-  Add DICEROll stage for each move that returns 256 bit int
-
-  Each IPlayer implementation should call a method from some networking somewhere
-
-  logic creates new RNG(256bitint)
-  rng.getDiceRolls(5);
 
   Trade in cards positioning might have to be changed
 
   When should threads exit
 
-Things:
-  Decided how threading will work between UI / Lobby / Logic / Network
-  Decided how card shuffling will work
-  Decided how dice rolls will work
-  Talk about Lobby -> Map UI integration
-  How to send messages on behalf of local player
+
+
+
 
 
 Adam:

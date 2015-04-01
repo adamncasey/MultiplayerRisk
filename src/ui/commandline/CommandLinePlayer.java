@@ -10,6 +10,7 @@ import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
+import networking.LocalPlayerHandler;
 
 /**
  * CommandLinePlayer --- A player that outputs everything that happens to the console (So we can spectate AI vs AI games / play on the command line)
@@ -22,16 +23,19 @@ public class CommandLinePlayer implements IPlayer {
     private Player player;
     private Board board;
 
+    private LocalPlayerHandler handler;
+
     public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer){
         this.controller = controller;
         this.reader = reader;
         this.writer = writer;
     }
 
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker){
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
        this.player = player;
        this.board = board;
        this.controller.setup(player, board);
+       this.handler = handler;
     }
 
     public void nextMove(String move){
@@ -43,10 +47,17 @@ public class CommandLinePlayer implements IPlayer {
         String message = Move.describeMove(move, board);
         writer.print(message);
         writer.flush();
+        if(move.getUID() == player.getUID()){
+            handler.sendMove(move);
+        }
     }
 
     public void getMove(Move move){
-        controller.getMove(move); 
+        if(move.getStage() == Move.Stage.ROLL_HASH){
+            handler.getRollHash(move);
+        }else{
+            controller.getMove(move);
+        }
     }
 }
 

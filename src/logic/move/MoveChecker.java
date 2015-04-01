@@ -68,6 +68,8 @@ public class MoveChecker {
                 int fortifyArmies = move.getArmies();
                 int fortifyCurrentArmies = move.getCurrentArmies();
                 return checkFortifyArmies(fortifyArmies, fortifyCurrentArmies);
+            case ROLL_HASH:
+                return true;
             default:
                 return false;
         }

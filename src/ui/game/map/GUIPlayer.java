@@ -21,39 +21,29 @@ import static java.lang.Thread.sleep;
  * GUIPlayer
  */
 public class GUIPlayer implements IPlayer {
-    private PlayerController controller;
-
-    private Main gui;
-    GameController guiController;
-
+    private PlayerController playerController;
+    private GameController gameController;
     private Board board;
     private Player player;
 
-    public GUIPlayer(PlayerController controller){
-        this.controller = controller;
+    public GUIPlayer(GameController gameController, PlayerController playerController){
+        this.playerController = playerController;
+        this.gameController = gameController;
     }
 
     public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
-        gui = new Main().getSelf();
-
-        gui.launch(gui.getClass());
-
-        FXMLLoader loader = gui.getLoader();
-        guiController = (GameController) loader.getController();
-
-        guiController.setGUIPlayer(this);
     }
 
     public void nextMove(String move){
-        guiController.console.write(move);
+        GameController.console.write(move);
     }
 
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
-        guiController.console.write(message);
-        MapControl mapController = guiController.mapControl;
+        GameController.console.write(message);
+        MapControl mapController = gameController.mapControl;
 
         int number = board.getNumTerritories();
         for(int i = 0 ; i < number ; i++){
@@ -72,7 +62,7 @@ public class GUIPlayer implements IPlayer {
     }
 
     public void getMove(Move move){
-        controller.getMove(move); 
+    	playerController.getMove(move); 
     }
 }
 

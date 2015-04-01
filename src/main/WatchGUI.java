@@ -61,7 +61,7 @@ public class WatchGUI {
         }
 
         GameController controller = new GameController();
-        controller.setApp(players,null,null,user);
+        controller.setApp(players,null,null);
 
         /*
         Game game = new Game(players, names, seed);

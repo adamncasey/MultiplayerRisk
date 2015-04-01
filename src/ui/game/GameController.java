@@ -57,11 +57,10 @@ public class GameController implements Initializable {
 	List<IPlayer> playersBefore;
 	List<IPlayer> playersAfter;
 	List<Object> cards;
-	public static GUIPlayer player;
+	
+	public GUIPlayer player;
 
-	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards, GUIPlayer guiPlayer) {
-
-		this.player = guiPlayer;
+	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
 
 		if(playersBefore == null && playersAfter == null) {
 			System.out.println("Error setting up game.");
@@ -71,7 +70,11 @@ public class GameController implements Initializable {
 
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
-		players.add(guiPlayer);
+		
+		Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+        this.player = new GUIPlayer(this, userAgent);
+        
+		players.add(player);
 
 		if(playersAfter != null)
 			players.addAll(playersAfter);

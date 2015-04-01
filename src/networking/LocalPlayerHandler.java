@@ -16,10 +16,10 @@ public class LocalPlayerHandler {
 
     public void handleRoll(Move move){
         if(move.getStage() == Move.Stage.ROLL_HASH){
-             move.setRollHash(move.getRNG().getHash());
+             move.setRollHash(move.getRNG().hash);
         }
         if(move.getStage() == Move.Stage.ROLL_NUMBER){
-             move.setRollNumber(move.getRNG().getNumber());
+             move.setRollNumber(move.getRNG().number);
         }
     }
 }

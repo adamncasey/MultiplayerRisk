@@ -5,24 +5,15 @@ import java.util.List;
 import java.util.Random;
 
 public class RNG {
+    private static Random random = new Random();
 
-    private static Random random = new Random(0);
+    public final Int256 hash;
+    public final Int256 number;
 
-    private final Int256 hash;
-    private final Int256 number;
-
-    public RNG(){
-        this.number = new Int256();
-        this.hash = new Int256();
+    public RNG() {
+        this.number = Int256.fromRandom();
+        this.hash = Int256.fromHash(number);
     };
-
-    public Int256 getHash(){
-        return hash;
-    }
-
-    public Int256 getNumber(){
-        return number;
-    }
 
     public static List<Integer> getDiceRolls(List<Int256> seedValues, int numRolls){
 //TEMP

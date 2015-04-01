@@ -36,16 +36,13 @@ public class GUIPlayer implements IPlayer {
     public void setup(Player player, List<String> names, Board board, MoveChecker checker){
         this.board = board;
         this.player = player;
-        System.out.println("1");
         gui = new Main().getSelf();
-        System.out.println("2");
 
         gui.launch(gui.getClass());
 
         FXMLLoader loader = gui.getLoader();
-        System.out.println("3");
         guiController = (GameController) loader.getController();
-        System.out.println("4");
+
         guiController.setGUIPlayer(this);
     }
 

@@ -7,6 +7,7 @@ import ai.agents.Agent;
 import logic.Game;
 import player.IPlayer;
 import ui.commandline.CommandLinePlayer;
+import ui.game.GameController;
 import ui.game.map.GUIPlayer;
 
 import java.io.PrintWriter;
@@ -58,10 +59,16 @@ public class WatchGUI {
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));
         }
+
+        GameController controller = new GameController();
+        controller.setApp(players,null,null,user);
+
+        /*
         Game game = new Game(players, names, seed);
 
         game.setupGame();
         game.playGame();
+        */
 
         String nameSummary = "Players were ";
         for(String s : names){

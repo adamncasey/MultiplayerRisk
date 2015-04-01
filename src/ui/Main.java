@@ -104,7 +104,7 @@ public class Main extends Application {
         	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
         	
         	stage.setResizable(true);
-        	game.setApp(this, playersBefore, playersAfter, cards);
+        	game.setApp(playersBefore, playersAfter, cards, null);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

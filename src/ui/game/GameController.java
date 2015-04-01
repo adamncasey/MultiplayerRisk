@@ -1,28 +1,16 @@
 package ui.game;
 
-import ai.AgentFactory;
-import ai.AgentTypes;
-import ai.agents.Agent;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-
-import java.io.PrintWriter;
-import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
-
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import logic.Game;
 import player.IPlayer;
-import ui.Main;
-import ui.commandline.CommandLinePlayer;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -30,6 +18,12 @@ import ui.game.dice.DiceRollResult;
 import ui.game.map.GUIPlayer;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
+
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameController implements Initializable {
 
@@ -80,17 +74,22 @@ public class GameController implements Initializable {
 
 		List<String> names = namePlayers(playersBefore, playersAfter);
 
-		Game game = new Game(players, names, ThreadLocalRandom.current().nextInt());
+		Task<Integer> task = new Task<Integer>() {
+			@Override protected Integer call() throws Exception {
+				Game game = new Game(players, names, ThreadLocalRandom.current().nextInt());
+				game.run();
+				/*System.out.println("Setting up game...");
+				game.setupGame();
+				System.out.println("Playing game...");
+				game.playGame();
+				*/
+				return 0;
+			}
+		};
 
-		System.out.println("Players: ");
-		for(String name : names) {
-			System.out.println(name);
-		}
-
-		System.out.println("Setting up game...");
-		game.setupGame();
-		System.out.println("Playing game...");
-		game.playGame();
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 
 	/**

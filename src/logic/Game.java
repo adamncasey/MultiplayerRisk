@@ -14,13 +14,18 @@ import static logic.move.Move.Stage.*;
 /**
  * Game --- The main game loop that lets each player take their turn, updating every player whenever anything happens.
  */
-public class Game {
+public class Game implements Runnable{
 
     private List<IPlayer> playerInterfaces;
     private int numPlayers = 0;
 
     private GameState state;
     private MoveChecker checker;
+
+    public void run(){
+        this.setupGame();
+        this.playGame();
+    }
 
     public Game(List<IPlayer> playerInterfaces, List<String> names, int seed){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);

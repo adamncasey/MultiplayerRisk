@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import logic.move.Move;
 import logic.move.MoveChecker;
@@ -43,8 +44,9 @@ public class GUIPlayer implements IPlayer {
 
     public void updatePlayer(Move move){
         String message = Move.describeMove(move, board);
-        GameController.console.write(message);
         System.out.print(message);
+
+        GameController.console.write(message);
         MapControl mapController = gameController.mapControl;
 
         int number = board.getNumTerritories();

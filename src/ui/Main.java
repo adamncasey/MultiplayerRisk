@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import ai.AgentFactory;
+import ai.AgentTypes;
+import ai.agents.Agent;
 import player.IPlayer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +19,7 @@ import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
 import ui.game.GameController;
+import ui.game.map.GUIPlayer;
 import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 
@@ -104,7 +108,24 @@ public class Main extends Application {
         	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
         	
         	stage.setResizable(true);
-        	game.setApp(playersBefore, playersAfter, cards);
+        	Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+        	GUIPlayer player = new GUIPlayer(game, userAgent);
+        	game.setApp(playersBefore, playersAfter, cards, player);
+        } catch (Exception ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void goToGameTest(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+        try {
+        	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
+        	stage.setResizable(true);
+        	
+    		Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+            GUIPlayer player = new GUIPlayer(game, userAgent);
+        	
+        	game.setApp(playersBefore, playersAfter, cards, player);
+        
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }

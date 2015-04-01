@@ -30,8 +30,6 @@ public class Game implements Runnable{
         this.playGame();
     }
 
-    public Game(List<IPlayer> playerInterfaces, List<String> names, int seed){
-
     public Game(List<IPlayer> playerInterfaces, List<String> names, LocalPlayerHandler handler){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();

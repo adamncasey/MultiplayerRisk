@@ -79,7 +79,7 @@ public class GameController implements Initializable {
 
 		Task<Integer> task = new Task<Integer>() {
 			@Override protected Integer call() throws Exception {
-				Game game = new Game(players, names, ThreadLocalRandom.current().nextInt());
+				Game game = new Game(players, names, new LocalPlayerHandler());
 				game.run();
 				/*System.out.println("Setting up game...");
 				game.setupGame();
@@ -89,8 +89,6 @@ public class GameController implements Initializable {
 				return 0;
 			}
 		};
-
-		Game game = new Game(players, names, new LocalPlayerHandler());
 
 		System.out.println("Players: ");
 		for(String name : names) {

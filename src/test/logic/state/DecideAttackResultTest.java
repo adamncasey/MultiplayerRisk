@@ -14,7 +14,7 @@ public class DecideAttackResultTest{
 
     @Before
     public void setupGame(){
-        this.game = new GameState(0, new ArrayList<String>(), 0); 
+        this.game = new GameState(0, new ArrayList<String>()); 
     }
 
     @Test

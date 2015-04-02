@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import logic.Card;
+import logic.rng.Int256;
+import logic.rng.RNG;
 import logic.state.Board;
 
 public class Move {
@@ -13,8 +15,9 @@ public class Move {
     public enum Stage {
         // Moves - Stages that IPlayers have to react to
         CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
-        DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, OCCUPY_TERRITORY,
-        DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
+        DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, ROLL_HASH, ROLL_NUMBER,
+        OCCUPY_TERRITORY, DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
+        // Dice Roll Stuff
         // Events - Stages used by Game (IPlayers are only updated with these)
         END_ATTACK, PLAYER_ELIMINATED, CARD_DRAWN,
         SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
@@ -171,6 +174,42 @@ public class Move {
     public int getDefendDice(){
         checkStage(Stage.CHOOSE_DEFEND_DICE);
         return this.defendDice;
+    }
+
+    // ROLL_HASH, ROLL_NUMBER
+    private RNG rng = null;
+    public void setRNG(RNG rng){
+        checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
+        checkPermissions(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
+        this.rng = rng;
+    }
+    public RNG getRNG(){
+        checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
+        return this.rng;
+    }
+
+    // ROLL_HASH, ROLL_NUMBER
+    private Int256 rollHash = null;
+    public void setRollHash(Int256 rollHash){
+        checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
+        checkPermissions(Stage.ROLL_NUMBER);
+        this.rollHash = rollHash;
+    }
+    public Int256 getRollHash(){
+        checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
+        return this.rollHash;
+    }
+
+    // ROLL_NUMBER
+    private Int256 rollNumber = null;
+    public void setRollNumber(Int256 rollNumber){
+        checkStage(Stage.ROLL_NUMBER);
+        checkPermissions();
+        this.rollNumber = rollNumber;
+    }
+    public Int256 getRollNumber(){
+        checkStage(Stage.ROLL_NUMBER);
+        return this.rollNumber;
     }
 
     // END_ATTACK
@@ -345,6 +384,12 @@ public class Move {
                 int numDefendingDice = move.getDefendDice();
                 message = String.format("%s has chosen to defend with %d dice.\n", name, numDefendingDice);
                 return message;
+            case ROLL_HASH:
+                message = String.format("%s has sent their roll hash.\n", name);
+                return message;
+            case ROLL_NUMBER:
+                message = String.format("%s has sent their roll number.\n", name);
+                return message;
             case OCCUPY_TERRITORY:
                 int numOccupyArmies = move.getArmies();
                 message = String.format("%s was successful in their attack and has moved %d armies forward.\n", name, numOccupyArmies);
@@ -440,6 +485,12 @@ public class Move {
             case CHOOSE_DEFEND_DICE:
                 message = String.format("%s is deciding how many dice to defend with.", name);
                 break;
+            case ROLL_HASH:
+                message = String.format("%s is sending their roll hash.", name);
+                break;
+            case ROLL_NUMBER:
+                message = String.format("%s is sending their roll number.", name);
+                break;
             case OCCUPY_TERRITORY:
                 message = String.format("%s is deciding how many armies to move into the captured territory.", name);
                 break;
@@ -477,6 +528,10 @@ public class Move {
                 return "CHOOSE_ATTACK_DICE";
             case CHOOSE_DEFEND_DICE:
                 return "CHOOSE_DEFEND_DICE";
+            case ROLL_HASH:
+                return "ROLL_HASH";
+            case ROLL_NUMBER:
+                return "ROLL_NUMBER";
             case OCCUPY_TERRITORY:
                 return "OCCUPY_TERRITORY";
             case DECIDE_FORTIFY:

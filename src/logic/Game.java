@@ -5,8 +5,11 @@ import java.util.List;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.rng.Int256;
+import logic.rng.RNG;
 import logic.state.GameState;
 import player.IPlayer;
+import networking.LocalPlayerHandler;
 import settings.Settings;
 
 import static logic.move.Move.Stage.*;
@@ -14,7 +17,7 @@ import static logic.move.Move.Stage.*;
 /**
  * Game --- The main game loop that lets each player take their turn, updating every player whenever anything happens.
  */
-public class Game {
+public class Game implements Runnable{
 
     private List<IPlayer> playerInterfaces;
     private int numPlayers = 0;
@@ -22,15 +25,20 @@ public class Game {
     private GameState state;
     private MoveChecker checker;
 
-    public Game(List<IPlayer> playerInterfaces, List<String> names, int seed){
+    public void run(){
+        this.setupGame();
+        this.playGame();
+    }
+
+    public Game(List<IPlayer> playerInterfaces, List<String> names, LocalPlayerHandler handler){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();
 
-        this.state = new GameState(numPlayers, names, seed);
+        this.state = new GameState(numPlayers, names);
         this.checker = new MoveChecker(state);
 
         for(int i = 0; i != this.numPlayers; ++i){
-            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getNames(), state.getBoard(), this.checker);
+            this.playerInterfaces.get(i).setup(state.getPlayer(i), state.getNames(), state.getBoard(), this.checker, handler);
         }
     }
 
@@ -66,6 +74,7 @@ public class Game {
             armiesToPlace--;
             currentPlayer = ++currentPlayer % numPlayers;
         }
+        System.out.println();
         updatePlayers(new Move(-1, SETUP_END));
     }
 
@@ -147,6 +156,7 @@ public class Game {
             int attackingDice = move.getAttackDice();
             updatePlayers(move);
 
+            List<Integer> attackDiceRolls = performDiceRolls(attackingDice);
 
             int defendingDice = 1;
             int enemyUID = state.getBoard().getOwner(attackTo);
@@ -157,9 +167,9 @@ public class Game {
             getMove(move);
             defendingDice = move.getDefendDice();
             updatePlayers(move);
+
+            List<Integer> defendDiceRolls = performDiceRolls(defendingDice);
  
-            List<Integer> attackDiceRolls = state.rollDice(attackingDice);
-            List<Integer> defendDiceRolls = state.rollDice(defendingDice);
             List<Integer> attackResult = state.decideAttackResult(attackDiceRolls, defendDiceRolls);
             state.placeArmies(attackFrom, -attackResult.get(0));
             state.placeArmies(attackTo, -attackResult.get(1));
@@ -303,5 +313,39 @@ public class Game {
         if(state.getPlayer(uid).isDisconnected() && !state.getPlayer(uid).isEliminated()){
             state.disconnectPlayer(uid);
         }
+    }
+
+    public List<Integer> performDiceRolls(int numDice){
+        List<RNG> rngs = new ArrayList<RNG>();
+        for(int i = 0; i != numPlayers; ++i){
+            rngs.add(new RNG());
+        }
+
+        List<Int256> rollHashes = new ArrayList<Int256>();
+        for(int i = 0; i != numPlayers; ++i){
+            if(isActive(i)){
+                Move move = new Move(i, ROLL_HASH);
+                move.setRNG(rngs.get(i));
+                getMove(move);
+                rollHashes.add(move.getRollHash());
+                updatePlayers(move);
+            }else{
+                rollHashes.add(null);
+            }
+        }
+
+        List<Int256> rollNumbers = new ArrayList<Int256>();
+        for(int i = 0; i != numPlayers; ++i){
+            if(isActive(i)){
+                Move move = new Move(i, ROLL_NUMBER);
+                move.setRNG(rngs.get(i));
+                move.setRollHash(rollHashes.get(i));
+                getMove(move);
+                rollNumbers.add(move.getRollNumber());
+                updatePlayers(move);
+            }
+        }
+
+        return RNG.getDiceRolls(rollNumbers, numDice);
     }
 }

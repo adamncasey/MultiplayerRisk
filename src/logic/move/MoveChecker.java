@@ -4,6 +4,7 @@ import java.util.List;
 
 import logic.Card;
 import logic.move.Move.Stage;
+import logic.rng.Int256;
 import logic.state.Board;
 import logic.state.GameState;
 
@@ -53,6 +54,12 @@ public class MoveChecker {
                 int defendingDice = move.getDefendDice();
                 int defendingTo = move.getTo();
                 return checkDefendingDice(defendingDice, defendingTo);
+            case ROLL_HASH:
+                return true;
+            case ROLL_NUMBER:
+                Int256 number = move.getRollNumber();
+                Int256 hash = move.getRollHash();
+                return checkHash(number, hash);
             case OCCUPY_TERRITORY:
                 int occupyArmies = move.getArmies();
                 int occupyDice = move.getAttackDice();
@@ -251,5 +258,10 @@ public class MoveChecker {
 
     private boolean checkBounds(int territory){
         return (territory < 0 || territory >= board.getNumTerritories());
+    }
+
+    private boolean checkHash(Int256 number, Int256 hash){
+        Int256 newHash = Int256.fromHash(number);
+        return hash.compare(newHash);
     }
 }

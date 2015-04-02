@@ -12,6 +12,7 @@ import ai.AgentTypes;
 import ai.agents.Agent;
 import logic.Game;
 import player.IPlayer;
+import networking.LocalPlayerHandler;
 import ui.commandline.CommandLineController;
 import ui.commandline.CommandLinePlayer;
 
@@ -58,7 +59,7 @@ public class WatchCLI {
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));
         }
-        Game game = new Game(players, names, seed);
+        Game game = new Game(players, names, new LocalPlayerHandler());
 
         game.setupGame();
         game.playGame();

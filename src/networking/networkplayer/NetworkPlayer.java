@@ -3,6 +3,7 @@ package networking.networkplayer;
 import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.rng.RNG;
 import logic.state.Board;
 import logic.state.Player;
 import networking.*;
@@ -25,6 +26,9 @@ public class NetworkPlayer implements IPlayer {
     final boolean delegatedLocalBroadcast;
     MoveChecker moveChecker;
     Set<NetworkClient> players;
+
+    private LocalPlayerHandler localPlayerHandler;
+
 
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
@@ -133,7 +137,7 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker) {
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
         this.moveChecker = checker;
     }
 
@@ -415,7 +419,6 @@ public class NetworkPlayer implements IPlayer {
             case DICE_ROLL:
             case DICE_HASH:
             case DICE_ROLL_NUM:
-                break;
             case KILL_GAME:
                 // TODO End the game.
                 break;

@@ -1,17 +1,19 @@
 package ui.game;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import logic.Game;
 import player.IPlayer;
+import networking.LocalPlayerHandler;
 import ui.Main;
+import ui.commandline.CommandLinePlayer;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -19,6 +21,12 @@ import ui.game.dice.DiceRollResult;
 import ui.game.map.GUIPlayer;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
+
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameController implements Initializable {
 
@@ -43,22 +51,80 @@ public class GameController implements Initializable {
 
 	public static GameConsole console;
 
-	private Main application;
 	List<IPlayer> playersBefore;
 	List<IPlayer> playersAfter;
 	List<Object> cards;
 	
+	public GUIPlayer player;
 
-	public void setApp(Main application, List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
-		this.application = application;
-		this.playersBefore = playersBefore;
-		this.playersAfter = playersAfter;
+	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards, GUIPlayer player) {
+
+		if(playersBefore == null && playersAfter == null) {
+			System.out.println("Error setting up game.");
+			return;
+		}
+		System.out.println("Starting game");
+
+		List<IPlayer> players = new LinkedList<>();
+		players.addAll(playersBefore);
+		
+        this.player = player;
+        
+		players.add(player);
+
+		if(playersAfter != null)
+			players.addAll(playersAfter);
+
+		List<String> names = namePlayers(playersBefore, playersAfter);
+
+		Task<Integer> task = new Task<Integer>() {
+			@Override protected Integer call() throws Exception {
+				Game game = new Game(players, names, new LocalPlayerHandler());
+				game.run();
+				/*System.out.println("Setting up game...");
+				game.setupGame();
+				System.out.println("Playing game...");
+				game.playGame();
+				*/
+				return 0;
+			}
+		};
+
+		System.out.println("Players: ");
+		for(String name : names) {
+			System.out.println(name);
+		}
+
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
-	
-	public static GUIPlayer player;
+
+	/**
+	 * Temporary method. To be replaced.
+	 */
+	private static List<String> namePlayers(List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
+		int i=0;
+		List<String> names = new LinkedList<>();
+
+		if(playersBefore != null)
+			for(;i<playersBefore.size(); i++) {
+				names.add("Foreign Player " + i);
+			}
+
+		names.add("Local Player");
+
+		if(playersAfter != null)
+			for(int j=0;j<playersAfter.size(); j++, i++) {
+				names.add("Foreign Player " + i);
+			}
+
+		return names;
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		System.out.println("Initializing...");
 		GameController.console = new GameConsole(consoleTextArea);
 		this.mapControl.initialise(console, player);
 	}

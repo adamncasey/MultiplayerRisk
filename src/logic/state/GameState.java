@@ -9,8 +9,6 @@ import logic.Card;
 import logic.move.Move;
 
 public class GameState {
-    private Random random;
-
     private List<Player> players;
 
     private Board board;
@@ -26,9 +24,7 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(int numPlayers, List<String> names, int seed){
-        this.random = new Random(seed);
-
+    public GameState(int numPlayers, List<String> names){
         this.players = new ArrayList<Player>();
         this.names = new ArrayList<String>();
         for(int i = 0; i != numPlayers; ++i){
@@ -39,7 +35,7 @@ public class GameState {
         
         this.board = new Board();
         this.deck = board.getDeck();
-        this.deck.shuffle(seed);
+        this.deck.shuffle(0);
         Move.setNames(this.names);
     }
 
@@ -47,8 +43,6 @@ public class GameState {
      * Load in a GameState
      */
     public GameState(boolean testing, int numPlayers, int[] owners, int[] armies){
-        this.random = new Random(0);
-
         this.players = new ArrayList<Player>();
         for(int i = 0; i != numPlayers; ++i){
             this.players.add(new Player(i));
@@ -158,14 +152,6 @@ public class GameState {
             }
         }
         return false;
-    }
-
-    public List<Integer> rollDice(int numDice){
-        List<Integer> diceRolls = new ArrayList<Integer>();
-        for(int i = 0; i != numDice; ++i){
-            diceRolls.add(random.nextInt(6)+1);
-        }
-        return diceRolls;
     }
 
     public List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){

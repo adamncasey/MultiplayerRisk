@@ -9,6 +9,7 @@ import lobby.handler.HostLobbyEventHandler;
 import lobby.handler.JoinLobbyEventHandler;
 import logic.Game;
 import networking.LobbyClient;
+import networking.LocalPlayerHandler;
 import player.IPlayer;
 import settings.Settings;
 
@@ -77,7 +78,7 @@ public class CLIMain {
 
         List<String> names = namePlayers(playersBefore, playersAfter);
 
-        Game game = new Game(players, names, ThreadLocalRandom.current().nextInt());
+        Game game = new Game(players, names, new LocalPlayerHandler());
 
         System.out.println("Players: ");
         for(String name : names) {

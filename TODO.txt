@@ -19,7 +19,7 @@ Adam:
   Also need to handle us leaving the game when we win / lose.
 
   logic.Move stages to implement until entire game should be possible;
-            case PLACE_ARMIES:
+            Trade in cards doesn't work if the player wants to trade in cards.
             case DECIDE_ATTACK:
             case START_ATTACK:
             case CHOOSE_ATTACK_DICE:

@@ -29,7 +29,6 @@ public class NetworkPlayer implements IPlayer {
 
     private LocalPlayerHandler localPlayerHandler;
 
-
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
 
@@ -87,26 +86,30 @@ public class NetworkPlayer implements IPlayer {
 	public void getMove(Move move)  {
 		// Read a message from the network
         Message msg;
-        if(unprocessedMessage == null) {
-            try {
-                msg = client.readMessage();
-            } catch (TimeoutException e) {
-                e.printStackTrace();
-                throw new RuntimeException("TimeoutException unhandled");
-            } catch (ConnectionLostException e) {
-                e.printStackTrace();
-                throw new RuntimeException("ConnectionLostException unhandled");
-            } catch (ParserException e) {
-                e.printStackTrace();
-                throw new RuntimeException("ParserException unhandled");
+        MessageProcessResult result;
+        // Keep receiving messages until we've completed handling network for this move.
+        do {
+            if (unprocessedMessage == null) {
+                try {
+                    msg = client.readMessage();
+                } catch (TimeoutException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("TimeoutException unhandled");
+                } catch (ConnectionLostException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("ConnectionLostException unhandled");
+                } catch (ParserException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("ParserException unhandled");
+                }
+            } else {
+                msg = unprocessedMessage;
+                unprocessedMessage = null;
             }
-        } else {
-            msg = unprocessedMessage;
-            unprocessedMessage = null;
-        }
 
-        // Apply message information to the move object
-        networkMessageToGameMove(msg, move);
+            // Apply message information to the move object
+            result = networkMessageToGameMove(msg, move);
+        } while(result != MessageProcessResult.COMPLETE);
 
         // Validate move object
         boolean acceptedMove = moveChecker.checkMove(move);
@@ -239,6 +242,10 @@ public class NetworkPlayer implements IPlayer {
                 return new MoveProcessResult(new Message(Command.ATTACK_CAPTURE, move.getUID(), new IntegerPayload(numArmies), true));
             }
 
+            case CARD_DRAWN: {
+                // Send Command.DRAW_CARD
+            }
+
             case DECIDE_FORTIFY: {
                 // If no, send null Command.FORTIFY.
                 if (!move.getDecision()) {
@@ -257,9 +264,16 @@ public class NetworkPlayer implements IPlayer {
                 return new MoveProcessResult(new Message(Command.FORTIFY, move.getUID(), payload, true));
             }
 
+            case ROLL_HASH: {
+                // Send roll_hash message.
+            }
+
+            case ROLL_NUMBER: {
+                // Send roll_number message.
+            }
+
             case END_ATTACK:
             case PLAYER_ELIMINATED:
-            case CARD_DRAWN:
             case SETUP_BEGIN:
             case SETUP_END:
             case GAME_BEGIN:
@@ -270,20 +284,19 @@ public class NetworkPlayer implements IPlayer {
         }
     }
 
-    private void networkMessageToGameMove(Message msg, Move move) {
+    private MessageProcessResult networkMessageToGameMove(Message msg, Move move) {
         // Change move object
         switch(msg.command) {
-            case SETUP:
-                int territoryID = ((IntegerPayload)msg.payload).value;
+            case SETUP: {
+                int territoryID = ((IntegerPayload) msg.payload).value;
                 move.setTerritory(territoryID);
-                break;
-            case DRAW_CARD:
-                break;
+                return MessageProcessResult.COMPLETE;
+            }
             case PLAY_CARDS: {
                 // No cards traded in
                 if (msg.payload == null) {
                     move.setToTradeIn(new ArrayList<>());
-                    break;
+                    return MessageProcessResult.COMPLETE;
                 }
 
                 PlayCardsPayload cards = (PlayCardsPayload) msg.payload;
@@ -293,14 +306,15 @@ public class NetworkPlayer implements IPlayer {
                     Integer[] set = ArrayUtils.toObject(cards.cardSetsPlayed[0]);
                     // Need a way to get Card objects from IDs
                     //move.setToTradeIn(Arrays.asList(set));
+                    System.out.println("NetworkPlayer wanted to trade in cards but NetworkPlayer doesn't support this yet.");
                 }
-                break;
+                return MessageProcessResult.COMPLETE;
             }
             case DEPLOY: {
                 DeployPayload payload = (DeployPayload) msg.payload;
 
                 // TODO Check that move.getExtraArmies() is the same as the total number of armies we still want to deploy.
-                // Else leave_game something's broken.
+                // TODO Else leave_game something's broken.
 
                 // Get first deployment.
                 if (payload.deployments.length < 1) {
@@ -327,7 +341,7 @@ public class NetworkPlayer implements IPlayer {
                     unprocessedMessage = reducedMessage;
                 }
 
-                break;
+                return MessageProcessResult.COMPLETE;
             }
             case ATTACK: {
                 switch (move.getStage()) {
@@ -335,9 +349,9 @@ public class NetworkPlayer implements IPlayer {
                         // Did this player decide to attack?
                         move.setDecision(msg.payload != null);
 
-                        // This message isn't entirely processed yet.
+                        // This message isn't entirely processed yet. Will process the rest on the next getMove call
                         unprocessedMessage = msg;
-                        break;
+                        return MessageProcessResult.COMPLETE;
                     }
                     case START_ATTACK: {
                         // Apply the from and to parameters of the attack message we received in DECIDE_ATTACK
@@ -346,45 +360,49 @@ public class NetworkPlayer implements IPlayer {
                         move.setFrom(payload.sourceTerritory);
                         move.setTo(payload.destinationTerritory);
 
-                        // This message still isn't entirely processed yet.
+                        // This message still isn't entirely processed yet. Will process the rest on the next getMove call
                         unprocessedMessage = msg;
-                        break;
+                        return MessageProcessResult.COMPLETE;
                     }
                     case CHOOSE_ATTACK_DICE: {
                         // Apply the numArmies paramter of the attack message received in DECIDE_ATTACK
                         ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
                         move.setAttackDice(payload.numArmies);
 
-                        break;
+                        return MessageProcessResult.COMPLETE;
+                    }
+                    default: {
+                        throw new RuntimeException("Received Command.ATTACK during unexpected game.Move stage.");
                     }
                 }
-                break;
             }
             case DEFEND: {
                 // Apply num armies parameter
                 IntegerPayload payload = (IntegerPayload)msg.payload;
 
                 move.setDefendDice(payload.value);
-                break;
+                return MessageProcessResult.COMPLETE;
             }
             case ATTACK_CAPTURE: {
                 // Apply num armies parameter
                 IntegerPayload payload = (IntegerPayload)msg.payload;
 
                 move.setArmies(payload.value);
-                break;
+
+                // Also receive the draw_cards command at this point
+                return MessageProcessResult.COMPLETE;
             }
 
             // TODO This is identical code to case ATTACK:
-            case FORTIFY:
-                switch(move.getStage()) {
+            case FORTIFY: {
+                switch (move.getStage()) {
                     case DECIDE_FORTIFY: {
                         // Is this player fortifying?
                         move.setDecision(msg.payload != null);
 
                         // This message isn't entirely processed yet.
                         unprocessedMessage = msg;
-                        break;
+                        return MessageProcessResult.COMPLETE;
                     }
                     case START_FORTIFY: {
                         // Apply the from and to parameters of the fortify message received in DECIDE_FORTIFY
@@ -395,36 +413,48 @@ public class NetworkPlayer implements IPlayer {
 
                         // This message still isn't entirely processed yet.
                         unprocessedMessage = msg;
-                        break;
+                        return MessageProcessResult.COMPLETE;
                     }
                     case FORTIFY_TERRITORY: {
                         // Apply the num armies parameters of the fortify message we recived back in DECIDE_FORTIFY.
                         ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
 
                         move.setArmies(payload.numArmies);
-                        break;
+                        return MessageProcessResult.COMPLETE;
+                    }
+                    default: {
+                        throw new RuntimeException("Received Command.FORTIFY during unexpected logic.Move state. I'm not sure we're supposed to get here. ");
                     }
                 }
+            }
+            case DICE_ROLL:
+                // Dice roll message doesn't need handling according how how logic is implemented
+                return MessageProcessResult.IGNORE_MESSAGE;
+            case DICE_HASH: {
+                //move.setRollHash();
+                return MessageProcessResult.COMPLETE;
+            }
+            case DICE_ROLL_NUM: {
+                //move.setRollNumber();
+                return MessageProcessResult.COMPLETE;
+            }
 
-                break;
-
+            case DRAW_CARD:
+                // We handle this message in ATTACK_CAPTURE
             case JOIN_GAME:
             case JOIN_ACCEPT:
             case JOIN_REJECT:
+            case PLAYERS_JOINED:
             case PING:
             case READY:
             case INITIALISE_GAME:
             case ACKNOWLEDGEMENT:
-                break;
-            case DICE_ROLL:
-            case DICE_HASH:
-            case DICE_ROLL_NUM:
-            case KILL_GAME:
-                // TODO End the game.
-                break;
+            case TIMEOUT:
+                // We shouldn't be receiving these messages right now. Ignore them.
+                return MessageProcessResult.IGNORE_MESSAGE;
             case LEAVE_GAME:
                 // TODO Turn this player into a neutral player.
-                break;
+                throw new RuntimeException("Not implemented.");
             default:
                  throw new RuntimeException("Received unknown message command.");
         }

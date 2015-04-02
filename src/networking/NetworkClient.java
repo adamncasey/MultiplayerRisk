@@ -61,6 +61,11 @@ public class NetworkClient {
     }
 
     protected void addMessageToQueue(Message msg) {
+
+        // TODO Handle leave_game messages here?
+        // leave_game would be sent to show that this player has left the game.
+        // For leave game, we could put a ConnectionLostException in the message queue.
+
         addToQueue(msg);
     }
 

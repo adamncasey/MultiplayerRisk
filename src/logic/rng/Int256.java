@@ -4,13 +4,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.List;
 import java.util.Random;
 
 public class Int256 {
 
     private static Random random = new Random();
 
-    public final int[] value;
+    private final int[] value;
     public final String string;
 
     public static Int256 fromRandom(){
@@ -54,6 +55,14 @@ public class Int256 {
         return true;
     }
 
+    public int[] copyValue(){
+        int[] copy = new int[8];
+        for(int i = 0; i != 8; ++i){
+            copy[i] = value[i];
+        }
+        return copy;
+    }
+
     private Int256(int[] value) {
         if(value.length != 8) {
             throw new IllegalArgumentException("value must be int array of length 8: 256bit");
@@ -61,15 +70,26 @@ public class Int256 {
         this.value = value;
         String string = "";
         for(int i : value){
-            string += Integer.toHexString(i);
+            string += String.format("%08X", (0xFFFFFFFF & i));;
         }
         this.string = string;
     }
 
-    private byte[] toBytes(){
+    public byte[] toBytes(){
         ByteBuffer bbuffer = ByteBuffer.allocate(256);
         IntBuffer ibuffer = bbuffer.asIntBuffer();
         ibuffer.put(value);
         return bbuffer.array(); 
+    }
+
+    public static Int256 xor(List<Int256> values){
+        int[] xor = values.get(0).copyValue();
+        for(Int256 v : values){
+            int[] value = v.copyValue();
+            for(int i = 0; i != 8; ++i){
+                xor[i] = xor[i] ^ value[i];
+            }
+        }
+        return new Int256(xor);
     }
 }

@@ -1,17 +1,11 @@
 Logic:
-  Add unit tests / MoveChecker stuff ROLL_HASH and ROLL_NUMBER
+  Make sure our RNG is not predictable (Int256.fromRandom())
 
-  Do the xor stuff with Int256s in logic.rng.RNG
+  Add unit tests / MoveChecker stuff ROLL_HASH and ROLL_NUMBER
 
   Add a timeout feature to stop AIs from taking too long
 
   Trade in cards positioning might have to be changed
-
-  When should threads exit
-
-
-
-
 
 
 Adam:
@@ -23,6 +17,19 @@ Adam:
 	Though I could probably hard code dice rolls to be 4 or something for testing...
 
   Also need to handle us leaving the game when we win / lose.
+
+  logic.Move stages to implement until entire game should be possible;
+            case PLACE_ARMIES:
+            case DECIDE_ATTACK:
+            case START_ATTACK:
+            case CHOOSE_ATTACK_DICE:
+            case CHOOSE_DEFEND_DICE:
+            case ROLL_HASH:
+            case ROLL_NUMBER:
+            case OCCUPY_TERRITORY:
+            case DECIDE_FORTIFY:
+            case START_FORTIFY:
+            case FORTIFY_TERRITORY:
   Parts of the protocol to implement:
 	Dice Roll
 1.		Parse DICE_ROLL, DICE_HASH, DICE_NUMBER messages

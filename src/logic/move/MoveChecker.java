@@ -55,11 +55,12 @@ public class MoveChecker {
                 int defendingTo = move.getTo();
                 return checkDefendingDice(defendingDice, defendingTo);
             case ROLL_HASH:
-                return true;
+                String hashStr = move.getRollHash();
+                return checkHash(hashStr);
             case ROLL_NUMBER:
-                Int256 number = move.getRollNumber();
-                Int256 hash = move.getRollHash();
-                return checkHash(number, hash);
+                String number = move.getRollNumber();
+                String hash = move.getRollHash();
+                return checkHashNumber(number, hash);
             case OCCUPY_TERRITORY:
                 int occupyArmies = move.getArmies();
                 int occupyDice = move.getAttackDice();
@@ -260,8 +261,18 @@ public class MoveChecker {
         return (territory < 0 || territory >= board.getNumTerritories());
     }
 
-    private boolean checkHash(Int256 number, Int256 hash){
+    private boolean checkHash(String hashStr){
+        return hashStr.length() == 64;
+    }
+
+    private boolean checkHashNumber(String numberStr, String hashStr){
+        if(numberStr.length() != 64){
+            return false;
+        }
+        Int256 hash = Int256.fromString(hashStr);
+        Int256 number = Int256.fromString(numberStr);
         Int256 newHash = Int256.fromHash(number);
+
         return hash.compare(newHash);
     }
 }

@@ -327,7 +327,7 @@ public class Game implements Runnable{
                 Move move = new Move(i, ROLL_HASH);
                 move.setRNG(rngs.get(i));
                 getMove(move);
-                rollHashes.add(move.getRollHash());
+                rollHashes.add(Int256.fromString(move.getRollHash()));
                 updatePlayers(move);
             }else{
                 rollHashes.add(null);
@@ -339,9 +339,9 @@ public class Game implements Runnable{
             if(isActive(i)){
                 Move move = new Move(i, ROLL_NUMBER);
                 move.setRNG(rngs.get(i));
-                move.setRollHash(rollHashes.get(i));
+                move.setRollHash(rollHashes.get(i).string);
                 getMove(move);
-                rollNumbers.add(move.getRollNumber());
+                rollNumbers.add(Int256.fromString(move.getRollNumber()));
                 updatePlayers(move);
             }
         }

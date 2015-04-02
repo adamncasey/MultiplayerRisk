@@ -189,25 +189,25 @@ public class Move {
     }
 
     // ROLL_HASH, ROLL_NUMBER
-    private Int256 rollHash = null;
-    public void setRollHash(Int256 rollHash){
+    private String rollHash = null;
+    public void setRollHash(String rollHash){
         checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
         checkPermissions(Stage.ROLL_NUMBER);
         this.rollHash = rollHash;
     }
-    public Int256 getRollHash(){
+    public String getRollHash(){
         checkStage(Stage.ROLL_HASH, Stage.ROLL_NUMBER);
         return this.rollHash;
     }
 
     // ROLL_NUMBER
-    private Int256 rollNumber = null;
-    public void setRollNumber(Int256 rollNumber){
+    private String rollNumber = null;
+    public void setRollNumber(String rollNumber){
         checkStage(Stage.ROLL_NUMBER);
         checkPermissions();
         this.rollNumber = rollNumber;
     }
-    public Int256 getRollNumber(){
+    public String getRollNumber(){
         checkStage(Stage.ROLL_NUMBER);
         return this.rollNumber;
     }

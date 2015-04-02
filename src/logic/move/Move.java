@@ -17,7 +17,6 @@ public class Move {
         CLAIM_TERRITORY, REINFORCE_TERRITORY, TRADE_IN_CARDS, PLACE_ARMIES,
         DECIDE_ATTACK, START_ATTACK, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, ROLL_HASH, ROLL_NUMBER,
         OCCUPY_TERRITORY, DECIDE_FORTIFY, START_FORTIFY, FORTIFY_TERRITORY,
-        // Dice Roll Stuff
         // Events - Stages used by Game (IPlayers are only updated with these)
         END_ATTACK, PLAYER_ELIMINATED, CARD_DRAWN,
         SETUP_BEGIN, SETUP_END, GAME_BEGIN, GAME_END
@@ -258,6 +257,18 @@ public class Move {
     public List<Integer> getDefendDiceRolls(){
         checkStage(Stage.END_ATTACK);
         return this.defendDiceRolls;
+    }
+
+    // CARD_DRAWN
+    private Card card = null;
+    public void setCard(Card card){
+        checkStage(Stage.CARD_DRAWN);
+        checkPermissions(Stage.CARD_DRAWN);
+        this.card = card;
+    }
+    public Card getCard(){
+        checkStage(Stage.CARD_DRAWN);
+        return this.card;
     }
 
     // SETUP_BEGIN, PLAYER_ELIMINATED, GAME_END

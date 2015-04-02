@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class Card {
 
-    private Integer territory; // the territory number, 0 = wildcard
-    private Integer type; // infantry, cavalry or artillery - 1, 5, 10
-    private String name;
+    private final Integer territory; // the territory number, 0 = wildcard
+    private final Integer type; // infantry, cavalry or artillery - 1, 5, 10
+    private final String name;
 
     public Card(Integer territory, Integer type, String name){
         this.territory = territory;

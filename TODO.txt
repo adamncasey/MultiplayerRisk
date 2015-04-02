@@ -25,10 +25,12 @@ Adam:
   Also need to handle us leaving the game when we win / lose.
   Parts of the protocol to implement:
 	Dice Roll
-	Card Shuffle (basically just a dice roll)
+1.		Parse DICE_ROLL, DICE_HASH, DICE_NUMBER messages
+4.		Handle these messages appropriately when needed in NetworkPlayer
+3.	Card Shuffle (basically just a dice roll)
 	Host must timeout players
 	Message Signing: 
-		Wrapper Format mandatory
+2.		Wrapper Format mandatory
 		Store public_keys from players joined, use to verify messages.
 	Revisit the lobby protocol: 
 		not sure if initialise_game is currently sent,

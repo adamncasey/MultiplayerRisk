@@ -237,7 +237,9 @@ public class Game implements Runnable{
             Card newCard = state.getDeck().drawCard();
             if(newCard != null){
                 state.addCard(uid, newCard);
-                updatePlayers(new Move(uid, CARD_DRAWN));
+                move = new Move(uid, CARD_DRAWN);
+                move.setCard(newCard);
+                updatePlayers(move);
             }
         }
 

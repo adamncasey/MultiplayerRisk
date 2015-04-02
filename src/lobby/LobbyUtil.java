@@ -1,7 +1,7 @@
 package lobby;
 
 import networking.NetworkClient;
-import networking.NetworkPlayer;
+import networking.networkplayer.NetworkPlayer;
 import player.IPlayer;
 
 import java.util.List;

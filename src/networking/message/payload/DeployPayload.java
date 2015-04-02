@@ -15,6 +15,10 @@ import java.util.List;
 public class DeployPayload extends Payload {
     public final int[][] deployments;
 
+    public DeployPayload(int[][] deployments) {
+        this.deployments = deployments;
+    }
+
     public DeployPayload(JSONArray array) throws ParserException {
         deployments = new int[array.size()][2];
 

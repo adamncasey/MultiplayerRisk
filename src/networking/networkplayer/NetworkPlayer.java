@@ -1,10 +1,11 @@
-package networking;
+package networking.networkplayer;
 
 import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
 import logic.state.Player;
+import networking.*;
 import networking.message.Acknowledgement;
 import networking.message.Message;
 import networking.message.payload.*;
@@ -46,18 +47,19 @@ public class NetworkPlayer implements IPlayer {
         }
 
         // convert Move into Message
-        Message msg = gameMoveToNetworkMessage(previousMove);
-
-        if(msg == null) {
+        MoveProcessResult result = gameMoveToNetworkMessage(previousMove);
+        if(result.moreWorkNeeded || !result.responseNeeded) {
             return;
         }
+
+        Message msg = result.message;
+
+        assert msg != null;
 
         // Send Message
         client.router.sendToAllPlayers(msg);
 
         // Receive acknowledgements from all players but broadcastPlayerID.
-
-
         NetworkClient removed = null;
 
         for(NetworkClient player : players) {
@@ -140,67 +142,116 @@ public class NetworkPlayer implements IPlayer {
 
     }
 
+    // State which is required between calls to getMove
+
+    // TODO This is a bit of a hack.. I don't like the weird state going on here
+    ArrayList<int[]> partialDeployment = new ArrayList<>();
+    int storedSourceTerritory = -1;
+    int storedDestinationTerritory = -1;
+
     /* Maps between game Move events and protocol Message */
-    private Message gameMoveToNetworkMessage(Move move)
+    private MoveProcessResult gameMoveToNetworkMessage(Move move)
     {
         switch(move.getStage()) {
             case CLAIM_TERRITORY:
             case REINFORCE_TERRITORY:
-                return new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true);
+                return new MoveProcessResult(new Message(Command.SETUP, move.getUID(), new IntegerPayload(move.getTerritory()), true));
 
-            case TRADE_IN_CARDS:
+            case TRADE_IN_CARDS: {
                 List<Card> cardSet = move.getToTradeIn();
                 Payload payload;
-                if(cardSet.size() > 0) {
+                if (cardSet.size() > 0) {
                     int numSets = 1; // TODO Handle multiple sets when logic supports that
 
                     int[][] setsTradedIn = new int[numSets][];
-                    for(int i=0; i<numSets; i++) {
+                    for (int i = 0; i < numSets; i++) {
 
                         setsTradedIn[i] = new int[cardSet.size()];
-                        for(int j=0; j<cardSet.size(); j++) {
+                        for (int j = 0; j < cardSet.size(); j++) {
                             setsTradedIn[i][j] = cardSet.get(j).getID();
                         }
                     }
                     payload = new PlayCardsPayload(setsTradedIn);
-                }
-                else {
+                } else {
                     payload = null;
                 }
 
-                return new Message(Command.PLAY_CARDS, move.getUID(), payload, true);
+                return new MoveProcessResult(new Message(Command.PLAY_CARDS, move.getUID(), payload, true));
+            }
+            case PLACE_ARMIES: {
+                // We need to save up these message until getExtraArmies == 0
 
-            case PLACE_ARMIES:
-                // We need to save up these message until getExtraArmies == 0. Then create new Command.DEPLOY
-                break;
+                // Add this moves deployment to persistent list
+                partialDeployment.add(new int[]{move.getTerritory(), move.getArmies()});
 
-            case DECIDE_ATTACK:
+                if (move.getExtraArmies() == 0) {
+                    // Create DeployPayload
+                    int[][] deployments = partialDeployment.toArray(new int[partialDeployment.size()][]);
+                    partialDeployment.clear();
+
+                    return new MoveProcessResult(new Message(Command.DEPLOY, move.getUID(), new DeployPayload(deployments), true));
+                }
+
+                return MoveProcessResult.MORE_WORK_NEEDED;
+            }
+            case DECIDE_ATTACK: {
                 // If no, send null ATTACK command
-                break;
+                if (!move.getDecision()) {
+                    return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
+                }
+                return MoveProcessResult.MORE_WORK_NEEDED;
+            }
             case START_ATTACK:
-                // Store from / to values
-                break;
-            case CHOOSE_ATTACK_DICE:
+            case START_FORTIFY: {
+                // If these are not -1, there's a programming bug in my code, or the logic called START_ATTACK twice without calling CHOOSE_ATTACK_DICE.
+                assert storedDestinationTerritory == -1;
+                assert storedSourceTerritory == -1;
+
+                storedSourceTerritory = move.getFrom();
+                storedDestinationTerritory = move.getTo();
+
+                return MoveProcessResult.MORE_WORK_NEEDED;
+            }
+            case CHOOSE_ATTACK_DICE: {
                 // Send Command.ATTACK with from/to and numArmies.
-                break;
+                int numArmies = move.getAttackDice();
 
-            case CHOOSE_DEFEND_DICE:
-                // Send Command.DEFNED with numArmies
-                break;
+                ArmyMovementPayload payload = new ArmyMovementPayload(storedSourceTerritory, storedDestinationTerritory, numArmies);
+                storedSourceTerritory = storedDestinationTerritory = -1;
 
-            case OCCUPY_TERRITORY:
-                // Send ATTACK_CAPTURE with numArmies.
-                break;
+                return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), payload, true));
+            }
+            case CHOOSE_DEFEND_DICE: {
+                // Send Command.DEFEND with numArmies
+                int numArmies = move.getDefendDice();
 
-            case DECIDE_FORTIFY:
+                return new MoveProcessResult(new Message(Command.DEFEND, move.getUID(), new IntegerPayload(numArmies), true));
+            }
+
+            case OCCUPY_TERRITORY: {
+                // Send Command.ATTACK_CAPTURE with numArmies
+                int numArmies = move.getArmies();
+
+                return new MoveProcessResult(new Message(Command.ATTACK_CAPTURE, move.getUID(), new IntegerPayload(numArmies), true));
+            }
+
+            case DECIDE_FORTIFY: {
                 // If no, send null Command.FORTIFY.
-                break;
-            case START_FORTIFY:
-                // Store from/to parameters.
-                break;
-            case FORTIFY_TERRITORY:
+                if (!move.getDecision()) {
+                    return new MoveProcessResult(new Message(Command.FORTIFY, move.getUID(), null));
+                }
+                return MoveProcessResult.MORE_WORK_NEEDED;
+            }
+            // START_FORTIFY handled in same place as START_ATTACK.
+            case FORTIFY_TERRITORY: {
                 // Send Command.FORTIFY with from/to and numArmies.
-                break;
+                int numArmies = move.getArmies();
+
+                ArmyMovementPayload payload = new ArmyMovementPayload(storedSourceTerritory, storedDestinationTerritory, numArmies);
+                storedSourceTerritory = storedDestinationTerritory = -1;
+
+                return new MoveProcessResult(new Message(Command.FORTIFY, move.getUID(), payload, true));
+            }
 
             case END_ATTACK:
             case PLAYER_ELIMINATED:
@@ -209,13 +260,10 @@ public class NetworkPlayer implements IPlayer {
             case SETUP_END:
             case GAME_BEGIN:
             case GAME_END:
-                return null;
+                return MoveProcessResult.NO_RESPONSE_NEEDED;
             default:
-                System.out.println("Unknown move stage: " + move.getStage().name());
-                return null;
+                throw new RuntimeException("Unknown move stage: " + move.getStage().name());
         }
-
-        throw new RuntimeException("Not implemented");
     }
 
     private void networkMessageToGameMove(Message msg, Move move) {
@@ -227,78 +275,131 @@ public class NetworkPlayer implements IPlayer {
                 break;
             case DRAW_CARD:
                 break;
-            case PLAY_CARDS:
+            case PLAY_CARDS: {
                 // No cards traded in
-                if(msg.payload == null) {
+                if (msg.payload == null) {
                     move.setToTradeIn(new ArrayList<>());
                     break;
                 }
 
-                PlayCardsPayload cards = (PlayCardsPayload)msg.payload;
+                PlayCardsPayload cards = (PlayCardsPayload) msg.payload;
                 // TODO handle multiple card sets played.
                 // TODO Get Card Object from Player.getHand()
-                if(cards.cardSetsPlayed.length > 0) {
+                if (cards.cardSetsPlayed.length > 0) {
                     Integer[] set = ArrayUtils.toObject(cards.cardSetsPlayed[0]);
                     // Need a way to get Card objects from IDs
                     //move.setToTradeIn(Arrays.asList(set));
                 }
                 break;
-            case DEPLOY:
-                DeployPayload payload = (DeployPayload)msg.payload;
-                for(int[] deployment : payload.deployments) {
-                    move.setTerritory(deployment[0]);
-                    move.setArmies(deployment[1]);
-                }
-                // If this is the first time we're being called:
-                // Parse message:
-                // Store armies to be traded in locally:
-                // continue below..
+            }
+            case DEPLOY: {
+                DeployPayload payload = (DeployPayload) msg.payload;
 
-                // Check that move.getExtraArmies() is the same as the total number of armies we still want to deploy.
+                // TODO Check that move.getExtraArmies() is the same as the total number of armies we still want to deploy.
                 // Else leave_game something's broken.
 
-                // Pick the first deployment in the list and execute it.
+                // Get first deployment.
+                if (payload.deployments.length < 1) {
+                    // TODO Error reporting.
+                    throw new RuntimeException("Message received should have at least one deployment.");
+                }
+                int[] deployment = payload.deployments[0];
+
+                move.setTerritory(deployment[0]);
+                move.setArmies(deployment[1]);
+
+                if (move.getExtraArmies() != 0) {
+                    // Create new Message with reduced Payload (remove the processed deployment from the message)
+                    // TODO This is a hack. Not only is there some slightly gross state in here, but it's a hack on top of a hack.
+
+                    int newLength = payload.deployments.length - 1;
+
+                    int[][] reducedDeployments = new int[newLength][];
+                    System.arraycopy(payload.deployments, 1, reducedDeployments, 0, newLength);
+
+                    Message reducedMessage = new Message(msg.command, msg.playerid, new DeployPayload(reducedDeployments), msg.ackId);
+
+                    // More work to be done using this message..
+                    unprocessedMessage = reducedMessage;
+                }
+
                 break;
-            case ATTACK:
-                switch(move.getStage()) {
-                    case DECIDE_ATTACK:
+            }
+            case ATTACK: {
+                switch (move.getStage()) {
+                    case DECIDE_ATTACK: {
                         // Did this player decide to attack?
+                        move.setDecision(msg.payload != null);
+
                         // This message isn't entirely processed yet.
                         unprocessedMessage = msg;
                         break;
-                    case START_ATTACK:
+                    }
+                    case START_ATTACK: {
                         // Apply the from and to parameters of the attack message we received in DECIDE_ATTACK
+                        ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
+
+                        move.setFrom(payload.sourceTerritory);
+                        move.setTo(payload.destinationTerritory);
+
                         // This message still isn't entirely processed yet.
                         unprocessedMessage = msg;
                         break;
-                    case CHOOSE_ATTACK_DICE:
+                    }
+                    case CHOOSE_ATTACK_DICE: {
                         // Apply the numArmies paramter of the attack message received in DECIDE_ATTACK
+                        ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
+                        move.setAttackDice(payload.numArmies);
+
                         break;
+                    }
                 }
                 break;
-            case DEFEND:
+            }
+            case DEFEND: {
                 // Apply num armies parameter
+                IntegerPayload payload = (IntegerPayload)msg.payload;
+
+                move.setDefendDice(payload.value);
                 break;
-            case ATTACK_CAPTURE:
-                // apply numarmies from attack_capture.
+            }
+            case ATTACK_CAPTURE: {
+                // Apply num armies parameter
+                IntegerPayload payload = (IntegerPayload)msg.payload;
+
+                move.setArmies(payload.value);
                 break;
+            }
+
+            // TODO This is identical code to case ATTACK:
             case FORTIFY:
                 switch(move.getStage()) {
-                    case DECIDE_FORTIFY:
+                    case DECIDE_FORTIFY: {
                         // Is this player fortifying?
+                        move.setDecision(msg.payload != null);
 
                         // This message isn't entirely processed yet.
                         unprocessedMessage = msg;
                         break;
-                    case START_FORTIFY:
+                    }
+                    case START_FORTIFY: {
                         // Apply the from and to parameters of the fortify message received in DECIDE_FORTIFY
+                        ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
+
+                        move.setFrom(payload.sourceTerritory);
+                        move.setTo(payload.destinationTerritory);
 
                         // This message still isn't entirely processed yet.
                         unprocessedMessage = msg;
                         break;
-                    case FORTIFY_TERRITORY:
+                    }
+                    case FORTIFY_TERRITORY: {
                         // Apply the num armies parameters of the fortify message we recived back in DECIDE_FORTIFY.
+                        ArmyMovementPayload payload = (ArmyMovementPayload) msg.payload;
+
+                        move.setArmies(payload.numArmies);
                         break;
+                    }
                 }
 
                 break;

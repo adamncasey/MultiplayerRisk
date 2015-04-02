@@ -29,16 +29,12 @@ Things:
 Adam:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_ROLL stage and broadcasts moves made locally over network.
   Ask reps: Should cards be traded in on player defeat or at the start of a turn?
-  logic.Move stages to implement until entire game should be possible;
-            case PLACE_ARMIES:
-            case DECIDE_ATTACK:
-            case START_ATTACK:
-            case CHOOSE_ATTACK_DICE:
-            case CHOOSE_DEFEND_DICE:
-            case OCCUPY_TERRITORY:
-            case DECIDE_FORTIFY:
-            case START_FORTIFY:
-            case FORTIFY_TERRITORY:
+
+  Re-visit the NetworkPlayer after dice roll is implemented to check it works. 
+  	Currently not possible due to different games getting different answers to dice rolls.
+	Though I could probably hard code dice rolls to be 4 or something for testing...
+
+  Also need to handle us leaving the game when we win / lose.
   Parts of the protocol to implement:
 	Dice Roll
 	Card Shuffle (basically just a dice roll)
@@ -52,4 +48,3 @@ Adam:
 		ready meaning / format changed
 		name and public key added to join_game
 		handle receiving players_joined command
-	

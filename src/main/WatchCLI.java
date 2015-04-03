@@ -61,8 +61,7 @@ public class WatchCLI {
         }
         Game game = new Game(players, names, new LocalPlayerHandler());
 
-        game.setupGame();
-        game.playGame();
+        game.run();
 
         String nameSummary = "Players were ";
         for(String s : names){

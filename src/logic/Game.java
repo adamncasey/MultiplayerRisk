@@ -25,11 +25,6 @@ public class Game implements Runnable{
     private GameState state;
     private MoveChecker checker;
 
-    public void run(){
-        this.setupGame();
-        this.playGame();
-    }
-
     public Game(List<IPlayer> playerInterfaces, List<String> names, LocalPlayerHandler handler){
         this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
         this.numPlayers = playerInterfaces.size();
@@ -42,7 +37,12 @@ public class Game implements Runnable{
         }
     }
 
-    public void setupGame(){
+    public void run(){
+        this.setupGame();
+        this.playGame();
+    }
+
+    private void setupGame(){
         if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
@@ -78,7 +78,7 @@ public class Game implements Runnable{
         updatePlayers(new Move(-1, SETUP_END));
     }
 
-    public void playGame(){
+    private void playGame(){
         if(numPlayers < Settings.MinNumberOfPlayers || numPlayers > Settings.MaxNumberOfPlayers){
             return;
         }
@@ -250,12 +250,12 @@ public class Game implements Runnable{
             }
         }
 
-        move = new Move(uid, DECIDE_FORTIFY);
         if(!state.checkFortifyPossible(uid)) {
+            move = new Move(uid, DECIDE_FORTIFY);
             move.setDecision(false);
             updatePlayers(move);
-        } else {
-
+        }else{
+            move = new Move(uid, DECIDE_FORTIFY);
             getMove(move);
             updatePlayers(move);
 

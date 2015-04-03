@@ -62,8 +62,7 @@ public class PlayCLI {
         }
         Game game = new Game(players, names, new LocalPlayerHandler());
 
-        game.setupGame();
-        game.playGame();
+        game.run();
     }
 }
 

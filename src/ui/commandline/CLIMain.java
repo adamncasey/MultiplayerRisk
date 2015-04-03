@@ -85,8 +85,7 @@ public class CLIMain {
             System.out.println(name);
         }
 
-        game.setupGame();
-        game.playGame();
+        game.run();
     }
 
     private static List<String> namePlayers(List<IPlayer> playersBefore, List<IPlayer> playersAfter) {

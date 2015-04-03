@@ -33,6 +33,15 @@ public class NetworkPlayer implements IPlayer {
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
 
+
+    // State which is required between calls from Game Logic.
+    // TODO I don't like the weird state going on here
+    ArrayList<int[]> partialDeployment = new ArrayList<>();
+    int storedSourceTerritory = -1;
+    int storedDestinationTerritory = -1;
+    boolean receivedAttackNull = false;
+    boolean receivedFortifyNull = false;
+
     public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
         this.localPlayerID = localPlayerID;
@@ -51,7 +60,26 @@ public class NetworkPlayer implements IPlayer {
 
     @Override
     public void updatePlayer(Move previousMove) {
-        if(!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID) {
+        // TODO Refactor. This is more complicated than it should be.
+        MoveProcessResult result = null;
+
+        // If it is this NetworkPlayer's DECIDE_ATTACK(false) event.
+        if(previousMove.getUID() == player.getUID()) {
+            if(previousMove.getStage() != Move.Stage.DECIDE_ATTACK && previousMove.getStage() != Move.Stage.DECIDE_FORTIFY) {
+                return;
+            }
+
+            if(previousMove.getDecision() || receivedAttackNull) {
+                receivedAttackNull = false;
+                return;
+            }
+
+            // Receive ATTACK payload: null and acknowledge this.
+            // TODO: Weird hack, might work.
+            getMove(previousMove);
+        }
+
+        if(result == null && (!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID)) {
             // We don't want to broadcast an update if this isn't the local player.
             // TODO IMPORTANT: EXCEPT In the case of a defend message and we sent the attack command.
             // In that case, we need to send the roll command.
@@ -59,7 +87,7 @@ public class NetworkPlayer implements IPlayer {
         }
 
         // convert Move into Message
-        MoveProcessResult result = gameMoveToNetworkMessage(previousMove);
+        result = gameMoveToNetworkMessage(previousMove);
         if(result.moreWorkNeeded || !result.responseNeeded) {
             return;
         }
@@ -76,24 +104,10 @@ public class NetworkPlayer implements IPlayer {
             return;
         }
 
-        // Receive acknowledgements from all players but broadcastPlayerID.
-        NetworkClient removed = null;
-
-        for(NetworkClient player : players) {
-            if(client.playerid == localPlayerID) {
-                players.remove(player);
-                removed = player;
-                break;
-            }
-        }
-
+        // Receive acknowledgements from all players but the playerid of the message
         System.out.println("Waiting for acknowledgements from " + players.size() + "players");
-
-        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(client.router, msg, players);
+        List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
         System.out.println("Received acknowledgement from " + responses.size() + "players");
-
-        if(removed != null)
-            players.add(removed);
     }
 
 	@Override
@@ -158,13 +172,6 @@ public class NetworkPlayer implements IPlayer {
 
     }
 
-    // State which is required between calls to getMove
-
-    // TODO This is a bit of a hack.. I don't like the weird state going on here
-    ArrayList<int[]> partialDeployment = new ArrayList<>();
-    int storedSourceTerritory = -1;
-    int storedDestinationTerritory = -1;
-
     /* Maps between game Move events and protocol Message */
     private MoveProcessResult gameMoveToNetworkMessage(Move move)
     {
@@ -211,6 +218,10 @@ public class NetworkPlayer implements IPlayer {
                 return MoveProcessResult.MORE_WORK_NEEDED;
             }
             case DECIDE_ATTACK: {
+                if(!move.getDecision()) {
+                    // Send a null attack message.
+                    return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
+                }
                 return MoveProcessResult.NO_RESPONSE_NEEDED;
             }
             case START_ATTACK:
@@ -277,10 +288,7 @@ public class NetworkPlayer implements IPlayer {
 
             case CARD_DRAWN:
                 // TODO Send draw_card command.
-            case END_ATTACK: {
-                // Send a null attack message.
-                return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
-            }
+            case END_ATTACK:
             case PLAYER_ELIMINATED:
             case SETUP_BEGIN:
             case SETUP_END:
@@ -365,10 +373,15 @@ public class NetworkPlayer implements IPlayer {
                 switch (move.getStage()) {
                     case DECIDE_ATTACK: {
                         // Did this player decide to attack?
-                        move.setDecision(msg.payload != null);
+                        if(msg.payload != null) {
+                            move.setDecision(true);
+                            unprocessedMessage = msg;
+                            return MessageProcessResult.COMPLETE;
+                        }
+                        // Otherwise ....
+                        receivedAttackNull = true;
 
                         // This message isn't entirely processed yet. Will process the rest on the next getMove call
-                        unprocessedMessage = msg;
                         return MessageProcessResult.COMPLETE;
                     }
                     case START_ATTACK: {
@@ -390,7 +403,7 @@ public class NetworkPlayer implements IPlayer {
                         return MessageProcessResult.COMPLETE;
                     }
                     default: {
-                        throw new RuntimeException("Received Command.ATTACK during unexpected game.Move stage: " + move.getStage().name());
+                        throw new RuntimeException("Received Command.ATTACK during unexpected game.Move stage: " + move.getStage().name() + " ignoring message.");
                     }
                 }
             }
@@ -416,10 +429,14 @@ public class NetworkPlayer implements IPlayer {
                 switch (move.getStage()) {
                     case DECIDE_FORTIFY: {
                         // Is this player fortifying?
-                        move.setDecision(msg.payload != null);
+                        if(msg.payload != null) {
+                            move.setDecision(true);
+                            unprocessedMessage = msg;
+                            return MessageProcessResult.COMPLETE;
+                        }
 
-                        // This message isn't entirely processed yet.
-                        unprocessedMessage = msg;
+                        // Otherwise ....
+                        receivedAttackNull = true;
                         return MessageProcessResult.COMPLETE;
                     }
                     case START_FORTIFY: {

@@ -134,7 +134,14 @@ public class Game implements Runnable{
         }
 
         boolean territoryCaptured = false;
-        while(state.checkAttackPossible(uid)){
+        while(true){
+            if(!state.checkAttackPossible(uid)){
+                move = new Move(uid, DECIDE_ATTACK);
+                move.setDecision(false);
+                updatePlayers(move);
+                break;
+            }
+
             move = new Move(uid, DECIDE_ATTACK);
             getMove(move);
             updatePlayers(move);

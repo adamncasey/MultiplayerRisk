@@ -10,11 +10,11 @@ public class LocalPlayerHandler {
     public LocalPlayerHandler(){
     }
 
-    public void sendMove(Move move){
-// CARD_DRAWN goes here
+    public void sendMove(Move move) {
+        // CARD_DRAWN goes here
     }
 
-    public void handleRoll(Move move){
+    public void handleRoll(Move move) {
         if(move.getStage() == Move.Stage.ROLL_HASH){
              move.setRollHash(move.getRNG().hash.string);
         }

@@ -2,7 +2,7 @@ package networking.message.payload;
 
 
 public class StringPayload extends Payload {
-    String value;
+    public final String value;
 
     public StringPayload(String value) {
         this.value = value;

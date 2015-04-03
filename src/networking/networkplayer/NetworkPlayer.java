@@ -46,6 +46,8 @@ public class NetworkPlayer implements IPlayer {
     public void updatePlayer(Move previousMove) {
         if(!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID) {
             // We don't want to broadcast an update if this isn't the local player.
+            // TODO IMPORTANT: EXCEPT In the case of a defend message and we sent the attack command.
+            // In that case, we need to send the roll command.
             return;
         }
 
@@ -61,6 +63,11 @@ public class NetworkPlayer implements IPlayer {
 
         // Send Message
         client.router.sendToAllPlayers(msg);
+
+        if(msg.ackId == null) {
+            // We don't need to receive acknowledgements from other players.
+            return;
+        }
 
         // Receive acknowledgements from all players but broadcastPlayerID.
         NetworkClient removed = null;
@@ -242,10 +249,6 @@ public class NetworkPlayer implements IPlayer {
                 return new MoveProcessResult(new Message(Command.ATTACK_CAPTURE, move.getUID(), new IntegerPayload(numArmies), true));
             }
 
-            case CARD_DRAWN: {
-                // Send Command.DRAW_CARD
-            }
-
             case DECIDE_FORTIFY: {
                 // If no, send null Command.FORTIFY.
                 if (!move.getDecision()) {
@@ -266,12 +269,16 @@ public class NetworkPlayer implements IPlayer {
 
             case ROLL_HASH: {
                 // Send roll_hash message.
+                return new MoveProcessResult(new Message(Command.DICE_HASH, move.getUID(), new StringPayload(move.getRollHash()), false));
             }
 
             case ROLL_NUMBER: {
                 // Send roll_number message.
+                return new MoveProcessResult(new Message(Command.DICE_ROLL_NUM, move.getUID(), new StringPayload(move.getRollNumber()), false));
             }
 
+            case CARD_DRAWN:
+                // TODO Send draw_card command.
             case END_ATTACK:
             case PLAYER_ELIMINATED:
             case SETUP_BEGIN:
@@ -372,7 +379,7 @@ public class NetworkPlayer implements IPlayer {
                         return MessageProcessResult.COMPLETE;
                     }
                     default: {
-                        throw new RuntimeException("Received Command.ATTACK during unexpected game.Move stage.");
+                        throw new RuntimeException("Received Command.ATTACK during unexpected game.Move stage: " + move.getStage().name());
                     }
                 }
             }
@@ -393,7 +400,7 @@ public class NetworkPlayer implements IPlayer {
                 return MessageProcessResult.COMPLETE;
             }
 
-            // TODO This is identical code to case ATTACK:
+            // TODO This is identical code to case ATTACK. Refactor?
             case FORTIFY: {
                 switch (move.getStage()) {
                     case DECIDE_FORTIFY: {
@@ -423,7 +430,7 @@ public class NetworkPlayer implements IPlayer {
                         return MessageProcessResult.COMPLETE;
                     }
                     default: {
-                        throw new RuntimeException("Received Command.FORTIFY during unexpected logic.Move state. I'm not sure we're supposed to get here. ");
+                        throw new RuntimeException("Received Command.FORTIFY during unexpected logic.Move state. I'm not sure we're supposed to get here. : " + move.getStage().name());
                     }
                 }
             }
@@ -431,16 +438,22 @@ public class NetworkPlayer implements IPlayer {
                 // Dice roll message doesn't need handling according how how logic is implemented
                 return MessageProcessResult.IGNORE_MESSAGE;
             case DICE_HASH: {
-                //move.setRollHash();
+                StringPayload payload = (StringPayload)msg.payload;
+                move.setRollHash(payload.value);
                 return MessageProcessResult.COMPLETE;
             }
             case DICE_ROLL_NUM: {
-                //move.setRollNumber();
+                StringPayload payload = (StringPayload)msg.payload;
+                move.setRollNumber(payload.value);
                 return MessageProcessResult.COMPLETE;
             }
 
             case DRAW_CARD:
-                // We handle this message in ATTACK_CAPTURE
+                // TODO Handle this message in ATTACK_CAPTURE
+            case LEAVE_GAME:
+                // TODO Turn this player into a neutral player.
+                throw new RuntimeException("Not implemented.");
+
             case JOIN_GAME:
             case JOIN_ACCEPT:
             case JOIN_REJECT:
@@ -452,9 +465,6 @@ public class NetworkPlayer implements IPlayer {
             case TIMEOUT:
                 // We shouldn't be receiving these messages right now. Ignore them.
                 return MessageProcessResult.IGNORE_MESSAGE;
-            case LEAVE_GAME:
-                // TODO Turn this player into a neutral player.
-                throw new RuntimeException("Not implemented.");
             default:
                  throw new RuntimeException("Received unknown message command.");
         }

@@ -354,7 +354,6 @@ public class MessageParserTests {
                 "    \"payload\": 5,\r\n" +
                 "    \"ack_id\": 9879876,\r\n" +
                 "    \"player_id\" : 2\r\n" +
-                "	 \"signature\": \"TBD\"\r\n" +
                 "}";
 
         Message msg = Parser.parseMessage(message);
@@ -379,7 +378,6 @@ public class MessageParserTests {
 				"    \"payload\": [19, 18, 4],\r\n" +
 				"    \"ack_id\": 4556554,\r\n" +
 				"    \"player_id\": 2\r\n" +
-				"	 \"signature\": \"TBD\"\r\n" +
 				"}\r\n" +
 				"";
 
@@ -388,6 +386,90 @@ public class MessageParserTests {
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.FORTIFY);
 	}
+	@Test
+	public void testRoll() throws ParserException {
+		/*
+		{
+		    "command": "fortify",
+		    "payload": [19, 18, 4],
+		    "ack_id": 4556554,
+				"			 \"signature\": \"TBD\"\r\n" +
+		    "player_id": 2
+		}
+
+		*/
+		String message = "{\n" +
+				"    \"command\": \"roll\",\n" +
+				"    \"payload\": {\n" +
+				"        \"dice_count\": 2,\n" +
+				"        \"dice_faces\": 6\n" +
+				"    },\n" +
+				"    \"player_id\": 0\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.DICE_ROLL);
+	}
+	// TODO Non player host tests...
+	//@Test
+	public void testRollNonPlayerHost() throws ParserException {
+		/*
+		{
+		    "command": "fortify",
+		    "payload": [19, 18, 4],
+		    "ack_id": 4556554,
+				"			 \"signature\": \"TBD\"\r\n" +
+		    "player_id": 2
+		}
+
+		*/
+		String message = "{\n" +
+				"    \"command\": \"roll\",\n" +
+				"    \"payload\": {\n" +
+				"        \"dice_count\": 2,\n" +
+				"        \"dice_faces\": 6\n" +
+				"    },\n" +
+				"    \"player_id\": null\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.DICE_ROLL);
+	}
+
+
+	@Test
+	public void testRollHash() throws ParserException {
+
+		String message = "{\n" +
+				"    \"command\": \"roll_hash\",\n" +
+				"    \"payload\": \"7b3d979ca8330a94fa7e9e1b466d8b99e0bcdea1ec90596c0dcc8d7ef6b4300c\",\n" +
+				"    \"player_id\": 0\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.DICE_HASH);
+	}
+	@Test
+	public void testRollNumber() throws ParserException {
+
+		String message = "{\n" +
+				"    \"command\": \"roll_number\",\n" +
+				"    \"payload\": \"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\",\n" +
+				"    \"player_id\": 0\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.DICE_ROLL_NUM);
+	}
+
 	@Test(expected=ParserException.class)
 	public void testNoCommand() throws ParserException {
 		/*

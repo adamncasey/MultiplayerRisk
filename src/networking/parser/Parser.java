@@ -108,7 +108,6 @@ public class Parser {
 
     private static Payload parsePayload(Command command, Object payloadObj) throws ParserException {
         switch(command) {
-
             case JOIN_GAME:
                 validatePayloadType(payloadObj, JSONObject.class);
                 return new JoinGamePayload((JSONObject)payloadObj);
@@ -139,15 +138,18 @@ public class Parser {
             case SETUP: //territory ID
             case DRAW_CARD: // card ID being drawn
             case DEFEND: // Num Armies to defend 1/2
-            case ATTACK_CAPTURE: // TODO Single Int Payload Not yet in spec. S2 Week6 meeting this was decided though.
-
+            case ATTACK_CAPTURE:
+                // TODO Single int ATTACK_CAPTURE command is not in spec. Need to conform or get protocol changed.
                 return singleIntegerPayload(payloadObj);
 
             case FORTIFY: // Null or ArmyMovement
                 if(payloadObj == null) {
                     return null;
                 }
-            case ATTACK: // ArmyMovement Payload
+            case ATTACK: // ArmyMovement Payload or null
+                if(payloadObj == null) {
+                    return null;
+                }
                 validatePayloadType(payloadObj, JSONArray.class);
                 return new ArmyMovementPayload((JSONArray) payloadObj);
 
@@ -162,6 +164,19 @@ public class Parser {
                 validatePayloadType(payloadObj, JSONArray.class);
                 return new DeployPayload((JSONArray)payloadObj);
 
+            case DICE_ROLL:
+                validatePayloadType(payloadObj, JSONObject.class);
+                // TODO Actually parse the "roll" payload. We don't use it internally at the moment, but it would be good to verify the contents.
+                return null;
+            case DICE_HASH:
+            case DICE_ROLL_NUM:
+                validatePayloadType(payloadObj, String.class);
+                return new StringPayload((String)payloadObj);
+
+            case TIMEOUT:
+            case LEAVE_GAME:
+            case PLAYERS_JOINED:
+            case INITIALISE_GAME:
             default:
                 throw new ParserException("Unsupported Message type. " + command);
         }

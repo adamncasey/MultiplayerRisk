@@ -250,8 +250,12 @@ public class Game implements Runnable{
             }
         }
 
-        if(state.checkFortifyPossible(uid)){
-            move = new Move(uid, DECIDE_FORTIFY);
+        move = new Move(uid, DECIDE_FORTIFY);
+        if(!state.checkFortifyPossible(uid)) {
+            move.setDecision(false);
+            updatePlayers(move);
+        } else {
+
             getMove(move);
             updatePlayers(move);
 

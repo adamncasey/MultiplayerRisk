@@ -25,6 +25,7 @@ public class NetworkPlayer implements IPlayer {
     final int localPlayerID;
     final boolean delegatedLocalBroadcast;
     MoveChecker moveChecker;
+    Player player;
     Set<NetworkClient> players;
 
     private LocalPlayerHandler localPlayerHandler;
@@ -40,6 +41,12 @@ public class NetworkPlayer implements IPlayer {
 
         players = client.router.getAllPlayers();
         unprocessedMessage = null;
+    }
+
+    @Override
+    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
+        this.moveChecker = checker;
+        this.player = player;
     }
 
     @Override
@@ -147,11 +154,6 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
-        this.moveChecker = checker;
-    }
-
-    @Override
     public void nextMove(String currentMove) {
 
     }
@@ -209,11 +211,7 @@ public class NetworkPlayer implements IPlayer {
                 return MoveProcessResult.MORE_WORK_NEEDED;
             }
             case DECIDE_ATTACK: {
-                // If no, send null ATTACK command
-                if (!move.getDecision()) {
-                    return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
-                }
-                return MoveProcessResult.MORE_WORK_NEEDED;
+                return MoveProcessResult.NO_RESPONSE_NEEDED;
             }
             case START_ATTACK:
             case START_FORTIFY: {
@@ -279,7 +277,10 @@ public class NetworkPlayer implements IPlayer {
 
             case CARD_DRAWN:
                 // TODO Send draw_card command.
-            case END_ATTACK:
+            case END_ATTACK: {
+                // Send a null attack message.
+                return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
+            }
             case PLAYER_ELIMINATED:
             case SETUP_BEGIN:
             case SETUP_END:
@@ -310,10 +311,20 @@ public class NetworkPlayer implements IPlayer {
                 // TODO handle multiple card sets played.
                 // TODO Get Card Object from Player.getHand()
                 if (cards.cardSetsPlayed.length > 0) {
-                    Integer[] set = ArrayUtils.toObject(cards.cardSetsPlayed[0]);
+                    int[] set = cards.cardSetsPlayed[0];
+
+                    List<Card> cardsInHand = player.getHand();
+
+                    List<Card> tradingIn = getCards(cardsInHand, set);
+
+                    if(tradingIn.size() != 3) {
+                        // TODO Error Handling
+
+                        throw new RuntimeException("NetworkPlayer tried to trade in cards which were not in their hand in our game state.");
+                    }
+
                     // Need a way to get Card objects from IDs
-                    //move.setToTradeIn(Arrays.asList(set));
-                    System.out.println("NetworkPlayer wanted to trade in cards but NetworkPlayer doesn't support this yet.");
+                    move.setToTradeIn(tradingIn);
                 }
                 return MessageProcessResult.COMPLETE;
             }
@@ -468,6 +479,20 @@ public class NetworkPlayer implements IPlayer {
             default:
                  throw new RuntimeException("Received unknown message command.");
         }
+    }
+
+    private List<Card> getCards(List<Card> cards, int[] setTradedIn) {
+        LinkedList<Card> result = new LinkedList<>();
+
+        for(Card card : cards) {
+            for(int id : setTradedIn) {
+                if(card.getID() == id) {
+                    result.add(card);
+                }
+            }
+        }
+
+        return result;
     }
 
     private List<Integer> readAcknowledgementsIgnorePlayerid(Message message, int ignoredPlayerID) {

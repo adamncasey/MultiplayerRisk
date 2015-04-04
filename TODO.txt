@@ -1,6 +1,4 @@
 Logic:
-  Make sure our RNG is not predictable (Int256.fromRandom())
-
   Add a timeout feature to stop AIs from taking too long
 
   Trade in cards positioning might have to be changed

@@ -15,9 +15,12 @@ public class Int256 {
     public final String string;
 
     public static Int256 fromRandom(){
+        byte[] randomBytes = new byte[256];
+        random.nextBytes(randomBytes);
+        RC4 rc4 = new RC4(randomBytes);
         int[] value = new int[8];
         for(int i = 0; i != 8; ++i){
-            value[i] = random.nextInt();
+            value[i] = rc4.nextInt();
         }
         return new Int256(value);
     }

@@ -8,6 +8,7 @@ import java.util.List;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
+import logic.rng.Int256;
 import logic.state.GameState;
 
 import static logic.move.Move.Stage.*;
@@ -717,5 +718,77 @@ public class MoveCheckerTest {
         move.setCurrentArmies(2);
         move.setArmies(0);
         assertFalse(checker.checkMove(move)); 
+    }
+
+    @Test
+    public void checkRollHashGood1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_HASH);
+        move.setRollHash("1234123412341234123412341234123412341234123412341234123412341234");
+        assertTrue(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollHashInvalid1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_HASH);
+        move.setRollHash("123412341234123412341234123412341234123412341234123412341234123");
+        assertFalse(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollHashInvalid2(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_HASH);
+        move.setRollHash("12341234123412341234123412341234123412341234123412341234123412341");
+        assertFalse(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollHashInvalid3(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_HASH);
+        assertFalse(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollNumberGood1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_NUMBER);
+        move.setRollHash("CAD4C36ABE7F36E1F5C40E2879C7FC16A46225C024A3B50B0E6D3D94AB5D9C63");
+        move.setRollNumber("1234123412341234123412341234123412341234123412341234123412341234");
+        assertTrue(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollNumberBad1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_NUMBER);
+        move.setRollHash("1234123412341234123412341234123412341234123412341234123412341234");
+        String hashNumber = "1234123412341234123412341234123412341234123412341234123412341234";
+        move.setRollNumber(hashNumber);
+        assertFalse(checker.checkMove(move));
+    }
+
+    @Test
+    public void checkRollNumberInvalid1(){
+        int[] owners = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+        MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
+        Move move = new Move(0, ROLL_NUMBER);
+        move.setRollHash("1234123412341234123412341234123412341234123412341234123412341234");
+        assertFalse(checker.checkMove(move));
     }
 }

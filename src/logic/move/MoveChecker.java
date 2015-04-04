@@ -262,10 +262,16 @@ public class MoveChecker {
     }
 
     private boolean checkHash(String hashStr){
+        if(hashStr == null){
+            return false;
+        }
         return hashStr.length() == 64;
     }
 
     private boolean checkHashNumber(String numberStr, String hashStr){
+        if(numberStr == null){
+            return false;
+        }
         if(numberStr.length() != 64){
             return false;
         }

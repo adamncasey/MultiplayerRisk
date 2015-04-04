@@ -1,12 +1,9 @@
 Logic:
   Make sure our RNG is not predictable (Int256.fromRandom())
 
-  Add unit tests / MoveChecker stuff ROLL_HASH and ROLL_NUMBER
-
   Add a timeout feature to stop AIs from taking too long
 
   Trade in cards positioning might have to be changed
-
 
 Adam:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_ROLL stage and broadcasts moves made locally over network.

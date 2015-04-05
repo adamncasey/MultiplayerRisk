@@ -17,6 +17,8 @@ ant test
 
 How to run the program:
 
+ant run
+OR
 java -jar bin/RiskyBusiness.jar
 
 - game ui

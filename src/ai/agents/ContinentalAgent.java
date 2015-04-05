@@ -52,7 +52,7 @@ public class ContinentalAgent extends Agent {
                 cs.getMove(move);
                 return;
             case START_ATTACK:
-                cs.getMove(move);
+                rs.getMove(move);
                 return;
             case CHOOSE_ATTACK_DICE:
                 as.getMove(move);

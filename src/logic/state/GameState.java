@@ -74,15 +74,12 @@ public class GameState {
         return activePlayerCount;
     }
 
-    public boolean tradeInCards(int uid, List<Card> toTradeIn){
+    public int tradeInCards(int uid, List<Card> toTradeIn){
         List<Card> hand = players.get(uid).modifyHand();
         for(Card c: toTradeIn){
             hand.remove(c);
         }
-        if(toTradeIn.size() == 3){
-            return true;
-        }
-        return false;
+        return toTradeIn.size() / 3;
     }
 
     public void claimTerritory(int tid, int uid){
@@ -101,18 +98,18 @@ public class GameState {
         return board.calculatePlayerContinentArmies(uid);
     }
 
-    public int calculateSetArmies(boolean traded){
-        if(traded){
-            int reward = armyReward;
+    public int calculateSetArmies(int sets){
+        int reward = 0;
+        for(int i = 0; i != sets; ++i){
+            reward += armyReward;
             setCounter++;
             if(setCounter > setValues.length-1){
                 armyReward = setValues[setValues.length-1] + (5 * (setCounter - (setValues.length-1)));
             } else {
                 armyReward = setValues[setCounter];
             }
-            return reward;
         }
-        return 0;
+        return reward;
     }
 
     public List<Integer> calculateMatchingCards(int uid, List<Card> toTradeIn){

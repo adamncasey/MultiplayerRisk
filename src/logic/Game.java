@@ -18,7 +18,6 @@ import static logic.move.Move.Stage.*;
  * Game --- The main game loop that lets each player take their turn, updating every player whenever anything happens.
  */
 public class Game implements Runnable{
-
     private List<IPlayer> playerInterfaces;
     private int numPlayers = 0;
 
@@ -107,15 +106,31 @@ public class Game implements Runnable{
     }
 
     private void playerTurn(int uid){
-        Move move = new Move(uid, TRADE_IN_CARDS);
-        getMove(move);
-        List<Card> toTradeIn = move.getToTradeIn();
-        boolean traded = state.tradeInCards(uid, toTradeIn); 
-        updatePlayers(move);
+        Move move;
+        List<Card> hand = state.getPlayer(uid).getHand();
+        List<Card> toTradeIn = new ArrayList<Card>();
+        while(hand.size() >= 5){
+            move = new Move(uid, TRADE_IN_CARDS);
+            getMove(move);
+            toTradeIn.addAll(move.getToTradeIn());
+            state.tradeInCards(uid, toTradeIn); 
+            updatePlayers(move);
+            hand = state.getPlayer(uid).getHand();
+        }
 
+        if(hand.size() >= 3){
+            move = new Move(uid, TRADE_IN_CARDS);
+            getMove(move);
+            toTradeIn.addAll(move.getToTradeIn());
+            state.tradeInCards(uid, toTradeIn); 
+            updatePlayers(move);
+            hand = state.getPlayer(uid).getHand();
+        }
+
+        int sets = state.tradeInCards(uid, toTradeIn); 
         int armies = state.calculateTerritoryArmies(uid);
         armies += state.calculateContinentArmies(uid);
-        armies += state.calculateSetArmies(traded);
+        armies += state.calculateSetArmies(sets);
         List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
         int extraArmies = state.calculateMatchingArmies(matchingCards);
 
@@ -145,8 +160,7 @@ public class Game implements Runnable{
             move = new Move(uid, DECIDE_ATTACK);
             getMove(move);
             updatePlayers(move);
-            boolean attacking = move.getDecision();
-            if(!attacking){
+            if(!move.getDecision()){
                 break;
             }
 
@@ -209,34 +223,6 @@ public class Game implements Runnable{
                 move = new Move(uid, PLAYER_ELIMINATED);
                 move.setPlayer(enemyUID);
                 updatePlayers(move);
-                List<Card> hand = state.getPlayer(uid).getHand();
-                if(hand.size() > 5){ // immediately trade in cards when at 6 or more
-                    while(hand.size() >= 5){ // trade in cards and place armies until 4 or fewer cards
-                        move = new Move(uid, TRADE_IN_CARDS);
-                        getMove(move);
-                        toTradeIn = move.getToTradeIn();
-                        state.tradeInCards(uid, toTradeIn); 
-                        updatePlayers(move);
-                    
-                        armies = state.calculateSetArmies(true);
-                        matchingCards = state.calculateMatchingCards(uid, toTradeIn);
-                        extraArmies = state.calculateMatchingArmies(matchingCards);
-
-                        while(armies != 0){
-                            move = new Move(uid, PLACE_ARMIES);
-                            move.setCurrentArmies(armies);
-                            move.setExtraArmies(extraArmies);
-                            move.setMatches(matchingCards);
-                            getMove(move);
-                            int newExtraArmies = state.updateExtraArmies(move.getTerritory(), move.getArmies(), extraArmies, matchingCards);
-                            int changeInExtraArmies = extraArmies - newExtraArmies;
-                            extraArmies = newExtraArmies;
-                            state.placeArmies(move.getTerritory(), move.getArmies());
-                            armies -= (move.getArmies() - changeInExtraArmies);
-                            updatePlayers(move);
-                        }
-                    }
-                }
             }
         }
 

@@ -68,7 +68,7 @@ public class CLIMain {
             return;
         }
         System.out.println("Starting game");
-        Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
+        Agent agent = AgentFactory.buildAgent(AgentTypes.Type.GREEDY);
         IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out));
 
         List<IPlayer> players = new LinkedList<>();

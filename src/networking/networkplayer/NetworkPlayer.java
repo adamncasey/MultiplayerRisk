@@ -222,7 +222,10 @@ public class NetworkPlayer implements IPlayer {
                 // Add this moves deployment to persistent list
                 partialDeployment.add(new int[]{move.getTerritory(), move.getArmies()});
 
-                if (move.getExtraArmies() == 0) {
+                int numArmiesLeft = move.getCurrentArmies() + move.getExtraArmies() - move.getArmies();
+                System.out.println("PLACE_ARMIES to Network Message " + numArmiesLeft + ": " + move.getCurrentArmies() + " "+ move.getExtraArmies() + " " + move.getArmies());
+                if (numArmiesLeft == 0) {
+                    System.out.println("PLACE_ARMIES Message sending");
                     // Create DeployPayload
                     int[][] deployments = partialDeployment.toArray(new int[partialDeployment.size()][]);
                     partialDeployment.clear();
@@ -366,7 +369,8 @@ public class NetworkPlayer implements IPlayer {
                 move.setTerritory(deployment[0]);
                 move.setArmies(deployment[1]);
 
-                if (move.getExtraArmies() != 0) {
+                int numArmiesLeft = move.getCurrentArmies() + move.getExtraArmies() - deployment[1];
+                if (numArmiesLeft > 0) {
                     // Create new Message with reduced Payload (remove the processed deployment from the message)
                     // TODO This is a hack. Not only is there some slightly gross state in here, but it's a hack on top of a hack.
 
@@ -381,10 +385,9 @@ public class NetworkPlayer implements IPlayer {
                     unprocessedMessage = reducedMessage;
                 }
 
-                // Reset Null Attack / Fortify at the end of the turn:
-
+                // TODO move to LocalHandler
+                // Reset Null Attack / Fortify at a random point in the game...
                 receivedNullAttack = false;
-
                 receivedNullFortify = false;
 
                 return MessageProcessResult.COMPLETE;

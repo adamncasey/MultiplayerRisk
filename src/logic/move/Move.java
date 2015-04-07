@@ -445,7 +445,7 @@ public class Move {
                 message = String.format("%s has just been eliminated by %s.\n", eliminatedPlayer, name);
                 return message;
             case CARD_DRAWN:
-                message = String.format("%s has drawn a card.\n", name);
+                message = String.format("%s has drawn a card (%s).\n", name, move.getCard().getID());
                 return message;
             case SETUP_BEGIN:
                 int numPlayers = move.getPlayer();

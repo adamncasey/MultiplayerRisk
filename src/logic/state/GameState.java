@@ -35,7 +35,8 @@ public class GameState {
         
         this.board = new Board();
         this.deck = board.getDeck();
-        this.deck.shuffle(0);
+        // TODO Deck Shuffling in Lobby?
+        //this.deck.shuffle(0);
         Move.setNames(this.names);
     }
 
@@ -51,7 +52,8 @@ public class GameState {
 
         this.board = new Board(testing, owners, armies);
         this.deck = board.getDeck();
-        this.deck.shuffle(0);
+        // TODO Deck Shuffling in Lobby?
+        //this.deck.shuffle(0);
     }
 
     public Board getBoard(){

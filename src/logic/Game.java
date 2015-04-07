@@ -134,7 +134,9 @@ public class Game implements Runnable{
         List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
         int extraArmies = state.calculateMatchingArmies(matchingCards);
 
-        while(armies != 0){
+
+        // Nathan: Is this going to make AIs churn for ages? (need to specifically chose extra army territory)
+        while((armies + extraArmies) != 0){
             move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);
             move.setExtraArmies(extraArmies);

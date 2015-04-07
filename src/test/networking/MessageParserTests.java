@@ -386,60 +386,7 @@ public class MessageParserTests {
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.FORTIFY);
 	}
-	@Test
-	public void testRoll() throws ParserException {
-		/*
-		{
-		    "command": "fortify",
-		    "payload": [19, 18, 4],
-		    "ack_id": 4556554,
-				"			 \"signature\": \"TBD\"\r\n" +
-		    "player_id": 2
-		}
-
-		*/
-		String message = "{\n" +
-				"    \"command\": \"roll\",\n" +
-				"    \"payload\": {\n" +
-				"        \"dice_count\": 2,\n" +
-				"        \"dice_faces\": 6\n" +
-				"    },\n" +
-				"    \"player_id\": 0\n" +
-				"}";
-
-		Message msg = Parser.parseMessage(message);
-
-		assertNotNull(msg);
-		assertEquals(msg.command, Command.DICE_ROLL);
-	}
 	// TODO Non player host tests...
-	//@Test
-	public void testRollNonPlayerHost() throws ParserException {
-		/*
-		{
-		    "command": "fortify",
-		    "payload": [19, 18, 4],
-		    "ack_id": 4556554,
-				"			 \"signature\": \"TBD\"\r\n" +
-		    "player_id": 2
-		}
-
-		*/
-		String message = "{\n" +
-				"    \"command\": \"roll\",\n" +
-				"    \"payload\": {\n" +
-				"        \"dice_count\": 2,\n" +
-				"        \"dice_faces\": 6\n" +
-				"    },\n" +
-				"    \"player_id\": null\n" +
-				"}";
-
-		Message msg = Parser.parseMessage(message);
-
-		assertNotNull(msg);
-		assertEquals(msg.command, Command.DICE_ROLL);
-	}
-
 
 	@Test
 	public void testRollHash() throws ParserException {

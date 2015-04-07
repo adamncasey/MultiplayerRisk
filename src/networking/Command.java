@@ -19,7 +19,6 @@ public enum Command {
 	ATTACK_CAPTURE("attack_capture"),
 	FORTIFY("fortify"),
 	ACKNOWLEDGEMENT("acknowledgement"),
-    DICE_ROLL("roll"),
 	DICE_HASH("roll_hash"),
 	DICE_ROLL_NUM("roll_number"),
 	TIMEOUT("timeout"),

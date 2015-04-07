@@ -164,10 +164,6 @@ public class Parser {
                 validatePayloadType(payloadObj, JSONArray.class);
                 return new DeployPayload((JSONArray)payloadObj);
 
-            case DICE_ROLL:
-                validatePayloadType(payloadObj, JSONObject.class);
-                // TODO Actually parse the "roll" payload. We don't use it internally at the moment, but it would be good to verify the contents.
-                return null;
             case DICE_HASH:
             case DICE_ROLL_NUM:
                 validatePayloadType(payloadObj, String.class);

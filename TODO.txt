@@ -3,40 +3,38 @@ Logic:
 
   CardsStrategy.StartAttack is broken, Agents that used it now use RandomStrategy (Continental + Greedy)
 
+
+
 Adam:
-  NetworkLocalPlayer to wrap local IPlayers: Implements DICE_ROLL stage and broadcasts moves made locally over network.
-  Ask reps: Should cards be traded in on player defeat or at the start of a turn?
+  NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.
 
-  Re-visit the NetworkPlayer after dice roll is implemented to check it works. 
-  	Currently not possible due to different games getting different answers to dice rolls.
-	Though I could probably hard code dice rolls to be 4 or something for testing...
+Work to be done to have a networked risk game:
+1.  logic.Move stages to implement until all logic will be networked;
+        Trade in cards doesn't work if the player wants to trade in cards.
+        case DECIDE_ATTACK:
+        case START_ATTACK:
+        case CHOOSE_ATTACK_DICE:
+        case CHOOSE_DEFEND_DICE:
+        case ROLL_HASH:
+        case ROLL_NUMBER:
+        case OCCUPY_TERRITORY:
+        case DECIDE_FORTIFY:
+        case START_FORTIFY:
+        case FORTIFY_TERRITORY:
 
-  Also need to handle us leaving the game when we win / lose.
+2.  Handle leaving the game when we win / lose.
+3.  Handle NetworkPlayer disconnection.
+4.	Card Shuffle (basically just a dice roll)
 
-  logic.Move stages to implement until entire game should be possible;
-            Trade in cards doesn't work if the player wants to trade in cards.
-            case DECIDE_ATTACK:
-            case START_ATTACK:
-            case CHOOSE_ATTACK_DICE:
-            case CHOOSE_DEFEND_DICE:
-            case ROLL_HASH:
-            case ROLL_NUMBER:
-            case OCCUPY_TERRITORY:
-            case DECIDE_FORTIFY:
-            case START_FORTIFY:
-            case FORTIFY_TERRITORY:
-  Parts of the protocol to implement:
-	Dice Roll
-1.		Parse DICE_ROLL, DICE_HASH, DICE_NUMBER messages
-4.		Handle these messages appropriately when needed in NetworkPlayer
-3.	Card Shuffle (basically just a dice roll)
-	Host must timeout players
-	Message Signing: 
-2.		Wrapper Format mandatory
-		Store public_keys from players joined, use to verify messages.
-	Revisit the lobby protocol: 
-		not sure if initialise_game is currently sent,
-		ping meaning / format changed
-		ready meaning / format changed
-		name and public key added to join_game
-		handle receiving players_joined command
+  Work to be done to play with other implementations:
+1.	Wrapper Format
+2.	Send initialise_game is currently sent,
+3.  Send name in join_game
+4.  Handle players_joined command
+5.  ping meaning / format changed
+6.  ready meaning / format changed
+8.  Delete draw_card command.
+7.	Host must timeout players
+
+  Protocol Extensions:
+1.  Message Signing (Store public_keys from players joined, use to verify messages.)

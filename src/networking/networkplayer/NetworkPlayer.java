@@ -462,9 +462,6 @@ public class NetworkPlayer implements IPlayer {
                     }
                 }
             }
-            case DICE_ROLL:
-                // Dice roll message doesn't need handling according how how logic is implemented
-                return MessageProcessResult.IGNORE_MESSAGE;
             case DICE_HASH: {
                 StringPayload payload = (StringPayload)msg.payload;
                 move.setRollHash(payload.value);

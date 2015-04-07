@@ -258,29 +258,32 @@ public class MapControl extends Pane{
 
 	public void removeArmy(GUITerritory territory) {
 
-		if(territory == null)
-			return;
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
 
-		if (territory.getArmyID() == null) {
-			return;
-		}
+				if (territory == null)
+					return;
 
-		ObservableList<Node> children = getChildren();
-		
-		for (Node child : children) {
-			if (territory.getArmyID() != null && child.getId() != null
-					&& child.getId().equals(territory.getArmyID())){
-				territory.setArmyID(null);
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
+				if (territory.getArmyID() == null) {
+					return;
+				}
+
+				ObservableList<Node> children = getChildren();
+
+				for (Node child : children) {
+					if (territory.getArmyID() != null && child.getId() != null
+							&& child.getId().equals(territory.getArmyID())) {
+						territory.setArmyID(null);
+
 						children.remove(child);
+
+
+						return;
 					}
-				});
-				
-				return;
-			}		
-		}
+				}
+			}
+		});
 	}
 
 	public ArmyMode getArmyMode() {

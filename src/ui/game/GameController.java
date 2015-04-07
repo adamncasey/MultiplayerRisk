@@ -77,27 +77,14 @@ public class GameController implements Initializable {
 
 		List<String> names = namePlayers(playersBefore, playersAfter);
 
-		Task<Integer> task = new Task<Integer>() {
-			@Override protected Integer call() throws Exception {
-				Game game = new Game(players, names, new LocalPlayerHandler());
-				game.run();
-				/*System.out.println("Setting up game...");
-				game.setupGame();
-				System.out.println("Playing game...");
-				game.playGame();
-				*/
-				return 0;
-			}
-		};
+
+		Game game = new Game(players, names, new LocalPlayerHandler());
+		game.run();
 
 		System.out.println("Players: ");
 		for(String name : names) {
 			System.out.println(name);
 		}
-
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
 	}
 
 	/**

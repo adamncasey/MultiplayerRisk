@@ -144,6 +144,8 @@ public class Main extends Application {
         } 
         Scene scene = new Scene(page, width, height);
         stage.setScene(scene);
+        //stage.sizeToScene();
+        stage.show();
         return (Initializable) loader.getController();
     }
 }

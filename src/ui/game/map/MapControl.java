@@ -19,7 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-public class MapControl extends Pane {
+public class MapControl extends Pane{
 
 	GameConsole console;
 
@@ -47,7 +47,6 @@ public class MapControl extends Pane {
 	private ArrayList<GUITerritory> highlighted_all;
 
 	private EventHandler<MouseEvent> mouseOverFocus;
-
 	{
 		mouseOverFocus = new EventHandler<MouseEvent>() {
 			@Override

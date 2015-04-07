@@ -79,7 +79,14 @@ public class GameController implements Initializable {
 
 
 		Game game = new Game(players, names, new LocalPlayerHandler());
-		game.run();
+		
+		new Thread()
+		{
+		    public void run() {
+				game.run();
+		    }
+		}.start();
+
 
 		System.out.println("Players: ");
 		for(String name : names) {

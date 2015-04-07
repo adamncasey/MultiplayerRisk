@@ -6,7 +6,9 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+
 import ui.game.GameConsole;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -244,7 +246,13 @@ public class MapControl extends Pane{
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
 					mouseOverFocus);
 
-			getChildren().add(army);
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					getChildren().add(army);
+				}
+			});
+			
 		}
 	}
 
@@ -263,7 +271,13 @@ public class MapControl extends Pane{
 			if (territory.getArmyID() != null && child.getId() != null
 					&& child.getId().equals(territory.getArmyID())){
 				territory.setArmyID(null);
-				children.remove(child);
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						children.remove(child);
+					}
+				});
+				
 				return;
 			}		
 		}

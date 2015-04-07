@@ -3,7 +3,6 @@ package networking.networkplayer;
 import logic.Card;
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.rng.RNG;
 import logic.state.Board;
 import logic.state.Player;
 import networking.*;
@@ -11,7 +10,6 @@ import networking.message.Acknowledgement;
 import networking.message.Message;
 import networking.message.payload.*;
 import networking.parser.ParserException;
-import org.apache.commons.lang3.ArrayUtils;
 import player.IPlayer;
 
 import java.util.*;
@@ -39,8 +37,8 @@ public class NetworkPlayer implements IPlayer {
     ArrayList<int[]> partialDeployment = new ArrayList<>();
     int storedSourceTerritory = -1;
     int storedDestinationTerritory = -1;
-    boolean receivedAttackNull = false;
-    boolean receivedFortifyNull = false;
+    boolean receivedNullAttack = false;
+    boolean receivedNullFortify = false;
 
     public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
@@ -63,20 +61,37 @@ public class NetworkPlayer implements IPlayer {
         // TODO Refactor. This is more complicated than it should be.
         MoveProcessResult result = null;
 
-        // If it is this NetworkPlayer's DECIDE_ATTACK(false) event.
+        // If it is this NetworkPlayer's DECIDE_ATTACK(false) or DECIDE_FORTIFY event.
         if(previousMove.getUID() == player.getUID()) {
-            if(previousMove.getStage() != Move.Stage.DECIDE_ATTACK && previousMove.getStage() != Move.Stage.DECIDE_FORTIFY) {
+            if(previousMove.getStage() == Move.Stage.DECIDE_ATTACK) {
+                if(previousMove.getDecision() || receivedNullAttack) {
+                    receivedNullAttack = false;
+                    return;
+                }
+
+                // Receive ATTACK payload: null and acknowledge this.
+                // TODO: Weird hack, might work.
+                getMove(previousMove);
+
                 return;
             }
 
-            if(previousMove.getDecision() || receivedAttackNull) {
-                receivedAttackNull = false;
+            if(previousMove.getStage() == Move.Stage.DECIDE_FORTIFY) {
+                System.out.println("Potentially getting DECIDE_FORTIFY message");
+                if(previousMove.getDecision() || receivedNullFortify) {
+
+                    System.out.println("Not getting DECIDE_FORTIFY because :" + previousMove.getDecision() + " " + receivedNullFortify);
+                    receivedNullFortify = false;
+                    return;
+                }
+
+                // Receive FORTIFY payload: null and acknowledge this.
+                // TODO: Weird hack, might work.
+                getMove(previousMove);
+                System.out.println("Getting DECIDE_FORTIFY message");
+
                 return;
             }
-
-            // Receive ATTACK payload: null and acknowledge this.
-            // TODO: Weird hack, might work.
-            getMove(previousMove);
         }
 
         if(result == null && (!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID)) {
@@ -220,7 +235,7 @@ public class NetworkPlayer implements IPlayer {
             case DECIDE_ATTACK: {
                 if(!move.getDecision()) {
                     // Send a null attack message.
-                    return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null));
+                    return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null, true));
                 }
                 return MoveProcessResult.NO_RESPONSE_NEEDED;
             }
@@ -261,7 +276,7 @@ public class NetworkPlayer implements IPlayer {
             case DECIDE_FORTIFY: {
                 // If no, send null Command.FORTIFY.
                 if (!move.getDecision()) {
-                    return new MoveProcessResult(new Message(Command.FORTIFY, move.getUID(), null));
+                    return new MoveProcessResult(new Message(Command.FORTIFY, move.getUID(), null, true));
                 }
                 return MoveProcessResult.MORE_WORK_NEEDED;
             }
@@ -287,7 +302,6 @@ public class NetworkPlayer implements IPlayer {
             }
 
             case CARD_DRAWN:
-                // TODO Send draw_card command.
             case END_ATTACK:
             case PLAYER_ELIMINATED:
             case SETUP_BEGIN:
@@ -367,6 +381,12 @@ public class NetworkPlayer implements IPlayer {
                     unprocessedMessage = reducedMessage;
                 }
 
+                // Reset Null Attack / Fortify at the end of the turn:
+
+                receivedNullAttack = false;
+
+                receivedNullFortify = false;
+
                 return MessageProcessResult.COMPLETE;
             }
             case ATTACK: {
@@ -379,7 +399,7 @@ public class NetworkPlayer implements IPlayer {
                             return MessageProcessResult.COMPLETE;
                         }
                         // Otherwise ....
-                        receivedAttackNull = true;
+                        receivedNullAttack = true;
 
                         // This message isn't entirely processed yet. Will process the rest on the next getMove call
                         return MessageProcessResult.COMPLETE;
@@ -436,7 +456,7 @@ public class NetworkPlayer implements IPlayer {
                         }
 
                         // Otherwise ....
-                        receivedAttackNull = true;
+                        receivedNullFortify = true;
                         return MessageProcessResult.COMPLETE;
                     }
                     case START_FORTIFY: {

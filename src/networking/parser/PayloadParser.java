@@ -4,6 +4,7 @@ package networking.parser;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,5 +36,17 @@ public class PayloadParser {
         }
 
         return values;
+    }
+    public static String[] parseStringArray(JSONArray array) throws ParserException {
+
+        ArrayList<String> values = new ArrayList<>();
+
+        for(Object obj : array) {
+
+            Parser.validateType(obj, String.class);
+            values.add((String)obj);
+        }
+
+        return values.toArray(new String[values.size()]);
     }
 }

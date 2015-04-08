@@ -2,12 +2,8 @@ package test.networking;
 
 import static org.junit.Assert.*;
 import networking.Command;
-import networking.message.payload.AcceptJoinGamePayload;
-import networking.message.payload.AcknowledgementPayload;
-import networking.message.payload.JoinGamePayload;
+import networking.message.payload.*;
 import networking.message.Message;
-import networking.message.payload.PingPayload;
-import networking.message.payload.RejectJoinGamePayload;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
@@ -87,7 +83,6 @@ public class MessageParserTests {
 			 "payload":	null,
 			 "player_id": 1,
 			 "ack_id": 541232121,
-			 "signature": "TBD"
 		}
 		*/
 		String message = "{" +
@@ -123,7 +118,7 @@ public class MessageParserTests {
 
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.PING);
-        assertTrue(msg.payload instanceof PingPayload);
+        assertTrue(msg.payload instanceof IntegerPayload);
 	}
 	@Test
 	public void testJoinGame() throws ParserException {
@@ -143,6 +138,7 @@ public class MessageParserTests {
 				"			 \"payload\":	{" +
 				"			        \"supported_versions\": [1]," +
 				"			        \"supported_features\": [\"custom_map\"]" +
+				"					\"name\": \"Player 1\"" +
 				"			    }," +
 				"			 \"player_id\": 1," +
 				"		}";
@@ -351,7 +347,7 @@ public class MessageParserTests {
 		*/
         String message = "{\r\n" +
                 "    \"command\": \"attack_capture\",\r\n" +
-                "    \"payload\": 5,\r\n" +
+                "    \"payload\": [1, 2, 2],\r\n" +
                 "    \"ack_id\": 9879876,\r\n" +
                 "    \"player_id\" : 2\r\n" +
                 "}";
@@ -416,6 +412,71 @@ public class MessageParserTests {
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.DICE_ROLL_NUM);
 	}
+	@Test
+	public void testInitialiseGame() throws ParserException {
+
+		String message = "{\n" +
+				"\"command\": \"initialise_game\",\n" +
+				"\"payload\": {\n" +
+				"\"version\": 1,\n" +
+				"\"supported_features\": [\"custom_map\"]\n" +
+				"}\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.INITIALISE_GAME);
+	}
+	@Test
+	public void testPlayersJoined() throws ParserException {
+
+		String message = "{\n" +
+				"\"command\": \"players_joined\",\n" +
+				"\"payload\": [\n" +
+				"[0, \"Player A\"],\n" +
+				"[1, \"Player B\"]\n" +
+				"]\n" +
+				"\t}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.PLAYERS_JOINED);
+	}
+	@Test
+	public void testLeaveGame() throws ParserException {
+
+		String message = "{\n" +
+				"\"command\": \"leave_game\",\n" +
+				"\"payload\": {\n" +
+				"\"response\": 401,\n" +
+				"\"message\": \"Defeated by player 2\",\n" +
+				"\"receive_updates\": true\n" +
+				"},\n" +
+				"\"player_id\": 0\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.LEAVE_GAME);
+	}
+	@Test
+	public void testTimeout() throws ParserException {
+
+		String message = "{\n" +
+				"\"command\": \"timeout\",\n" +
+				"\"payload\": 2,\n" +
+				"\"player_id\": 0,\n" +
+				"\"ack_id\": 1\n" +
+				"}";
+
+		Message msg = Parser.parseMessage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.TIMEOUT);
+	}
 
 	@Test(expected=ParserException.class)
 	public void testNoCommand() throws ParserException {
@@ -466,11 +527,10 @@ public class MessageParserTests {
 	@Test(expected=ParserException.class)
 	public void testNotYetSupportedCommand() throws ParserException {
 		String message = "{\r\n" +
-				"    \"command\": \"roll_number\"," +
+				"    \"command\": \"unsupportedcommand\"," +
 				"    \"ack_id\": 4556554,\r\n" +
 				"    \"player_id\": 2\r\n" +
 				"    \"payload\": [19, 18, 4],\r\n" +
-				"	 \"signature\": \"TBD\"\r\n" +
 				"}\r\n" +
 				"";
 

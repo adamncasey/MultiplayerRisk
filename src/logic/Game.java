@@ -209,6 +209,8 @@ public class Game implements Runnable{
                 territoryCaptured = true;
                 move = new Move(uid, OCCUPY_TERRITORY);
                 move.setCurrentArmies(state.getBoard().getArmies(attackFrom));
+                move.setFrom(attackFrom);
+                move.setTo(attackTo);
                 move.setAttackDice(attackingDice);
                 getMove(move);
                 int occupyArmies = move.getArmies();

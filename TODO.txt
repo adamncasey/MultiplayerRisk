@@ -8,27 +8,14 @@ Logic:
 Adam:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.
 
-Work to be done to have a networked risk game:
-1.  logic.Move stages to implement until all logic will be networked;
-        Trade in cards doesn't work if the player wants to trade in cards.
-        case DECIDE_ATTACK:
-        case START_ATTACK:
-        case CHOOSE_ATTACK_DICE:
-        case CHOOSE_DEFEND_DICE:
-        case ROLL_HASH:
-        case ROLL_NUMBER:
-        case OCCUPY_TERRITORY:
-        case DECIDE_FORTIFY:
-        case START_FORTIFY:
-        case FORTIFY_TERRITORY:
-
-2.  Handle leaving the game when we win / lose.
+Work remaining for our version of networked risk:
+1.  Handle leaving the game when we win / lose.
+2.	Card Shuffle (basically just a dice roll)
 3.  Handle NetworkPlayer disconnection.
-4.	Card Shuffle (basically just a dice roll)
 
   Work to be done to play with other implementations:
 1.	Wrapper Format
-2.	Send initialise_game is currently sent,
+2.	Send initialise_game
 3.  Send name in join_game
 4.  Handle players_joined command
 5.  ping meaning / format changed

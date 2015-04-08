@@ -40,6 +40,8 @@ public class NetworkPlayer implements IPlayer {
     boolean receivedNullAttack = false;
     boolean receivedNullFortify = false;
 
+    boolean eliminatationKnown = false;
+
     public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
         this.localPlayerID = localPlayerID;
@@ -61,8 +63,12 @@ public class NetworkPlayer implements IPlayer {
         // TODO Refactor. This is more complicated than it should be.
         MoveProcessResult result = null;
 
-        // If it is this NetworkPlayer's DECIDE_ATTACK(false) or DECIDE_FORTIFY event.
+        // Handle this NetworkPlayer's updatePlayer.
         if(previousMove.getUID() == player.getUID()) {
+            if(!eliminatationKnown && player.isEliminated()) {
+                // send LEAVE_GAME with continue listening = true.
+            }
+
             if(previousMove.getStage() == Move.Stage.DECIDE_ATTACK) {
                 if(previousMove.getDecision() || receivedNullAttack) {
                     receivedNullAttack = false;
@@ -92,8 +98,11 @@ public class NetworkPlayer implements IPlayer {
 
                 return;
             }
+
+            return;
         }
 
+        // Decide whether or not we want to perform a broadcast for the delegated player.
         if(result == null && (!delegatedLocalBroadcast || previousMove.getUID() != localPlayerID)) {
             // We don't want to broadcast an update if this isn't the local player.
             // TODO IMPORTANT: EXCEPT In the case of a defend message and we sent the attack command.
@@ -272,8 +281,10 @@ public class NetworkPlayer implements IPlayer {
             case OCCUPY_TERRITORY: {
                 // Send Command.ATTACK_CAPTURE with numArmies
                 int numArmies = move.getArmies();
+                int from = move.getFrom();
+                int to = move.getTo();
 
-                return new MoveProcessResult(new Message(Command.ATTACK_CAPTURE, move.getUID(), new IntegerPayload(numArmies), true));
+                return new MoveProcessResult(new Message(Command.ATTACK_CAPTURE, move.getUID(), new ArmyMovementPayload(from, to, numArmies), true));
             }
 
             case DECIDE_FORTIFY: {

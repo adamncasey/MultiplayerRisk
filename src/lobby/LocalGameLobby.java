@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import lobby.handler.HostLobbyEventHandler;
 import networking.*;
 import networking.message.Message;
-import networking.message.payload.PingPayload;
+import networking.message.payload.IntegerPayload;
 import player.IPlayer;
 
 /**
@@ -156,7 +156,7 @@ public class LocalGameLobby extends Thread {
     private boolean sendPingToAll(GameRouter router) {
         int numPlayers = router.getNumPlayers() + 1;
 
-        PingPayload payload = new PingPayload(numPlayers);
+        IntegerPayload payload = new IntegerPayload(numPlayers);
 
         Message msg = new Message(Command.PING, 0, payload);
 

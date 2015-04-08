@@ -51,6 +51,8 @@ public class Parser {
 
         // playerid is required on all messages except join_game
         // TODO: Non-playable host was added ~12th Feb 2015 which breaks this assumption
+        // TODO player_id is not sent on initialise_game, players_joined, accept_join_game, reject_join_game, join_game
+        // TODO player_id can be null for ping, ready.
         if(command != Command.JOIN_GAME) {
             validateType(message, "player_id", Number.class);
             playerid = ((Long) message.get("player_id")).intValue();
@@ -120,36 +122,29 @@ public class Parser {
                 validatePayloadType(payloadObj, String.class);
                 return new RejectJoinGamePayload((String)payloadObj);
 
-            case PING:
-                if(payloadObj != null) {
-                    validatePayloadType(payloadObj, Long.class);
-                    return new PingPayload(((Long) payloadObj).intValue());
-                }
-                // Payload can be null
-                return null;
-
             case ACKNOWLEDGEMENT:
                 validatePayloadType(payloadObj, JSONObject.class);
                 return new AcknowledgementPayload((JSONObject)payloadObj);
 
             case READY:
                 return null;
-
+            case PING: // Null or num players
+                if(payloadObj == null) {
+                    return null;
+                }
             case SETUP: //territory ID
             case DRAW_CARD: // card ID being drawn
             case DEFEND: // Num Armies to defend 1/2
-            case ATTACK_CAPTURE:
+            case TIMEOUT:
                 // TODO Single int ATTACK_CAPTURE command is not in spec. Need to conform or get protocol changed.
                 return singleIntegerPayload(payloadObj);
 
             case FORTIFY: // Null or ArmyMovement
-                if(payloadObj == null) {
-                    return null;
-                }
             case ATTACK: // ArmyMovement Payload or null
                 if(payloadObj == null) {
                     return null;
                 }
+            case ATTACK_CAPTURE:
                 validatePayloadType(payloadObj, JSONArray.class);
                 return new ArmyMovementPayload((JSONArray) payloadObj);
 
@@ -169,10 +164,12 @@ public class Parser {
                 validatePayloadType(payloadObj, String.class);
                 return new StringPayload((String)payloadObj);
 
-            case TIMEOUT:
+            case INITIALISE_GAME:
+                validatePayloadType(payloadObj, JSONObject.class);
+                return new InitialiseGamePayload((JSONObject)payloadObj);
+
             case LEAVE_GAME:
             case PLAYERS_JOINED:
-            case INITIALISE_GAME:
             default:
                 throw new ParserException("Unsupported Message type. " + command);
         }

@@ -257,8 +257,8 @@ public class RemoteGameLobby extends Thread {
 
         handler.onPingReceive(msg.playerid);
 
-        if(msg.payload instanceof PingPayload) {
-            return ((PingPayload)msg.payload).numPlayers;
+        if(msg.payload instanceof IntegerPayload) {
+            return ((IntegerPayload)msg.payload).value;
         }
 
         return -1;

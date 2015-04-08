@@ -22,9 +22,8 @@ Work remaining for our version of networked risk:
 6.  ready meaning / format changed
 7.  Delete draw_card command.
 8.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
-9.  Acknowledgement payload should just be an integer (or long?)
-10.	Host must timeout players
-11. Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
+9.	Host must timeout players
+10. Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
 
   Protocol Extensions:
 1.  Message Signing (Store public_keys from players joined, use to verify messages.)

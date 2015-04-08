@@ -27,12 +27,8 @@ public class MessageParserTests {
 		*/
 		String message = "{\r\n" +
 				"			 \"command\": \"acknowledgement\",\r\n" +
-				"			 \"payload\":	{\r\n" +
-				"			 				\"ack_id\": 32183921,\r\n" +
-				"			 				\"response\": 0,\r\n" +
-				"			 				\"data\": null\r\n" +
-				"			 			}\r\n" +
-				"			 \"player_id\": 5,\r\n" +
+				"			 \"payload\": 32183921,\r\n" +
+				"			 \"player_id\": 5\r\n" +
 				"		}";
 
 		Message msg = Parser.parseMessage(message);
@@ -40,40 +36,9 @@ public class MessageParserTests {
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
 
-        assertTrue(msg.payload instanceof AcknowledgementPayload);
+        assertTrue(msg.payload instanceof IntegerPayload);
 	}
 
-	@Test
-	public void testAcknowledge2() throws ParserException {
-		/*
-		{
-			 "command": "acknowledge",
-			 "payload":	{
-			 				"ack_id": 67812687,
-			 				"response": 0,
-			 				"data": null
-			 			}
-
-			 "player_id": 1,
-			 "signature": "TBD"
-		}
-		*/
-		String message = "		{" +
-				"		 \"command\": \"acknowledgement\"," +
-				"		 \"payload\":	{\r\n" +
-				"		 				\"ack_id\": 67812687," +
-				"		 				\"response\": 0," +
-				"		 				\"data\": null" +
-				"		 			}," +
-				"		 \"player_id\": 1," +
-				"	}";
-
-		Message msg = Parser.parseMessage(message);
-
-		assertNotNull(msg);
-		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
-        assertTrue(msg.payload instanceof AcknowledgementPayload);
-	}
 
 	@Test
 	public void testReady() throws ParserException {

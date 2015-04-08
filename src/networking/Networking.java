@@ -1,7 +1,7 @@
 package networking;
 
 import lobby.handler.LobbyEventHandler;
-import networking.message.payload.AcknowledgementPayload;
+import networking.message.payload.IntegerPayload;
 import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
@@ -149,13 +149,13 @@ public class Networking {
             throw new RuntimeException("invalid message received: " + ack.command);
         }
 
-        if(!(ack.payload instanceof AcknowledgementPayload)) {
+        if(!(ack.payload instanceof IntegerPayload)) {
             throw new RuntimeException("invalid message");
         }
 
-        AcknowledgementPayload payload = (AcknowledgementPayload)ack.payload;
-        if(payload.ack_id != message.ackId) {
-            throw new RuntimeException("Bad acknowledgement");
+        IntegerPayload payload = (IntegerPayload)ack.payload;
+        if(payload.value != message.ackId) {
+            throw new RuntimeException("Bad acknowledgement ack_id. Expected " + message.ackId + ". Received: " + payload.value);
         }
 
         // Otherwise ALL OK.

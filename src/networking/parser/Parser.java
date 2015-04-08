@@ -78,12 +78,12 @@ public class Parser {
             }
         }
 
-        Long ackId = null;
+        Integer ackId = null;
 
         if(message.get("ack_id") != null) {
             validateType(message, "ack_id", Long.class);
 
-            ackId = (Long)message.get("ack_id");
+            ackId = ((Long)message.get("ack_id")).intValue();
         }
 
 		return new Message(command, playerid, payload, ackId);
@@ -146,9 +146,6 @@ public class Parser {
                 validatePayloadType(payloadObj, String.class);
                 return new RejectJoinGamePayload((String)payloadObj);
 
-            case ACKNOWLEDGEMENT:
-                validatePayloadType(payloadObj, JSONObject.class);
-                return new AcknowledgementPayload((JSONObject)payloadObj);
 
             case READY:
                 return null;
@@ -156,11 +153,11 @@ public class Parser {
                 if(payloadObj == null) {
                     return null;
                 }
-            case SETUP: //territory ID
+            case SETUP: // Territory ID
             case DRAW_CARD: // card ID being drawn
             case DEFEND: // Num Armies to defend 1/2
-            case TIMEOUT:
-                // TODO Single int ATTACK_CAPTURE command is not in spec. Need to conform or get protocol changed.
+            case TIMEOUT: // Player ID being booted
+            case ACKNOWLEDGEMENT: // Ack_ID being acknowledged
                 return singleIntegerPayload(payloadObj);
 
             case FORTIFY: // Null or ArmyMovement

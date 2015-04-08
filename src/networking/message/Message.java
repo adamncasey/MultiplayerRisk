@@ -18,9 +18,9 @@ public class Message {
 
     // Integer for normal playerid. -1 for message with no playerid. null for null playerid.
     public final Integer playerid;
-    public final Long ackId;
+    public final Integer ackId;
 
-	public Message(Command command, Integer playerid, Payload payload, Long ackId) {
+	public Message(Command command, Integer playerid, Payload payload, Integer ackId) {
 		this.command = command;
 		this.payload = payload;
 		this.playerid = playerid;
@@ -44,8 +44,8 @@ public class Message {
         this(command, -1 /*unknown playerid*/, payload, null);
     }
 
-    private static long generateAcknowledgementID() {
-        return new Random().nextLong();
+    private static int generateAcknowledgementID() {
+        return new Random().nextInt();
     }
 
 	public String toString() {

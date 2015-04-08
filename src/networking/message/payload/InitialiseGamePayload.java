@@ -42,7 +42,7 @@ public class InitialiseGamePayload extends Payload {
         }
 
 
-        if (!Parser.validateType(version, Double.class)) {
+        if(Parser.validateType(version, Double.class)) {
 
             return ((Double)version);
         }

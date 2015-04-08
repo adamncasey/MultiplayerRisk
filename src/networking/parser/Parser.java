@@ -56,10 +56,10 @@ public class Parser {
 
         Integer playerid = null;
 
-        // playerid is required on all messages except join_game
-        // TODO: Non-playable host was added ~12th Feb 2015 which breaks this assumption
-        // TODO player_id is not sent on NO_PLAYERID_COMMANDS
-        // TODO player_id can be null for ping, ready.
+        // player_id is needed on most messages, but not all.
+        // player_id is null on NULL_PLAYERID_COMMANDS.
+        // player_id is not specified at all on NO_PLAYERID_COMMANDS
+        // player_id must be an integer >= 0
         if(NO_PLAYERID_COMMANDS.contains(command)) {
             // playerid shouldn't be sent in this message.
             if(message.containsKey("player_id")) {
@@ -75,6 +75,10 @@ public class Parser {
             else {
                 validateType(obj, Long.class);
                 playerid = ((Long)obj).intValue();
+
+                if(playerid < 0) {
+                    throw new ParserException("Invalid playerid. Playerid must be not be negative");
+                }
             }
         }
 

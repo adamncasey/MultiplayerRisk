@@ -450,9 +450,9 @@ public class NetworkPlayer implements IPlayer {
             }
             case ATTACK_CAPTURE: {
                 // Apply num armies parameter
-                IntegerPayload payload = (IntegerPayload)msg.payload;
+                ArmyMovementPayload payload = (ArmyMovementPayload)msg.payload;
 
-                move.setArmies(payload.value);
+                move.setArmies(payload.numArmies);
 
                 // Also receive the draw_cards command at this point
                 return MessageProcessResult.COMPLETE;

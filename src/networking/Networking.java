@@ -52,7 +52,7 @@ public class Networking {
      * @throws Exception on error. ParserException for invalid packet.
      * ConnectionLostException or TimeoutException for network related errors
 	 */
-	protected static Message readMessage(IConnection conn) throws ParserException,
+	public static Message readMessage(IConnection conn) throws ParserException,
 			ConnectionLostException, TimeoutException {
 		// Assumes newline is equivalent to JSON Object boundary. Waiting on
 		// representatives to formally agree on this

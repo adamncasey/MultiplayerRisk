@@ -31,6 +31,8 @@ public class RemoteGameLobby extends Thread {
 
     int playerid = -1;
 
+    boolean nonPlayingHost;
+
     // TODO Implement timeouts in networking
 
     public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
@@ -48,14 +50,18 @@ public class RemoteGameLobby extends Thread {
         }
     }
 
-    // TODO: Write custom Exceptions with user friendly error messages. (instead of just throwing IOException/RuntimeException)
+    // TODO: Write custom Exceptions with user friendly error messages. (instead of just throwing RuntimeException)
     private void joinLobby() throws IOException {
+
+        GameRouter router = new GameRouter();
+        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, true);
+
+
         IConnection conn = tcpConnect(address, port);
         handler.onTCPConnect();
 
-        GameRouter router = new GameRouter();
-        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID);
         router.addRoute(host, conn);
+
 
         sendJoinGame(router);
 
@@ -64,15 +70,20 @@ public class RemoteGameLobby extends Thread {
         }
         // Now we have a playerid
 
+
         int firstPlayer;
         List<NetworkClient> otherPlayers = new LinkedList<>();
         otherPlayers.add(host);
         try {
-            List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingStart + onPingReceive
+            List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingReceive
             otherPlayers.addAll(nonHostOtherPlayers);
 
             if(!handleReady(router, host, nonHostOtherPlayers)) {
                 return; // callbacks: onReady + onReadyAcknowledge
+            }
+
+            if (!receiveInitialiseGame(router, host)) {
+                return;
             }
 
             firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
@@ -92,9 +103,6 @@ public class RemoteGameLobby extends Thread {
         handler.onLobbyComplete(playersBefore, playersAfter, null);
     }
 
-    private int decidePlayerOrder() {
-        return 0;
-    }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
         for(NetworkClient client : players) {
@@ -159,24 +167,25 @@ public class RemoteGameLobby extends Thread {
      *
      * @param router
      * @param conn
-     *@param host  @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
+     * @param host
+     * @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
      * @throws InterruptedException
      */
     private List<NetworkClient> handlePings(GameRouter router, IConnection conn, NetworkClient host) throws InterruptedException {
-
         int numplayers = receiveHostPing(host);
         handler.onPingStart();
 
         if(numplayers < 2) {
             throw new RuntimeException("Invalid number of players received from host. " + numplayers);
         }
-
         List<NetworkClient> players = setupOtherPlayers(router, conn, numplayers);
 
         // Send ping to all other players
         sendPing(router);
 
         // Receive ping from all other players
+        // TODO Try to receive ping from all other players.
+        // TODO But if we get a ready command from the host, we should stop trying.
         receivePingResponseFromConnections(players);
         return players;
     }
@@ -191,7 +200,18 @@ public class RemoteGameLobby extends Thread {
             throw new RuntimeException("Invalid message received from host");
         }
 
-        return handlePingMessage(msg);
+        int numplayers = handlePingMessage(msg);
+
+        if(msg.playerid == null) {
+            nonPlayingHost = true;
+        } else {
+            if(msg.playerid < 0) {
+                throw new RuntimeException("Host did not specific playerid. Playerid must be explicitly null for non playing host");
+            }
+            nonPlayingHost = false;
+        }
+
+        return numplayers;
     }
 
     private List<NetworkClient> setupOtherPlayers(GameRouter router, IConnection conn, int numplayers) {
@@ -200,7 +220,7 @@ public class RemoteGameLobby extends Thread {
         for(int i=1; i<numplayers; i++) {
             if(i != this.playerid) {
                 System.out.println("Added playerid " + i);
-                clients.add(new NetworkClient(router, i));
+                clients.add(new NetworkClient(router, i, false));
             }
         }
 
@@ -319,5 +339,25 @@ public class RemoteGameLobby extends Thread {
         handler.onReady();
 
         return msg;
+    }
+
+    private boolean receiveInitialiseGame(GameRouter router, NetworkClient host) {
+        Message msg;
+        try {
+            msg = host.readMessage();
+        } catch (TimeoutException | ConnectionLostException | ParserException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Unable to receive initialise_game message: " + e.getClass().toString() + " " + e.getMessage());
+        }
+
+        InitialiseGamePayload payload = (InitialiseGamePayload)msg.payload;
+
+        handler.onInitialiseGame(payload.version, payload.features);
+
+        return true;
+    }
+
+    private int decidePlayerOrder() {
+        return 0;
     }
 }

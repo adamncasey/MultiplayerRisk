@@ -148,6 +148,11 @@ public class CLIMain {
         }
 
         @Override
+        public void onInitialiseGame(double protocolVersion, String[] extendedFeatures) {
+
+        }
+
+        @Override
         public void onDicePlayerOrder() {
             System.out.println("onDicePlayerOrder ");
         }
@@ -245,6 +250,11 @@ public class CLIMain {
         @Override
         public void onReadyAcknowledge(int playerid) {
             System.out.println("onReadyAcknowledge " + playerid);
+        }
+
+        @Override
+        public void onInitialiseGame(double protocolVersion, String[] extendedFeatures) {
+            System.out.println("onInitialiseGame " + protocolVersion + ". " + extendedFeatures.toString());
         }
 
         @Override

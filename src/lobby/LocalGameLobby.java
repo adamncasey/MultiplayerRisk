@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import lobby.handler.HostLobbyEventHandler;
 import networking.*;
 import networking.message.Message;
+import networking.message.payload.InitialiseGamePayload;
 import networking.message.payload.IntegerPayload;
 import player.IPlayer;
 
@@ -68,7 +69,7 @@ public class LocalGameLobby extends Thread {
                 if(client != null) {
                     lobbyClients.add(client);
 
-                    NetworkClient newPlayer = new NetworkClient(router, newplayerid);
+                    NetworkClient newPlayer = new NetworkClient(router, newplayerid, false);
                     router.addRoute(newPlayer, client.getConnection());
 
                     netClients.add(newPlayer);
@@ -94,6 +95,8 @@ public class LocalGameLobby extends Thread {
 
             readyMessage(router);
 
+            initialiseMessage(router);
+
             firstPlayer = decidePlayerOrder(router);
 
             shuffleCards(router);
@@ -116,7 +119,6 @@ public class LocalGameLobby extends Thread {
         // TODO Pass cards up to onLobbyComplete handler
         handler.onLobbyComplete(playersBefore, playersAfter, null);
 	}
-
 
     private void setupRouterForwarding(GameRouter router, List<LobbyClient> clients) {
         // Tells the GameRouter to forward messages received from clients to every other client
@@ -158,7 +160,7 @@ public class LocalGameLobby extends Thread {
 
         IntegerPayload payload = new IntegerPayload(numPlayers);
 
-        Message msg = new Message(Command.PING, 0, payload);
+        Message msg = new Message(Command.PING, HOST_PLAYERID, payload);
 
         router.sendToAllPlayers(msg);
         handler.onPingStart();
@@ -225,12 +227,25 @@ public class LocalGameLobby extends Thread {
     }
 
     private Message sendReadyToAll(GameRouter router) {
-        Message msg = new Message(Command.READY, 0, null, true);
+        Message msg = new Message(Command.READY, HOST_PLAYERID, null, true);
 
         router.sendToAllPlayers(msg);
         handler.onReady();
 
         return msg;
+    }
+
+    private void initialiseMessage(GameRouter router) {
+        double version = 1.0;
+        String[] features = new String[0];
+
+        // TODO This probably shouldn't be hard coded. But actually working this out isn't exactly simple.
+        InitialiseGamePayload payload = new InitialiseGamePayload(version, features);
+        Message msg = new Message(Command.INITIALISE_GAME, HOST_PLAYERID, payload, false);
+
+        router.sendToAllPlayers(msg);
+
+        handler.onInitialiseGame(version, features);
     }
 
     private int decidePlayerOrder(GameRouter router) {

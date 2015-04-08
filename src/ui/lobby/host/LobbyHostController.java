@@ -148,7 +148,13 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
         }
 
-        @Override
+		@Override
+		public void onInitialiseGame(double protocolVersion, String[] extendedFeatures) {
+
+			writeToConsole("onInitialiseGame " + protocolVersion + ". " + extendedFeatures.toString());
+		}
+
+		@Override
         public void onDicePlayerOrder() {
             writeToConsole("onDicePlayerOrder ");
 

@@ -150,8 +150,19 @@ public class GameRouter {
     }
 
     private void dispatchMessageToNetworkClient(Message msg) {
+
+        int playerid;
+
+        if(msg.playerid == null || msg.playerid < 0) {
+            // findNetworkClient HOST PLAYER
+            playerid = -1;
+        } else {
+            playerid = msg.playerid.intValue();
+        }
+
+
         // Find the appropriate NetworkClient
-        NetworkClient client = findNetworkClient(msg.playerid);
+        NetworkClient client = findNetworkClient(playerid);
 
         if(client == null) {
             //Log received message with playerid for which we have no client registered in the router
@@ -166,6 +177,10 @@ public class GameRouter {
         for(Set<NetworkClient> clients : connections.values()) {
             for(NetworkClient client : clients) {
                 if(client.playerid == playerid) {
+                    return client;
+                }
+
+                if(playerid == -1 && client.hostPlayer) {
                     return client;
                 }
             }

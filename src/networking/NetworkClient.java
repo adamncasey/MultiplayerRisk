@@ -12,10 +12,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class NetworkClient {
 
     public final int playerid;
+    public final boolean hostPlayer;
+
     public final GameRouter router;
     private BlockingQueue<Object> messageQueue;
 
-    public NetworkClient(GameRouter router, int playerid) {
+    public NetworkClient(GameRouter router, int playerid, boolean isHost) {
+        this.hostPlayer = isHost;
         this.router = router;
         this.playerid = playerid;
 

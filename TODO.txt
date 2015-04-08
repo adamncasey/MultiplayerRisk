@@ -15,15 +15,12 @@ Work remaining for our version of networked risk:
 
   Work to be done to play with other implementations:
 1.	Wrapper Format
-2.	Send initialise_game
 3.  Send name in join_game
 4.  Handle players_joined command
-5.  ping meaning / format changed
-6.  ready meaning / format changed
-7.  Delete draw_card command.
-8.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
-9.	Host must timeout players
-10. Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
+5.  Delete draw_card command.
+6.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
+7.	Host must timeout players
+8. Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
 
   Protocol Extensions:
 1.  Message Signing (Store public_keys from players joined, use to verify messages.)

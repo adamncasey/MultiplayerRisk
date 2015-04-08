@@ -164,6 +164,11 @@ public class DirectConnectController extends AnchorPane implements
 		}
 
 		@Override
+		public void onInitialiseGame(double protocolVersion, String[] extendedFeatures) {
+			status("onInitialiseGame " + protocolVersion + ". " + extendedFeatures.toString());
+		}
+
+		@Override
 		public void onDicePlayerOrder() {
 			status("onDicePlayerOrder ");
 

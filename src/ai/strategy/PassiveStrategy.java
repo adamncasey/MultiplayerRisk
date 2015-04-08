@@ -37,15 +37,6 @@ public class PassiveStrategy extends Strategy {
         }
     }
 
-    private void pickTerritory(Move move){
-        move.setTerritory(random.nextInt(board.getNumTerritories()));
-    }
-
-    private void placeArmies(Move move){
-        move.setTerritory(random.nextInt(board.getNumTerritories()));
-        move.setArmies(1);
-    }
-
     private void decide(Move move){
         move.setDecision(false);
     }

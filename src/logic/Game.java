@@ -117,7 +117,6 @@ public class Game implements Runnable{
             updatePlayers(move);
             hand = state.getPlayer(uid).getHand();
         }
-
         if(hand.size() >= 3){
             move = new Move(uid, TRADE_IN_CARDS);
             getMove(move);
@@ -134,8 +133,6 @@ public class Game implements Runnable{
         List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
         int extraArmies = state.calculateMatchingArmies(matchingCards);
 
-
-        // Nathan: Is this going to make AIs churn for ages? (need to specifically chose extra army territory)
         while((armies + extraArmies) != 0){
             move = new Move(uid, PLACE_ARMIES);
             move.setCurrentArmies(armies);

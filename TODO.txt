@@ -4,7 +4,6 @@ Logic:
   CardsStrategy.StartAttack is broken, Agents that used it now use RandomStrategy (Continental + Greedy)
 
 
-
 Adam:
 Refactoring:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.

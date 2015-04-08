@@ -64,7 +64,7 @@ public class RandomStrategy extends Strategy {
 
     private void placeArmies(Move move){
         move.setTerritory(random.nextInt(board.getNumTerritories()));
-        move.setArmies(random.nextInt(move.getCurrentArmies() + move.getExtraArmies() + 1));
+        move.setArmies(1);
     }
 
     private void decide(Move move){

@@ -50,12 +50,13 @@ public interface LobbyEventHandler {
     /**
      * Called when the lobby is complete.
      * The next step should be the "setup" phase of the Risk game.
-     * @param playersBefore - List of players whose turn comes before the local turn
-     * @param playersAfter - List of players whose turn comes after the local turn
      * @param cards - List of cards used in game, shuffled. TODO: Card format etc needs thinking about. These will be encrypted in future too..
      *              TODO It seems unlikely that encrypted cards will happen anymore
+     * @param playersBefore - List of players whose turn comes before the local turn
+     * @param playersAfter - List of players whose turn comes after the local turn
+     * @param cardIDs
      */
-    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards);
+    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs);
 
     /**
      * Called on Error / Exception which causes joining or hosting the lobby to fail.

@@ -72,6 +72,7 @@ public class RemoteGameLobby extends Thread {
 
 
         int firstPlayer;
+        List<Integer> cards;
         List<NetworkClient> otherPlayers = new LinkedList<>();
         otherPlayers.add(host);
         try {
@@ -86,9 +87,15 @@ public class RemoteGameLobby extends Thread {
                 return;
             }
 
-            firstPlayer = decidePlayerOrder(); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            firstPlayer = decidePlayerOrder(router, otherPlayers); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            if(firstPlayer < 0) {
+                return;
+            }
 
-            //shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+            cards = shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+            /*if(cards == null) {
+                return;
+            }*/
         } catch(InterruptedException e) {
             // TODO Tidy up logging: Log exception?
             handler.onFailure(e);
@@ -100,9 +107,8 @@ public class RemoteGameLobby extends Thread {
         LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
 
         // TODO Pass cards up to onLobbyComplete handler
-        handler.onLobbyComplete(playersBefore, playersAfter, null);
+        handler.onLobbyComplete(playersBefore, playersAfter, cards);
     }
-
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
         for(NetworkClient client : players) {
@@ -357,7 +363,28 @@ public class RemoteGameLobby extends Thread {
         return true;
     }
 
-    private int decidePlayerOrder() {
+    // Returns the count of the player who should go first.
+    // If returns 2: the second player will play first. Assuming continuous playerids, player id #1 will start.
+    private int decidePlayerOrder(GameRouter router, List<NetworkClient> otherPlayers) {
+
+        int result;
+        try {
+            int numplayers = otherPlayers.size() + 1;
+            result = LobbyDiceRoll.rollDice(router, playerid, numplayers, otherPlayers);
+        } catch (LobbyDiceRoll.DiceRollException e) {
+            handler.onFailure(e);
+            return -1;
+        }
+
+        System.out.println("Player Order Dice result: " + result);
+
+        // Return the playerid of that player index.
+        // Go through otherPlayers
+            // If we skipped over our playerID, take it into account.
         return 0;
+    }
+
+    private List<Integer> shuffleCards() {
+        return null;
     }
 }

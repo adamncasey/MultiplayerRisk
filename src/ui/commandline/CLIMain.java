@@ -22,7 +22,6 @@ import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by Adam on 31/01/2015.
@@ -173,7 +172,7 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());
@@ -278,7 +277,7 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());

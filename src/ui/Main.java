@@ -103,7 +103,7 @@ public class Main extends Application {
         }
     }
     
-    public void goToGame(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+    public void goToGame(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards) {
         try {
         	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
         	
@@ -116,7 +116,7 @@ public class Main extends Application {
         }
     }
     
-    public void goToGameTest(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards) {
+    public void goToGameTest(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards) {
         try {
         	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
         	stage.setResizable(true);

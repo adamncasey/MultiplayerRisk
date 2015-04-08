@@ -57,7 +57,7 @@ public class GameController implements Initializable {
 	
 	public GUIPlayer player;
 
-	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Object> cards, GUIPlayer player) {
+	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player) {
 
 		if(playersBefore == null && playersAfter == null) {
 			System.out.println("Error setting up game.");

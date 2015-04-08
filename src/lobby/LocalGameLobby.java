@@ -97,7 +97,7 @@ public class LocalGameLobby extends Thread {
 
             initialiseMessage(router);
 
-            firstPlayer = decidePlayerOrder(router);
+            firstPlayer = decidePlayerOrder(router, HOST_PLAYERID, netClients);
 
             shuffleCards(router);
 
@@ -248,16 +248,27 @@ public class LocalGameLobby extends Thread {
         handler.onInitialiseGame(version, features);
     }
 
-    private int decidePlayerOrder(GameRouter router) {
-        // Roll Dice.
+    private int decidePlayerOrder(GameRouter router, int ourPlayerid, List<NetworkClient> otherPlayers) {
+        int result;
+        try {
+            int numplayers = otherPlayers.size() + 1;
+            result = LobbyDiceRoll.rollDice(router, ourPlayerid, numplayers, otherPlayers);
+        } catch (LobbyDiceRoll.DiceRollException e) {
+            handler.onFailure(e);
+            return -1;
+        }
 
-        // Number retrieved determines order
-        int firstplayer = 0; // rand from dice
+        System.out.println("Player Order Dice result: " + result);
+
+        // Return the playerid of that player index.
+        // Go through otherPlayers
+        // If we skipped over our playerID, take it into account.
+        return 0;
 
         // Re-arrange for the correct play order
         //Collections.rotate(players, firstplayer);
 
-        return firstplayer;
+        //return firstplayer;
     }
     private void shuffleCards(GameRouter router) {
         // Roll Dice

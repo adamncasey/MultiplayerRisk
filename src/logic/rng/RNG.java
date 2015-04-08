@@ -1,6 +1,7 @@
 package logic.rng;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import javax.crypto.Cipher;
@@ -16,7 +17,7 @@ public class RNG {
         this.hash = Int256.fromHash(number);
     };
 
-    public static List<Integer> getDiceRolls(List<Int256> seedValues, int numRolls){
+    public static List<Integer> getDiceRolls(Collection<Int256> seedValues, int numRolls, int numFaces){
         // XOR seedValues together
         Int256 newValue = Int256.xor(seedValues);
 
@@ -25,9 +26,13 @@ public class RNG {
 
         List<Integer> rolls = new ArrayList<Integer>();
         for(int i = 0; i != numRolls; ++i){
-            int roll = ((rc4.nextInt() % 6) + 6) % 6 + 1;
+            int roll = ((rc4.nextInt() % numFaces) + numFaces) % numFaces + 1;
             rolls.add(roll);
         }
         return rolls;
+    }
+
+    public static List<Integer> getDiceRolls(List<Int256> seedValues, int numRolls) {
+        return getDiceRolls(seedValues, numRolls, 6);
     }
 }

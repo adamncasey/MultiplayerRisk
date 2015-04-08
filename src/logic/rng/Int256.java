@@ -4,6 +4,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -49,6 +51,7 @@ public class Int256 {
         return new Int256(value);
     }
 
+    // TODO refactor to equals / hashCode.
     public boolean compare(Int256 n){
         for(int i = 0; i != 8; ++i){
             if(value[i] != n.value[i]){
@@ -85,9 +88,15 @@ public class Int256 {
         return bbuffer.array(); 
     }
 
-    public static Int256 xor(List<Int256> values){
-        int[] xor = values.get(0).copyValue();
-        for(Int256 v : values){
+    public static Int256 xor(Collection<Int256> values){
+        if(values.size() < 1) {
+            throw new IllegalArgumentException("At least 1 Int256 must be passed into xor");
+        }
+
+        Iterator<Int256> iter = values.iterator();
+        int[] xor = iter.next().copyValue();
+        while(iter.hasNext()){
+            Int256 v = iter.next();
             int[] value = v.copyValue();
             for(int i = 0; i != 8; ++i){
                 xor[i] = xor[i] ^ value[i];

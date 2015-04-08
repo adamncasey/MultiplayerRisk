@@ -15,10 +15,12 @@ public class Message {
 
     public final Command command;
     public final Payload payload;
-    public final int playerid;
+
+    // Integer for normal playerid. -1 for message with no playerid. null for null playerid.
+    public final Integer playerid;
     public final Long ackId;
 
-	public Message(Command command, int playerid, Payload payload, Long ackId) {
+	public Message(Command command, Integer playerid, Payload payload, Long ackId) {
 		this.command = command;
 		this.payload = payload;
 		this.playerid = playerid;
@@ -26,11 +28,11 @@ public class Message {
 		this.ackId = ackId;
 	}
 
-    public Message(Command command, int playerid, Payload payload, boolean ack) {
+    public Message(Command command, Integer playerid, Payload payload, boolean ack) {
         this(command, playerid, payload, ack ? generateAcknowledgementID() : null);
     }
 
-	public Message(Command command, int playerid, Payload payload) {
+	public Message(Command command, Integer playerid, Payload payload) {
 		this(command, playerid, payload, false);
 	}
 

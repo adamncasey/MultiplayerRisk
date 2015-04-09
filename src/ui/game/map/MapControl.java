@@ -149,17 +149,6 @@ public class MapControl extends Pane{
 						}
 					});
 		}
-
-		this.addEventFilter(MouseEvent.MOUSE_CLICKED,
-				new EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent mouseEvent) {
-						System.out.print("Mouse click at: "
-								+ mouseEvent.getSceneX() + ", "
-								+ mouseEvent.getSceneY() + "\n");
-					}
-				});
-
 	}
 
 	public void setArmies(int playerID, int number, GUITerritory territory) {

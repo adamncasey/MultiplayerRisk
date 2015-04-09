@@ -113,8 +113,6 @@ public class GameController implements Initializable, PlayerController {
 
 	@Override
 	public synchronized void getMove(Move move) {
-		moveCompleted = false;
-		
 		currentMove = move;
 		
 		String prompt = "Not set";
@@ -152,18 +150,22 @@ public class GameController implements Initializable, PlayerController {
 
 		console.write(prompt);
 		
+		moveCompleted = false;
+		System.out.println("Starting await move lock");
 		while(!moveCompleted) {
 			try {
 	            wait();
 	        } catch (InterruptedException e) {}
 		}
 		
-		moveCompleted = true;
+		System.out.println("Exited await move lock");
 	}
 	
 	public synchronized void notifyMoveCompleted() {
 	    moveCompleted = true;
+	    System.out.println("Notifying move completed");
 	    notifyAll();
+	    System.out.println("Done notifying move completed");
 	}
 
 	void territoryClicked(GUITerritory territory) {

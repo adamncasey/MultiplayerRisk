@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import ui.game.GameConsole;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -23,14 +21,6 @@ import javafx.scene.layout.*;
 public class MapControl extends Pane{
 
 	GameConsole console;
-
-	public GUIPlayer getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(GUIPlayer player) {
-		this.player = player;
-	}
 
 	HashMap<String, GUITerritory> nameIndex = new HashMap<>();
 	HashMap<GUITerritory, Node> armyMapping = new HashMap<>();
@@ -137,8 +127,6 @@ public class MapControl extends Pane{
 		highlighted_all = territories.getTerritoryList();
 
 		for (final GUITerritory territory : highlighted_all) {
-
-			territory.setPlayer(player);
 			nameIndex.put(territory.getName(), territory);
 			imageMapping.put(territory.getImage(), territory);
 

@@ -32,18 +32,12 @@ public class GameController implements Initializable, PlayerController  {
 
 	@FXML
 	public Pane centerPane;
-
-	public void setMapControl(MapControl mapControl) {
-		this.mapControl = mapControl;
-	}
-
 	@FXML
 	public MapControl mapControl;
 	@FXML
 	public DiceRollControl diceRollControl;
 	@FXML
 	public TextArea consoleTextArea;
-
 	@FXML
 	public GridPane popup;
 	@FXML
@@ -54,7 +48,6 @@ public class GameController implements Initializable, PlayerController  {
 	List<IPlayer> playersBefore;
 	List<IPlayer> playersAfter;
 	List<Object> cards;
-	
 	public GUIPlayer player;
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player, List<String> playerNames) {
@@ -80,7 +73,6 @@ public class GameController implements Initializable, PlayerController  {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		System.out.println("Initializing...");
 		GameController.console = new GameConsole(consoleTextArea);
 		this.mapControl.initialise(console, player);
 	}

@@ -2,22 +2,11 @@ package ui.game.map;
 
 import javafx.scene.image.ImageView;
 import logic.state.Board;
-import logic.state.Territory;
 
 public class GUITerritory {
 	String name;
 	int id;
 	int continent_id;
-
-	public GUIPlayer getPlayer() {
-		return player;
-	}
-
-	public void setPlayer(GUIPlayer player) {
-		this.player = player;
-	}
-
-	GUIPlayer player;
 	int logicTerritoryNumber;
 
 	public int getLogicTerritoryNnumber(Board board){

@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,11 @@ import ui.game.map.GUIPlayer;
 import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 
+/**
+ * Start point for the Application.
+ * Handles the main window and navigation to views/controllers
+ * @author James
+ */
 public class Main extends Application {
 
 	private Stage stage;
@@ -112,7 +118,7 @@ public class Main extends Application {
 	}
 
 	public void goToGame(List<IPlayer> playersBefore,
-			List<IPlayer> playersAfter, List<Integer> cards, String playerType) {
+			List<IPlayer> playersAfter, List<Integer> cards, String playerType, List<String> playerNames) {
 		try {
 			GameController game = (GameController) replaceSceneContent(
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
@@ -147,7 +153,7 @@ public class Main extends Application {
 				}
 			}
 
-			game.setApp(playersBefore, playersAfter, cards, player);
+			game.setApp(playersBefore, playersAfter, cards, player, playerNames);
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -163,12 +169,35 @@ public class Main extends Application {
 			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
 			GUIPlayer player = new GUIPlayer(game, userAgent);
 
-			game.setApp(playersBefore, playersAfter, cards, player);
+			game.setApp(playersBefore, playersAfter, cards, player, namePlayers(playersBefore, playersAfter));
 
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
+	
+	/**
+	 * Temporary method. To be replaced.
+	 */
+	public static List<String> namePlayers(List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
+		int i=0;
+		List<String> names = new LinkedList<>();
+
+		if(playersBefore != null)
+			for(;i<playersBefore.size(); i++) {
+				names.add("Foreign Player " + i);
+			}
+
+		names.add("Local Player");
+
+		if(playersAfter != null)
+			for(int j=0;j<playersAfter.size(); j++, i++) {
+				names.add("Foreign Player " + i);
+			}
+
+		return names;
+	}
+
 
 	private Initializable replaceSceneContent(String fxml, double width,
 			double height) throws Exception {

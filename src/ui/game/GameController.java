@@ -9,7 +9,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import logic.Game;
+import logic.move.Move;
+import logic.state.Board;
+import logic.state.Player;
 import player.IPlayer;
+import player.PlayerController;
 import networking.LocalPlayerHandler;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
@@ -18,12 +22,13 @@ import ui.game.dice.DiceRollResult;
 import ui.game.map.GUIPlayer;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
+
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class GameController implements Initializable {
+public class GameController implements Initializable, PlayerController  {
 
 	@FXML
 	public Pane centerPane;
@@ -52,7 +57,7 @@ public class GameController implements Initializable {
 	
 	public GUIPlayer player;
 
-	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player) {
+	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player, List<String> playerNames) {
 		
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
@@ -62,10 +67,7 @@ public class GameController implements Initializable {
 		if(playersAfter != null)
 			players.addAll(playersAfter);
 
-		List<String> names = namePlayers(playersBefore, playersAfter);
-
-
-		Game game = new Game(players, names, new LocalPlayerHandler());
+		Game game = new Game(players, playerNames, new LocalPlayerHandler());
 		
 		new Thread()
 		{
@@ -73,35 +75,8 @@ public class GameController implements Initializable {
 				game.run();
 		    }
 		}.start();
-
-
-		System.out.println("Players: ");
-		for(String name : names) {
-			System.out.println(name);
-		}
 	}
 
-	/**
-	 * Temporary method. To be replaced.
-	 */
-	private static List<String> namePlayers(List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
-		int i=0;
-		List<String> names = new LinkedList<>();
-
-		if(playersBefore != null)
-			for(;i<playersBefore.size(); i++) {
-				names.add("Foreign Player " + i);
-			}
-
-		names.add("Local Player");
-
-		if(playersAfter != null)
-			for(int j=0;j<playersAfter.size(); j++, i++) {
-				names.add("Foreign Player " + i);
-			}
-
-		return names;
-	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -109,10 +84,20 @@ public class GameController implements Initializable {
 		GameController.console = new GameConsole(consoleTextArea);
 		this.mapControl.initialise(console, player);
 	}
-
-	public void setGUIPlayer(GUIPlayer player){
-		this.player = player;
+	
+	
+	// ================================================================================
+	// PlayerController Functions
+	// ================================================================================
+	
+	@Override
+	public void setup(Player player, Board board) {
 	}
+
+	@Override
+	public void getMove(Move move) {
+	}
+	
 
 	// ================================================================================
 	// Button Actions

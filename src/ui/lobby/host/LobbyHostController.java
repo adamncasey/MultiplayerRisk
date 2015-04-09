@@ -54,9 +54,9 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		this.maxPlayers = maxPlayers;
 		this.hostPlayerType = hostPlayerType;
 		
-		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, addr, hostPlayerType));
+		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, hostPlayerType));
 		
-        lobby = new LocalGameLobby(handler, port, hostNickname);
+        lobby = new LocalGameLobby(handler, port, addr, hostNickname);
 
         lobby.start();
 	}

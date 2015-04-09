@@ -56,7 +56,12 @@ public class DirectConnectController extends AnchorPane implements
 		return isFormEditable.get();
 	}
 	public void setIsFormEditable(boolean value) {
-		isFormEditable.set(value);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				isFormEditable.set(value);
+			}
+		});
 	}
 	public final BooleanProperty isFormEditableProperty() {
 		return isFormEditable;

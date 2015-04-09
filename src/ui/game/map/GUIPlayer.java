@@ -15,14 +15,13 @@ import ui.game.GameController;
  */
 public class GUIPlayer implements IPlayer {
     private PlayerController playerController;
-    private GameController gameController;
+	private GameController gameController;
     private Board board;
     private Player player;
 
     private LocalPlayerHandler handler;
 
-    public GUIPlayer(GameController gameController, PlayerController playerController){
-        this.playerController = playerController;
+    public GUIPlayer(GameController gameController){
         this.gameController = gameController;
     }
 
@@ -67,6 +66,13 @@ public class GUIPlayer implements IPlayer {
             playerController.getMove(move);
         }
     }
+    
+    public PlayerController getPlayerController() {
+		return this.playerController;
+	}
+    public void setPlayerController(PlayerController playerController) {
+		this.playerController = playerController;
+	}
 }
 
 

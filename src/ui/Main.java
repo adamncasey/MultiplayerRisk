@@ -124,31 +124,25 @@ public class Main extends Application {
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
 			stage.setResizable(true);
 
-			GUIPlayer player = null;
+			GUIPlayer player = new GUIPlayer(game);
 			switch (playerType) {
 				case "Self": {
-					player = new GUIPlayer(game, AgentFactory.buildAgent(AgentTypes
-							.randomType()));
 					break;
 				}
 				case "ANGRY AI": {
-					player = new GUIPlayer(game,
-							AgentFactory.buildAgent(AgentTypes.Type.ANGRY));
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.ANGRY));
 					break;
 				}
 				case "GREEDY AI": {
-					player = new GUIPlayer(game,
-							AgentFactory.buildAgent(AgentTypes.Type.GREEDY));
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.GREEDY));
 					break;
 				}
 				case "CONTINENTAL AI": {
-					player = new GUIPlayer(game,
-							AgentFactory.buildAgent(AgentTypes.Type.CONTINENTAL));
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.CONTINENTAL));
 					break;
 				}
 				case "FURIOUS AI": {
-					player = new GUIPlayer(game,
-							AgentFactory.buildAgent(AgentTypes.Type.FURIOUS));
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.FURIOUS));
 					break;
 				}
 			}
@@ -167,7 +161,8 @@ public class Main extends Application {
 			stage.setResizable(true);
 
 			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-			GUIPlayer player = new GUIPlayer(game, userAgent);
+			GUIPlayer player = new GUIPlayer(game);
+			player.setPlayerController(userAgent);
 
 			game.setApp(playersBefore, playersAfter, cards, player, namePlayers(playersBefore, playersAfter));
 

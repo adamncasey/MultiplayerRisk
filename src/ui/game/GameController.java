@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class GameController implements Initializable, PlayerController  {
-
+	
 	@FXML
 	public Pane centerPane;
 	@FXML
@@ -51,6 +51,12 @@ public class GameController implements Initializable, PlayerController  {
 	public GUIPlayer player;
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player, List<String> playerNames) {
+
+		// If playing as self, use this as the PlayerController.
+		if(player.getPlayerController() == null) { 
+			player.setPlayerController(this);
+		}
+		this.player = player;
 		
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
@@ -74,23 +80,26 @@ public class GameController implements Initializable, PlayerController  {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		GameController.console = new GameConsole(consoleTextArea);
-		this.mapControl.initialise(console, player);
+		this.mapControl.initialise(console);
 	}
 	
 	
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
-	
 	@Override
 	public void setup(Player player, Board board) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void getMove(Move move) {
+		// TODO Auto-generated method stub
+		
 	}
-	
 
+	
 	// ================================================================================
 	// Button Actions
 	// ================================================================================

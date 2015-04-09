@@ -3,9 +3,8 @@ package ui.game.map;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import ui.game.GameConsole;
 import javafx.application.Platform;
@@ -258,32 +257,37 @@ public class MapControl extends Pane{
 
 	public void removeArmy(GUITerritory territory) {
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
+		if (territory == null)
+			return;
 
-				if (territory == null)
+		if (territory.getArmyID() == null) {
+			return;
+		}
+
+		ObservableList<Node> children = getChildren();
+		Iterator<Node> iterator = children.iterator();
+
+		try {
+			while (iterator.hasNext()) {
+				Node child = iterator.next();
+				if (territory.getArmyID() != null && child.getId() != null
+						&& child.getId().equals(territory.getArmyID())) {
+					territory.setArmyID(null);
+
+					Platform.runLater(new Runnable() {
+						@Override
+						public void run() {
+							children.remove(child);
+						}
+					});
+
 					return;
-
-				if (territory.getArmyID() == null) {
-					return;
-				}
-
-				ObservableList<Node> children = getChildren();
-
-				for (Node child : children) {
-					if (territory.getArmyID() != null && child.getId() != null
-							&& child.getId().equals(territory.getArmyID())) {
-						territory.setArmyID(null);
-
-						children.remove(child);
-
-
-						return;
-					}
 				}
 			}
-		});
+		} catch (ConcurrentModificationException e){
+			//ignore
+		}
+
 	}
 
 	public ArmyMode getArmyMode() {

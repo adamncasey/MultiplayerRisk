@@ -94,7 +94,7 @@ public class DefaultMap {
 		list.add(new GUITerritory("Western Europe",4,2,EU5));
 		list.add(new GUITerritory("Southern Europe",5,2,EU6));
 		list.add(new GUITerritory("Alaska",0,0,NA0));
-		list.add(new GUITerritory("Northwest territory",1,0,NA1));
+		list.add(new GUITerritory("Northwest Territory",1,0,NA1));
 		list.add(new GUITerritory("Greenland",2,0,NA2));
 		list.add(new GUITerritory("Alberta",3,0,NA3));
 		list.add(new GUITerritory("Ontario",4,0,NA4));

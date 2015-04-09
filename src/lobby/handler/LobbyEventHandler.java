@@ -10,7 +10,7 @@ public interface LobbyEventHandler {
         TODO: Only called on Lobby Host. Protocol may change to allow these to be called for lobby joiners as well.
         onPlayerJoin to be called when a player has been accepted by the Host into the lobby.
     */
-    void onPlayerJoin(int playerid);
+    void onPlayerJoin(int playerid, String name);
     void onPlayerLeave(int playerid);
 
     /**

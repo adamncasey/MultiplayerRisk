@@ -28,15 +28,17 @@ public class LocalGameLobby extends Thread {
     private final HostLobbyEventHandler handler;
     private final InetAddress listenAddress;
     private final int port;
+    private final String name;
 
-    public LocalGameLobby(HostLobbyEventHandler handler, int port) {
-        this(handler, port, null);
+    public LocalGameLobby(HostLobbyEventHandler handler, int port, String name) {
+        this(handler, port, null, name);
     }
 
-	public LocalGameLobby(HostLobbyEventHandler handler, int port, InetAddress listenAddress) {
+	public LocalGameLobby(HostLobbyEventHandler handler, int port, InetAddress listenAddress, String name) {
         this.handler = handler;
         this.listenAddress = listenAddress;
         this.port = port;
+        this.name = name;
 	}
 
     /**
@@ -293,7 +295,7 @@ public class LocalGameLobby extends Thread {
         if(result == null) {
             if(lobbyClient.accept(newplayerid)) {
 
-                handler.onPlayerJoin(newplayerid);
+                handler.onPlayerJoin(newplayerid, lobbyClient.getName());
                 return lobbyClient;
             }
         }

@@ -25,6 +25,7 @@ public class LobbyClient {
 
     private int playerid;
     private IConnection conn;
+    private String name;
 
     public IConnection getConnection() {
         return conn;
@@ -32,6 +33,10 @@ public class LobbyClient {
 
     public int getPlayerid() {
         return playerid;
+    }
+    
+    public String getName() {
+    	return name;
     }
 	
 	public boolean accept(int playerid) {
@@ -48,6 +53,8 @@ public class LobbyClient {
 		}
 
         this.playerid = playerid;
+        // TODO Read name from JOIN_GAME message.
+        this.name = "Player " + playerid;
 
 		return true;
 	}

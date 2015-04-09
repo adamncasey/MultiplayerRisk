@@ -47,7 +47,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	
 	public void startLobby(int port, int maxPlayers) {
 		this.maxPlayers = maxPlayers;
-        lobby = new LocalGameLobby(handler, port);
+		// TODO Add player name
+        lobby = new LocalGameLobby(handler, port, "Player Name");
         lobby.start();
 	}
 
@@ -108,11 +109,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         }
 
         @Override
-        public void onPlayerJoin(int playerid) {
+        public void onPlayerJoin(int playerid, String name) {
     		Platform.runLater(new Runnable() {
     			@Override
     			public void run() {
-    				playersList.add("Player " + playerid);
+    				playersList.add("Player (" + playerid + "): " + name);
     			}
     		});
     		

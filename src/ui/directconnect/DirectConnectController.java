@@ -91,7 +91,8 @@ public class DirectConnectController extends AnchorPane implements
 		try {
 			RemoteGameLobby lobby = new RemoteGameLobby(
 					InetAddress.getByName(ip.getText()), Settings.port,
-					joinHandler);
+					joinHandler,
+					"Player Name"); // TODO fill in actual name
 			lobby.start();
 		} catch (UnknownHostException e) {
 			status("Unknown host: " + e.getMessage());
@@ -130,8 +131,8 @@ public class DirectConnectController extends AnchorPane implements
 		}
 
 		@Override
-		public void onPlayerJoin(int playerid) {
-			status("onPlayerJoin " + playerid);
+		public void onPlayerJoin(int playerid, String name) {
+			status("onPlayerJoin (" + playerid + "): " + name);
 		}
 
 		@Override

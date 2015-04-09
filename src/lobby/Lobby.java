@@ -36,7 +36,8 @@ public class Lobby implements ILobby {
 	public LocalGameLobby createGameLobby(String friendlyName, int noOfPlayers, HostLobbyEventHandler handler)
 			throws PortInUseException {
 		
-		LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port);
+		// TODO is friendly name the right string to pass in as playername?
+		LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port, friendlyName);
 		lobby.start();
 		
 		return lobby;

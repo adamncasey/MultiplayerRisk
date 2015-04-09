@@ -51,7 +51,7 @@
             <TextField fx:id="port" editable="${controller.isFormEditable}" maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
               <children>
-                <Button focusTraversable="false" onAction="#joinButtonAction" text="Connect" />
+                <Button fx:id="connectButton" focusTraversable="false" onAction="#joinButtonAction" text="Connect" />
               </children>
             </HBox>
             <ProgressIndicator fx:id="progressRing" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6" />

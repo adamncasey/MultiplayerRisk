@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -47,6 +48,8 @@ public class DirectConnectController extends AnchorPane implements
 	private ProgressIndicator progressRing;
 	@FXML
 	private ChoiceBox<String> playAsChoiceBox;
+	@FXML
+	private Button connectButton;
 	
 	private BooleanProperty isFormEditable = new SimpleBooleanProperty(true);
 	public boolean getIsFormEditable() {
@@ -105,6 +108,7 @@ public class DirectConnectController extends AnchorPane implements
 		connectionStatus.setText("connecting...");
 
 		try {
+			connectButton.setDisable(true);
 			RemoteGameLobby lobby = new RemoteGameLobby(
 					InetAddress.getByName(ip.getText()), Settings.port,
 					joinHandler,
@@ -112,6 +116,7 @@ public class DirectConnectController extends AnchorPane implements
 			lobby.start();
 		} catch (UnknownHostException e) {
 			status("Unknown host: " + e.getMessage());
+			connectButton.setDisable(false);
 		}
 	}
 
@@ -225,8 +230,14 @@ public class DirectConnectController extends AnchorPane implements
 		@Override
 		public void onFailure(Throwable e) {
 			status("onFailure: " + e.getMessage());
-
-			e.printStackTrace();
+			
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					connectButton.setDisable(false);
+				}
+			});
+			
 		}
 	};
 }

@@ -12,11 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import lobby.LocalGameLobby;
 import lobby.handler.HostLobbyEventHandler;
+import settings.Settings;
 import ui.*;
 
 public class LobbyHostController extends AnchorPane implements Initializable {
@@ -27,6 +29,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	ListView<String> players;
 	@FXML
 	TextArea consoleWindow;
+	@FXML
+	Button startButton;
 	
 	ObservableList<String> playersList;
 	int maxPlayers;
@@ -34,7 +38,6 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	String hostPlayerType;
 	
 	LocalGameLobby lobby;
-
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -65,32 +68,12 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
-		if(playersList.size()>1) {
+		if(playersList.size() >= Settings.MinNumberOfPlayers) {
+			startButton.setDisable(true);
 			lobby.startGame();
 		}
 		else {
-			writeToConsole("You need at least 3 players to start a game");
-		}
-	}
-	
-	@FXML
-	protected void kickPlayerButtonAction(ActionEvent event) {
-		int selectedIndex = players.getSelectionModel().getSelectedIndex();
-		if(selectedIndex > 0) {
-			String selected = playersList.get(selectedIndex);
-			
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					playersList.remove(selectedIndex);
-				}
-			});
-			
-			writeToConsole(String.format("-> You kicked %s\n", selected));
-		}
-		else
-		{
-			writeToConsole("You cannot kick the host!");
+			writeToConsole("You need at least " + Settings.MinNumberOfPlayers + " players");
 		}
 	}
 	

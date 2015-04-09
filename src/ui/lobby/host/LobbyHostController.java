@@ -1,5 +1,6 @@
 package ui.lobby.host;
 
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -49,11 +50,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		players.setItems(playersList);
 	}
 	
-	public void startLobby(int port, int maxPlayers, String hostPlayerType, String hostNickname) {
+	public void startLobby(int port, int maxPlayers, String hostPlayerType, InetAddress addr, String hostNickname) {
 		this.maxPlayers = maxPlayers;
 		this.hostPlayerType = hostPlayerType;
 		
-		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, hostPlayerType));
+		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, addr, hostPlayerType));
 		
         lobby = new LocalGameLobby(handler, port, hostNickname);
 

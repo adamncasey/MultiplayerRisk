@@ -1,6 +1,8 @@
 package ui.creategame;
 
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -22,6 +24,8 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	private TextField port;
 	@FXML
+	private TextField ipaddress;
+	@FXML
 	private TextField players;
 	@FXML
 	private TextField name;
@@ -38,10 +42,11 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.players.setText("4");
 		this.port.setText(Settings.port + "");
+		this.ipaddress.setText("0.0.0.0");
 	}
 
 	private boolean isFormValid() {
-		return isValidPort() && isValidNumberOfPlayers() && isValidNickname();
+		return isValidPort() && isValidNumberOfPlayers() && isValidNickname() && isValidIPAddress();
 	}
 
 	private boolean isValidPort() {
@@ -53,6 +58,17 @@ public class CreateGameController extends AnchorPane implements Initializable {
 		}
 
 		return valid;
+	}
+
+	private boolean isValidIPAddress() {
+		try {
+			InetAddress.getByName(ipaddress.getText());
+		} catch (UnknownHostException e) {
+			// TODO If the user enters a valid URL which doesn't resolve through DNS, this is not a useful error message.
+			return false;
+		}
+
+		return true;
 	}
 	
 	private boolean isValidNickname() {
@@ -104,8 +120,15 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	protected void startButtonAction(ActionEvent event) {
 		if (isFormValid()) {
 			String selected = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
-			
-			application.gotoLobbyAsHost(Integer.parseInt(port.getText()), Integer.parseInt(players.getText()), selected, name.getText());
+			InetAddress addr;
+			try {
+				addr = InetAddress.getByName(ipaddress.getText());
+			} catch (UnknownHostException e) {
+				status("Error: Invalid Binding IP Address");
+				return;
+			}
+
+			application.gotoLobbyAsHost(Integer.parseInt(port.getText()), Integer.parseInt(players.getText()), selected, addr, name.getText());
 		}
 	}
 }

@@ -49,12 +49,14 @@
             <TextField fx:id="players" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <Label text="Port" GridPane.columnIndex="0" GridPane.rowIndex="4" />
             <TextField fx:id="port" maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Label text="IP Address" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <TextField fx:id="ipaddress" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
               <children>
                 <Button focusTraversable="false" onAction="#startButtonAction" text="Start Lobby" />
               </children>
             </HBox>
-                  <Label fx:id="status" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+                  <Label fx:id="status" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
           </children>
           <columnConstraints>
             <ColumnConstraints />

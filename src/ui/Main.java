@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -93,11 +94,11 @@ public class Main extends Application {
 	}
 
 	public void gotoLobbyAsHost(int port, int maxPlayers, String playerType,
-			String hostNickname) {
+			InetAddress addr, String hostNickname) {
 		try {
 			LobbyHostController lobby = (LobbyHostController) replaceSceneContent(
 					"lobby/lobby.fxml", MENU_WIDTH, MENU_HEIGHT);
-			lobby.startLobby(port, maxPlayers, playerType, hostNickname);
+			lobby.startLobby(port, maxPlayers, playerType, addr, hostNickname);
 
 			stage.setResizable(true);
 			lobby.setApp(this);

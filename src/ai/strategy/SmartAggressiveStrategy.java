@@ -37,18 +37,26 @@ public class SmartAggressiveStrategy extends Strategy {
     private void placeArmies(Move move){
         int territory = -1;
         boolean ok = false;
+        if(move.getExtraArmies() > 0){
+            List<Integer> matches = move.getMatches();
+            territory = matches.get(random.nextInt(matches.size()));
+            move.setTerritory(territory);
+            move.setArmies(1);
+            return;
+        }
+
         while(!ok){
             territory = random.nextInt(board.getNumTerritories());
             if(board.getOwner(territory) != move.getUID()){
                 continue;
             }
-            ok = false;
             for(int link : board.getLinks(territory)){
                 if(board.getOwner(link) != move.getUID()){
                     ok = true;
                 }
             }
         }
+
         move.setTerritory(territory);
         move.setArmies(1);
     }

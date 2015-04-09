@@ -81,4 +81,3 @@ List of Strategies:
 // Shaft - Looks ahead and attacks into as few borders as possible
 // Quo - Shaft that tries to obtain a card every turn
 
-

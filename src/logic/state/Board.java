@@ -37,9 +37,6 @@ public class Board {
 
     public Board(){
         loadDefaultBoard();
-        for(String s : TERRITORY_NAMES) {
-        	System.out.println(s);
-        }
     }
 
     protected Board(boolean testing, int[] owners, int[] armies){

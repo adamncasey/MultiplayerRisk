@@ -49,7 +49,7 @@ public class GreedyAgent extends Agent {
                 cs.getMove(move);
                 return;
             case START_ATTACK:
-                rs.getMove(move);
+                cs.getMove(move);
                 return;
             case CHOOSE_ATTACK_DICE:
                 as.getMove(move);

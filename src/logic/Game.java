@@ -109,6 +109,13 @@ public class Game implements Runnable{
         Move move;
         List<Card> hand = state.getPlayer(uid).getHand();
         List<Card> toTradeIn = new ArrayList<Card>();
+
+        move = new Move(uid, TRADE_IN_CARDS);
+        getMove(move);
+        toTradeIn.addAll(move.getToTradeIn());
+        state.tradeInCards(uid, toTradeIn); 
+        updatePlayers(move);
+        hand = state.getPlayer(uid).getHand();
         while(hand.size() >= 5){
             move = new Move(uid, TRADE_IN_CARDS);
             getMove(move);
@@ -176,8 +183,6 @@ public class Game implements Runnable{
             int attackingDice = move.getAttackDice();
             updatePlayers(move);
 
-            List<Integer> attackDiceRolls = performDiceRolls(attackingDice);
-
             int defendingDice = 1;
             int enemyUID = state.getBoard().getOwner(attackTo);
             checkDisconnect(enemyUID);
@@ -187,6 +192,8 @@ public class Game implements Runnable{
             getMove(move);
             defendingDice = move.getDefendDice();
             updatePlayers(move);
+
+            List<Integer> attackDiceRolls = performDiceRolls(attackingDice);
 
             List<Integer> defendDiceRolls = performDiceRolls(defendingDice);
  

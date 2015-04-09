@@ -72,7 +72,7 @@ public class CardsStrategy extends Strategy {
     private void decideAttack(Move move){
         int result = pickBestAttack();
         // If there are no promising attacks, do not attack
-        if(result < 0 || board.getArmies(bestFrom) == 1){
+        if(result < 0){
             move.setDecision(false);
         }else{
             move.setDecision(true);
@@ -87,7 +87,7 @@ public class CardsStrategy extends Strategy {
         int bestScore = -Integer.MAX_VALUE;
         int uid = player.getUID();
         for(int i = 0; i != board.getNumTerritories(); ++i){
-            if(board.getOwner(i) != uid){
+            if(board.getOwner(i) != uid || board.getArmies(i) == 1){
                 continue;
             }
             for(int j : board.getLinks(i)){
@@ -108,6 +108,7 @@ public class CardsStrategy extends Strategy {
     private void attack(Move move){
         move.setFrom(bestFrom);
         move.setTo(bestTo);
+// System.out.format("%d %d %d %d %d %d\n", bestFrom, board.getArmies(bestFrom), board.getOwner(bestFrom), bestTo, board.getArmies(bestTo), board.getOwner(bestTo));
     }
 }
 

@@ -1,6 +1,5 @@
 package ui.game;
 
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,8 +11,6 @@ import javafx.scene.layout.Pane;
 import logic.Game;
 import player.IPlayer;
 import networking.LocalPlayerHandler;
-import ui.Main;
-import ui.commandline.CommandLinePlayer;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -21,12 +18,10 @@ import ui.game.dice.DiceRollResult;
 import ui.game.map.GUIPlayer;
 import ui.game.map.MapControl;
 import ui.game.map.MapControl.ArmyMode;
-
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class GameController implements Initializable {
 
@@ -58,18 +53,10 @@ public class GameController implements Initializable {
 	public GUIPlayer player;
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, GUIPlayer player) {
-
-		if(playersBefore == null && playersAfter == null) {
-			System.out.println("Error setting up game.");
-			return;
-		}
-		System.out.println("Starting game");
-
+		
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
-		
         this.player = player;
-        
 		players.add(player);
 
 		if(playersAfter != null)

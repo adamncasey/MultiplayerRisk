@@ -23,6 +23,8 @@ public class LocalGameLobby extends Thread {
     protected static final int HOST_PLAYERID = 0;
 
 	boolean lobbyOpen = true;
+	boolean lobbyCancelled = false;
+	
     ServerSocket server;
 
     private final HostLobbyEventHandler handler;
@@ -63,7 +65,7 @@ public class LocalGameLobby extends Thread {
 
             server = createServerSocket();
 
-            while (isLobbyOpen()) {
+            while (isLobbyOpen() && !isLobbyCancelled()) {
                 int newplayerid = lobbyClients.size() + 1;
 
                 LobbyClient client = getClient(server, newplayerid);
@@ -85,41 +87,44 @@ public class LocalGameLobby extends Thread {
             throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
         }
 
-        setupRouterForwarding(router, lobbyClients);
+        if(!isLobbyCancelled()) {
+        	
+            setupRouterForwarding(router, lobbyClients);
 
-        // At this point the router should have all knowledge required to send messages to appropriate users.
-        // lobbyClients is a weird mix (needs refactoring). Will only contain lobby-specific information
+            // At this point the router should have all knowledge required to send messages to appropriate users.
+            // lobbyClients is a weird mix (needs refactoring). Will only contain lobby-specific information
 
-        int firstPlayer;
+            int firstPlayer;
 
-        try {
-            pingMessage(router);
+            try {
+                pingMessage(router);
 
-            readyMessage(router);
+                readyMessage(router);
 
-            initialiseMessage(router);
+                initialiseMessage(router);
 
-            firstPlayer = decidePlayerOrder(router, HOST_PLAYERID, netClients);
+                firstPlayer = decidePlayerOrder(router, HOST_PLAYERID, netClients);
 
-            shuffleCards(router);
+                shuffleCards(router);
 
-            // Pick version & features compatible with players.
+                // Pick version & features compatible with players.
 
-            // initialise game.
-        } catch(InterruptedException e) {
-            // TODO Log exception?
-            handler.onFailure(e);
-            return;
+                // initialise game.
+            } catch(InterruptedException e) {
+                // TODO Log exception?
+                handler.onFailure(e);
+                return;
+            }
+            
+        	// collect the IPlayers together.
+            List<IPlayer> playersBefore = new LinkedList<>();
+            List<IPlayer> playersAfter = new LinkedList<>();
+
+            LobbyUtil.createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
+
+            // TODO Pass cards up to onLobbyComplete handler
+            handler.onLobbyComplete(playersBefore, playersAfter, null);
         }
-
-        // collect the IPlayers together.
-        List<IPlayer> playersBefore = new LinkedList<>();
-        List<IPlayer> playersAfter = new LinkedList<>();
-
-        LobbyUtil.createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
-
-        // TODO Pass cards up to onLobbyComplete handler
-        handler.onLobbyComplete(playersBefore, playersAfter, null);
 	}
 
     private void setupRouterForwarding(GameRouter router, List<LobbyClient> clients) {
@@ -323,7 +328,22 @@ public class LocalGameLobby extends Thread {
         return lobbyOpen;
     }
     
+    private synchronized boolean isLobbyCancelled() {
+        return lobbyCancelled;
+    }
+    
     public synchronized void closeLobby() {
+    	lobbyOpen = false;
+    	try {
+    		if(server != null) {
+    			server.close();
+    		}
+		} catch (Exception e) {
+		}
+    }
+    
+    public synchronized void cancelLobby() {
+    	lobbyCancelled = true;
     	lobbyOpen = false;
     	try {
     		if(server != null) {

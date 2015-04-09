@@ -1,11 +1,6 @@
 package ui.game.map;
 
-import java.io.*;
 import java.util.*;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -14,10 +9,6 @@ import player.IPlayer;
 import player.PlayerController;
 import networking.LocalPlayerHandler;
 import ui.game.GameController;
-import ui.game.Main;
-import javafx.stage.Stage;
-
-import static java.lang.Thread.sleep;
 
 /**
  * GUIPlayer

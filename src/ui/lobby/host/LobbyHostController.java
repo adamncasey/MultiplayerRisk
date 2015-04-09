@@ -62,7 +62,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
-		lobby.closeLobby();
+		lobby.cancelLobby();
 		application.gotoMenu();
 	}
 

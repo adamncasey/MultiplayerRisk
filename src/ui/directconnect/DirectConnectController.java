@@ -8,6 +8,8 @@ import java.util.ResourceBundle;
 
 import player.IPlayer;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,6 +47,17 @@ public class DirectConnectController extends AnchorPane implements
 	private ProgressIndicator progressRing;
 	@FXML
 	private ChoiceBox<String> playAsChoiceBox;
+	
+	private BooleanProperty isFormEditable = new SimpleBooleanProperty(true);
+	public boolean getIsFormEditable() {
+		return isFormEditable.get();
+	}
+	public void setIsFormEditable(boolean value) {
+		isFormEditable.set(value);
+	}
+	public final BooleanProperty isFormEditableProperty() {
+		return isFormEditable;
+	}
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
@@ -125,6 +138,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onJoinAccepted(int playerid) {
+			setIsFormEditable(false);
 			status("Join accepted!\nYou are player number " + playerid + "\n\nWaiting for host to start the game...");
 		}
 

@@ -9,6 +9,16 @@ public class GUITerritory {
 	int id;
 	int continent_id;
 
+	public int getArmyQuantity() {
+		return armyQuantity;
+	}
+
+	public void setArmyQuantity(int armyQuantity) {
+		this.armyQuantity = armyQuantity;
+	}
+
+	int armyQuantity;
+
 	public GUIPlayer getPlayer() {
 		return player;
 	}

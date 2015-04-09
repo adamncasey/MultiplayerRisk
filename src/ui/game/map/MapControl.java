@@ -190,6 +190,9 @@ public class MapControl extends Pane{
 		if(territory == null)
 			return;
 
+		if(number == 0)
+			return;
+
 		if(ownershipMapping!=null) {
 			if (ownershipMapping.get(territory)!=null && ownershipMapping.get(territory) == playerID) {
 				if (territory.getArmyQuantity() == number) {

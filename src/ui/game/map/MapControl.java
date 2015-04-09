@@ -33,6 +33,8 @@ public class MapControl extends Pane{
 	}
 
 	HashMap<String, GUITerritory> nameIndex = new HashMap<>();
+	HashMap<GUITerritory, Node> armyMapping = new HashMap<>();
+	HashMap<ImageView, GUITerritory> imageMapping = new HashMap<>();
 
 	GUIPlayer player;
 
@@ -91,11 +93,7 @@ public class MapControl extends Pane{
 	}
 
 	private GUITerritory getTerritoryByImageView(ImageView img) {
-		for (GUITerritory territory : highlighted_all) {
-			if (territory.getImage().equals(img))
-				return territory;
-		}
-		return null;
+		return imageMapping.get(img);
 	}
 
 	public GUITerritory getTerritoryByName(String name) {
@@ -142,6 +140,7 @@ public class MapControl extends Pane{
 
 			territory.setPlayer(player);
 			nameIndex.put(territory.getName(), territory);
+			imageMapping.put(territory.getImage(), territory);
 
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
 					new EventHandler<MouseEvent>() {
@@ -240,8 +239,10 @@ public class MapControl extends Pane{
 			army.relocate(x, y);
 
 			army.setId(generateRandomID());
-
 			territory.setArmyID(army.getId());
+
+			armyMapping.put(territory, army);
+
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
 					mouseOverFocus);
 
@@ -257,36 +258,23 @@ public class MapControl extends Pane{
 
 	public void removeArmy(GUITerritory territory) {
 
-		if (territory == null)
+		if (territory == null) {
 			return;
+		}
 
 		if (territory.getArmyID() == null) {
 			return;
 		}
 
+		Node toRemove = armyMapping.get(territory);
+
 		ObservableList<Node> children = getChildren();
-		Iterator<Node> iterator = children.iterator();
-
-		try {
-			while (iterator.hasNext()) {
-				Node child = iterator.next();
-				if (territory.getArmyID() != null && child.getId() != null
-						&& child.getId().equals(territory.getArmyID())) {
-					territory.setArmyID(null);
-
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							children.remove(child);
-						}
-					});
-
-					return;
-				}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				children.remove(toRemove);
 			}
-		} catch (ConcurrentModificationException e){
-			//ignore
-		}
+		});
 
 	}
 

@@ -7,6 +7,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -23,7 +24,11 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	private TextField players;
 	@FXML
+	private TextField name;
+	@FXML
 	private Label status;
+	@FXML
+	private ChoiceBox playAsChoiceBox;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -36,7 +41,7 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	}
 
 	private boolean isFormValid() {
-		return isValidPort() && isValidNumberOfPlayers();
+		return isValidPort() && isValidNumberOfPlayers() && isValidNickname();
 	}
 
 	private boolean isValidPort() {
@@ -44,6 +49,17 @@ public class CreateGameController extends AnchorPane implements Initializable {
 
 		if (!Validator.isValidPort(port.getText())) {
 			status("Error: Invalid port");
+			valid = false;
+		}
+
+		return valid;
+	}
+	
+	private boolean isValidNickname() {
+		boolean valid = true;
+
+		if (name.getText() == null || name.getText().isEmpty()) {
+			status("Error: Invalid nickname");
 			valid = false;
 		}
 
@@ -87,7 +103,9 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
 		if (isFormValid()) {
-			application.gotoLobbyAsHost(Integer.parseInt(port.getText()), Integer.parseInt(players.getText()));
+			String selected = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
+			
+			application.gotoLobbyAsHost(Integer.parseInt(port.getText()), Integer.parseInt(players.getText()), selected, name.getText());
 		}
 	}
 }

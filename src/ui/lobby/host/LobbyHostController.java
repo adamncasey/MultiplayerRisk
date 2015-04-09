@@ -24,12 +24,14 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	private Main application;
 
 	@FXML
-	private ListView<String> players;
+	ListView<String> players;
 	@FXML
-	private TextArea consoleWindow;
+	TextArea consoleWindow;
 	
-	private ObservableList<String> playersList;
-	private int maxPlayers;
+	ObservableList<String> playersList;
+	int maxPlayers;
+	
+	String hostPlayerType;
 	
 	LocalGameLobby lobby;
 
@@ -40,13 +42,16 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		ObservableList<String> items = FXCollections.observableArrayList("You (Host)");
-		playersList = items;
+		playersList = FXCollections.observableArrayList();
 		players.setItems(playersList);
 	}
 	
-	public void startLobby(int port, int maxPlayers) {
+	public void startLobby(int port, int maxPlayers, String hostPlayerType, String hostNickname) {
 		this.maxPlayers = maxPlayers;
+		this.hostPlayerType = hostPlayerType;
+		
+		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, hostPlayerType));
+		
         lobby = new LocalGameLobby(handler, port);
         lobby.start();
 	}
@@ -59,7 +64,9 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
-		lobby.startGame();
+		if(playersList.size()>1) {
+			lobby.startGame();
+		}
 	}
 	
 	@FXML
@@ -163,7 +170,6 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         @Override
         public void onDiceHash(int playerid) {
             writeToConsole("onDiceHash " + playerid);
-
         }
 
         @Override

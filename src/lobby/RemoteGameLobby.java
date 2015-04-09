@@ -35,7 +35,7 @@ public class RemoteGameLobby extends Thread {
 
     // TODO Implement timeouts in networking
 
-    public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler) {
+    public RemoteGameLobby(InetAddress address, int port, JoinLobbyEventHandler handler, String name) {
         this.address = address;
         this.port = port;
         this.handler = handler;
@@ -281,6 +281,9 @@ public class RemoteGameLobby extends Thread {
             throw new RuntimeException("Invalid message");
         }
 
+        //TODO Handle name elsewhere. This is just a good place to inject a fake name.
+        handler.onPlayerJoin(msg.playerid, "Player " + msg.playerid);
+        
         handler.onPingReceive(msg.playerid);
 
         if(msg.payload instanceof IntegerPayload) {

@@ -37,7 +37,7 @@ public class CLIMain {
 
         String value = reader.readLine();
         if(value.equals("host")) {
-            lobby = hostLobby();
+            lobby = hostLobby("Host Player Name");
 
             value = reader.readLine();
             if(value.equals("start")) {
@@ -103,8 +103,8 @@ public class CLIMain {
         return names;
     }
 
-    public static LocalGameLobby hostLobby() {
-        LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port);
+    public static LocalGameLobby hostLobby(String name) {
+        LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port, name);
         lobby.start();
         return lobby;
     }
@@ -117,8 +117,8 @@ public class CLIMain {
         }
 
         @Override
-        public void onPlayerJoin(int playerid) {
-            System.out.println("onPlayerJoin " + playerid);
+        public void onPlayerJoin(int playerid, String playerName) {
+            System.out.println("onPlayerJoin (" + playerid + "): " + playerName);
         }
 
         @Override
@@ -192,7 +192,7 @@ public class CLIMain {
 
     public static void joinLobby() {
         try {
-            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler);
+            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler, "Player Name");
 
             lobby.start();
 
@@ -222,8 +222,8 @@ public class CLIMain {
         }
 
         @Override
-        public void onPlayerJoin(int playerid) {
-            System.out.println("onPlayerJoin " + playerid);
+        public void onPlayerJoin(int playerid, String playerName) {
+            System.out.println("onPlayerJoin (" + playerid + "): " + playerName);
         }
 
         @Override

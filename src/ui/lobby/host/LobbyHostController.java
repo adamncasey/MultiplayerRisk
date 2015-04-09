@@ -52,7 +52,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		
 		playersList.add(String.format("%s (%s) \t[Host]", hostNickname, hostPlayerType));
 		
-        lobby = new LocalGameLobby(handler, port);
+        lobby = new LocalGameLobby(handler, port, hostNickname);
+
         lobby.start();
 	}
 
@@ -115,11 +116,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         }
 
         @Override
-        public void onPlayerJoin(int playerid) {
+        public void onPlayerJoin(int playerid, String name) {
     		Platform.runLater(new Runnable() {
     			@Override
     			public void run() {
-    				playersList.add("Player " + playerid);
+    				playersList.add("Player (" + playerid + "): " + name);
     			}
     		});
     		

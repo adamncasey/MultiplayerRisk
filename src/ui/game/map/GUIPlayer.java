@@ -42,7 +42,7 @@ public class GUIPlayer implements IPlayer {
 
         GameController.console.write(message);
         MapControl mapController = gameController.mapControl;
-        
+
         int number = board.getNumTerritories();
         for(int i = 0 ; i < number ; i++) {
             int owner = board.getOwner(i);
@@ -55,6 +55,12 @@ public class GUIPlayer implements IPlayer {
 
         if(move.getUID() == player.getUID()){
             handler.sendMove(move);
+        }
+
+        try{
+            Thread.sleep(20);
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
     }

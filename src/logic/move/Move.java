@@ -3,9 +3,7 @@ package logic.move;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import logic.Card;
-import logic.rng.Int256;
 import logic.rng.RNG;
 import logic.state.Board;
 

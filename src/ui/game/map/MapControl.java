@@ -36,7 +36,11 @@ public class MapControl extends Pane{
 			AS7, AS8, AS9, AS10, AS11;
 
 	private float armyScalingFactor = (float) 0.25;
-	private ArrayList<GUITerritory> highlighted_all;
+	private ArrayList<GUITerritory> clickableTerritories;
+
+	public ArrayList<GUITerritory> getClickableTerritories() {
+		return clickableTerritories;
+	}
 
 	private EventHandler<MouseEvent> mouseOverFocus;
 	{
@@ -122,9 +126,9 @@ public class MapControl extends Pane{
 				EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1,
 				AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
 
-		highlighted_all = territories.getTerritoryList();
+		clickableTerritories = territories.getTerritoryList();
 
-		for (final GUITerritory territory : highlighted_all) {
+		for (final GUITerritory territory : clickableTerritories) {
 			nameIndex.put(territory.getName(), territory);
 			imageMapping.put(territory.getImage(), territory);
 
@@ -142,17 +146,6 @@ public class MapControl extends Pane{
 						@Override
 						public void handle(MouseEvent mouseEvent) {
 							territory.getImage().setOpacity(0);
-						}
-					});
-
-			territory.getImage().addEventFilter(MouseEvent.MOUSE_CLICKED,
-					new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent mouseEvent) {
-							Random generator = new Random();
-							int x = generator.nextInt(6) + 1;
-							int y = generator.nextInt(25) + 1;
-							setArmies(x, y, territory);
 						}
 					});
 		}

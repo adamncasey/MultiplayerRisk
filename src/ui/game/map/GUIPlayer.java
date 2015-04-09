@@ -43,9 +43,9 @@ public class GUIPlayer implements IPlayer {
 
         GameController.console.write(message);
         MapControl mapController = gameController.mapControl;
-
+        
         int number = board.getNumTerritories();
-        for(int i = 0 ; i < number ; i++){
+        for(int i = 0 ; i < number ; i++) {
             int owner = board.getOwner(i);
             if (owner >= 0) {
                 int armies = board.getArmies(i);

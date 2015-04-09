@@ -68,6 +68,9 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 		if(playersList.size()>1) {
 			lobby.startGame();
 		}
+		else {
+			writeToConsole("You need at least 3 players to start a game");
+		}
 	}
 	
 	@FXML

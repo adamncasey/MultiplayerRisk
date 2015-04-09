@@ -122,7 +122,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onJoinAccepted(int playerid) {
-			status("onJoinAccepted " + playerid);
+			status("Join accepted!\nYou are player number " + playerid + "\n\nWaiting for host to start the game...");
 		}
 
 		@Override

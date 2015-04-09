@@ -7,6 +7,17 @@ public class GUITerritory {
 	String name;
 	int id;
 	int continent_id;
+
+	public int getArmyQuantity() {
+		return armyQuantity;
+	}
+
+	public void setArmyQuantity(int armyQuantity) {
+		this.armyQuantity = armyQuantity;
+	}
+
+	int armyQuantity;
+
 	int logicTerritoryNumber;
 
 	public int getLogicTerritoryNnumber(Board board){

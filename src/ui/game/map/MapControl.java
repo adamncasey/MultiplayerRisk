@@ -25,6 +25,7 @@ public class MapControl extends Pane{
 	HashMap<String, GUITerritory> nameIndex = new HashMap<>();
 	HashMap<GUITerritory, Node> armyMapping = new HashMap<>();
 	HashMap<ImageView, GUITerritory> imageMapping = new HashMap<>();
+	HashMap<GUITerritory, Integer> ownershipMapping = new HashMap<>();
 
 	GUIPlayer player;
 
@@ -176,7 +177,16 @@ public class MapControl extends Pane{
 		if(territory == null)
 			return;
 
+		if(ownershipMapping!=null) {
+			if (ownershipMapping.get(territory)!=null && ownershipMapping.get(territory) == playerID) {
+				if (territory.getArmyQuantity() == number) {
+					return;
+				}
+			}
+		}
+
 		removeArmy(territory);
+		ownershipMapping.put(territory, playerID);
 
 		Image infantryImage = new Image(getClass().getResourceAsStream(
 				"army/infantry_player" + playerID + ".png"));
@@ -186,6 +196,7 @@ public class MapControl extends Pane{
 				"army/artillery_player" + playerID + ".png"));
 		
 		Label army = new Label(Integer.toString(number));
+		territory.setArmyQuantity(number);
 		ImageView currentImage = null;
 		
 		double sizex = territory.getImage().getImage().getWidth();
@@ -194,13 +205,11 @@ public class MapControl extends Pane{
 		double x = territory.getImage().getLayoutX() + sizex / 2;
 		double y = territory.getImage().getLayoutY() + sizey / 2;
 
-		// if (armyMode == ArmyMode.ADD) {
-		if (true) {
 		
 			int labelOffset = 0;
 			if (number < 5) {			
 				currentImage = new ImageView(infantryImage);
-				labelOffset = -95; //ignore_this
+				labelOffset = -94; //ignore_this
 			}
 			if (number >= 5 && number < 20) {				
 				currentImage = new ImageView(cavalryImage);
@@ -222,7 +231,6 @@ public class MapControl extends Pane{
 			
 			army.setContentDisplay(ContentDisplay.TOP);
 			army.setMouseTransparent(true);
-			
 
 			army.relocate(x, y);
 
@@ -241,7 +249,7 @@ public class MapControl extends Pane{
 				}
 			});
 			
-		}
+
 	}
 
 	public void removeArmy(GUITerritory territory) {
@@ -253,6 +261,8 @@ public class MapControl extends Pane{
 		if (territory.getArmyID() == null) {
 			return;
 		}
+
+		ownershipMapping.remove(territory);
 
 		Node toRemove = armyMapping.get(territory);
 

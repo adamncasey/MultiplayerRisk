@@ -103,13 +103,17 @@ public class Main extends Application {
         }
     }
     
-    public void goToGame(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards) {
+    public void goToGame(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cards, String playerType) {
         try {
         	GameController game = (GameController) replaceSceneContent("game/Game.fxml", WIDTH, HEIGHT);
         	
         	stage.setResizable(true);
         	Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+        	
+        	// TODO: Chose player using playerType.
         	GUIPlayer player = new GUIPlayer(game, userAgent);
+        	
+        	
         	game.setApp(playersBefore, playersAfter, cards, player);
         } catch (Exception ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

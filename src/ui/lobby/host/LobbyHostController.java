@@ -197,7 +197,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs);
+					application.goToGame(playersBefore, playersAfter, cardIDs, hostPlayerType);
 				}
 			});
 			

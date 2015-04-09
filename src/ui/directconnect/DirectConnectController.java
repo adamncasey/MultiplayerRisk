@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
@@ -42,6 +43,8 @@ public class DirectConnectController extends AnchorPane implements
 	private TextField port;
 	@FXML
 	private ProgressIndicator progressRing;
+	@FXML
+	private ChoiceBox<String> playAsChoiceBox;
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
@@ -92,7 +95,7 @@ public class DirectConnectController extends AnchorPane implements
 			RemoteGameLobby lobby = new RemoteGameLobby(
 					InetAddress.getByName(ip.getText()), Settings.port,
 					joinHandler,
-					"Player Name"); // TODO fill in actual name
+					name.getText());
 			lobby.start();
 		} catch (UnknownHostException e) {
 			status("Unknown host: " + e.getMessage());
@@ -196,10 +199,11 @@ public class DirectConnectController extends AnchorPane implements
 		@Override
 		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
 			status("onLobbyComplete: ");
+			String selectedPlayerType = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs);
+					application.goToGame(playersBefore, playersAfter, cardIDs, selectedPlayerType);
 				}
 			});
 		}

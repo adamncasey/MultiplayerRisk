@@ -28,7 +28,7 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	private Label status;
 	@FXML
-	private ChoiceBox playAsChoiceBox;
+	private ChoiceBox<String> playAsChoiceBox;
 
 	public void setApp(Main application) {
 		this.application = application;

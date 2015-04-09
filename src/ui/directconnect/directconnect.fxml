@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -6,6 +7,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.collections.FXCollections?>
+
 <AnchorPane id="AnchorPane" prefHeight="600" prefWidth="500" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.directconnect.DirectConnectController">
   <children>
     <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -26,17 +29,32 @@
           <children>
             <Label text="Your Nickname" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label text="IP Address" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <TextField fx:id="ip" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label text="Port" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <TextField fx:id="port" maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <Label text="Play as" GridPane.rowIndex="2" />
+            <ChoiceBox fx:id="playAsChoiceBox" prefWidth="224.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Self" />
+                  <String fx:value="ANGRY AI" />
+                  <String fx:value="GREEDY AI" />
+                  <String fx:value="CONTINENTAL AI" />
+                  <String fx:value="FURIOUS AI" />
+                </FXCollections>
+              </items>
+              <value>
+                <String fx:value="Self" />
+              </value>
+            </ChoiceBox>
+            <Label text="IP Address" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <TextField fx:id="ip" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Port" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <TextField fx:id="port" maxWidth="80.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
               <children>
                 <Button focusTraversable="false" onAction="#joinButtonAction" text="Connect" />
               </children>
             </HBox>
-            <ProgressIndicator fx:id="progressRing" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="5" />
-            <Label fx:id="connectionStatus" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+            <ProgressIndicator fx:id="progressRing" visible="false" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+            <Label fx:id="connectionStatus" textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7">
               <padding>
                 <Insets top="15.0" />
               </padding>
@@ -52,6 +70,7 @@
           <rowConstraints>
             <RowConstraints />
             <RowConstraints />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />

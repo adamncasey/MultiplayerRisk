@@ -67,11 +67,6 @@ public class GUIPlayer implements IPlayer {
             handler.sendMove(move);
         }
 
-        try {
-            sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void getMove(Move move){

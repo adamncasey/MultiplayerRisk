@@ -110,14 +110,11 @@ public class Game implements Runnable{
         List<Card> hand = state.getPlayer(uid).getHand();
         List<Card> toTradeIn = new ArrayList<Card>();
 
-        // Always do atleast 1 TRADE_IN_CARDS
-        hand = tradeInCards(uid, toTradeIn);
         while(hand.size() >= 5){ // Force more TRADE_IN_CARDS if hand is too big
             hand = tradeInCards(uid, toTradeIn);
         }
-        if(hand.size() >= 3){ // Allow a final optional TRADE_IN_CARDS if needed (in real game this could ask a player twice is they dont want to trade in 3 cards, maybe fix?)
-            hand = tradeInCards(uid, toTradeIn);
-        }
+        // Always do atleast 1 TRADE_IN_CARDS
+        hand = tradeInCards(uid, toTradeIn);
 
         int sets = state.tradeInCards(uid, toTradeIn); 
         int armies = state.calculateTerritoryArmies(uid);

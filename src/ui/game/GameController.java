@@ -11,7 +11,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import logic.Game;
 import logic.move.Move;
-import logic.move.Move.Stage;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
@@ -21,15 +20,16 @@ import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
 import ui.game.dice.DiceRollResult;
-import ui.game.map.GUIPlayer;
 import ui.game.map.GUITerritory;
 import ui.game.map.MapControl;
-import ui.game.map.MapControl.ArmyMode;
 
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
+
+import ai.strategy.PassiveStrategy;
 
 public class GameController implements Initializable, PlayerController {
 
@@ -90,16 +90,21 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
+	
+	// TODO: Replace this with Cards control.
+	private PassiveStrategy ps;
+	
 	boolean moveCompleted = false;
 	Player userDetails;
-	
+
 	@Override
 	public void setup(Player player, Board board) {
 		this.userDetails = player;
-		
+		ps = new PassiveStrategy(player, board, new Random());
+
 		for (final GUITerritory territory : mapControl
 				.getClickableTerritories()) {
-			
+
 			// Handle territory clicks.
 			territory.getImage().addEventFilter(MouseEvent.MOUSE_CLICKED,
 					new EventHandler<MouseEvent>() {
@@ -113,10 +118,11 @@ public class GameController implements Initializable, PlayerController {
 
 	@Override
 	public synchronized void getMove(Move move) {
+		moveCompleted = false;
 		currentMove = move;
-		
+
 		String prompt = "Not set";
-		
+
 		switch (move.getStage()) {
 		case CLAIM_TERRITORY:
 			prompt = "Claim a territory!";
@@ -125,6 +131,8 @@ public class GameController implements Initializable, PlayerController {
 			prompt = "Reinforce a territory!";
 			break;
 		case TRADE_IN_CARDS:
+			ps.getMove(move);
+			moveCompleted = true;
 			break;
 		case PLACE_ARMIES:
 			break;
@@ -149,34 +157,57 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		console.write(prompt);
-		
-		moveCompleted = false;
-		System.out.println("Starting await move lock");
-		while(!moveCompleted) {
+
+		while (!moveCompleted) {
 			try {
-	            wait();
-	        } catch (InterruptedException e) {}
+				wait();
+			} catch (InterruptedException e) {
+			}
 		}
-		
-		System.out.println("Exited await move lock");
 	}
-	
+
 	public synchronized void notifyMoveCompleted() {
-	    moveCompleted = true;
-	    System.out.println("Notifying move completed");
-	    notifyAll();
-	    System.out.println("Done notifying move completed");
+		moveCompleted = true;
+		notifyAll();
 	}
 
 	void territoryClicked(GUITerritory territory) {
-		
-		if(currentMove.getStage() == Stage.CLAIM_TERRITORY) {
+
+		switch (currentMove.getStage()) {
+		case CLAIM_TERRITORY:
 			currentMove.setTerritory(territory.getId());
-			mapControl.setArmies(userDetails.getUID() + 1, 1, territory);
 			notifyMoveCompleted();
-		}
-		else {
-			console.write("Stage " + currentMove.getStage().toString() + " not implemented");
+			break;
+		case REINFORCE_TERRITORY:
+			currentMove.setTerritory(territory.getId());
+			notifyMoveCompleted();
+			break;
+		case TRADE_IN_CARDS:
+			break;
+		case PLACE_ARMIES:
+			currentMove.setTerritory(territory.getId());
+			currentMove.setArmies(1);
+			notifyMoveCompleted();
+			break;
+//		case DECIDE_ATTACK:
+//			break;
+//		case START_ATTACK:
+//			break;
+//		case CHOOSE_ATTACK_DICE:
+//			break;
+//		case CHOOSE_DEFEND_DICE:
+//			break;
+//		case OCCUPY_TERRITORY:
+//			break;
+//		case DECIDE_FORTIFY:
+//			break;
+//		case START_FORTIFY:
+//			break;
+//		case FORTIFY_TERRITORY:
+//			break;
+		default:
+			console.write("Stage " + currentMove.getStage().toString()
+					+ " not implemented");
 		}
 	}
 
@@ -187,21 +218,6 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// Button Actions
 	// ================================================================================
-
-	public void addArmies(ActionEvent event) {
-		mapControl.setArmyMode(ArmyMode.ADD);
-		console.write("In army adding mode.");
-	}
-
-	public void removeArmies(ActionEvent event) {
-		mapControl.setArmyMode(ArmyMode.REMOVE);
-		console.write("In army removing mode mode.");
-	}
-
-	public void setArmies(ActionEvent event) {
-		mapControl.setArmyMode(ArmyMode.SET);
-		console.write("In army setting mode.");
-	}
 
 	// ================================================================================
 	// Popup

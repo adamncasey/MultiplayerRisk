@@ -1,6 +1,7 @@
-package ui.game.map;
+package ui.game;
 
 import java.util.*;
+
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -8,7 +9,7 @@ import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
 import networking.LocalPlayerHandler;
-import ui.game.GameController;
+import ui.game.map.MapControl;
 
 /**
  * GUIPlayer

@@ -8,8 +8,8 @@ import logic.Game;
 import player.IPlayer;
 import ui.Main;
 import ui.commandline.CommandLinePlayer;
+import ui.game.GUIPlayer;
 import ui.game.GameController;
-import ui.game.map.GUIPlayer;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;

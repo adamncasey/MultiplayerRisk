@@ -20,8 +20,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
+import ui.game.GUIPlayer;
 import ui.game.GameController;
-import ui.game.map.GUIPlayer;
 import ui.lobby.host.LobbyHostController;
 import ui.menu.*;
 

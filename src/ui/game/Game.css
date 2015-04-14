@@ -34,11 +34,21 @@
     -fx-background-color: transparent;
 }
 
+.text-area .scroll-bar:vertical {
+    -fx-opacity: 0;
+}
+
 .label {
     -fx-font-family:'Open Sans', sans-serif;
     -fx-font-size: 14;
     -fx-text-fill: rgba(255, 255, 255, 1);
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
+}
+
+#currentMoveDescription {
+    -fx-font-size: 24;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: none;
 }
 
 .button .text {

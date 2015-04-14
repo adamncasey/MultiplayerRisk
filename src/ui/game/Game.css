@@ -67,3 +67,7 @@
 .button:hover {
     -fx-background-color:rgba(0, 0, 0, 0.5);
 }
+
+.selectedPlayer {
+    -fx-background-color:rgba(0,0,0,0.2);
+}

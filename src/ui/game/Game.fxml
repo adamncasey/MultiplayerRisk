@@ -7,17 +7,17 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<?import ui.game.dice.DiceRollControl?>
-<?import ui.game.map.MapControl?>
+<!-- <?import ui.game.dice.DiceRollControl?>
+<?import ui.game.map.MapControl?> -->
 
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
     <BorderPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
       <top>
-        <GridPane prefHeight="80.0" BorderPane.alignment="CENTER">
+        <GridPane prefHeight="150.0" BorderPane.alignment="CENTER">
           <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="250.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
@@ -25,11 +25,60 @@
           </rowConstraints>
           <children>
             <!-- Title -->
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="TOP">
               <image>
                 <Image url="@Logo.png" />
               </image>
             </ImageView>
+                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                     <children>
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);" styleClass="selectedPlayer">
+                           <bottom>
+                              <Label text="James" BorderPane.alignment="CENTER" />
+                           </bottom>
+                           <center>
+                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@shield.png" />
+                                 </image>
+                              </ImageView>
+                           </center>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </BorderPane>
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
+                           <bottom>
+                              <Label text="James" BorderPane.alignment="CENTER" />
+                           </bottom>
+                           <center>
+                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@shield.png" />
+                                 </image>
+                              </ImageView>
+                           </center>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </BorderPane>
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
+                           <bottom>
+                              <Label text="James" BorderPane.alignment="CENTER" />
+                           </bottom>
+                           <center>
+                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <image>
+                                    <Image url="@shield.png" />
+                                 </image>
+                              </ImageView>
+                           </center>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </BorderPane>
+                     </children>
+                  </HBox>
           </children>
         </GridPane>
       </top>
@@ -39,8 +88,8 @@
             <Insets top="30.0" />
           </GridPane.margin>
           <children>
-            <MapControl fx:id="mapControl">
-            </MapControl>
+            <!-- <MapControl fx:id="mapControl">
+            </MapControl> -->
           </children>
         </Pane>
       </center>
@@ -73,8 +122,8 @@
       <children>
         <Pane fx:id="popupContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
           <children>
-            <DiceRollControl fx:id="diceRollControl" visible="false">
-            </DiceRollControl>
+            <!-- <DiceRollControl fx:id="diceRollControl" visible="false">
+            </DiceRollControl> -->
           </children>
         </Pane>
         <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />

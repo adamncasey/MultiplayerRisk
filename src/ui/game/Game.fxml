@@ -15,7 +15,7 @@
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
     <BorderPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
       <top>
-        <GridPane prefHeight="150.0" BorderPane.alignment="CENTER">
+        <GridPane prefHeight="90.0" BorderPane.alignment="CENTER">
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="250.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -25,59 +25,96 @@
           </rowConstraints>
           <children>
             <!-- Title -->
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="TOP">
+            <ImageView fitWidth="220.0" pickOnBounds="true" preserveRatio="true" GridPane.valignment="TOP">
               <image>
                 <Image url="@Logo.png" />
               </image>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </GridPane.margin>
             </ImageView>
-                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="2">
                      <children>
-                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);" styleClass="selectedPlayer">
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="70.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
                            <bottom>
-                              <Label text="James" BorderPane.alignment="CENTER" />
+                              <Label styleClass="playerName" text="Nathan" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="5.0" />
+                                 </BorderPane.margin>
+                              </Label>
                            </bottom>
                            <center>
-                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                              <ImageView fitWidth="45.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
                                  <image>
-                                    <Image url="@shield.png" />
+                                    <Image url="@player/shield_player_1.png" />
                                  </image>
+                                 <BorderPane.margin>
+                                    <Insets top="5.0" />
+                                 </BorderPane.margin>
                               </ImageView>
                            </center>
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
                         </BorderPane>
-                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="70.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);" styleClass="selectedPlayer">
                            <bottom>
-                              <Label text="James" BorderPane.alignment="CENTER" />
+                              <Label styleClass="playerName" text="James" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="5.0" />
+                                 </BorderPane.margin>
+                              </Label>
                            </bottom>
                            <center>
-                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                              <ImageView fitWidth="45.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
                                  <image>
-                                    <Image url="@shield.png" />
+                                    <Image url="@player/shield_player_2.png" />
                                  </image>
+                                 <BorderPane.margin>
+                                    <Insets top="5.0" />
+                                 </BorderPane.margin>
                               </ImageView>
                            </center>
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
                         </BorderPane>
-                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="110.0" prefWidth="100.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="70.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
                            <bottom>
-                              <Label text="James" BorderPane.alignment="CENTER" />
+                              <Label styleClass="playerName" text="Adam" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="5.0" />
+                                 </BorderPane.margin>
+                              </Label>
                            </bottom>
                            <center>
-                              <ImageView fitHeight="80.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                              <ImageView fitWidth="45.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
                                  <image>
-                                    <Image url="@shield.png" />
+                                    <Image url="@player/shield_player_3.png" />
                                  </image>
+                                 <BorderPane.margin>
+                                    <Insets top="5.0" />
+                                 </BorderPane.margin>
                               </ImageView>
                            </center>
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
+                        </BorderPane>
+                        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="80.0" prefWidth="70.0" style="-fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);">
+                           <bottom>
+                              <Label styleClass="playerName" text="Victor" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets bottom="5.0" />
+                                 </BorderPane.margin>
+                              </Label>
+                           </bottom>
+                           <center>
+                              <ImageView fitWidth="45.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
+                                 <image>
+                                    <Image url="@player/shield_player_4.png" />
+                                 </image>
+                                 <BorderPane.margin>
+                                    <Insets top="5.0" />
+                                 </BorderPane.margin>
+                              </ImageView>
+                           </center>
                         </BorderPane>
                      </children>
+                     <GridPane.margin>
+                        <Insets top="3.0" />
+                     </GridPane.margin>
                   </HBox>
           </children>
         </GridPane>

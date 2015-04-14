@@ -1,0 +1,10 @@
+p1: #2449aa; (blue)
+p2: #bb0000; (red)
+p3: #3d8e00; (green)
+p4: #ffdb00; (yellow)
+p5: #00ffff; (cyan)
+p6: #6f00bb; (purple)
+
+
+Shield width: 45px;
+height ~55px;

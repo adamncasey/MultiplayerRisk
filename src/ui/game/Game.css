@@ -51,6 +51,12 @@
     -fx-effect: none;
 }
 
+.playerName {
+    -fx-font-size: 9;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: none;
+}
+
 .button .text {
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
 }

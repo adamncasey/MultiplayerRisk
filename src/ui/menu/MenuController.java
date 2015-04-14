@@ -57,28 +57,9 @@ public class MenuController extends AnchorPane implements Initializable {
     public void gametest(ActionEvent event) {
         if (application != null) {
         	
-        	int seed = random.nextInt();
-            Scanner reader = new Scanner(System.in);
             PrintWriter writer = new PrintWriter(System.out);
 
-            writer.println("Hello! Welcome to Risk");
-            writer.print("How many AIs would you like to watch? (3-6)\n> ");
-            writer.flush();
-            int numAI = 0; boolean correct = false;
-            while(!correct){
-                writer.flush();
-                while(!reader.hasNextInt()){
-                    writer.print("Invalid input\n> ");
-                    writer.flush();
-                    reader.next();
-                }
-                numAI = reader.nextInt();
-                correct = numAI >= 3 && numAI <= 6;
-                if(!correct){
-                    writer.print("Invalid input\n> ");
-                    writer.flush();
-                }
-            }
+            int numAI = 3;
             
             writer.format("Loading game with %d AIs\n", numAI);
             List<IPlayer> players = new ArrayList<IPlayer>();

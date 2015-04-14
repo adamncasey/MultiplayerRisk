@@ -45,18 +45,6 @@
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.1), 0, 0.0 , 0 , 1 );
 }
 
-#currentMoveDescription {
-    -fx-font-size: 24;
-    -fx-text-fill: rgba(255, 255, 255, 1);
-    -fx-effect: none;
-}
-
-.playerName {
-    -fx-font-size: 9;
-    -fx-text-fill: rgba(255, 255, 255, 1);
-    -fx-effect: none;
-}
-
 .button .text {
     -fx-effect: dropshadow( one-pass-box , rgba(0, 0, 0, 0.8), 0, 0.0 , 0 , -1 );
 }
@@ -72,6 +60,18 @@
 
 .button:hover {
     -fx-background-color:rgba(0, 0, 0, 0.5);
+}
+
+// Player shields
+.playerBorder {
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.9), 10, 0, 0, 0);
+}
+
+.playerName {
+    -fx-font-size: 9;
+    -fx-text-fill: rgba(255, 255, 255, 1);
+    -fx-effect: none;
 }
 
 .selectedPlayer {

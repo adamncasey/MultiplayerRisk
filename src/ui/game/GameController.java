@@ -4,11 +4,15 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import logic.Game;
 import logic.move.Move;
 import logic.state.Board;
@@ -23,6 +27,7 @@ import ui.game.dice.DiceRollResult;
 import ui.game.map.GUITerritory;
 import ui.game.map.MapControl;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,15 +50,22 @@ public class GameController implements Initializable, PlayerController {
 	public GridPane popup;
 	@FXML
 	public Pane popupContent;
+	@FXML
+	HBox playerShields;
 
 	private Move currentMove;
 
 	public static GameConsole console;
 
-	List<IPlayer> playersBefore;
-	List<IPlayer> playersAfter;
 	List<Object> cards;
 	public GUIPlayer player;
+	
+	List<String> players;
+	
+	
+	// ================================================================================
+	// Startup
+	// ================================================================================
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter,
 			List<Integer> cards, GUIPlayer player, List<String> playerNames) {
@@ -64,14 +76,51 @@ public class GameController implements Initializable, PlayerController {
 		}
 		this.player = player;
 
+		setPlayers(playerNames);
+		startGame(combinePlayers(playersBefore, player, playersAfter), playerNames);
+	}
+	
+	void setPlayers(List<String> players) {
+		this.players = players;
+		
+		// Add player shields for each player.
+		for(int i=0; i<players.size(); i++) {
+			BorderPane pane = new BorderPane();
+			pane.setPrefSize(70, 60);
+			pane.getStyleClass().add("playerBorder");
+		
+			ImageView image = new ImageView();
+			image.setFitWidth(45);
+			image.setPreserveRatio(true);
+			
+			InputStream in = GameController.class.getResourceAsStream(String.format("player/shield_player_%d.png", i+1));
+			image.setImage(new Image(in));
+			pane.setCenter(image);
+			BorderPane.setAlignment(image, Pos.TOP_CENTER);
+			
+			Label label = new Label();
+			label.setText(players.get(i));
+			label.getStyleClass().add("playerName");
+			pane.setBottom(label);
+			BorderPane.setAlignment(label, Pos.CENTER);
+			BorderPane.setMargin(label, new Insets(0,0,7,0));
+			
+			playerShields.getChildren().add(pane);
+		}
+	}
+	
+	List<IPlayer> combinePlayers(List<IPlayer> playersBefore, GUIPlayer player, List<IPlayer> playersAfter) {
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
-		this.player = player;
 		players.add(player);
 
 		if (playersAfter != null)
 			players.addAll(playersAfter);
-
+		
+		return players;
+	}
+	
+	void startGame(List<IPlayer> players, List<String> playerNames) {
 		Game game = new Game(players, playerNames, new LocalPlayerHandler());
 
 		new Thread() {
@@ -87,6 +136,7 @@ public class GameController implements Initializable, PlayerController {
 		this.mapControl.initialise(console);
 	}
 
+	
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
@@ -215,10 +265,12 @@ public class GameController implements Initializable, PlayerController {
 		return currentMove;
 	}
 
+	
 	// ================================================================================
 	// Button Actions
 	// ================================================================================
 
+	
 	// ================================================================================
 	// Popup
 	// ================================================================================
@@ -237,6 +289,7 @@ public class GameController implements Initializable, PlayerController {
 		diceRollControl.reset();
 	}
 
+	
 	// ================================================================================
 	// Dice
 	// ================================================================================

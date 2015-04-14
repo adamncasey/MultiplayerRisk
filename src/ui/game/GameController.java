@@ -29,8 +29,10 @@ import ui.game.map.MapControl;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -51,7 +53,7 @@ public class GameController implements Initializable, PlayerController {
 	@FXML
 	public Pane popupContent;
 	@FXML
-	HBox playerShields;
+	HBox playerShieldContainer;
 
 	private Move currentMove;
 
@@ -61,6 +63,8 @@ public class GameController implements Initializable, PlayerController {
 	public GUIPlayer player;
 	
 	List<String> players;
+	
+	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
 	
 	
 	// ================================================================================
@@ -105,7 +109,8 @@ public class GameController implements Initializable, PlayerController {
 			BorderPane.setAlignment(label, Pos.CENTER);
 			BorderPane.setMargin(label, new Insets(0,0,7,0));
 			
-			playerShields.getChildren().add(pane);
+			playerShieldContainer.getChildren().add(pane);
+			playerShields.put(players.get(i), pane);
 		}
 	}
 	

@@ -30,7 +30,7 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
               </GridPane.margin>
             </ImageView>
-            <HBox fx:id="playerShields" alignment="TOP_CENTER" spacing="20.0" GridPane.columnSpan="2">
+            <HBox fx:id="playerShieldContainer" alignment="TOP_CENTER" spacing="20.0" GridPane.columnSpan="2">
               <GridPane.margin>
                 <Insets top="10.0" />
               </GridPane.margin>

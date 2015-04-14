@@ -192,7 +192,7 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void nextMove(String currentMove) {
+    public void nextMove(String currentMove, String playerName) {
 
     }
 

@@ -2,6 +2,8 @@ package ui.game;
 
 import java.util.*;
 
+import javafx.application.Platform;
+import javafx.scene.layout.BorderPane;
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -19,6 +21,7 @@ public class GUIPlayer implements IPlayer {
 	private GameController gameController;
     private Board board;
     private Player player;
+    String lastPlayerToMove;
 
     private LocalPlayerHandler handler;
 
@@ -33,8 +36,30 @@ public class GUIPlayer implements IPlayer {
         this.handler = handler;
     }
 
-    public void nextMove(String move){
+    public void nextMove(String move, String playerName){
         GameController.console.write(move);
+        
+        final BorderPane lastShield;
+        if(lastPlayerToMove != null) {
+        	lastShield = gameController.playerShields.get(lastPlayerToMove);
+        	
+        	Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					lastShield.getStyleClass().remove("selectedPlayer");
+				}
+			});
+        }
+        
+        final BorderPane shield = gameController.playerShields.get(playerName);
+    	Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+		        shield.getStyleClass().add("selectedPlayer");
+			}
+		});
+
+        lastPlayerToMove = playerName;
     }
 
     public void updatePlayer(Move move){

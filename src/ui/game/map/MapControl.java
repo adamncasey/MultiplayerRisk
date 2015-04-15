@@ -1,16 +1,12 @@
 package ui.game.map;
 
 import java.io.IOException;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.*;
-import ui.game.GameConsole;
+
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,93 +14,26 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
-public class MapControl extends Pane{
+public class MapControl extends Pane {
 
-	GameConsole console;
-
-	HashMap<String, GUITerritory> nameIndex = new HashMap<>();
-	HashMap<GUITerritory, Node> armyMapping = new HashMap<>();
-	HashMap<ImageView, GUITerritory> imageMapping = new HashMap<>();
-	HashMap<GUITerritory, Integer> ownershipMapping = new HashMap<>();
-
-	@FXML
-	public ImageView worldmap;
-	@FXML
-	public ImageView AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3, AF4, AF5, SA0,
-			SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5, EU6, NA0, NA1, NA2,
-			NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1, AS2, AS3, AS4, AS5, AS6,
-			AS7, AS8, AS9, AS10, AS11;
-
-	private float armyScalingFactor = (float) 0.25;
-	private ArrayList<GUITerritory> clickableTerritories;
-
-	public ArrayList<GUITerritory> getClickableTerritories() {
-		return clickableTerritories;
+	public enum ArmyClass {
+		None, Infantry, Cavalry, Artillery
 	}
 
-	private EventHandler<MouseEvent> mouseOverFocus;
-	{
-		mouseOverFocus = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				try {
-
-					ImageView source = (ImageView) mouseEvent.getSource();
-					GUITerritory territory = getTerritoryByImageView(source);
-
-					for (Node child : getChildren()) {
-							if (territory.getArmyID() != null
-									&& child.getId() != null
-									&& child.getId().equals(territory.getArmyID())) {
-								child.toFront();
-							}
-					}
-				} catch (Exception e) {
-					// Do nothing, because it means nothing in this context.
-				}
-			}
-		};
-	}
-
-	public boolean selectTerritory(GUITerritory t){
-
-		if (t.isSelected()){
-			unselectTerritory(t);
-			return false;
-		}
-		else{
-			t.getImage().setOpacity(100);
-			t.setSelected(true);
-		}
-		return true;
-	}
-
-	public boolean unselectTerritory(GUITerritory t){
-		t.getImage().setOpacity(0);
-		t.setSelected(false);
-		return true;
-	}
-
-	private GUITerritory getTerritoryByImageView(ImageView img) {
-		return imageMapping.get(img);
-	}
-
-	public GUITerritory getTerritoryByName(String name) {
-		return nameIndex.get(name);
-	}
-
-	private String generateRandomID() {
-		SecureRandom random = new SecureRandom();
-		return (new BigInteger(130, random).toString(32));
-	}
+	Map<Integer, GUITerritory> territoryByID = new HashMap<>();
+	Map<ImageView, GUITerritory> territoryByImageView = new HashMap<>();
 
 	DefaultMap territories;
 
-	public enum ArmyMode {
-		SET, ADD, REMOVE
-	}
+	@FXML
+	ImageView worldmap;
+	@FXML
+	ImageView AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3, AF4, AF5, SA0, SA1, SA2,
+			SA3, EU0, EU1, EU2, EU3, EU4, EU5, EU6, NA0, NA1, NA2, NA3, NA4,
+			NA5, NA6, NA7, NA8, AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8,
+			AS9, AS10, AS11;
 
-	private ArmyMode armyMode;
+	ArrayList<GUITerritory> clickableTerritories;
 
 	public MapControl() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -118,8 +47,25 @@ public class MapControl extends Pane{
 		}
 	}
 
-	public void initialise(GameConsole console) {
-		this.console = console;
+	Map<Integer, Image> artilleryImages = new HashMap<>();
+	Map<Integer, Image> infantryImages = new HashMap<>();
+	Map<Integer, Image> cavalryImages = new HashMap<>();
+
+	public void initialise() {
+		for (int i = 1; i < 7; i++) {
+			artilleryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/artillery_player" + i + ".png")));
+			infantryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/infantry_player" + i + ".png")));
+			cavalryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/cavalry_player" + i + ".png")));
+		}
 
 		territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
 				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
@@ -128,142 +74,125 @@ public class MapControl extends Pane{
 
 		clickableTerritories = territories.getTerritoryList();
 
+		Label label;
 		for (final GUITerritory territory : clickableTerritories) {
-			nameIndex.put(territory.getName(), territory);
-			imageMapping.put(territory.getImage(), territory);
+			// Add territory
+			territoryByID.put(territory.getId(), territory);
+			territoryByImageView.put(territory.getImage(), territory);
 
-			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
-					new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent mouseEvent) {
-							if (territory.getImage().getOpacity() < 100)
-								territory.getImage().setOpacity(100);
-						}
-					});
+			// Mouse events
+			addMouseHoverEvents(territory);
 
-			territory.getImage().addEventFilter(MouseEvent.MOUSE_EXITED,
-					new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent mouseEvent) {
-							territory.getImage().setOpacity(0);
-						}
-					});
+			// Army
+			label = new Label();
+			territory.setArmyLabel(label);
+			getChildren().add(label);
 		}
 	}
 
-	public void setArmies(int playerID, int number, GUITerritory territory) {
+	void addMouseHoverEvents(GUITerritory territory) {
+		territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
+				new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent mouseEvent) {
+						if (territory.getImage().getOpacity() < 100)
+							territory.getImage().setOpacity(100);
+					}
+				});
 
-		if(territory == null)
-			return;
+		territory.getImage().addEventFilter(MouseEvent.MOUSE_EXITED,
+				new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent mouseEvent) {
+						territory.getImage().setOpacity(0);
+					}
+				});
+	}
 
-		if(number == 0)
-			return;
+	public void updateTerritory(int playerID, int numberOfArmies,
+			GUITerritory territory) {
 
-		if(ownershipMapping!=null) {
-			if (ownershipMapping.get(territory)!=null && ownershipMapping.get(territory) == playerID) {
-				if (territory.getArmyQuantity() == number) {
-					return;
-				}
-			}
-		}
+		ArmyClass oldClass = territory.getArmyClass();
+		int oldOwnerID = territory.getOwnerID();
+		int oldNumberOfArmies = territory.getNumberOfArmies();
 
-		removeArmy(territory);
-		ownershipMapping.put(territory, playerID);
+		territory.setOwnerID(playerID);
+		territory.setNumberOfArmies(numberOfArmies);
 
-		Image infantryImage = new Image(getClass().getResourceAsStream(
-				"army/infantry_player" + playerID + ".png"));
-		Image cavalryImage = new Image(getClass().getResourceAsStream(
-				"army/cavalry_player" + playerID + ".png"));
-		Image artilleryImage = new Image(getClass().getResourceAsStream(
-				"army/artillery_player" + playerID + ".png"));
-		
-		Label army = new Label(Integer.toString(number));
-		territory.setArmyQuantity(number);
-		ImageView currentImage = null;
-		
-		double sizex = territory.getImage().getImage().getWidth();
-		double sizey = territory.getImage().getImage().getHeight();
+		Label label = territory.getArmyLabel();
 
-		double x = territory.getImage().getLayoutX() + sizex / 2;
-		double y = territory.getImage().getLayoutY() + sizey / 2;
+		if (territory.getOwnerID() != oldOwnerID
+				|| territory.getArmyClass() != oldClass) {
 
-		
+			ImageView image = null;
 			int labelOffset = 0;
-			if (number < 5) {			
-				currentImage = new ImageView(infantryImage);
-				labelOffset = -94; //ignore_this
-			}
-			if (number >= 5 && number < 20) {				
-				currentImage = new ImageView(cavalryImage);
-				labelOffset = -110;
-			}
-			if (number >= 20) {
-				currentImage = new ImageView(artilleryImage);
+
+			switch (territory.getArmyClass()) {
+			case Artillery:
+				image = new ImageView(artilleryImages.get(territory.getOwnerID()));
 				labelOffset = -162;
+				break;
+			case Cavalry:
+				image = new ImageView(cavalryImages.get(territory.getOwnerID()));
+				labelOffset = -110;
+				break;
+			case Infantry:
+				image = new ImageView(infantryImages.get(territory.getOwnerID()));
+				labelOffset = -94;
+				break;
+			case None:
+				break;
 			}
 
-			currentImage.setScaleX(armyScalingFactor);
-			currentImage.setScaleY(armyScalingFactor);
-			
-			x -= currentImage.getImage().getWidth() / 2;
-			y -= currentImage.getImage().getHeight() / 2;
-			
-			army.setGraphic(currentImage);
-			army.setGraphicTextGap(labelOffset);
-			
-			army.setContentDisplay(ContentDisplay.TOP);
-			army.setMouseTransparent(true);
+			double x = territory.getImage().getLayoutX()
+					+ territory.getImage().getImage().getWidth() / 2;
+			double y = territory.getImage().getLayoutY()
+					+ territory.getImage().getImage().getHeight() / 2;
 
-			army.relocate(x, y);
+			image.setScaleX(0.25f);
+			image.setScaleY(0.25f);
 
-			army.setId(generateRandomID());
-			territory.setArmyID(army.getId());
+			x -= image.getImage().getWidth() / 2;
+			y -= image.getImage().getHeight() / 2;
 
-			armyMapping.put(territory, army);
-
-			territory.getImage().addEventFilter(MouseEvent.MOUSE_ENTERED,
-					mouseOverFocus);
+			final ImageView finalImage = image;
+			final int finalLabelOffset = labelOffset;
+			final double xF = x;
+			final double yF = y;
 
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					getChildren().add(army);
+					label.setGraphic(finalImage);
+					label.setGraphicTextGap(finalLabelOffset);
+
+					label.setContentDisplay(ContentDisplay.TOP);
+					label.setMouseTransparent(true);
+
+					label.relocate(xF, yF);
 				}
 			});
-			
-
-	}
-
-	public void removeArmy(GUITerritory territory) {
-
-		if (territory == null) {
-			return;
 		}
 
-		if (territory.getArmyID() == null) {
-			return;
+		if (territory.getNumberOfArmies() != oldNumberOfArmies) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					label.setText(Integer.toString(numberOfArmies));
+				}
+			});
 		}
-
-		ownershipMapping.remove(territory);
-
-		Node toRemove = armyMapping.get(territory);
-
-		ObservableList<Node> children = getChildren();
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				children.remove(toRemove);
-			}
-		});
-
 	}
 
-	public ArmyMode getArmyMode() {
-		return armyMode;
+	// ================================================================================
+	// Accessors
+	// ================================================================================
+
+	public ArrayList<GUITerritory> getClickableTerritories() {
+		return clickableTerritories;
 	}
 
-	public void setArmyMode(ArmyMode armyMode) {
-		this.armyMode = armyMode;
+	public GUITerritory getTerritoryByID(int id) {
+		return territoryByID.get(id);
 	}
-
 }

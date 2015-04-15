@@ -1,83 +1,18 @@
 package ui.game.map;
 
+import ui.game.map.MapControl.ArmyClass;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import logic.state.Board;
 
 public class GUITerritory {
-	String name;
-	int id;
-	int continent_id;
-
-	public int getArmyQuantity() {
-		return armyQuantity;
-	}
-
-	public void setArmyQuantity(int armyQuantity) {
-		this.armyQuantity = armyQuantity;
-	}
-
-	int armyQuantity;
-
-	int logicTerritoryNumber;
-
-	public int getLogicTerritoryNnumber(Board board){
-		for(int i = 0 ; i < board.getNumTerritories() ; i++)
-			if (board.getName(i) == this.name)
-				return i;
-		return -1;
-	}
-
-	public int getContinent_id() {
-		return continent_id;
-	}
-
-	public void setContinent_id(int continent_id) {
-		this.continent_id = continent_id;
-	}
-
-	boolean selected;
-	ImageView image;
-	String imgPath;
-	String armyID; //id of the army node associated with the territory
 	
-	public String getArmyID() {
-		return armyID;
-	}
-
-	public void setArmyID(String string) {
-		this.armyID = string;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public ImageView getImage() {
-		return image;
-	}
-
-	public void setImage(ImageView image) {
-		this.image = image;
-	}
-
-	public GUITerritory(String name){
-		this.name = name;
-		selected = false;
-	}
-	
-	public GUITerritory(int id, int continent_id){
-		this("", id, continent_id);
-	}
-	
-	public GUITerritory(String name, int id, int continent_id) {
-		this.name = name;
-		this.id = id;
-		this.continent_id = id;
-	}
+	private String name;
+	private int id;
+	private int continent_id;
+	private int numberOfArmies;
+	private ImageView image;
+	private Label armyLabel;
+	private int ownerID;
 	
 	public GUITerritory(String name, int id, int continent_id, ImageView img) {
 		this.name = name;
@@ -85,7 +20,26 @@ public class GUITerritory {
 		this.continent_id = id;
 		this.image = img;
 	}
-
+	
+	public ArmyClass getArmyClass() {
+		if(numberOfArmies == 0) {
+			return ArmyClass.None;
+		}
+		if(numberOfArmies < 5) {
+			return ArmyClass.Infantry;
+		}
+		else if(numberOfArmies < 10) {
+			return ArmyClass.Cavalry;
+		}
+		else {
+			return ArmyClass.Artillery;
+		}
+	}
+	
+	// ================================================================================
+	// Accessors
+	// ================================================================================
+	
 	public String getName() {
 		return name;
 	}
@@ -93,10 +47,42 @@ public class GUITerritory {
 		this.name = name;
 	}
 	
-	public boolean isSelected() {
-		return selected;
+	public int getId() {
+		return id;
 	}
-	public void setSelected(boolean selected) {
-		this.selected = selected;
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getContinent_id() {
+		return continent_id;
+	}
+	public void setContinent_id(int continent_id) {
+		this.continent_id = continent_id;
+	}
+	
+	public int getNumberOfArmies() {
+		return numberOfArmies;
+	}
+	public void setNumberOfArmies(int armyQuantity) {
+		this.numberOfArmies = armyQuantity;
+	}
+	
+	public ImageView getImage() {
+		return image;
+	}
+	
+	public Label getArmyLabel() {
+		return armyLabel;
+	}
+	public void setArmyLabel(Label armyLabel) {
+		this.armyLabel = armyLabel;
+	}
+	
+	public int getOwnerID() {
+		return ownerID;
+	}
+	public void setOwnerID(int ownerID) {
+		this.ownerID = ownerID;
 	}
 }

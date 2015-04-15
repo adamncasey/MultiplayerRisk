@@ -141,7 +141,7 @@ public class GameController implements Initializable, PlayerController {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		GameController.console = new GameConsole(consoleTextArea);
-		this.mapControl.initialise(console);
+		this.mapControl.initialise();
 	}
 
 	

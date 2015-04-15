@@ -54,6 +54,8 @@ public class GameController implements Initializable, PlayerController {
 	public Pane popupContent;
 	@FXML
 	HBox playerShieldContainer;
+	@FXML
+	Label moveDescription;
 
 	private Move currentMove;
 
@@ -175,43 +177,12 @@ public class GameController implements Initializable, PlayerController {
 	public synchronized void getMove(Move move) {
 		moveCompleted = false;
 		currentMove = move;
-
-		String prompt = "Not set";
-
-		switch (move.getStage()) {
-		case CLAIM_TERRITORY:
-			prompt = "Claim a territory!";
-			break;
-		case REINFORCE_TERRITORY:
-			prompt = "Reinforce a territory!";
-			break;
-		case TRADE_IN_CARDS:
+		
+		// CARDS HACK
+		if (move.getStage().equals(Move.Stage.TRADE_IN_CARDS)) {
 			ps.getMove(move);
 			moveCompleted = true;
-			break;
-		case PLACE_ARMIES:
-			break;
-		case DECIDE_ATTACK:
-			break;
-		case START_ATTACK:
-			break;
-		case CHOOSE_ATTACK_DICE:
-			break;
-		case CHOOSE_DEFEND_DICE:
-			break;
-		case OCCUPY_TERRITORY:
-			break;
-		case DECIDE_FORTIFY:
-			break;
-		case START_FORTIFY:
-			break;
-		case FORTIFY_TERRITORY:
-			break;
-		default:
-			assert false : move.getStage();
 		}
-
-		console.write(prompt);
 
 		while (!moveCompleted) {
 			try {
@@ -226,6 +197,8 @@ public class GameController implements Initializable, PlayerController {
 		notifyAll();
 	}
 
+	GUITerritory attackFrom;
+	GUITerritory attackTo;
 	void territoryClicked(GUITerritory territory) {
 
 		switch (currentMove.getStage()) {
@@ -244,8 +217,11 @@ public class GameController implements Initializable, PlayerController {
 			currentMove.setArmies(1);
 			notifyMoveCompleted();
 			break;
-//		case DECIDE_ATTACK:
-//			break;
+		case DECIDE_ATTACK:
+			currentMove.setDecision(true);
+			attackFrom = territory;
+			notifyMoveCompleted();
+			break;
 //		case START_ATTACK:
 //			break;
 //		case CHOOSE_ATTACK_DICE:

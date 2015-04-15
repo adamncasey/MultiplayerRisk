@@ -4,10 +4,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Scanner;
-
 import player.IPlayer;
 import ai.AgentFactory;
 import ai.AgentPlayer;
@@ -53,7 +50,6 @@ public class MenuController extends AnchorPane implements Initializable {
 	// Test map
 	// ================================================================================
     
-    private static Random random = new Random();
     public void gametest(ActionEvent event) {
         if (application != null) {
         	

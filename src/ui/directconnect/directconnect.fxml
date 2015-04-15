@@ -16,7 +16,7 @@
       <children>
         <BorderPane prefHeight="100.0">
           <center>
-            <Label styleClass="title" text="Direct Connect" BorderPane.alignment="CENTER" />
+            <Label styleClass="title" text="Join game" BorderPane.alignment="CENTER" />
           </center>
           <top>
             <Button focusTraversable="false" onAction="#backButtonAction" styleClass="button-nav" text="Back" BorderPane.alignment="TOP_LEFT">

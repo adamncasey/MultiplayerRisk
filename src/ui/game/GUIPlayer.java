@@ -39,6 +39,13 @@ public class GUIPlayer implements IPlayer {
     public void nextMove(String move, String playerName){
         GameController.console.write(move);
         
+        Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameController.moveDescription.setText(move);
+			}
+		});
+        
         final BorderPane lastShield;
         if(lastPlayerToMove != null) {
         	lastShield = gameController.playerShields.get(lastPlayerToMove);

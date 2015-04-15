@@ -12,7 +12,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Parent root = loader.load(getClass().getResource("Game.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("Game.fxml"));
 		primaryStage.setTitle("Risk");
 		Scene newScene = new Scene(root, 1000, 800);
 		//newScene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");

@@ -165,7 +165,7 @@ public class Main extends Application {
 			GUIPlayer player = new GUIPlayer(game);
 			player.setPlayerController(userAgent);
 
-			game.setApp(playersBefore, playersAfter, cards, player, namePlayers(playersBefore, playersAfter));
+			game.setApp(playersBefore, playersAfter, cards, player, namePlayers(playersBefore, "Host" ,playersAfter));
 
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -175,20 +175,20 @@ public class Main extends Application {
 	/**
 	 * Temporary method. To be replaced.
 	 */
-	public static List<String> namePlayers(List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
+	public static List<String> namePlayers(List<IPlayer> playersBefore, String playerName, List<IPlayer> playersAfter) {
 		int i=0;
 		List<String> names = new LinkedList<>();
 
 		if(playersBefore != null)
 			for(;i<playersBefore.size(); i++) {
-				names.add("Foreign Player " + i);
+				names.add("Player " + i);
 			}
 
-		names.add("Local Player");
+		names.add(playerName);
 
 		if(playersAfter != null)
 			for(int j=0;j<playersAfter.size(); j++, i++) {
-				names.add("Foreign Player " + i);
+				names.add("Player " + i);
 			}
 
 		return names;

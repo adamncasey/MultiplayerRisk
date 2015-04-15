@@ -227,7 +227,7 @@ public class DirectConnectController extends AnchorPane implements
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs, selectedPlayerType, ui.Main.namePlayers(playersBefore, playersAfter));
+					application.goToGame(playersBefore, playersAfter, cardIDs, selectedPlayerType, ui.Main.namePlayers(playersBefore, name.getText(), playersAfter));
 				}
 			});
 		}

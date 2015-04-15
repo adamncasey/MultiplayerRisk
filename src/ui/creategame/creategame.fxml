@@ -16,7 +16,7 @@
       <children>
         <BorderPane prefHeight="100.0">
           <center>
-            <Label styleClass="title" text="Host New Game" BorderPane.alignment="CENTER" />
+            <Label styleClass="title" text="Host game" BorderPane.alignment="CENTER" />
           </center>
           <top>
             <Button focusTraversable="false" onAction="#backButtonAction" styleClass="button-nav" text="Back" BorderPane.alignment="TOP_LEFT">

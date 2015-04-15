@@ -121,6 +121,21 @@ public class MapControl extends Pane {
 
 		Label label = territory.getArmyLabel();
 
+		// Update image (if required)
+		updateTerritoryImage(territory, label, oldOwnerID, oldClass);
+
+		// Update number
+		if (territory.getNumberOfArmies() != oldNumberOfArmies) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					label.setText(Integer.toString(numberOfArmies));
+				}
+			});
+		}
+	}
+	
+	void updateTerritoryImage(GUITerritory territory, Label label, int oldOwnerID, ArmyClass oldClass) {
 		if (territory.getOwnerID() != oldOwnerID
 				|| territory.getArmyClass() != oldClass) {
 
@@ -170,15 +185,6 @@ public class MapControl extends Pane {
 					label.setMouseTransparent(true);
 
 					label.relocate(xF, yF);
-				}
-			});
-		}
-
-		if (territory.getNumberOfArmies() != oldNumberOfArmies) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					label.setText(Integer.toString(numberOfArmies));
 				}
 			});
 		}

@@ -1,7 +1,6 @@
 package ui.game;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import logic.Game;
 import logic.move.Move;
+import logic.move.Move.Stage;
 import logic.state.Board;
 import logic.state.Player;
 import player.IPlayer;
@@ -37,38 +37,38 @@ import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import ai.agents.Agent;
+import ai.agents.RandomAgent;
 import ai.strategy.PassiveStrategy;
 
 public class GameController implements Initializable, PlayerController {
 
 	@FXML
-	public Pane centerPane;
+	Pane centerPane;
 	@FXML
-	public MapControl mapControl;
+	MapControl mapControl;
 	@FXML
-	public DiceRollControl diceRollControl;
+	DiceRollControl diceRollControl;
 	@FXML
-	public TextArea consoleTextArea;
+	TextArea consoleTextArea;
 	@FXML
-	public GridPane popup;
+	GridPane popup;
 	@FXML
-	public Pane popupContent;
+	Pane popupContent;
 	@FXML
 	HBox playerShieldContainer;
 	@FXML
 	Label moveDescription;
 
-	private Move currentMove;
-
 	public static GameConsole console;
-
-	List<Object> cards;
 	public GUIPlayer player;
 	
 	List<String> players;
+	List<Object> cards;
+	
+	Move currentMove;
 	
 	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
-	
 	
 	// ================================================================================
 	// Startup
@@ -80,6 +80,7 @@ public class GameController implements Initializable, PlayerController {
 		// If playing as self, use this as the PlayerController.
 		if (player.getPlayerController() == null) {
 			player.setPlayerController(this);
+			player.setRealUserPlaying(true);
 		}
 		this.player = player;
 
@@ -149,6 +150,10 @@ public class GameController implements Initializable, PlayerController {
 	// PlayerController Functions
 	// ================================================================================
 	
+    private Agent testingAI;
+    boolean testing = true;
+    Stage testingStage = Stage.DECIDE_ATTACK;
+	
 	// TODO: Replace this with Cards control.
 	private PassiveStrategy ps;
 	
@@ -172,12 +177,25 @@ public class GameController implements Initializable, PlayerController {
 						}
 					});
 		}
+		
+        if(testing){
+            this.testingAI = new RandomAgent();
+            this.testingAI.setup(player, board);
+        }
 	}
 
 	@Override
 	public synchronized void getMove(Move move) {
 		moveCompleted = false;
 		currentMove = move;
+		
+        if(testing && move.getStage() != testingStage){
+            testingAI.getMove(move);
+            return;
+        }
+        else if(testingStage == move.getStage()) {
+        	testing = false;
+        }
 
 		
 		switch (currentMove.getStage()) {
@@ -197,6 +215,16 @@ public class GameController implements Initializable, PlayerController {
 			openPopup(diceRollControl);
 			break;
 		case CHOOSE_DEFEND_DICE:
+			diceRollControl.initialiseDefend(player.getBoard().getName(move.getTo()),
+					move.getDefendDice(),
+					new DefendingDiceRollControlEventHandler() {
+						@Override
+						public void onReadyToRoll(int numberOfDefendingDice) {
+							currentMove.setDefendDice(numberOfDefendingDice);
+							notifyMoveCompleted();
+						}
+					});
+			openPopup(diceRollControl);
 			break;
 		default:
 			break;
@@ -255,11 +283,13 @@ public class GameController implements Initializable, PlayerController {
 					+ " not implemented");
 		}
 	}
-
-	public Move getCurrentMove() {
-		return currentMove;
+	
+	public void diceRollEnded(Move move) {
+        diceRollControl.visualiseResults(new DiceRollResult(move.getAttackDiceRolls(),
+        		move.getDefendDiceRolls()), 
+        		move.getAttackerLosses(), 
+        		move.getDefenderLosses());
 	}
-
 	
 	// ================================================================================
 	// Popup
@@ -283,51 +313,4 @@ public class GameController implements Initializable, PlayerController {
 
 		diceRollControl.reset();
 	}
-
-	
-	// ================================================================================
-	// Dice
-	// ================================================================================
-//	public void rollDiceAttack() {
-//		diceRollControl.initialiseAttack("Nathan the defender",
-//				new AttackingDiceRollControlEventHandler() {
-//					@Override
-//					public void onReadyToRoll(int numberOfAttackingDice) {
-//						
-////						// Get number of defending dice from the defending
-////						// player.
-////						int numberOfDefendingDie = 3;
-////
-////						// Get result of dice rolls.
-////						DiceRollResult result = DiceRollResult
-////								.generateDummyResults(numberOfAttackingDice,
-////										numberOfDefendingDie);
-////						diceRollControl.visualiseResults(result);
-//					}
-//				});
-//		openPopup(diceRollControl);
-//	}
-
-//	public void rollDiceDefend() {
-//		diceRollControl.initialiseDefend("Victor the brave", 3,
-//				new DefendingDiceRollControlEventHandler() {
-//					@Override
-//					public void onReadyToRoll(int numberOfDefendingDice) {
-//						
-//						currentMove.setAttackDice(numberOfAttackingDice);
-//						notifyMoveCompleted();
-//						
-////						console.write(String.format(
-////								"Defending %d dice with %d dice!",
-////								numberOfAttackingDice, numberOfDefendingDice));
-////
-////						// Get result of dice rolls.
-////						DiceRollResult result = DiceRollResult
-////								.generateDummyResults(numberOfAttackingDice,
-////										numberOfDefendingDice);
-////						diceRollControl.visualiseResults(result);
-//					}
-//				});
-//		openPopup(diceRollControl);
-//	}
 }

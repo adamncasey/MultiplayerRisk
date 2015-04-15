@@ -112,7 +112,7 @@ public class DiceRollControl extends BorderPane {
 	// Results
 	// ================================================================================
 	
-	public void visualiseResults(DiceRollResult results) {
+	public void visualiseResults(DiceRollResult results, int attackerLosses, int defenderLosses) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {

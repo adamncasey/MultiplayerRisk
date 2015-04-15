@@ -2,6 +2,7 @@ package ui.game;
 
 import java.util.*;
 
+import ai.agents.Agent;
 import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import logic.move.Move;
@@ -23,6 +24,7 @@ public class GUIPlayer implements IPlayer {
 	private Board board;
 	private Player player;
 	String lastPlayerToMove;
+	private boolean isRealUserPlaying;
 
 	private LocalPlayerHandler handler;
 
@@ -96,6 +98,9 @@ public class GUIPlayer implements IPlayer {
 		case DECIDE_FORTIFY:
 			break;
 		case END_ATTACK:
+			if (isRealUserPlaying) {
+				gameController.diceRollEnded(move);
+			}
 			break;
 		case FORTIFY_TERRITORY:
 			break;
@@ -173,5 +178,13 @@ public class GUIPlayer implements IPlayer {
 
 	public Board getBoard() {
 		return board;
+	}
+
+	public boolean isRealUserPlaying() {
+		return isRealUserPlaying;
+	}
+
+	public void setRealUserPlaying(boolean isRealUserPlaying) {
+		this.isRealUserPlaying = isRealUserPlaying;
 	}
 }

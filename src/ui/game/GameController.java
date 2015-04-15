@@ -266,8 +266,16 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case START_ATTACK:
-			currentMove.setFrom(attackFrom.getId());
-			currentMove.setTo(territory.getId());
+			if(attackFrom == null) { 
+				attackFrom = territory;
+			}
+			else
+			{
+				currentMove.setFrom(attackFrom.getId());
+				currentMove.setTo(territory.getId());
+				attackFrom = null;
+			}
+
 			notifyMoveCompleted();
 			break;
 //		case OCCUPY_TERRITORY:
@@ -284,11 +292,26 @@ public class GameController implements Initializable, PlayerController {
 		}
 	}
 	
-	public void diceRollEnded(Move move) {
+	boolean diceMoveDismissed = false;
+	public synchronized void diceRollEnded(Move move) {
+		diceMoveDismissed = false;
+		
         diceRollControl.visualiseResults(new DiceRollResult(move.getAttackDiceRolls(),
         		move.getDefendDiceRolls()), 
         		move.getAttackerLosses(), 
         		move.getDefenderLosses());
+        
+		while (!diceMoveDismissed) {
+			try {
+				wait(); 
+			} catch (InterruptedException e) {
+			}
+		}
+	}
+	
+	public synchronized void notifyDiceMoveDismissed() {
+		diceMoveDismissed = true;
+		notifyAll();
 	}
 	
 	// ================================================================================
@@ -312,5 +335,7 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		diceRollControl.reset();
+		
+		notifyDiceMoveDismissed();
 	}
 }

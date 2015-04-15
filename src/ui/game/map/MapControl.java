@@ -22,8 +22,10 @@ public class MapControl extends Pane {
 
 	Map<Integer, GUITerritory> territoryByID = new HashMap<>();
 	Map<ImageView, GUITerritory> territoryByImageView = new HashMap<>();
-
-	DefaultMap territories;
+	
+	Map<Integer, Image> artilleryImages = new HashMap<>();
+	Map<Integer, Image> infantryImages = new HashMap<>();
+	Map<Integer, Image> cavalryImages = new HashMap<>();
 
 	@FXML
 	ImageView worldmap;
@@ -47,27 +49,10 @@ public class MapControl extends Pane {
 		}
 	}
 
-	Map<Integer, Image> artilleryImages = new HashMap<>();
-	Map<Integer, Image> infantryImages = new HashMap<>();
-	Map<Integer, Image> cavalryImages = new HashMap<>();
-
 	public void initialise() {
-		for (int i = 1; i < 7; i++) {
-			artilleryImages.put(
-					i,
-					new Image(getClass().getResourceAsStream(
-							"army/artillery_player" + i + ".png")));
-			infantryImages.put(
-					i,
-					new Image(getClass().getResourceAsStream(
-							"army/infantry_player" + i + ".png")));
-			cavalryImages.put(
-					i,
-					new Image(getClass().getResourceAsStream(
-							"army/cavalry_player" + i + ".png")));
-		}
+		loadArmyIcons();
 
-		territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
+		DefaultMap territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
 				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
 				EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1,
 				AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
@@ -87,6 +72,23 @@ public class MapControl extends Pane {
 			label = new Label();
 			territory.setArmyLabel(label);
 			getChildren().add(label);
+		}
+	}
+	
+	void loadArmyIcons() {
+		for (int i = 1; i < 7; i++) {
+			artilleryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/artillery_player" + i + ".png")));
+			infantryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/infantry_player" + i + ".png")));
+			cavalryImages.put(
+					i,
+					new Image(getClass().getResourceAsStream(
+							"army/cavalry_player" + i + ".png")));
 		}
 	}
 

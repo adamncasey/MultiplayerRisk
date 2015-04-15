@@ -1,5 +1,6 @@
 package ui.game;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -177,16 +178,33 @@ public class GameController implements Initializable, PlayerController {
 	public synchronized void getMove(Move move) {
 		moveCompleted = false;
 		currentMove = move;
+
 		
-		// CARDS HACK
-		if (move.getStage().equals(Move.Stage.TRADE_IN_CARDS)) {
+		switch (currentMove.getStage()) {
+		case TRADE_IN_CARDS:
 			ps.getMove(move);
 			moveCompleted = true;
+			break;
+		case CHOOSE_ATTACK_DICE:
+			diceRollControl.initialiseAttack(player.getBoard().getName(move.getTo()),
+					new AttackingDiceRollControlEventHandler() {
+						@Override
+						public void onReadyToRoll(int numberOfAttackingDice) {
+							currentMove.setAttackDice(numberOfAttackingDice);
+							notifyMoveCompleted();
+						}
+					});
+			openPopup(diceRollControl);
+			break;
+		case CHOOSE_DEFEND_DICE:
+			break;
+		default:
+			break;
 		}
 
 		while (!moveCompleted) {
 			try {
-				wait();
+				wait(); 
 			} catch (InterruptedException e) {
 			}
 		}
@@ -198,7 +216,6 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	GUITerritory attackFrom;
-	GUITerritory attackTo;
 	void territoryClicked(GUITerritory territory) {
 
 		switch (currentMove.getStage()) {
@@ -210,8 +227,6 @@ public class GameController implements Initializable, PlayerController {
 			currentMove.setTerritory(territory.getId());
 			notifyMoveCompleted();
 			break;
-		case TRADE_IN_CARDS:
-			break;
 		case PLACE_ARMIES:
 			currentMove.setTerritory(territory.getId());
 			currentMove.setArmies(1);
@@ -222,12 +237,11 @@ public class GameController implements Initializable, PlayerController {
 			attackFrom = territory;
 			notifyMoveCompleted();
 			break;
-//		case START_ATTACK:
-//			break;
-//		case CHOOSE_ATTACK_DICE:
-//			break;
-//		case CHOOSE_DEFEND_DICE:
-//			break;
+		case START_ATTACK:
+			currentMove.setFrom(attackFrom.getId());
+			currentMove.setTo(territory.getId());
+			notifyMoveCompleted();
+			break;
 //		case OCCUPY_TERRITORY:
 //			break;
 //		case DECIDE_FORTIFY:
@@ -248,17 +262,17 @@ public class GameController implements Initializable, PlayerController {
 
 	
 	// ================================================================================
-	// Button Actions
-	// ================================================================================
-
-	
-	// ================================================================================
 	// Popup
 	// ================================================================================
 
 	public void openPopup(Node child) {
-		child.setVisible(true);
-		popup.setVisible(true);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				child.setVisible(true);
+				popup.setVisible(true);
+			}
+		});
 	}
 
 	public void closePopup(MouseEvent event) {
@@ -274,46 +288,46 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// Dice
 	// ================================================================================
-	public void rollDiceAttack(ActionEvent event) {
-		diceRollControl.initialiseAttack("Nathan the defender",
-				new AttackingDiceRollControlEventHandler() {
-					@Override
-					public void onReadyToRoll(int numberOfAttackingDice) {
-						console.write(String.format("Attacking with %d dice!",
-								numberOfAttackingDice));
+//	public void rollDiceAttack() {
+//		diceRollControl.initialiseAttack("Nathan the defender",
+//				new AttackingDiceRollControlEventHandler() {
+//					@Override
+//					public void onReadyToRoll(int numberOfAttackingDice) {
+//						
+////						// Get number of defending dice from the defending
+////						// player.
+////						int numberOfDefendingDie = 3;
+////
+////						// Get result of dice rolls.
+////						DiceRollResult result = DiceRollResult
+////								.generateDummyResults(numberOfAttackingDice,
+////										numberOfDefendingDie);
+////						diceRollControl.visualiseResults(result);
+//					}
+//				});
+//		openPopup(diceRollControl);
+//	}
 
-						// Get number of defending dice from the defending
-						// player.
-						int numberOfDefendingDie = 3;
-
-						// Get result of dice rolls.
-						DiceRollResult result = DiceRollResult
-								.generateDummyResults(numberOfAttackingDice,
-										numberOfDefendingDie);
-						diceRollControl.visualiseResults(result);
-					}
-				});
-		openPopup(diceRollControl);
-	}
-
-	public void rollDiceDefend(ActionEvent event) {
-		int numberOfAttackingDice = 2;
-
-		diceRollControl.initialiseDefend("Victor the brave", 3,
-				new DefendingDiceRollControlEventHandler() {
-					@Override
-					public void onReadyToRoll(int numberOfDefendingDice) {
-						console.write(String.format(
-								"Defending %d dice with %d dice!",
-								numberOfAttackingDice, numberOfDefendingDice));
-
-						// Get result of dice rolls.
-						DiceRollResult result = DiceRollResult
-								.generateDummyResults(numberOfAttackingDice,
-										numberOfDefendingDice);
-						diceRollControl.visualiseResults(result);
-					}
-				});
-		openPopup(diceRollControl);
-	}
+//	public void rollDiceDefend() {
+//		diceRollControl.initialiseDefend("Victor the brave", 3,
+//				new DefendingDiceRollControlEventHandler() {
+//					@Override
+//					public void onReadyToRoll(int numberOfDefendingDice) {
+//						
+//						currentMove.setAttackDice(numberOfAttackingDice);
+//						notifyMoveCompleted();
+//						
+////						console.write(String.format(
+////								"Defending %d dice with %d dice!",
+////								numberOfAttackingDice, numberOfDefendingDice));
+////
+////						// Get result of dice rolls.
+////						DiceRollResult result = DiceRollResult
+////								.generateDummyResults(numberOfAttackingDice,
+////										numberOfDefendingDice);
+////						diceRollControl.visualiseResults(result);
+//					}
+//				});
+//		openPopup(diceRollControl);
+//	}
 }

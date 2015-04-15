@@ -2,6 +2,8 @@ package ui.game.dice;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,9 +73,16 @@ public class DiceRollControl extends BorderPane {
 
 	private AttackingDiceRollControlEventHandler attackHandler;
 
-	public void initialiseAttack(String defendingPlayerName,
+	public void initialiseAttack(String defendingName,
 			AttackingDiceRollControlEventHandler attackHandler) {
-		title.setText(String.format("Attacking %s!", defendingPlayerName));
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				title.setText(String.format("Attacking %s!", defendingName));
+			}
+		});
+		
 		this.attackHandler = attackHandler;
 		this.mode = Mode.ATTACKING;
 	}
@@ -85,10 +94,15 @@ public class DiceRollControl extends BorderPane {
 
 	private DefendingDiceRollControlEventHandler defendHandler;
 
-	public void initialiseDefend(String attackingPlayerName,
+	public void initialiseDefend(String attackingName,
 			int numberOfAttackingDice,
 			DefendingDiceRollControlEventHandler defendHandler) {
-		title.setText(String.format("Attacked by %s!", attackingPlayerName));
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				title.setText(String.format("Attacked from %s!", attackingName));
+			}
+		});
 		this.defendHandler = defendHandler;
 		this.mode = Mode.DEFENDING;
 	}
@@ -99,15 +113,20 @@ public class DiceRollControl extends BorderPane {
 	// ================================================================================
 	
 	public void visualiseResults(DiceRollResult results) {
-		HBox attackerHBox = mode.equals(Mode.ATTACKING) ? userDiceHBox : enemyDiceHBox;
-		HBox defenderHBox = mode.equals(Mode.DEFENDING) ? userDiceHBox : enemyDiceHBox;
-		
-		for(int attackDie : results.attackingDice) {
-			attackerHBox.getChildren().add(getDie(attackDie));
-		}
-		for(int defendDie : results.defendingDice) {
-			defenderHBox.getChildren().add(getDie(defendDie));
-		}
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				HBox attackerHBox = mode.equals(Mode.ATTACKING) ? userDiceHBox : enemyDiceHBox;
+				HBox defenderHBox = mode.equals(Mode.DEFENDING) ? userDiceHBox : enemyDiceHBox;
+				
+				for(int attackDie : results.attackingDice) {
+					attackerHBox.getChildren().add(getDie(attackDie));
+				}
+				for(int defendDie : results.defendingDice) {
+					defenderHBox.getChildren().add(getDie(defendDie));
+				}
+			}
+		});
 		
 		//winnerName.setText("");
 	}
@@ -133,14 +152,20 @@ public class DiceRollControl extends BorderPane {
 	private Mode mode;
 
 	public void reset() {
-		setIsResultsVisible(false);
-		title.setText("");
-		mode = null;
-		userDiceChoiceBox.getSelectionModel().selectFirst();
-		userDiceHBox.getChildren().clear();
-		enemyDiceHBox.getChildren().clear();
-		
-		winnerName.setText("");
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				setIsResultsVisible(false);
+				title.setText("");
+				mode = null;
+				userDiceChoiceBox.getSelectionModel().selectFirst();
+				userDiceHBox.getChildren().clear();
+				enemyDiceHBox.getChildren().clear();
+				
+				winnerName.setText("");
+			}
+		});
+
 	}
 }
 

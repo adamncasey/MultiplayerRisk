@@ -20,7 +20,7 @@ public class GUIPlayer implements IPlayer {
     private PlayerController playerController;
 	private GameController gameController;
     private Board board;
-    private Player player;
+	private Player player;
     String lastPlayerToMove;
 
     private LocalPlayerHandler handler;
@@ -111,6 +111,10 @@ public class GUIPlayer implements IPlayer {
 	}
     public void setPlayerController(PlayerController playerController) {
 		this.playerController = playerController;
+	}
+    
+    public Board getBoard() {
+		return board;
 	}
 }
 

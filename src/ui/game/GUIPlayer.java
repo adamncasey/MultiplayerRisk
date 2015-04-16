@@ -89,7 +89,7 @@ public class GUIPlayer implements IPlayer {
 		case CHOOSE_DEFEND_DICE:
 			break;
 		case CLAIM_TERRITORY:
-			gameController.mapControl.updateTerritory(move.getUID() + 1, 1,
+			gameController.mapControl.updateTerritory(move.getUID() + 1, board.getArmies(move.getTerritory()),
 					gameController.mapControl.getTerritoryByID(move
 							.getTerritory()));
 			break;
@@ -117,7 +117,7 @@ public class GUIPlayer implements IPlayer {
 			territory = gameController.mapControl.getTerritoryByID(move
 					.getTerritory());
 			gameController.mapControl.updateTerritory(move.getUID() + 1,
-					territory.getNumberOfArmies() + 1, territory);
+					board.getArmies(move.getTerritory()), territory);
 			break;
 		case PLAYER_ELIMINATED:
 			break;
@@ -125,7 +125,7 @@ public class GUIPlayer implements IPlayer {
 			territory = gameController.mapControl.getTerritoryByID(move
 					.getTerritory());
 			gameController.mapControl.updateTerritory(move.getUID() + 1,
-					territory.getNumberOfArmies() + 1, territory);
+					board.getArmies(move.getTerritory()), territory);
 			break;
 		case ROLL_HASH:
 			break;
@@ -162,10 +162,10 @@ public class GUIPlayer implements IPlayer {
 			@Override
 			public void run() {
 				gameController.mapControl.updateTerritory(
-						move.getUID() + 1, from.getNumberOfArmies() - move.getArmies(),
+						move.getUID() + 1, board.getArmies(move.getFrom()),
 						from);
 				gameController.mapControl.updateTerritory(
-						move.getUID() + 1, move.getArmies(),
+						move.getUID() + 1, board.getArmies(move.getTo()),
 						to);
 			}
 		});
@@ -174,22 +174,18 @@ public class GUIPlayer implements IPlayer {
 	void postAttackMapUpdate(Move move) {
 		GUITerritory attackerTerritory = gameController.mapControl
 				.getTerritoryByID(move.getFrom());
-		
-		int attackerArmies = attackerTerritory.getNumberOfArmies() - move.getAttackerLosses();
 
 		GUITerritory defenderTerritory = gameController.mapControl
 				.getTerritoryByID(move.getTo());
-		
-		int defenderArmies = defenderTerritory.getNumberOfArmies() - move.getDefenderLosses();
 		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				gameController.mapControl.updateTerritory(
-						attackerTerritory.getOwnerID(), attackerArmies,
+						attackerTerritory.getOwnerID(), board.getArmies(move.getFrom()),
 						attackerTerritory);
 				gameController.mapControl.updateTerritory(
-						defenderTerritory.getOwnerID(), defenderArmies,
+						defenderTerritory.getOwnerID(), board.getArmies(move.getTo()),
 						defenderTerritory);
 			}
 		});

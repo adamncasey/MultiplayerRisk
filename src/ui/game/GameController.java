@@ -319,7 +319,7 @@ public class GameController implements Initializable, PlayerController {
 						.getDefendDiceRolls()), move.getAttackerLosses(), move
 						.getDefenderLosses());
 		
-		lastAttackerNumberOfArmiesSurvived = this.player.getBoard().getArmies(move.getFrom()) - move.getAttackerLosses();
+		lastAttackerNumberOfArmiesSurvived = player.getBoard().getArmies(move.getFrom());
 
 		while (!diceMoveDismissed) {
 			try {

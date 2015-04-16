@@ -113,6 +113,10 @@ public class MessageParserTests {
 		assertNotNull(msg);
 		assertEquals(msg.command, Command.JOIN_GAME);
         assertTrue(msg.payload instanceof JoinGamePayload);
+
+		JoinGamePayload payload = (JoinGamePayload)msg.payload;
+
+		assertEquals("Player 1", payload.playerName);
 	}
 	@Test
 	public void testJoinAccept() throws ParserException {

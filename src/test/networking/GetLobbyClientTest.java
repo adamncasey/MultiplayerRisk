@@ -34,8 +34,8 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"payload\":{\n" +
                 "        \"supported_versions\":[1.0,2.1],\n" +
                 "        \"supported_features\":[\"secure\",\"defaultmap\"]\n" +
+                "        \"name\" : \"Player 1\"" +
                 "    },\n" +
-                "    \"signature\": \"TBD\",\n" +
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;

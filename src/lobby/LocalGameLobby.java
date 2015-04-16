@@ -280,7 +280,7 @@ public class LocalGameLobby extends Thread {
         if(result == null) {
             if(lobbyClient.accept(newplayerid)) {
 
-                handler.onPlayerJoin(newplayerid, lobbyClient.getName());
+                handler.onPlayerJoin(newplayerid, lobbyClient.name);
                 return lobbyClient;
             }
         }

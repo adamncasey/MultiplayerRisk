@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  * Created by Adam on 08/04/2015.
  */
 public class LobbyDiceRoll {
-    public static int rollDice(GameRouter router, int ourPlayerid, int numPlayers, List<NetworkClient> otherPlayers) throws DiceRollException {
+    public static List<Integer> rollDice(GameRouter router, int ourPlayerid, List<NetworkClient> otherPlayers, int numDice, int numFaces) throws DiceRollException {
         RNG rng = new RNG();
 
         // Send ROLL_HASH
@@ -47,11 +47,11 @@ public class LobbyDiceRoll {
         List<Int256> rolls = new ArrayList<>(numbers.values());
         rolls.add(rng.number);
 
-        List<Integer> results = RNG.getDiceRolls(rolls, 1, numPlayers);
+        List<Integer> results = RNG.getDiceRolls(rolls, numDice, numFaces);
 
         assert(results.size() > 0);
 
-        return results.get(0);
+        return results;
     }
 
     private static Map<Integer, Int256> receiveRollNumbers(List<NetworkClient> otherPlayers) throws DiceRollException {

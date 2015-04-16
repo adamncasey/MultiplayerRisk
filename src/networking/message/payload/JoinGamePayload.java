@@ -16,10 +16,12 @@ import java.util.Map;
 public class JoinGamePayload extends Payload {
     public final double[] supportedVersions;
     public final String[] supportedFeatures;
+    public final String playerName;
 
-    public JoinGamePayload(double[] versions, String[] features) {
+    public JoinGamePayload(double[] versions, String[] features, String name) {
         this.supportedFeatures = features;
         this.supportedVersions = versions;
+        this.playerName = name;
     }
 
     public JoinGamePayload(JSONObject payload) throws ParserException {
@@ -32,6 +34,9 @@ public class JoinGamePayload extends Payload {
         JSONArray featuresArray = (JSONArray)payload.get("supported_features");
 
         supportedFeatures = convertJSONArrayToStringArray(featuresArray);
+
+        Parser.validateType(payload, "name", String.class);
+        playerName = (String)payload.get("name");
     }
 
     @Override
@@ -45,6 +50,7 @@ public class JoinGamePayload extends Payload {
         List<Double> versions = Arrays.asList(ArrayUtils.toObject(supportedVersions));
         map.put("supported_versions", versions);
         map.put("supported_features", Arrays.asList(supportedFeatures));
+        map.put("name", playerName);
 
         return map;
     }

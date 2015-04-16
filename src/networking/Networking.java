@@ -39,7 +39,7 @@ public class Networking {
 		JoinGamePayload payload = (JoinGamePayload) message.payload;
 
 		return new LobbyClient(socket, payload.supportedVersions,
-				payload.supportedFeatures, hostPlayerid);
+				payload.supportedFeatures, hostPlayerid, payload.playerName);
 	}
 
 	/**

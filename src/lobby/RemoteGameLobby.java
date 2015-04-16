@@ -26,8 +26,9 @@ import networking.parser.ParserException;
 public class RemoteGameLobby extends Thread {
 
     JoinLobbyEventHandler handler;
-    InetAddress address;
-    int port;
+    final InetAddress address;
+    final int port;
+    final String name;
 
     int playerid = -1;
 
@@ -39,6 +40,7 @@ public class RemoteGameLobby extends Thread {
         this.address = address;
         this.port = port;
         this.handler = handler;
+        this.name = name;
     }
 
     public void run() {
@@ -126,7 +128,7 @@ public class RemoteGameLobby extends Thread {
 
     private void sendJoinGame(GameRouter router) throws ConnectionLostException {
 
-        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1 }, new String[] {});
+        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1 }, new String[] {}, name);
 
         Message msg = new Message(Command.JOIN_GAME, payload);
 

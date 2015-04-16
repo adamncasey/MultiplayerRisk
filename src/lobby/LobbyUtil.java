@@ -13,7 +13,7 @@ import java.util.List;
 
 public class LobbyUtil {
 
-    // TODO this needs unit testing, it's logically a mess.
+    // TODO Revisit this to simplify?
     public static void createIPlayersInOrder(List<NetworkClient> clients, int firstID, int ourPlayerID, List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
 
         Collections.sort(clients, new NetworkClientComparator());
@@ -95,7 +95,7 @@ public class LobbyUtil {
         int result;
         try {
             int numplayers = otherPlayers.size() + 1;
-            result = LobbyDiceRoll.rollDice(router, ourPlayerid, numplayers, otherPlayers);
+            result = LobbyDiceRoll.rollDice(router, ourPlayerid, otherPlayers, 1, numplayers).get(0);
             result -= 1; // We want to index from 0, not 1.
         } catch (LobbyDiceRoll.DiceRollException e) {
             handler.onFailure(e);

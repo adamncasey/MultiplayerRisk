@@ -12,20 +12,21 @@ import networking.message.payload.RejectJoinGamePayload;
  */
 public class LobbyClient {
 
-	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures, int hostPlayerid) {
+	protected LobbyClient(IConnection conn, double[] supportedVersions, String[] supportedFeatures, int hostPlayerid, String playerName) {
         this.conn = conn;
         this.supportedVersions = supportedVersions;
 		this.supportedFeatures = supportedFeatures;
         this.hostPlayerid = hostPlayerid;
+        this.name = playerName;
 	}
 
 	public final double[] supportedVersions;
 	public final String[] supportedFeatures;
     public final int hostPlayerid;
+    public final String name;
 
     private int playerid;
     private IConnection conn;
-    private String name;
 
     public IConnection getConnection() {
         return conn;
@@ -33,10 +34,6 @@ public class LobbyClient {
 
     public int getPlayerid() {
         return playerid;
-    }
-    
-    public String getName() {
-    	return name;
     }
 	
 	public boolean accept(int playerid) {
@@ -53,8 +50,6 @@ public class LobbyClient {
 		}
 
         this.playerid = playerid;
-        // TODO Read name from JOIN_GAME message.
-        this.name = "Player " + playerid;
 
 		return true;
 	}

@@ -15,11 +15,10 @@ Work remaining for our version of networked risk:
   Work to be done to play with other implementations:
 1.  Handle players_joined command (Send and receive it)
 2.  Update our dice rolling implementation, assuming other groups do that too.
-3.  Delete draw_card command.
-4.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
-5.  Stop receiving PING messages when host sends READY command.
-6.  Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
-7.	Host must timeout players
+3.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
+4.  Stop receiving PING messages when host sends READY command.
+5.  Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
+6.  Host must timeout players
 
   Protocol Extensions:
 1.  Message Signing (Store public_keys from players joined, use to verify messages.)

@@ -12,7 +12,6 @@ public enum Command {
 	INITIALISE_GAME("initialise_game"),
 	SETUP("setup"),
 	PLAY_CARDS("play_cards"),
-	DRAW_CARD("draw_card"),
 	DEPLOY("deploy"),
 	ATTACK("attack"),
 	DEFEND("defend"),

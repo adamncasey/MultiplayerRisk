@@ -516,8 +516,6 @@ public class NetworkPlayer implements IPlayer {
                 return MessageProcessResult.COMPLETE;
             }
 
-            case DRAW_CARD:
-                // TODO Handle this message in ATTACK_CAPTURE
             case LEAVE_GAME:
                 // TODO Turn this player into a neutral player.
                 throw new RuntimeException("Not implemented.");

@@ -64,7 +64,6 @@ public class RemoteGameLobby extends Thread {
 
         router.addRoute(host, conn);
 
-
         sendJoinGame(router);
 
         if(!handleJoinGameResponse(host)) { // callbacks: onJoinAccepted or onJoinRejected
@@ -78,6 +77,8 @@ public class RemoteGameLobby extends Thread {
         List<NetworkClient> otherPlayers = new LinkedList<>();
         otherPlayers.add(host);
         try {
+            // Receive either a PING or a PLAYERS_JOINED command.
+
             List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingReceive
             otherPlayers.addAll(nonHostOtherPlayers);
 

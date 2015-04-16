@@ -233,20 +233,6 @@ public class MessageParserTests {
         assertEquals(msg.command, Command.PLAY_CARDS);
     }
     @Test
-    public void testDrawCard() throws ParserException {
-        String message = "	{\r\n" +
-                "		 \"command\": \"draw_card\",\r\n" +
-                "		 \"payload\": 12,\r\n" +
-                "		 \"player_id\": 0,\r\n" +
-                "		 \"ack_id\": 67812687\r\n" +
-                "	}";
-
-        Message msg = Parser.parseMessage(message);
-
-        assertNotNull(msg);
-        assertEquals(msg.command, Command.DRAW_CARD);
-    }
-    @Test
     public void testSetup() throws ParserException {
         String message = "	{\r\n" +
                 "		 \"command\": \"setup\",\r\n" +

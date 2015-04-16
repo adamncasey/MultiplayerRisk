@@ -234,7 +234,6 @@ public class Parser {
                     return null;
                 }
             case SETUP: // Territory ID
-            case DRAW_CARD: // card ID being drawn
             case DEFEND: // Num Armies to defend 1/2
             case TIMEOUT: // Player ID being booted
             case ACKNOWLEDGEMENT: // Ack_ID being acknowledged

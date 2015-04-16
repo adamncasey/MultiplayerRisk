@@ -78,6 +78,8 @@ public class LocalGameLobby extends Thread {
                     router.addRoute(newPlayer, client.getConnection());
 
                     netClients.add(newPlayer);
+
+                    // TODO Send PLAYERS_JOINED command.
                 }
             }
 

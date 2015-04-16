@@ -159,8 +159,9 @@ public class Main extends Application {
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
 			stage.setResizable(true);
 
-			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+			Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.FURIOUS);
 			GUIPlayer player = new GUIPlayer(game, "Host");
+			
 			player.setPlayerController(userAgent);
 
 			game.setApp(playersBefore, playersAfter, cards, player);

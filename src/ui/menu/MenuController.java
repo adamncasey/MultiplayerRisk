@@ -61,7 +61,7 @@ public class MenuController extends AnchorPane implements Initializable {
             List<IPlayer> players = new ArrayList<IPlayer>();
             List<String> names = new ArrayList<String>();
             
-            Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+            Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.ANGRY);
             
             names.add(String.format("%s 1", userAgent.getName()));
             for(int i = 0; i != numAI-1; ++i){

@@ -79,24 +79,20 @@ public class GUIPlayer implements IPlayer {
 		GameController.console.write(desc);
 		System.out.print(desc);
 
-		// Update map.
-		GUITerritory territory;
 		switch (move.getStage()) {
-		case CARD_DRAWN:
-			break;
-		case CHOOSE_ATTACK_DICE:
-			break;
-		case CHOOSE_DEFEND_DICE:
-			break;
+//		case CARD_DRAWN:
+//			break;
+//		case CHOOSE_ATTACK_DICE:
+//			break;
+//		case CHOOSE_DEFEND_DICE:
+//			break;
 		case CLAIM_TERRITORY:
-			gameController.mapControl.updateTerritory(move.getUID() + 1, board.getArmies(move.getTerritory()),
-					gameController.mapControl.getTerritoryByID(move
-							.getTerritory()));
+			updateMapSingleTerritory(move);
 			break;
-		case DECIDE_ATTACK:
-			break;
-		case DECIDE_FORTIFY:
-			break;
+//		case DECIDE_ATTACK:
+//			break;
+//		case DECIDE_FORTIFY:
+//			break;
 		case END_ATTACK:
 			if (isRealUserPlaying) {
 				gameController.diceRollEnded(move);
@@ -105,40 +101,35 @@ public class GUIPlayer implements IPlayer {
 			// Update
 			break;
 		case FORTIFY_TERRITORY:
+			updateMapMoveBetweenTerritories(move);
 			break;
-		case GAME_BEGIN:
-			break;
-		case GAME_END:
-			break;
+//		case GAME_BEGIN:
+//			break;
+//		case GAME_END:
+//			break;
 		case OCCUPY_TERRITORY:
-			occupyMapUpdate(move);
+			updateMapMoveBetweenTerritories(move);
 			break;
 		case PLACE_ARMIES:
-			territory = gameController.mapControl.getTerritoryByID(move
-					.getTerritory());
-			gameController.mapControl.updateTerritory(move.getUID() + 1,
-					board.getArmies(move.getTerritory()), territory);
+			updateMapSingleTerritory(move);
 			break;
 		case PLAYER_ELIMINATED:
 			break;
 		case REINFORCE_TERRITORY:
-			territory = gameController.mapControl.getTerritoryByID(move
-					.getTerritory());
-			gameController.mapControl.updateTerritory(move.getUID() + 1,
-					board.getArmies(move.getTerritory()), territory);
+			updateMapSingleTerritory(move);
 			break;
-		case ROLL_HASH:
-			break;
-		case ROLL_NUMBER:
-			break;
-		case SETUP_BEGIN:
-			break;
-		case SETUP_END:
-			break;
-		case START_ATTACK:
-			break;
-		case START_FORTIFY:
-			break;
+//		case ROLL_HASH:
+//			break;
+//		case ROLL_NUMBER:
+//			break;
+//		case SETUP_BEGIN:
+//			break;
+//		case SETUP_END:
+//			break;
+//		case START_ATTACK:
+//			break;
+//		case START_FORTIFY:
+//			break;
 		case TRADE_IN_CARDS:
 			break;
 		default:
@@ -149,26 +140,34 @@ public class GUIPlayer implements IPlayer {
 		if (move.getUID() == player.getUID()) {
 			handler.sendMove(move);
 		}
+		
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {}
 	}
 	
-	void occupyMapUpdate(Move move) {
-		GUITerritory from = gameController.mapControl
-				.getTerritoryByID(move.getFrom());
-		
-		GUITerritory to = gameController.mapControl
-				.getTerritoryByID(move.getTo());
-		
+	void updateMapSingleTerritory(Move move) {
+		gameController.mapControl.updateTerritory(move.getUID() + 1,
+				board.getArmies(move.getTerritory()),
+				getTerritory(move.getTerritory()));
+	}
+
+	void updateMapMoveBetweenTerritories(Move move) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				gameController.mapControl.updateTerritory(
-						move.getUID() + 1, board.getArmies(move.getFrom()),
-						from);
-				gameController.mapControl.updateTerritory(
-						move.getUID() + 1, board.getArmies(move.getTo()),
-						to);
+				gameController.mapControl.updateTerritory(move.getUID() + 1,
+						board.getArmies(move.getFrom()),
+						getTerritory(move.getFrom()));
+				gameController.mapControl.updateTerritory(move.getUID() + 1,
+						board.getArmies(move.getTo()),
+						getTerritory(move.getTo()));
 			}
 		});
+	}
+
+	GUITerritory getTerritory(int id) {
+		return gameController.mapControl.getTerritoryByID(id);
 	}
 
 	void postAttackMapUpdate(Move move) {
@@ -177,16 +176,16 @@ public class GUIPlayer implements IPlayer {
 
 		GUITerritory defenderTerritory = gameController.mapControl
 				.getTerritoryByID(move.getTo());
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				gameController.mapControl.updateTerritory(
-						attackerTerritory.getOwnerID(), board.getArmies(move.getFrom()),
-						attackerTerritory);
+						attackerTerritory.getOwnerID(),
+						board.getArmies(move.getFrom()), attackerTerritory);
 				gameController.mapControl.updateTerritory(
-						defenderTerritory.getOwnerID(), board.getArmies(move.getTo()),
-						defenderTerritory);
+						defenderTerritory.getOwnerID(),
+						board.getArmies(move.getTo()), defenderTerritory);
 			}
 		});
 	}

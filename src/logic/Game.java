@@ -263,6 +263,8 @@ public class Game implements Runnable {
 
 				move = new Move(uid, FORTIFY_TERRITORY);
 				move.setCurrentArmies(state.getBoard().getArmies(fortifyFrom));
+				move.setFrom(fortifyFrom);
+				move.setTo(fortifyTo);
 				getMove(move);
 				int numFortifyArmies = move.getArmies();
 				state.placeArmies(fortifyFrom, -numFortifyArmies);

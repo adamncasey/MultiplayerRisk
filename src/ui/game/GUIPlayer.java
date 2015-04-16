@@ -25,11 +25,13 @@ public class GUIPlayer implements IPlayer {
 	private Player player;
 	String lastPlayerToMove;
 	private boolean isRealUserPlaying;
+	private String playerName;
 
 	private LocalPlayerHandler handler;
 
-	public GUIPlayer(GameController gameController) {
+	public GUIPlayer(GameController gameController, String playerName) {
 		this.gameController = gameController;
+		this.playerName = playerName;
 	}
 
 	public void setup(Player player, List<String> names, Board board,
@@ -186,5 +188,10 @@ public class GUIPlayer implements IPlayer {
 
 	public void setRealUserPlaying(boolean isRealUserPlaying) {
 		this.isRealUserPlaying = isRealUserPlaying;
+	}
+
+	@Override
+	public String getPlayerName() {
+		return playerName;
 	}
 }

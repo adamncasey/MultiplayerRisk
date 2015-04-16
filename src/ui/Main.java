@@ -2,11 +2,9 @@ package ui;
 
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import ai.AgentFactory;
 import ai.AgentTypes;
 import ai.agents.Agent;
@@ -119,13 +117,13 @@ public class Main extends Application {
 	}
 
 	public void goToGame(List<IPlayer> playersBefore,
-			List<IPlayer> playersAfter, List<Integer> cards, String playerType, List<String> playerNames) {
+			List<IPlayer> playersAfter, List<Integer> cards, String playerType, String playerName) {
 		try {
 			GameController game = (GameController) replaceSceneContent(
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
 			stage.setResizable(true);
 
-			GUIPlayer player = new GUIPlayer(game);
+			GUIPlayer player = new GUIPlayer(game, playerName);
 			switch (playerType) {
 				case "Self": {
 					break;
@@ -148,7 +146,7 @@ public class Main extends Application {
 				}
 			}
 
-			game.setApp(playersBefore, playersAfter, cards, player, playerNames);
+			game.setApp(playersBefore, playersAfter, cards, player);
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -162,38 +160,15 @@ public class Main extends Application {
 			stage.setResizable(true);
 
 			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-			GUIPlayer player = new GUIPlayer(game);
+			GUIPlayer player = new GUIPlayer(game, "Host");
 			player.setPlayerController(userAgent);
 
-			game.setApp(playersBefore, playersAfter, cards, player, namePlayers(playersBefore, "Host" ,playersAfter));
+			game.setApp(playersBefore, playersAfter, cards, player);
 
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
-	
-	/**
-	 * Temporary method. To be replaced.
-	 */
-	public static List<String> namePlayers(List<IPlayer> playersBefore, String playerName, List<IPlayer> playersAfter) {
-		int i=0;
-		List<String> names = new LinkedList<>();
-
-		if(playersBefore != null)
-			for(;i<playersBefore.size(); i++) {
-				names.add("Player " + i);
-			}
-
-		names.add(playerName);
-
-		if(playersAfter != null)
-			for(int j=0;j<playersAfter.size(); j++, i++) {
-				names.add("Player " + i);
-			}
-
-		return names;
-	}
-
 
 	private Initializable replaceSceneContent(String fxml, double width,
 			double height) throws Exception {

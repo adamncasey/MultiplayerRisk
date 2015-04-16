@@ -68,17 +68,16 @@ public class CLIMain {
         }
         System.out.println("Starting game");
         Agent agent = AgentFactory.buildAgent(AgentTypes.Type.GREEDY);
-        IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out));
+        IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out), "Me");
 
         List<IPlayer> players = new LinkedList<>();
         players.addAll(playersBefore);
         players.add(localPlayer);
         players.addAll(playersAfter);
 
+        Game game = new Game(players, new LocalPlayerHandler());
+
         List<String> names = namePlayers(playersBefore, playersAfter);
-
-        Game game = new Game(players, names, new LocalPlayerHandler());
-
         System.out.println("Players: ");
         for(String name : names) {
             System.out.println(name);

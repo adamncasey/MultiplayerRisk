@@ -25,11 +25,17 @@ public class Game implements Runnable {
 	private MoveChecker checker;
 	private List<String> names;
 
-	public Game(List<IPlayer> playerInterfaces, List<String> names,
+	public Game(List<IPlayer> playerInterfaces,
 			LocalPlayerHandler handler) {
 		this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
 		this.numPlayers = playerInterfaces.size();
-		this.names = names;
+		
+		List<String> playerNames = new ArrayList<String>();
+		for(IPlayer player : playerInterfaces) {
+			playerNames.add(player.getPlayerName());
+		}
+		this.names = playerNames;
+
 		this.state = new GameState(numPlayers, names);
 		this.checker = new MoveChecker(state);
 

@@ -39,6 +39,8 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	String hostPlayerType;
 	
 	LocalGameLobby lobby;
+	
+	private String hostNickname;
 
 	public void setApp(Main application) {
 		this.application = application;
@@ -53,6 +55,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	public void startLobby(int port, int maxPlayers, String hostPlayerType, InetAddress addr, String hostNickname) {
 		this.maxPlayers = maxPlayers;
 		this.hostPlayerType = hostPlayerType;
+		this.hostNickname = hostNickname;
 		
 		playersList.add(hostNickname);
 		
@@ -79,6 +82,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 	}
 	
 	void writeToConsole(String message) {
+		System.out.println(message);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -181,7 +185,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs, hostPlayerType, playersList);
+					application.goToGame(playersBefore, playersAfter, cardIDs, hostPlayerType, hostNickname);
 				}
 			});
         }

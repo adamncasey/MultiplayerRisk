@@ -27,7 +27,6 @@ import ui.game.dice.DiceRollControl;
 import ui.game.dice.DiceRollResult;
 import ui.game.map.GUITerritory;
 import ui.game.map.MapControl;
-
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
@@ -36,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
-
 import ai.agents.Agent;
 import ai.agents.RandomAgent;
 import ai.strategy.PassiveStrategy;
@@ -63,7 +61,7 @@ public class GameController implements Initializable, PlayerController {
 	public static GameConsole console;
 	public GUIPlayer player;
 	
-	List<String> players;
+	List<IPlayer> players;
 	List<Object> cards;
 	
 	Move currentMove;
@@ -75,7 +73,10 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter,
-			List<Integer> cards, GUIPlayer player, List<String> playerNames) {
+			List<Integer> cards, GUIPlayer player) {
+		
+		this.players = combinePlayers(playersBefore, player, playersAfter);
+		
 
 		// If playing as self, use this as the PlayerController.
 		if (player.getPlayerController() == null) {
@@ -84,13 +85,11 @@ public class GameController implements Initializable, PlayerController {
 		}
 		this.player = player;
 
-		setPlayers(playerNames);
-		startGame(combinePlayers(playersBefore, player, playersAfter), playerNames);
+		setPlayers();
+		startGame(combinePlayers(playersBefore, player, playersAfter));
 	}
 	
-	void setPlayers(List<String> players) {
-		this.players = players;
-		
+	void setPlayers() {	
 		// Add player shields for each player.
 		for(int i=0; i<players.size(); i++) {
 			BorderPane pane = new BorderPane();
@@ -107,14 +106,14 @@ public class GameController implements Initializable, PlayerController {
 			BorderPane.setAlignment(image, Pos.TOP_CENTER);
 			
 			Label label = new Label();
-			label.setText(players.get(i));
+			label.setText(players.get(i).getPlayerName());
 			label.getStyleClass().add("playerName");
 			pane.setBottom(label);
 			BorderPane.setAlignment(label, Pos.CENTER);
 			BorderPane.setMargin(label, new Insets(0,0,7,0));
 			
 			playerShieldContainer.getChildren().add(pane);
-			playerShields.put(players.get(i), pane);
+			playerShields.put(players.get(i).getPlayerName(), pane);
 		}
 	}
 	
@@ -129,8 +128,8 @@ public class GameController implements Initializable, PlayerController {
 		return players;
 	}
 	
-	void startGame(List<IPlayer> players, List<String> playerNames) {
-		Game game = new Game(players, playerNames, new LocalPlayerHandler());
+	void startGame(List<IPlayer> players) {
+		Game game = new Game(players, new LocalPlayerHandler());
 
 		new Thread() {
 			public void run() {
@@ -246,6 +245,10 @@ public class GameController implements Initializable, PlayerController {
 	GUITerritory attackFrom;
 	void territoryClicked(GUITerritory territory) {
 
+		if(currentMove == null) {
+			return;
+		}
+		
 		switch (currentMove.getStage()) {
 		case CLAIM_TERRITORY:
 			currentMove.setTerritory(territory.getId());

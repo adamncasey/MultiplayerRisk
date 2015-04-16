@@ -25,3 +25,26 @@ Work remaining for our version of networked risk:
 
   Protocol Extensions:
 1.  Message Signing (Store public_keys from players joined, use to verify messages.)
+
+
+
+
+
+
+Everyone - Entire Report
+
+James/Victor - Add all stages of game to GUIPlayer getMove and GUIPlayer updatePlayer
+
+James/Victor - Make GUIPlayer safer so that it doesn't crash all the time
+
+Adam - All of network changes required to make game protocol compliant - Test game with other group
+Nathan - Logic RNG isnt protocol compliat
+
+
+Everyone - Fix it so names are consistent across all games
+
+Nathan - Implement a better AI
+
+
+
+

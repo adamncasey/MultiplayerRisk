@@ -198,12 +198,12 @@ public class GameController implements Initializable, PlayerController {
 		moveCompleted = false;
 		currentMove = move;
 
-//		if (testing && move.getStage() != testingStage) {
-//			testingAI.getMove(move);
-//			return;
-//		} else if (testingStage == move.getStage()) {
-//			testing = false;
-//		}
+		if (testing && move.getStage() != testingStage) {
+			testingAI.getMove(move);
+			return;
+		} else if (testingStage == move.getStage()) {
+			testing = false;
+		}
 
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
@@ -226,9 +226,11 @@ public class GameController implements Initializable, PlayerController {
 							currentMove.setAttackDice(numberOfAttackingDice);
 							notifyMoveCompleted();
 						}
-					});
+					}, 1, player.getBoard().getArmies(move.getFrom()) - 1);
 			openPopup(diceRollControl);
+
 			break;
+
 		case CHOOSE_DEFEND_DICE:
 			diceRollControl.initialiseDefend(
 					player.getBoard().getName(move.getTo()),
@@ -239,7 +241,7 @@ public class GameController implements Initializable, PlayerController {
 							currentMove.setDefendDice(numberOfDefendingDice);
 							notifyMoveCompleted();
 						}
-					});
+					}, 1, player.getBoard().getArmies(move.getTo()));
 			openPopup(diceRollControl);
 			break;
 		case OCCUPY_TERRITORY:
@@ -298,31 +300,82 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case DECIDE_ATTACK:
-			currentMove.setDecision(true);
-			attackFrom = territory;
-			notifyMoveCompleted();
+			if (isAttackFromValid(territory, currentMove)) {
+				currentMove.setDecision(true);
+				this.attackFrom = territory;
+				notifyMoveCompleted();
+			}
+
 			break;
 		case START_ATTACK:
-			if(attackFrom == null) {
-				attackFrom = territory;
-				return;
+			// Selecting attack from.
+			if (attackFrom == null) {
+				if (isAttackFromValid(territory, currentMove)) {
+					this.attackFrom = territory;
+					console.write("Choose a territory to attack");
+				}
+				else {
+					console.write("Choose a territory to attack from");
+				}
+
+				break;
 			}
 			
-			currentMove.setFrom(attackFrom.getId());
-			currentMove.setTo(territory.getId());
-			attackFrom = null;
-			notifyMoveCompleted();
+			// Selecting attack to
+			if (isAttackToValid(attackFrom, territory, currentMove)) {
+				currentMove.setFrom(attackFrom.getId());
+				currentMove.setTo(territory.getId());
+				notifyMoveCompleted();
+			}
+			else {
+				attackFrom = null;
+				console.write("Inavalid attack move");
+				console.write("Choose a territory to attack from");
+			}
+
 			break;
-//		 case DECIDE_FORTIFY:
-//		 break;
-//		 case START_FORTIFY:
-//		 break;
+
+		// case DECIDE_FORTIFY:
+		// break;
+		// case START_FORTIFY:
+		// break;
 		// case FORTIFY_TERRITORY:
 		// break;
 		default:
 			console.write("Stage " + currentMove.getStage().toString()
 					+ " not implemented");
 		}
+	}
+
+	boolean isAttackFromValid(GUITerritory attackFrom, Move move) {
+		if(attackFrom == null) {
+			return false;
+		}
+		
+		if (player.getBoard().getOwner(attackFrom.getId()) != move.getUID()) {
+			console.write(String.format("%s is not your territory!",
+					attackFrom.getName()));
+			attackFrom = null;
+			return false;
+		}
+
+		if (attackFrom.getNumberOfArmies() < 2) {
+			console.write(String.format(
+					"%s has too few armies to make an attack",
+					attackFrom.getName()));
+			attackFrom = null;
+			return false;
+		}
+
+		return true;
+	}
+
+	boolean isAttackToValid(GUITerritory attackFrom, GUITerritory attackTo,
+			Move move) {
+		boolean valid = player.getMoveChecker().checkStartAttack(
+				currentMove.getUID(), attackFrom.getId(), attackTo.getId());
+
+		return valid;
 	}
 
 	boolean diceMoveDismissed = false;
@@ -357,18 +410,18 @@ public class GameController implements Initializable, PlayerController {
 	public void doneButtonAction(ActionEvent event) {
 		if (currentMove == null)
 			return;
-		
+
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
 			currentMove.setDecision(false);
 			setDoneButtonDisabled(true);
 			notifyMoveCompleted();
 			break;
-		 case DECIDE_FORTIFY:
-				currentMove.setDecision(false);
-				setDoneButtonDisabled(true);
-				notifyMoveCompleted();
-		 break;
+		case DECIDE_FORTIFY:
+			currentMove.setDecision(false);
+			setDoneButtonDisabled(true);
+			notifyMoveCompleted();
+			break;
 		default:
 			break;
 		}

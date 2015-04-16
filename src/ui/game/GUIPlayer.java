@@ -24,6 +24,7 @@ public class GUIPlayer implements IPlayer {
 	String lastPlayerToMove;
 	private boolean isRealUserPlaying;
 	private String playerName;
+	private MoveChecker moveChecker;
 
 	private LocalPlayerHandler handler;
 
@@ -38,6 +39,7 @@ public class GUIPlayer implements IPlayer {
 		this.player = player;
 		playerController.setup(player, board);
 		this.handler = handler;
+		this.moveChecker = checker;
 	}
 
 	public void nextMove(String move, String playerName) {
@@ -147,7 +149,7 @@ public class GUIPlayer implements IPlayer {
 	}
 	
 	void updateMapSingleTerritory(Move move) {
-		gameController.mapControl.updateTerritory(move.getUID() + 1,
+		gameController.mapControl.updateTerritory(move.getUID(),
 				board.getArmies(move.getTerritory()),
 				getTerritory(move.getTerritory()));
 	}
@@ -156,10 +158,10 @@ public class GUIPlayer implements IPlayer {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				gameController.mapControl.updateTerritory(move.getUID() + 1,
+				gameController.mapControl.updateTerritory(move.getUID(),
 						board.getArmies(move.getFrom()),
 						getTerritory(move.getFrom()));
-				gameController.mapControl.updateTerritory(move.getUID() + 1,
+				gameController.mapControl.updateTerritory(move.getUID(),
 						board.getArmies(move.getTo()),
 						getTerritory(move.getTo()));
 			}
@@ -181,10 +183,10 @@ public class GUIPlayer implements IPlayer {
 			@Override
 			public void run() {
 				gameController.mapControl.updateTerritory(
-						attackerTerritory.getOwnerID(),
+						board.getOwner(attackerTerritory.getId()),
 						board.getArmies(move.getFrom()), attackerTerritory);
 				gameController.mapControl.updateTerritory(
-						defenderTerritory.getOwnerID(),
+						board.getOwner(defenderTerritory.getId()),
 						board.getArmies(move.getTo()), defenderTerritory);
 			}
 		});
@@ -219,8 +221,14 @@ public class GUIPlayer implements IPlayer {
 		this.isRealUserPlaying = isRealUserPlaying;
 	}
 
+
 	@Override
 	public String getPlayerName() {
 		return playerName;
+	}
+
+	public MoveChecker getMoveChecker() {
+		return moveChecker;
+
 	}
 }

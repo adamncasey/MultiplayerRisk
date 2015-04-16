@@ -148,16 +148,16 @@ public class MapControl extends Pane {
 			switch (territory.getArmyClass()) {
 			 case Artillery:
 			 image = new ImageView(artilleryImages.get(territory
-			 .getOwnerID()));
+			 .getOwnerID() + 1));
 			 labelOffset = -162;
 			 break;
 			 case Cavalry:
-			 image = new ImageView(cavalryImages.get(territory.getOwnerID()));
+			 image = new ImageView(cavalryImages.get(territory.getOwnerID() + 1));
 			 labelOffset = -110;
 			 break;
 			 case Infantry:
 			 image = new ImageView(
-			 infantryImages.get(territory.getOwnerID()));
+			 infantryImages.get(territory.getOwnerID() + 1));
 			 labelOffset = -94;
 			 break;
 			default:

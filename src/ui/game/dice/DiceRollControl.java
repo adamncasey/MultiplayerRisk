@@ -5,6 +5,8 @@ import java.io.InputStream;
 
 import javafx.application.Platform;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
@@ -28,6 +30,8 @@ public class DiceRollControl extends BorderPane {
 
 	@FXML
 	Label winnerName;
+	
+	ObservableList<Integer> choices;
 
 	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
 
@@ -68,6 +72,16 @@ public class DiceRollControl extends BorderPane {
 
 		setIsResultsVisible(true);
 	}
+	
+	void populateChoices(int minArmies, int maxArmies) {
+		choices = FXCollections.observableArrayList();
+		
+		for (int i = minArmies; i <= maxArmies; i++) {
+			choices.add(i);
+		}
+		
+		userDiceChoiceBox.setItems(choices);
+	}
 
 	// ================================================================================
 	// Attack Mode
@@ -76,11 +90,12 @@ public class DiceRollControl extends BorderPane {
 	private AttackingDiceRollControlEventHandler attackHandler;
 
 	public void initialiseAttack(String defendingName,
-			AttackingDiceRollControlEventHandler attackHandler) {
+			AttackingDiceRollControlEventHandler attackHandler, int minDice, int maxDice) {
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				populateChoices(minDice, maxDice);
 				title.setText(String.format("Attacking %s!", defendingName));
 			}
 		});
@@ -97,10 +112,11 @@ public class DiceRollControl extends BorderPane {
 
 	public void initialiseDefend(String attackingName,
 			int numberOfAttackingDice,
-			DefendingDiceRollControlEventHandler defendHandler) {
+			DefendingDiceRollControlEventHandler defendHandler, int minDice, int maxDice) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				populateChoices(minDice, maxDice);
 				title.setText(String.format("Attacked from %s!", attackingName));
 			}
 		});

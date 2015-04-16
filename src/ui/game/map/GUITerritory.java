@@ -80,9 +80,9 @@ public class GUITerritory {
 	}
 	
 	public int getOwnerID() {
-		return ownerID;
+		return ownerID - 1;
 	}
 	public void setOwnerID(int ownerID) {
-		this.ownerID = ownerID;
+		this.ownerID = ownerID + 1;
 	}
 }

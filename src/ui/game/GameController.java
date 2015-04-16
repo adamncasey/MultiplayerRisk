@@ -241,7 +241,7 @@ public class GameController implements Initializable, PlayerController {
 					closePopup(null);
 					notifyMoveCompleted();
 				}
-			}, mapControl.getTerritoryByID(move.getTo()).getName(), lastAttackerNumberOfArmiesSurvived-1, move.getCurrentArmies()-1);
+			}, mapControl.getTerritoryByID(move.getTo()).getName(), lastAttackerNumberOfArmiesSurvived, move.getCurrentArmies()-1);
 			openPopup(occupyControl);
 			break;
 		default:
@@ -319,7 +319,7 @@ public class GameController implements Initializable, PlayerController {
 						.getDefendDiceRolls()), move.getAttackerLosses(), move
 						.getDefenderLosses());
 		
-		lastAttackerNumberOfArmiesSurvived = player.getBoard().getArmies(move.getFrom());
+		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size() - move.getAttackerLosses();
 
 		while (!diceMoveDismissed) {
 			try {

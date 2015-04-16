@@ -87,7 +87,8 @@ public class RemoteGameLobby extends Thread {
                 return;
             }
 
-            firstPlayer = decidePlayerOrder(router, otherPlayers); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+            firstPlayer = LobbyUtil.decidePlayerOrder(router, playerid, otherPlayers, handler); // callbacks: onDicePlayerOrder + onDiceHash + onDiceNumber
+
             if(firstPlayer < 0) {
                 return;
             }
@@ -364,27 +365,6 @@ public class RemoteGameLobby extends Thread {
         handler.onInitialiseGame(payload.version, payload.features);
 
         return true;
-    }
-
-    // Returns the count of the player who should go first.
-    // If returns 2: the second player will play first. Assuming continuous playerids, player id #1 will start.
-    private int decidePlayerOrder(GameRouter router, List<NetworkClient> otherPlayers) {
-
-        int result;
-        try {
-            int numplayers = otherPlayers.size() + 1;
-            result = LobbyDiceRoll.rollDice(router, playerid, numplayers, otherPlayers);
-        } catch (LobbyDiceRoll.DiceRollException e) {
-            handler.onFailure(e);
-            return -1;
-        }
-
-        System.out.println("Player Order Dice result: " + result);
-
-        // Return the playerid of that player index.
-        // Go through otherPlayers
-            // If we skipped over our playerID, take it into account.
-        return 0;
     }
 
     private List<Integer> shuffleCards() {

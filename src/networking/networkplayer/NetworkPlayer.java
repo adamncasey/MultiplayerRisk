@@ -52,6 +52,10 @@ public class NetworkPlayer implements IPlayer {
         unprocessedMessage = null;
     }
 
+    public int getPlayerID() {
+        return this.client.playerid;
+    }
+
     @Override
     public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
         this.moveChecker = checker;

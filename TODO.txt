@@ -5,22 +5,22 @@ Adam:
 Refactoring:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.
     Reduces the complexity in NetworkPlayer::updatePlayer.
+  LobbyUtil.createIPlayersInOrder could do with a second look at some point. It's really complicated for no great reason.
 
 Work remaining for our version of networked risk:
-3.  Handle leaving the game when we win / lose.
+2.  Handle leaving the game when we win / lose.
 1.	Card Shuffle (basically just a dice roll)
-2.  Player Order shuffle (same as card shuffle)
-4.  Handle NetworkPlayer disconnection.
+3.  Handle NetworkPlayer disconnection.
 
   Work to be done to play with other implementations:
 1.	Wrapper Format
-3.  Send name in join_game
-4.  Handle players_joined command
-5.  Delete draw_card command.
-6.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
-7.	Host must timeout players
-8.  Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
-9.  Stop receiving PING messages when host sends READY command.
+2.  Send name in join_game
+3.  Handle players_joined command (Send and receive it)
+4.  Delete draw_card command.
+5.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
+6.	Host must timeout players
+7.  Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
+8.  Stop receiving PING messages when host sends READY command.
 
   Protocol Extensions:
 1.  Message Signing (Store public_keys from players joined, use to verify messages.)

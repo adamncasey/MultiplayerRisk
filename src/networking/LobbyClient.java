@@ -3,6 +3,7 @@ package networking;
 import networking.message.payload.AcceptJoinGamePayload;
 import networking.message.Message;
 import networking.message.payload.RejectJoinGamePayload;
+import networking.parser.Parser;
 
 /**
  * Handles accept / reject process.
@@ -43,7 +44,7 @@ public class LobbyClient {
 
 		Message msg = new Message(Command.JOIN_ACCEPT, hostPlayerid, payload);
 		try {
-			conn.sendBlocking(msg.toString());
+			conn.sendBlocking(Parser.stringifyMessage(msg));
 		}
 		catch(ConnectionLostException e) {
 			return false;
@@ -58,7 +59,7 @@ public class LobbyClient {
         // send message JOIN_REJECT (player_id, ack timeout, move timeout)
         Message msg = new Message(Command.JOIN_REJECT, hostPlayerid, new RejectJoinGamePayload(rejectMessage));
         try {
-            conn.sendBlocking(msg.toString());
+            conn.sendBlocking(Parser.stringifyMessage(msg));
         } catch (ConnectionLostException e) {
             return;
         }

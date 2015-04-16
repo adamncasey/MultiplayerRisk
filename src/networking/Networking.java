@@ -6,6 +6,7 @@ import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
+import settings.Settings;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -62,7 +63,12 @@ public class Networking {
 		}
 		else
 		{
-			return Parser.parseMessage(msgString);
+            if(Settings.SUPPORT_WRAPPER_MESSAGES) {
+                return Parser.parseOuterMesage(msgString);
+            }
+            else {
+                return Parser.parseMessage(msgString);
+            }
 		}
 	}
 

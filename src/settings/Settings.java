@@ -13,6 +13,11 @@ public class Settings {
     public static final int MaxNumberOfPlayers = 6;
     public static final int MinNumberOfPlayers = 3;
 
+    /**
+     * Enables support for the outer wrapper message format.
+     */
+    public static boolean SUPPORT_WRAPPER_MESSAGES = true;
 
-    public static boolean printNetworkMessages = false;
+
+    public static boolean printNetworkMessages = true;
 }

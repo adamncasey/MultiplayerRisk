@@ -1,6 +1,7 @@
 package networking;
 
 import networking.message.Message;
+import networking.parser.Parser;
 
 import java.util.*;
 
@@ -106,7 +107,7 @@ public class GameRouter {
 
     private void sendToConnection(Message message, IConnection conn) {
         try {
-            conn.sendBlocking(message.toString());
+            conn.sendBlocking(Parser.stringifyMessage(message));
         } catch (ConnectionLostException e) {
             handleException(conn, e);
         }

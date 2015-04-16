@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import settings.Settings;
 
 @RunWith(JUnit4.class)
 public class GetLobbyClientTest extends TestCase {
@@ -39,7 +40,10 @@ public class GetLobbyClientTest extends TestCase {
                 "    \"player_id\": 1\n" +
                 "}";
         conn.lineToReceive = message;
+        Settings.SUPPORT_WRAPPER_MESSAGES = false;
         LobbyClient client = Networking.getLobbyClient(conn, 0);
+
+        Settings.SUPPORT_WRAPPER_MESSAGES = true;
         assertNotNull(client);
 
         Assert.assertArrayEquals("Supported Features Equality", client.supportedFeatures, new String[]{"secure", "defaultmap"});

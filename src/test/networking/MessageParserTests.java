@@ -12,6 +12,32 @@ import org.junit.Test;
 public class MessageParserTests {
 
 	@Test
+	public void escapeTest() {
+		String test = "\"";
+		assertEquals("\\\"", Parser.escapeJson(test));
+
+		test = "\\";
+		assertEquals("\\\\", Parser.escapeJson(test));
+
+		test = "\n";
+		assertEquals("\\n", Parser.escapeJson(test));
+	}
+
+	@Test
+	public void testWrapperFormat() throws ParserException {
+		String innerMessage = "{\"command\": \"acknowledgement\", \"payload\": 32183921, \"player_id\": 5 }";
+
+		String message = "{\"message\": \"" + Parser.escapeJson(innerMessage) + "\"}";
+
+		Message msg = Parser.parseOuterMesage(message);
+
+		assertNotNull(msg);
+		assertEquals(msg.command, Command.ACKNOWLEDGEMENT);
+
+		assertTrue(msg.payload instanceof IntegerPayload);
+	}
+
+	@Test
 	public void testAcknowledgeMessage() throws ParserException {
 		/*
 		{

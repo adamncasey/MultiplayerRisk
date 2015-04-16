@@ -8,13 +8,89 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
 import networking.Command;
+import settings.Settings;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
+import java.util.regex.Pattern;
 
 public class Parser {
-	/**
+
+    public static String stringifyMessage(Message message) {
+        String innerMessage = message.toString();
+
+        if(!Settings.SUPPORT_WRAPPER_MESSAGES) {
+            return innerMessage;
+        }
+
+        innerMessage = escapeJson(innerMessage);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("message", innerMessage);
+
+        JSONObject obj = new JSONObject(map);
+
+        return JSONValue.toJSONString(obj) + "\n";
+    }
+
+    /**
+     * Parses a message starting from the outer wrapper format.
+     * This wrapper format is described in the protocol in section 5.1.1
+     * @param msgString
+     * @return
+     */
+    public static Message parseOuterMesage(String msgString) throws ParserException {
+        Object parsed;
+
+        try {
+            parsed = JSONValue.parseWithException(msgString);
+        } catch(ParseException e) {
+            throw new ParserException("Unable to parse outer packet. Error: " + e.toString() + ". Message:'" + msgString + "'");
+        }
+
+        return parseOuterJSONObjectToMessage(parsed);
+    }
+
+    private static Message parseOuterJSONObjectToMessage(Object parsed) throws ParserException {
+        if(!(parsed instanceof JSONObject)) {
+            throw new ParserException("Invalid message format. Expecting JSONObject");
+        }
+
+        JSONObject wrapper = (JSONObject)parsed;
+
+        validateType(wrapper, "message", String.class);
+
+        String innerMessage = (String)wrapper.get("message");
+
+        innerMessage = unescapeJson(innerMessage);
+
+        return parseMessage(innerMessage);
+    }
+
+    public static String unescapeJson(String innerMessage) {
+
+        innerMessage = innerMessage.replaceAll(Pattern.quote("\\\""), "\"");
+        innerMessage = innerMessage.replaceAll(Pattern.quote("\\n"), "\n");
+
+        innerMessage = innerMessage.replaceAll(Pattern.quote("\\\\"), "\\");
+
+        return innerMessage;
+    }
+
+    public static String escapeJson(String innerMessage) {
+
+        // find replace all back slash with \\
+        innerMessage = innerMessage.replace("\\", "\\\\");
+
+        // find replace all new lines with \n
+        innerMessage = innerMessage.replace("\n", "\\n");
+
+        // find replace all double quotes with \"
+        innerMessage = innerMessage.replace("\"", "\\\"");
+
+        return innerMessage;
+    }
+
+    /**
 	 * Parses an entire JSON object in the format described by Json communication structure
 	 * @param jsonMessage
 	 * @return Message - The data in jsonMessage parsed into our data structure.

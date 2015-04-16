@@ -43,6 +43,7 @@ public class JoinGamePayload extends Payload {
     public Map getJSONValue() {
         // JSONObject: "supported_versions": [float, float]
         //             "supported_features": [string, string]
+        //             "name": string
 
         Map<String, Object> map = new HashMap<>();
 

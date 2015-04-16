@@ -22,8 +22,8 @@ public class LobbyUtilTests {
     public void playerOrderTests() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 1, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 1, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                             after = new LinkedList<>();
@@ -39,8 +39,8 @@ public class LobbyUtilTests {
     public void playerOrderTests2() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 1, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 1, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -57,8 +57,8 @@ public class LobbyUtilTests {
     public void playerOrderTests3() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 1, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 1, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -75,8 +75,8 @@ public class LobbyUtilTests {
     public void playerOrderTests4() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -93,8 +93,8 @@ public class LobbyUtilTests {
     public void playerOrderTests5() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -111,8 +111,8 @@ public class LobbyUtilTests {
     public void playerOrderTests6() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 2, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 2, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -130,8 +130,8 @@ public class LobbyUtilTests {
     public void playerOrderTests7() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 1, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 1, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -148,8 +148,8 @@ public class LobbyUtilTests {
     public void playerOrderTests8() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 1, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 1, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();
@@ -166,8 +166,8 @@ public class LobbyUtilTests {
     public void playerOrderTests9() {
         GameRouter router = new GameRouter();
 
-        NetworkClient client2 = new NetworkClient(router, 0, true);
-        NetworkClient client3 = new NetworkClient(router, 1, true);
+        NetworkClient client2 = new NetworkClient(router, 0, "name", true);
+        NetworkClient client3 = new NetworkClient(router, 1, "name", true);
 
         LinkedList<IPlayer> before = new LinkedList<>(),
                 after = new LinkedList<>();

@@ -74,7 +74,7 @@ public class LocalGameLobby extends Thread {
                 if(client != null) {
                     lobbyClients.add(client);
 
-                    NetworkClient newPlayer = new NetworkClient(router, newplayerid, false);
+                    NetworkClient newPlayer = new NetworkClient(router, newplayerid, client.name, false);
                     router.addRoute(newPlayer, client.getConnection());
 
                     netClients.add(newPlayer);

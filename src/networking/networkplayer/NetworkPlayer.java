@@ -52,6 +52,10 @@ public class NetworkPlayer implements IPlayer {
         unprocessedMessage = null;
     }
 
+    public String getPlayerName() {
+        return client.name;
+    }
+
     public int getPlayerID() {
         return this.client.playerid;
     }

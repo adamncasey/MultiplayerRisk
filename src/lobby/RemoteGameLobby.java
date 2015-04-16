@@ -56,7 +56,7 @@ public class RemoteGameLobby extends Thread {
     private void joinLobby() throws IOException {
 
         GameRouter router = new GameRouter();
-        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, true);
+        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, name, true);
 
 
         IConnection conn = tcpConnect(address, port);
@@ -228,8 +228,11 @@ public class RemoteGameLobby extends Thread {
 
         for(int i=1; i<numplayers; i++) {
             if(i != this.playerid) {
-                System.out.println("Added playerid " + i);
-                clients.add(new NetworkClient(router, i, false));
+
+                String name = "NetPlayer " + i;
+                System.out.println("Added player " + name);
+
+                clients.add(new NetworkClient(router, i, name, false));
             }
         }
 

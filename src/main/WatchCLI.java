@@ -3,9 +3,7 @@ package main;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
-
 import ai.AgentFactory;
 import ai.AgentPlayer;
 import ai.AgentTypes;
@@ -13,17 +11,14 @@ import ai.agents.Agent;
 import logic.Game;
 import player.IPlayer;
 import networking.LocalPlayerHandler;
-import ui.commandline.CommandLineController;
 import ui.commandline.CommandLinePlayer;
 
 /**
  * WatchCLI - Watch 3-6 AIs play out the game on the command line.
  */
 public class WatchCLI {
-    private static Random random = new Random();
 
     public static void main(String[] args){ 
-        int seed = random.nextInt();
         Scanner reader = new Scanner(System.in);
         PrintWriter writer = new PrintWriter(System.out);
 
@@ -50,7 +45,7 @@ public class WatchCLI {
         List<IPlayer> players = new ArrayList<IPlayer>();
         List<String> names = new ArrayList<String>();
         Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer);
+        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer, "CL Player");
         players.add(user);
         names.add(String.format("%s 1", userAgent.getName()));
         for(int i = 0; i != numAI-1; ++i){
@@ -59,7 +54,7 @@ public class WatchCLI {
             players.add(ai);
             names.add(String.format("%s %d", agent.getName(), i + 2));
         }
-        Game game = new Game(players, names, new LocalPlayerHandler());
+        Game game = new Game(players, new LocalPlayerHandler());
 
         game.run();
 

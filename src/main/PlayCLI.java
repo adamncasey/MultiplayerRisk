@@ -3,9 +3,7 @@ package main;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
-
 import ai.AgentFactory;
 import ai.AgentPlayer;
 import ai.AgentTypes;
@@ -20,10 +18,8 @@ import ui.commandline.CommandLinePlayer;
  * PlayCLI --- Sets up a game for 1 human to play on the command line vs a variable number of RandomPlayers.
  */
 public class PlayCLI {
-    private static Random random = new Random();
 
     public static void main(String[] args){
-        int seed = random.nextInt();
         Scanner reader = new Scanner(System.in);
         PrintWriter writer = new PrintWriter(System.out);
 
@@ -50,17 +46,14 @@ public class PlayCLI {
 
 
         List<IPlayer> players = new ArrayList<IPlayer>();
-        List<String> names = new ArrayList<String>();
-        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer);
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, "CL Player");
         players.add(user);
-        names.add("User 1");
         for(int i = 0; i != numAI; ++i){
             Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
-            names.add(String.format("%s %d", agent.getName(), i + 2));
         }
-        Game game = new Game(players, names, new LocalPlayerHandler());
+        Game game = new Game(players, new LocalPlayerHandler());
 
         game.run();
     }

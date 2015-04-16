@@ -52,6 +52,7 @@ public class NetworkPlayer implements IPlayer {
         unprocessedMessage = null;
     }
 
+    @Override
     public String getPlayerName() {
         return client.name;
     }
@@ -571,5 +572,10 @@ public class NetworkPlayer implements IPlayer {
             players.add(removed);
 
         return responses;
+    }
+    
+    @Override
+    public String toString() {
+    	return getPlayerName() != null ? getPlayerName() :  "";
     }
 }

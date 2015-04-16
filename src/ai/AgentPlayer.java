@@ -43,4 +43,9 @@ public class AgentPlayer implements IPlayer {
             controller.getMove(move);
         }
     }
+
+	@Override
+	public String getPlayerName() {
+		return controller.getName();
+	}
 }

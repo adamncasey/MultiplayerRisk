@@ -1,14 +1,14 @@
 package ui.game;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -61,6 +61,8 @@ public class GameController implements Initializable, PlayerController {
 	HBox playerShieldContainer;
 	@FXML
 	Label moveDescription;
+	@FXML
+	Button doneButton;
 
 	public static GameConsole console;
 	public GUIPlayer player;
@@ -163,7 +165,7 @@ public class GameController implements Initializable, PlayerController {
 
 	boolean moveCompleted = false;
 	Player userDetails;
-	
+
 	GUITerritory attackFrom;
 	int lastAttackerNumberOfArmiesSurvived;
 
@@ -196,14 +198,21 @@ public class GameController implements Initializable, PlayerController {
 		moveCompleted = false;
 		currentMove = move;
 
-		if (testing && move.getStage() != testingStage) {
-			testingAI.getMove(move);
-			return;
-		} else if (testingStage == move.getStage()) {
-			testing = false;
-		}
+//		if (testing && move.getStage() != testingStage) {
+//			testingAI.getMove(move);
+//			return;
+//		} else if (testingStage == move.getStage()) {
+//			testing = false;
+//		}
 
 		switch (currentMove.getStage()) {
+		case DECIDE_ATTACK:
+			setDoneButtonDisabled(false);
+			break;
+		case DECIDE_FORTIFY:
+			setDoneButtonDisabled(false);
+			break;
+
 		case TRADE_IN_CARDS:
 			ps.getMove(move);
 			moveCompleted = true;
@@ -241,7 +250,9 @@ public class GameController implements Initializable, PlayerController {
 					closePopup(null);
 					notifyMoveCompleted();
 				}
-			}, mapControl.getTerritoryByID(move.getTo()).getName(), lastAttackerNumberOfArmiesSurvived, move.getCurrentArmies()-1);
+			}, mapControl.getTerritoryByID(move.getTo()).getName(),
+					lastAttackerNumberOfArmiesSurvived,
+					move.getCurrentArmies() - 1);
 			openPopup(occupyControl);
 			break;
 		default:
@@ -254,6 +265,9 @@ public class GameController implements Initializable, PlayerController {
 			} catch (InterruptedException e) {
 			}
 		}
+
+		currentMove = null;
+		setDoneButtonDisabled(true);
 	}
 
 	public synchronized void notifyMoveCompleted() {
@@ -262,6 +276,8 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	void territoryClicked(GUITerritory territory) {
+		if (currentMove == null)
+			return;
 
 		if(currentMove == null) {
 			return;
@@ -287,20 +303,20 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case START_ATTACK:
-			if (attackFrom == null) {
+			if(attackFrom == null) {
 				attackFrom = territory;
-			} else {
-				currentMove.setFrom(attackFrom.getId());
-				currentMove.setTo(territory.getId());
-				attackFrom = null;
+				return;
 			}
-
+			
+			currentMove.setFrom(attackFrom.getId());
+			currentMove.setTo(territory.getId());
+			attackFrom = null;
 			notifyMoveCompleted();
 			break;
-		// case DECIDE_FORTIFY:
-		// break;
-		// case START_FORTIFY:
-		// break;
+//		 case DECIDE_FORTIFY:
+//		 break;
+//		 case START_FORTIFY:
+//		 break;
 		// case FORTIFY_TERRITORY:
 		// break;
 		default:
@@ -318,8 +334,9 @@ public class GameController implements Initializable, PlayerController {
 				new DiceRollResult(move.getAttackDiceRolls(), move
 						.getDefendDiceRolls()), move.getAttackerLosses(), move
 						.getDefenderLosses());
-		
-		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size() - move.getAttackerLosses();
+
+		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size()
+				- move.getAttackerLosses();
 
 		while (!diceMoveDismissed) {
 			try {
@@ -332,6 +349,38 @@ public class GameController implements Initializable, PlayerController {
 	public synchronized void notifyDiceMoveDismissed() {
 		diceMoveDismissed = true;
 		notifyAll();
+	}
+
+	// ================================================================================
+	// Buttons
+	// ================================================================================
+	public void doneButtonAction(ActionEvent event) {
+		if (currentMove == null)
+			return;
+		
+		switch (currentMove.getStage()) {
+		case DECIDE_ATTACK:
+			currentMove.setDecision(false);
+			setDoneButtonDisabled(true);
+			notifyMoveCompleted();
+			break;
+		 case DECIDE_FORTIFY:
+				currentMove.setDecision(false);
+				setDoneButtonDisabled(true);
+				notifyMoveCompleted();
+		 break;
+		default:
+			break;
+		}
+	}
+
+	void setDoneButtonDisabled(boolean isDisabled) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				doneButton.setDisable(isDisabled);
+			}
+		});
 	}
 
 	// ================================================================================

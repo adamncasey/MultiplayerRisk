@@ -94,7 +94,7 @@ public class GUIPlayer implements IPlayer {
 //		case DECIDE_FORTIFY:
 //			break;
 		case END_ATTACK:
-			if (isRealUserPlaying) {
+			if (isRealUserPlaying && move.getUID() == player.getUID()) {
 				gameController.diceRollEnded(move);
 			}
 			postAttackMapUpdate(move);
@@ -142,7 +142,7 @@ public class GUIPlayer implements IPlayer {
 		}
 		
 		try {
-			Thread.sleep(10);
+			Thread.sleep(15);
 		} catch (InterruptedException e) {}
 	}
 	

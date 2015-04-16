@@ -19,23 +19,26 @@ public class DiceRollControl extends BorderPane {
 	Label title;
 	@FXML
 	ChoiceBox<Integer> userDiceChoiceBox;
-	
+
 	// Results Properties
 	@FXML
 	HBox userDiceHBox;
 	@FXML
 	HBox enemyDiceHBox;
-	
+
 	@FXML
 	Label winnerName;
 
 	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
+
 	public boolean getIsResultsVisible() {
 		return isResultsVisible.get();
 	}
+
 	public void setIsResultsVisible(boolean value) {
 		isResultsVisible.set(value);
 	}
+
 	public final BooleanProperty isResultsVisibleProperty() {
 		return isResultsVisible;
 	}
@@ -51,7 +54,7 @@ public class DiceRollControl extends BorderPane {
 			throw new RuntimeException(exception);
 		}
 	}
-	
+
 	@FXML
 	protected void submit() {
 		int selectedNumberOfDice = (int) userDiceChoiceBox.getSelectionModel()
@@ -66,7 +69,6 @@ public class DiceRollControl extends BorderPane {
 		setIsResultsVisible(true);
 	}
 
-	
 	// ================================================================================
 	// Attack Mode
 	// ================================================================================
@@ -75,19 +77,18 @@ public class DiceRollControl extends BorderPane {
 
 	public void initialiseAttack(String defendingName,
 			AttackingDiceRollControlEventHandler attackHandler) {
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				title.setText(String.format("Attacking %s!", defendingName));
 			}
 		});
-		
+
 		this.attackHandler = attackHandler;
 		this.mode = Mode.ATTACKING;
 	}
 
-	
 	// ================================================================================
 	// Defend Mode
 	// ================================================================================
@@ -106,45 +107,47 @@ public class DiceRollControl extends BorderPane {
 		this.defendHandler = defendHandler;
 		this.mode = Mode.DEFENDING;
 	}
-	
-	
+
 	// ================================================================================
 	// Results
 	// ================================================================================
-	
-	public void visualiseResults(DiceRollResult results, int attackerLosses, int defenderLosses) {
+
+	public void visualiseResults(DiceRollResult results, int attackerLosses,
+			int defenderLosses) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				HBox attackerHBox = mode.equals(Mode.ATTACKING) ? userDiceHBox : enemyDiceHBox;
-				HBox defenderHBox = mode.equals(Mode.DEFENDING) ? userDiceHBox : enemyDiceHBox;
-				
-				for(int attackDie : results.attackingDice) {
+				HBox attackerHBox = mode.equals(Mode.ATTACKING) ? userDiceHBox
+						: enemyDiceHBox;
+				HBox defenderHBox = mode.equals(Mode.DEFENDING) ? userDiceHBox
+						: enemyDiceHBox;
+
+				for (int attackDie : results.attackingDice) {
 					attackerHBox.getChildren().add(getDie(attackDie));
 				}
-				for(int defendDie : results.defendingDice) {
+				for (int defendDie : results.defendingDice) {
 					defenderHBox.getChildren().add(getDie(defendDie));
 				}
 			}
 		});
-		
-		//winnerName.setText("");
+
+		// winnerName.setText("");
 	}
-	
+
 	public ImageView getDie(int number) {
 		ImageView result = new ImageView();
 		result.setFitHeight(50.0);
 		result.setPreserveRatio(true);
-		InputStream in = DiceRollControl.class.getResourceAsStream("resources/die_" + number + ".png");
+		InputStream in = DiceRollControl.class
+				.getResourceAsStream("resources/die_" + number + ".png");
 		result.setImage(new Image(in));
 		return result;
 	}
 
-	
 	// ================================================================================
 	// Utils
 	// ================================================================================
-	
+
 	private enum Mode {
 		ATTACKING, DEFENDING
 	}
@@ -152,22 +155,13 @@ public class DiceRollControl extends BorderPane {
 	private Mode mode;
 
 	public void reset() {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				setIsResultsVisible(false);
-				title.setText("");
-				mode = null;
-				userDiceChoiceBox.getSelectionModel().selectFirst();
-				userDiceHBox.getChildren().clear();
-				enemyDiceHBox.getChildren().clear();
-				
-				winnerName.setText("");
-			}
-		});
+		setIsResultsVisible(false);
+		title.setText("");
+		mode = null;
+		userDiceChoiceBox.getSelectionModel().selectFirst();
+		userDiceHBox.getChildren().clear();
+		enemyDiceHBox.getChildren().clear();
 
+		winnerName.setText("");
 	}
 }
-
-
-

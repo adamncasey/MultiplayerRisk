@@ -204,6 +204,8 @@ public class Game implements Runnable {
 			move.setDefenderLosses(attackResult.get(1));
 			move.setAttackDiceRolls(attackDiceRolls);
 			move.setDefendDiceRolls(defendDiceRolls);
+			move.setFrom(attackFrom);
+			move.setTo(attackTo);
 			updatePlayers(move);
 
 			boolean willCaptureTerritory = state.getBoard().getArmies(attackTo) == 0;

@@ -22,7 +22,7 @@ public class MapControl extends Pane {
 
 	Map<Integer, GUITerritory> territoryByID = new HashMap<>();
 	Map<ImageView, GUITerritory> territoryByImageView = new HashMap<>();
-	
+
 	Map<Integer, Image> artilleryImages = new HashMap<>();
 	Map<Integer, Image> infantryImages = new HashMap<>();
 	Map<Integer, Image> cavalryImages = new HashMap<>();
@@ -52,10 +52,10 @@ public class MapControl extends Pane {
 	public void initialise() {
 		loadArmyIcons();
 
-		DefaultMap territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1, AF2, AF3,
-				AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3, EU4, EU5,
-				EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8, AS0, AS1,
-				AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
+		DefaultMap territories = new DefaultMap(AU0, AU1, AU2, AU3, AF0, AF1,
+				AF2, AF3, AF4, AF5, SA0, SA1, SA2, SA3, EU0, EU1, EU2, EU3,
+				EU4, EU5, EU6, NA0, NA1, NA2, NA3, NA4, NA5, NA6, NA7, NA8,
+				AS0, AS1, AS2, AS3, AS4, AS5, AS6, AS7, AS8, AS9, AS10, AS11);
 
 		clickableTerritories = territories.getTerritoryList();
 
@@ -74,7 +74,7 @@ public class MapControl extends Pane {
 			getChildren().add(label);
 		}
 	}
-	
+
 	void loadArmyIcons() {
 		for (int i = 1; i < 7; i++) {
 			artilleryImages.put(
@@ -136,8 +136,9 @@ public class MapControl extends Pane {
 			});
 		}
 	}
-	
-	void updateTerritoryImage(GUITerritory territory, Label label, int oldOwnerID, ArmyClass oldClass) {
+
+	void updateTerritoryImage(GUITerritory territory, Label label,
+			int oldOwnerID, ArmyClass oldClass) {
 		if (territory.getOwnerID() != oldOwnerID
 				|| territory.getArmyClass() != oldClass) {
 
@@ -146,7 +147,8 @@ public class MapControl extends Pane {
 
 			switch (territory.getArmyClass()) {
 			case Artillery:
-				image = new ImageView(artilleryImages.get(territory.getOwnerID()));
+				image = new ImageView(artilleryImages.get(territory
+						.getOwnerID()));
 				labelOffset = -162;
 				break;
 			case Cavalry:
@@ -154,10 +156,12 @@ public class MapControl extends Pane {
 				labelOffset = -110;
 				break;
 			case Infantry:
-				image = new ImageView(infantryImages.get(territory.getOwnerID()));
+				image = new ImageView(
+						infantryImages.get(territory.getOwnerID()));
 				labelOffset = -94;
 				break;
 			case None:
+				image = new ImageView();
 				break;
 			}
 
@@ -169,8 +173,10 @@ public class MapControl extends Pane {
 			image.setScaleX(0.25f);
 			image.setScaleY(0.25f);
 
-			x -= image.getImage().getWidth() / 2;
-			y -= image.getImage().getHeight() / 2;
+			if(image.getImage() != null) {
+				x -= image.getImage().getWidth() / 2;
+				y -= image.getImage().getHeight() / 2;
+			}
 
 			final ImageView finalImage = image;
 			final int finalLabelOffset = labelOffset;

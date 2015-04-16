@@ -2,7 +2,6 @@ package ui.game;
 
 import java.util.*;
 
-import ai.agents.Agent;
 import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import logic.move.Move;
@@ -13,7 +12,6 @@ import player.IPlayer;
 import player.PlayerController;
 import networking.LocalPlayerHandler;
 import ui.game.map.GUITerritory;
-import ui.game.map.MapControl;
 
 /**
  * GUIPlayer
@@ -103,6 +101,8 @@ public class GUIPlayer implements IPlayer {
 			if (isRealUserPlaying) {
 				gameController.diceRollEnded(move);
 			}
+			postAttackMapUpdate(move);
+			// Update
 			break;
 		case FORTIFY_TERRITORY:
 			break;
@@ -159,6 +159,30 @@ public class GUIPlayer implements IPlayer {
 		if (move.getUID() == player.getUID()) {
 			handler.sendMove(move);
 		}
+	}
+
+	void postAttackMapUpdate(Move move) {
+		GUITerritory attackerTerritory = gameController.mapControl
+				.getTerritoryByID(move.getFrom());
+		
+		int attackerArmies = attackerTerritory.getNumberOfArmies() - move.getAttackerLosses();
+
+		GUITerritory defenderTerritory = gameController.mapControl
+				.getTerritoryByID(move.getTo());
+		
+		int defenderArmies = defenderTerritory.getNumberOfArmies() - move.getDefenderLosses();
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameController.mapControl.updateTerritory(
+						attackerTerritory.getOwnerID(), attackerArmies,
+						attackerTerritory);
+				gameController.mapControl.updateTerritory(
+						defenderTerritory.getOwnerID(), defenderArmies,
+						defenderTerritory);
+			}
+		});
 	}
 
 	public void getMove(Move move) {

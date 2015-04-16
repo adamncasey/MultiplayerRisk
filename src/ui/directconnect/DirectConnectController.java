@@ -117,7 +117,7 @@ public class DirectConnectController extends AnchorPane implements
 			RemoteGameLobby lobby = new RemoteGameLobby(
 					InetAddress.getByName(ip.getText()), Settings.port,
 					joinHandler,
-					name.getText());
+					"Host");
 			lobby.start();
 		} catch (UnknownHostException e) {
 			status("Unknown host: " + e.getMessage());

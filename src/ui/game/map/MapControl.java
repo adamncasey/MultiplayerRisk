@@ -146,22 +146,22 @@ public class MapControl extends Pane {
 			int labelOffset = 0;
 
 			switch (territory.getArmyClass()) {
-			case Artillery:
-				image = new ImageView(artilleryImages.get(territory
-						.getOwnerID()));
-				labelOffset = -162;
-				break;
-			case Cavalry:
-				image = new ImageView(cavalryImages.get(territory.getOwnerID()));
-				labelOffset = -110;
-				break;
-			case Infantry:
-				image = new ImageView(
-						infantryImages.get(territory.getOwnerID()));
-				labelOffset = -94;
-				break;
-			case None:
-				image = new ImageView();
+			 case Artillery:
+			 image = new ImageView(artilleryImages.get(territory
+			 .getOwnerID()));
+			 labelOffset = -162;
+			 break;
+			 case Cavalry:
+			 image = new ImageView(cavalryImages.get(territory.getOwnerID()));
+			 labelOffset = -110;
+			 break;
+			 case Infantry:
+			 image = new ImageView(
+			 infantryImages.get(territory.getOwnerID()));
+			 labelOffset = -94;
+			 break;
+			default:
+				image = null;
 				break;
 			}
 
@@ -170,12 +170,14 @@ public class MapControl extends Pane {
 			double y = territory.getImage().getLayoutY()
 					+ territory.getImage().getImage().getHeight() / 2;
 
-			image.setScaleX(0.25f);
-			image.setScaleY(0.25f);
+			if (image != null) {
+				image.setScaleX(0.25f);
+				image.setScaleY(0.25f);
 
-			if(image.getImage() != null) {
-				x -= image.getImage().getWidth() / 2;
-				y -= image.getImage().getHeight() / 2;
+				if (image.getImage() != null) {
+					x -= image.getImage().getWidth() / 2;
+					y -= image.getImage().getHeight() / 2;
+				}
 			}
 
 			final ImageView finalImage = image;
@@ -186,7 +188,8 @@ public class MapControl extends Pane {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					label.setGraphic(finalImage);
+					if (finalImage != null)
+						label.setGraphic(finalImage);
 					label.setGraphicTextGap(finalLabelOffset);
 
 					label.setContentDisplay(ContentDisplay.TOP);

@@ -405,11 +405,7 @@ public class GameController implements Initializable, PlayerController {
 		}
 		diceRollControl.reset();
 	}
-
-	public synchronized void notifyDiceMoveDismissed() {
-		diceMoveDismissed = true;
-		notifyAll();
-	}
+	
 
 	// ================================================================================
 	// Buttons
@@ -464,6 +460,12 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// Popup
 	// ================================================================================
+	
+	public synchronized void notifyDiceMoveDismissed() {
+		diceMoveDismissed = true;
+		notifyAll();
+	}
+
 
 	public void openPopup(Node child) {
 		Platform.runLater(new Runnable() {
@@ -480,7 +482,9 @@ public class GameController implements Initializable, PlayerController {
 		for (Node n : popupContent.getChildren()) {
 			n.setVisible(false);
 		}
-
-		notifyDiceMoveDismissed();
+		
+		if(diceRollControl.isDiceMoveCompleted()) {
+			notifyDiceMoveDismissed();
+		}
 	}
 }

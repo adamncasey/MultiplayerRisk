@@ -32,6 +32,8 @@ public class DiceRollControl extends BorderPane {
 	Label winnerName;
 	
 	ObservableList<Integer> choices;
+	
+	private boolean isDiceMoveCompleted = false;
 
 	private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
 
@@ -91,7 +93,7 @@ public class DiceRollControl extends BorderPane {
 
 	public void initialiseAttack(String defendingName,
 			AttackingDiceRollControlEventHandler attackHandler, int minDice, int maxDice) {
-
+		isDiceMoveCompleted = false;
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -113,6 +115,7 @@ public class DiceRollControl extends BorderPane {
 	public void initialiseDefend(String attackingName,
 			int numberOfAttackingDice,
 			DefendingDiceRollControlEventHandler defendHandler, int minDice, int maxDice) {
+		isDiceMoveCompleted = false;
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -147,6 +150,7 @@ public class DiceRollControl extends BorderPane {
 			}
 		});
 
+		isDiceMoveCompleted = true;
 		// winnerName.setText("");
 	}
 
@@ -182,5 +186,13 @@ public class DiceRollControl extends BorderPane {
 				enemyDiceHBox.getChildren().clear();
 			}
 		});
+	}
+
+	public boolean isDiceMoveCompleted() {
+		return isDiceMoveCompleted;
+	}
+
+	public void setDiceMoveCompleted(boolean isDiceMoveCompleted) {
+		this.isDiceMoveCompleted = isDiceMoveCompleted;
 	}
 }

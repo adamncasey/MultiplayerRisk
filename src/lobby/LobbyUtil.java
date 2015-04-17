@@ -101,11 +101,12 @@ public class LobbyUtil {
         try {
             int numplayers = otherPlayers.size() + 1;
             result = LobbyDiceRoll.rollDice(router, ourPlayerid, otherPlayers, 1, numplayers).get(0);
-            result -= 1; // We want to index from 0, not 1.
         } catch (LobbyDiceRoll.DiceRollException e) {
             handler.onFailure(e);
             return -1;
         }
+
+        result -= 1; // We want to index from 0, not 1.
 
         System.out.println("Player Order Dice result: " + result + "th player");
 
@@ -129,7 +130,24 @@ public class LobbyUtil {
         return playerid;
     }
 
-    public static void shuffleCards(Deck deck) {
-        // over the network deck shuffling madness goes here!
+    public static void shuffleCards(GameRouter router, int ourPlayerid, List<NetworkClient> otherPlayers, Deck deck, LobbyEventHandler handler) {
+        List<Integer> randomNumbers;
+        try {
+            randomNumbers = LobbyDiceRoll.rollDice(router, ourPlayerid, otherPlayers, deck.getNumCards(), deck.getNumCards());
+        } catch (LobbyDiceRoll.DiceRollException e) {
+            handler.onFailure(e);
+            throw new RuntimeException("Cannot roll dice to shuffle cards.");
+        }
+
+        System.out.println("Deck being shuffled");
+
+        int i = 0;
+        for (int num : randomNumbers) {
+
+            System.out.println(i + " swaps with " + num);
+            num -= 1; // Dice roll code produces 1-indexed numbers, we need zero-indexed.
+
+            deck.shuffleSwap(i++, num);
+        }
     }
 }

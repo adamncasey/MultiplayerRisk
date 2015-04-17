@@ -113,7 +113,7 @@ public class LocalGameLobby extends Thread {
 
                 Board board = new Board();
                 this.deck = board.getDeck();
-                LobbyUtil.shuffleCards(deck); // perhaps GameRouter is needed here?
+                LobbyUtil.shuffleCards(router, LocalGameLobby.HOST_PLAYERID, netClients, deck, handler); // perhaps GameRouter is needed here?
 
                 // Pick version & features compatible with players.
 

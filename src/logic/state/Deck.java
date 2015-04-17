@@ -12,7 +12,7 @@ import logic.Card;
  */
 public class Deck {
 
-    List<Card> cards = new ArrayList<Card>();
+    List<Card> cards = new ArrayList<>();
 
     public Deck(){
     }
@@ -30,13 +30,13 @@ public class Deck {
         return c;
     }
 
-    public void shuffle(int seed){
-        MersenneTwister twister = new MersenneTwister();
-        int size = cards.size();
-        for(int i = 0; i != size; ++i){
-            int j = twister.nextInt(size);
-            Collections.swap(cards, i, j);
-        }
+    public int getNumCards() {
+
+        return cards.size();
+    }
+
+    public void shuffleSwap(int index1, int index2) {
+        Collections.swap(cards, index1, index2);
     }
 }
 

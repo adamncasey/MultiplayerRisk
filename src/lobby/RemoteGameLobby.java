@@ -108,7 +108,7 @@ public class RemoteGameLobby extends Thread {
 
             Board board = new Board();
             this.deck = board.getDeck();
-            LobbyUtil.shuffleCards(deck); // ??? // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+            LobbyUtil.shuffleCards(router, playerid, otherPlayers, deck, handler); // ??? // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
 
         } catch(InterruptedException e) {
             // TODO Tidy up logging: Log exception?

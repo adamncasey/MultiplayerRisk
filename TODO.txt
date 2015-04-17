@@ -17,6 +17,7 @@ Adam's list of things to do which will actually get done:
 4. in NetworkPlayer, if we ever can't receive a message, tell the Game Logic we should be a neutral player.
 
 -------- Not likely to get done
+Warnings on some messages. Fix them!
 Maybe stop receiveing PING messages when the host sends READY. This requires quite a re-architecture of the lobby code as far as I can tell
 Maybe Check that unknown messages are ignored by the game at all important points.
 Maybe also check that the host forwards unknown messages. The host should probably just forward line by line instead of parsing and resending. Does this happen already?

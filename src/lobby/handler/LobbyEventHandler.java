@@ -1,5 +1,6 @@
 package lobby.handler;
 
+import logic.state.Deck;
 import player.IPlayer;
 
 import java.util.List;
@@ -54,9 +55,9 @@ public interface LobbyEventHandler {
      *              TODO It seems unlikely that encrypted cards will happen anymore
      * @param playersBefore - List of players whose turn comes before the local turn
      * @param playersAfter - List of players whose turn comes after the local turn
-     * @param cardIDs
+     * @param Deck - the shuffled deck of cards
      */
-    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs);
+    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck);
 
     /**
      * Called on Error / Exception which causes joining or hosting the lobby to fail.

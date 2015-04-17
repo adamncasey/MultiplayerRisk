@@ -14,6 +14,8 @@ import player.IPlayer;
 import settings.Settings;
 import lobby.handler.JoinLobbyEventHandler;
 import lobby.handler.LobbyEventHandler;
+import logic.state.Board;
+import logic.state.Deck;
 import networking.*;
 import networking.message.*;
 import networking.parser.ParserException;
@@ -33,6 +35,8 @@ public class RemoteGameLobby extends Thread {
     int playerid = -1;
 
     boolean nonPlayingHost;
+
+    private Deck deck;
 
     // TODO Implement timeouts in networking
 
@@ -96,10 +100,10 @@ public class RemoteGameLobby extends Thread {
                 return;
             }
 
-            cards = shuffleCards(); // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
-            /*if(cards == null) {
-                return;
-            }*/
+            Board board = new Board();
+            this.deck = board.getDeck();
+            LobbyUtil.shuffleCards(deck); // ??? // callbacks: onDiceCardShuffle + onDiceHash + onDiceNumber
+
         } catch(InterruptedException e) {
             // TODO Tidy up logging: Log exception?
             handler.onFailure(e);
@@ -111,7 +115,7 @@ public class RemoteGameLobby extends Thread {
         LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
 
         // TODO Pass cards up to onLobbyComplete handler
-        handler.onLobbyComplete(playersBefore, playersAfter, cards);
+        handler.onLobbyComplete(playersBefore, playersAfter, deck);
     }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {

@@ -21,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import lobby.RemoteGameLobby;
 import lobby.Validator;
+import logic.state.Deck;
 import lobby.handler.JoinLobbyEventHandler;
 import settings.Settings;
 import ui.*;
@@ -221,13 +222,13 @@ public class DirectConnectController extends AnchorPane implements
 		}
 
 		@Override
-		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
+		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
 			status("onLobbyComplete: ");
 			String selectedPlayerType = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs, selectedPlayerType, name.getText());
+					application.goToGame(playersBefore, playersAfter, deck, selectedPlayerType, name.getText());
 				}
 			});
 		}

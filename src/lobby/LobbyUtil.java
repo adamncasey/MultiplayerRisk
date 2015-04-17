@@ -1,6 +1,7 @@
 package lobby;
 
 import lobby.handler.LobbyEventHandler;
+import logic.state.Deck;
 import networking.GameRouter;
 import networking.NetworkClient;
 import networking.networkplayer.NetworkPlayer;
@@ -122,5 +123,9 @@ public class LobbyUtil {
         System.out.println("Player Order Dice result: Playerid going first:" + playerid);
 
         return playerid;
+    }
+
+    public static void shuffleCards(Deck deck){
+        // over the network deck shuffling madness goes here!
     }
 }

@@ -8,6 +8,7 @@ import lobby.RemoteGameLobby;
 import lobby.handler.HostLobbyEventHandler;
 import lobby.handler.JoinLobbyEventHandler;
 import logic.Game;
+import logic.state.Deck;
 import networking.LobbyClient;
 import networking.LocalPlayerHandler;
 import player.IPlayer;
@@ -75,7 +76,7 @@ public class CLIMain {
         players.add(localPlayer);
         players.addAll(playersAfter);
 
-        Game game = new Game(players, new LocalPlayerHandler());
+        Game game = new Game(players, new LocalPlayerHandler(), null);
 
         List<String> names = namePlayers(playersBefore, playersAfter);
         System.out.println("Players: ");
@@ -171,7 +172,7 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());
@@ -276,7 +277,7 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());

@@ -8,6 +8,7 @@ import logic.move.MoveChecker;
 import logic.rng.Int256;
 import logic.rng.RNG;
 import logic.state.GameState;
+import logic.state.Deck;
 import player.IPlayer;
 import networking.LocalPlayerHandler;
 import settings.Settings;
@@ -26,7 +27,7 @@ public class Game implements Runnable {
 	private List<String> names;
 
 	public Game(List<IPlayer> playerInterfaces,
-			LocalPlayerHandler handler) {
+			LocalPlayerHandler handler, Deck deck) {
 		this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
 		this.numPlayers = playerInterfaces.size();
 		
@@ -36,7 +37,7 @@ public class Game implements Runnable {
 		}
 		this.names = playerNames;
 
-		this.state = new GameState(numPlayers, names);
+		this.state = new GameState(numPlayers, names, deck);
 		this.checker = new MoveChecker(state);
 
 		for (int i = 0; i != this.numPlayers; ++i) {

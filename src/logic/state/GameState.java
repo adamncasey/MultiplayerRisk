@@ -24,7 +24,7 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(int numPlayers, List<String> names){
+    public GameState(int numPlayers, List<String> names, Deck deck){
         this.players = new ArrayList<Player>();
         this.names = new ArrayList<String>();
         for(int i = 0; i != numPlayers; ++i){
@@ -34,9 +34,11 @@ public class GameState {
         this.activePlayerCount = numPlayers;
         
         this.board = new Board();
-        this.deck = board.getDeck();
-        // TODO Deck Shuffling in Lobby?
-        //this.deck.shuffle(0);
+        if(deck == null){
+            this.deck = board.getDeck();
+        }else{
+            this.deck = deck;
+        }
         Move.setNames(this.names);
     }
 
@@ -52,8 +54,6 @@ public class GameState {
 
         this.board = new Board(testing, owners, armies);
         this.deck = board.getDeck();
-        // TODO Deck Shuffling in Lobby?
-        //this.deck.shuffle(0);
     }
 
     public Board getBoard(){

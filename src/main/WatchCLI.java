@@ -51,7 +51,7 @@ public class WatchCLI {
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
         }
-        Game game = new Game(players, new LocalPlayerHandler());
+        Game game = new Game(players, new LocalPlayerHandler(), null);
 
         game.run();
 

@@ -19,6 +19,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import lobby.LocalGameLobby;
 import lobby.handler.HostLobbyEventHandler;
+import logic.state.Deck;
 import settings.Settings;
 import ui.*;
 
@@ -177,7 +178,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, List<Integer> cardIDs) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
             writeToConsole("onLobbyComplete: ");
 			writeToConsole("\tplayers before: " + playersBefore.toString());
 			writeToConsole("\tplayers after: " + playersAfter.toString());
@@ -185,7 +186,7 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, cardIDs, hostPlayerType, hostNickname);
+					application.goToGame(playersBefore, playersAfter, deck, hostPlayerType, hostNickname);
 				}
 			});
         }

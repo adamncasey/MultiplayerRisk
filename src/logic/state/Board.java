@@ -110,7 +110,7 @@ public class Board {
         t.addArmies(numArmies);
     }
 
-    protected Deck getDeck(){
+    public Deck getDeck(){
         Deck deck = new Deck();
         for(int i = 0; i != territories.size(); ++i){
             Card card = new Card(i, TERRITORY_CARDS[i], getName(i));

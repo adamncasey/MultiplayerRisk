@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 
 import lobby.handler.HostLobbyEventHandler;
+import logic.state.Board;
+import logic.state.Deck;
 import networking.*;
 import networking.message.Message;
 import networking.message.payload.InitialiseGamePayload;
@@ -32,6 +34,8 @@ public class LocalGameLobby extends Thread {
     private final InetAddress listenAddress;
     private final int port;
     private final String name;
+
+    private Deck deck;
 
     public LocalGameLobby(HostLobbyEventHandler handler, int port, String name) {
         this(handler, port, null, name);
@@ -108,7 +112,9 @@ public class LocalGameLobby extends Thread {
 
                 firstPlayer = LobbyUtil.decidePlayerOrder(router, HOST_PLAYERID, netClients, handler);
 
-                shuffleCards(router);
+                Board board = new Board();
+                this.deck = board.getDeck();
+                LobbyUtil.shuffleCards(deck); // perhaps GameRouter is needed here?
 
                 // Pick version & features compatible with players.
 
@@ -126,7 +132,7 @@ public class LocalGameLobby extends Thread {
             LobbyUtil.createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
 
             // TODO Pass cards up to onLobbyComplete handler
-            handler.onLobbyComplete(playersBefore, playersAfter, null);
+            handler.onLobbyComplete(playersBefore, playersAfter, deck);
         }
 	}
 
@@ -256,14 +262,6 @@ public class LocalGameLobby extends Thread {
         router.sendToAllPlayers(msg);
 
         handler.onInitialiseGame(version, features);
-    }
-
-
-    private void shuffleCards(GameRouter router) {
-        // Roll Dice
-
-        // for 0 <= i < decksize
-            // swap(card[i], card[rand from dice]);
     }
 
     private LobbyClient getClient(ServerSocket server, int newplayerid) throws IOException {

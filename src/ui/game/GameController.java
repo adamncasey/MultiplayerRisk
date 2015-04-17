@@ -17,6 +17,7 @@ import logic.Game;
 import logic.move.Move;
 import logic.move.Move.Stage;
 import logic.state.Board;
+import logic.state.Deck;
 import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
@@ -67,8 +68,9 @@ public class GameController implements Initializable, PlayerController {
 	public static GameConsole console;
 	public GUIPlayer player;
 	List<IPlayer> players;
-	List<Object> cards;
 
+	Deck deck;
+	
 	Move currentMove;
 
 	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
@@ -78,10 +80,11 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter,
-			List<Integer> cards, GUIPlayer player) {
+			Deck deck, GUIPlayer player) {
 		
 		this.players = combinePlayers(playersBefore, player, playersAfter);
 		
+        this.deck = deck;
 
 		// If playing as self, use this as the PlayerController.
 		if (player.getPlayerController() == null) {
@@ -137,7 +140,7 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	void startGame(List<IPlayer> players) {
-		Game game = new Game(players, new LocalPlayerHandler());
+		Game game = new Game(players, new LocalPlayerHandler(), deck);
 
 		new Thread() {
 			public void run() {

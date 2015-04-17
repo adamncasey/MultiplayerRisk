@@ -9,6 +9,7 @@ import ai.AgentFactory;
 import ai.AgentTypes;
 import ai.agents.Agent;
 import player.IPlayer;
+import logic.state.Deck;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -117,7 +118,7 @@ public class Main extends Application {
 	}
 
 	public void goToGame(List<IPlayer> playersBefore,
-			List<IPlayer> playersAfter, List<Integer> cards, String playerType, String playerName) {
+			List<IPlayer> playersAfter, Deck deck, String playerType, String playerName) {
 		try {
 			GameController game = (GameController) replaceSceneContent(
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
@@ -146,14 +147,14 @@ public class Main extends Application {
 				}
 			}
 
-			game.setApp(playersBefore, playersAfter, cards, player);
+			game.setApp(playersBefore, playersAfter, deck, player);
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
 	public void goToGameTest(List<IPlayer> playersBefore,
-			List<IPlayer> playersAfter, List<Integer> cards) {
+			List<IPlayer> playersAfter, Deck deck) {
 		try {
 			GameController game = (GameController) replaceSceneContent(
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
@@ -164,7 +165,7 @@ public class Main extends Application {
 			
 			player.setPlayerController(userAgent);
 
-			game.setApp(playersBefore, playersAfter, cards, player);
+			game.setApp(playersBefore, playersAfter, deck, player);
 
 		} catch (Exception ex) {
 			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

@@ -10,6 +10,8 @@ import ai.AgentFactory;
 import ai.AgentPlayer;
 import ai.AgentTypes;
 import ai.agents.Agent;
+import logic.state.Deck;
+import logic.state.Board;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
@@ -76,10 +78,11 @@ public class MenuController extends AnchorPane implements Initializable {
             }
             nameSummary = nameSummary.substring(0, nameSummary.length() - 2);
             writer.println(nameSummary); 
-            writer.flush();
-        	
-        	
-        	application.goToGameTest(players, null, null);
+            writer.flush();	
+
+            Board board = new Board();
+            Deck deck = board.getDeck();        	
+        	application.goToGameTest(players, null, deck);
         }
     }
 }

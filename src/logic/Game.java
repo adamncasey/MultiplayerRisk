@@ -66,17 +66,18 @@ public class Game implements Runnable {
 
 		int currentPlayer = 0;
 		while (armiesToPlace > 0) {
+            int actualID = players.get(currentPlayer).getPlayerID();
 			Move move;
 			int territory;
 			if (territoriesToClaim > 0) {
-				move = new Move(currentPlayer, CLAIM_TERRITORY);
+				move = new Move(actualID, CLAIM_TERRITORY);
 			} else {
-				move = new Move(currentPlayer, REINFORCE_TERRITORY);
+				move = new Move(actualID, REINFORCE_TERRITORY);
 			}
 			getMove(move);
 			territory = move.getTerritory();
 			if (territoriesToClaim > 0) {
-				state.claimTerritory(territory, currentPlayer);
+				state.claimTerritory(territory, actualID);
 				territoriesToClaim--;
 			}
 			state.placeArmies(territory, 1);
@@ -100,8 +101,9 @@ public class Game implements Runnable {
 
 		int currentPlayer = 0;
 		while (state.getActivePlayerCount() != 1) {
-			if (isActive(currentPlayer)) {
-				playerTurn(currentPlayer);
+            int actualID = players.get(currentPlayer).getPlayerID();
+			if (isActive(actualID)) {
+				playerTurn(actualID);
 				turnCounter++;
 			}
 			currentPlayer = ++currentPlayer % numPlayers;
@@ -113,7 +115,7 @@ public class Game implements Runnable {
 
 		Move gameEnded = new Move(-1, GAME_END);
 		gameEnded.setTurns(turnCounter);
-		gameEnded.setPlayer(winner);
+		gameEnded.setPlayer(players.get(winner).getPlayerID());
 		updatePlayers(gameEnded);
 	}
 

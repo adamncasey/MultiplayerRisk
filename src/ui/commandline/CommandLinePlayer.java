@@ -44,14 +44,18 @@ public class CommandLinePlayer implements IPlayer {
     }
 
     public void nextMove(String move, String playerName){
-        writer.println(move); 
-        writer.flush();
+        if(move.getStage() != Move.Stage.ROLL_HASH && move.getStage() != Move.Stage.ROLL_NUMBER){
+            writer.println(move); 
+            writer.flush();
+        }
     }
 
     public void updatePlayer(Move move){
-        String message = Move.describeMove(move, board);
-        writer.print(message);
-        writer.flush();
+        if(move.getStage() != Move.Stage.ROLL_HASH && move.getStage() != Move.Stage.ROLL_NUMBER){
+            String message = Move.describeMove(move, board);
+            writer.print(message);
+            writer.flush();
+        }
         if(move.getUID() == player.getUID()){
             handler.sendMove(move);
         }

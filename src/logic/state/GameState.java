@@ -7,6 +7,7 @@ import java.util.Random;
 
 import logic.Card;
 import logic.move.Move;
+import player.IPlayer;
 
 public class GameState {
     private List<Player> players;
@@ -24,11 +25,11 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(int numPlayers, List<String> names, Deck deck){
+    public GameState(List<IPlayer> playerInterfaces, List<String> names, Deck deck){
         this.players = new ArrayList<Player>();
         this.names = new ArrayList<String>();
-        for(int i = 0; i != numPlayers; ++i){
-            this.players.add(new Player(i));
+        for(int i = 0; i != playerInterfaces.size(); ++i){
+            this.players.add(new Player(playerInterfaces.get(i).getPlayerID()));
             this.names.add(names.get(i));
         }
         this.activePlayerCount = numPlayers;

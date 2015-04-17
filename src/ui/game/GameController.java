@@ -27,6 +27,8 @@ import ui.game.dice.DiceRollControl;
 import ui.game.dice.DiceRollResult;
 import ui.game.map.GUITerritory;
 import ui.game.map.MapControl;
+import ui.game.popup.OccupyControl;
+import ui.game.popup.OccupyNumberOfArmiesEventHandler;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
@@ -48,6 +50,8 @@ public class GameController implements Initializable, PlayerController {
 	@FXML
 	DiceRollControl diceRollControl;
 	@FXML
+	OccupyControl occupyControl;
+	@FXML
 	TextArea consoleTextArea;
 	@FXML
 	GridPane popup;
@@ -60,14 +64,13 @@ public class GameController implements Initializable, PlayerController {
 
 	public static GameConsole console;
 	public GUIPlayer player;
-	
 	List<IPlayer> players;
 	List<Object> cards;
-	
+
 	Move currentMove;
-	
+
 	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
-	
+
 	// ================================================================================
 	// Startup
 	// ================================================================================
@@ -90,44 +93,47 @@ public class GameController implements Initializable, PlayerController {
 	}
 	
 	void setPlayers() {	
+
 		// Add player shields for each player.
-		for(int i=0; i<players.size(); i++) {
+		for (int i = 0; i < players.size(); i++) {
 			BorderPane pane = new BorderPane();
 			pane.setPrefSize(70, 60);
 			pane.getStyleClass().add("playerBorder");
-		
+
 			ImageView image = new ImageView();
 			image.setFitWidth(45);
 			image.setPreserveRatio(true);
-			
-			InputStream in = GameController.class.getResourceAsStream(String.format("player/shield_player_%d.png", i+1));
+
+			InputStream in = GameController.class.getResourceAsStream(String
+					.format("player/shield_player_%d.png", i + 1));
 			image.setImage(new Image(in));
 			pane.setCenter(image);
 			BorderPane.setAlignment(image, Pos.TOP_CENTER);
-			
+
 			Label label = new Label();
 			label.setText(players.get(i).getPlayerName());
 			label.getStyleClass().add("playerName");
 			pane.setBottom(label);
 			BorderPane.setAlignment(label, Pos.CENTER);
-			BorderPane.setMargin(label, new Insets(0,0,7,0));
-			
+			BorderPane.setMargin(label, new Insets(0, 0, 7, 0));
+
 			playerShieldContainer.getChildren().add(pane);
 			playerShields.put(players.get(i).getPlayerName(), pane);
 		}
 	}
-	
-	List<IPlayer> combinePlayers(List<IPlayer> playersBefore, GUIPlayer player, List<IPlayer> playersAfter) {
+
+	List<IPlayer> combinePlayers(List<IPlayer> playersBefore, GUIPlayer player,
+			List<IPlayer> playersAfter) {
 		List<IPlayer> players = new LinkedList<>();
 		players.addAll(playersBefore);
 		players.add(player);
 
 		if (playersAfter != null)
 			players.addAll(playersAfter);
-		
+
 		return players;
 	}
-	
+
 	void startGame(List<IPlayer> players) {
 		Game game = new Game(players, new LocalPlayerHandler());
 
@@ -144,20 +150,22 @@ public class GameController implements Initializable, PlayerController {
 		this.mapControl.initialise();
 	}
 
-	
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
-	
+
     private Agent testingAI;
     boolean testing = false;
     Stage testingStage = Stage.DECIDE_ATTACK;
 	
 	// TODO: Replace this with Cards control.
 	private PassiveStrategy ps;
-	
+
 	boolean moveCompleted = false;
 	Player userDetails;
+	
+	GUITerritory attackFrom;
+	int lastAttackerNumberOfArmiesSurvived;
 
 	@Override
 	public void setup(Player player, Board board) {
@@ -176,34 +184,33 @@ public class GameController implements Initializable, PlayerController {
 						}
 					});
 		}
-		
-        if(testing){
-            this.testingAI = new RandomAgent();
-            this.testingAI.setup(player, board);
-        }
+
+		if (testing) {
+			this.testingAI = new RandomAgent();
+			this.testingAI.setup(player, board);
+		}
 	}
 
 	@Override
 	public synchronized void getMove(Move move) {
 		moveCompleted = false;
 		currentMove = move;
-		
-        if(testing && move.getStage() != testingStage){
-            testingAI.getMove(move);
-            return;
-        }
-        else if(testingStage == move.getStage()) {
-        	testing = false;
-        }
 
-		
+		if (testing && move.getStage() != testingStage) {
+			testingAI.getMove(move);
+			return;
+		} else if (testingStage == move.getStage()) {
+			testing = false;
+		}
+
 		switch (currentMove.getStage()) {
 		case TRADE_IN_CARDS:
 			ps.getMove(move);
 			moveCompleted = true;
 			break;
 		case CHOOSE_ATTACK_DICE:
-			diceRollControl.initialiseAttack(player.getBoard().getName(move.getTo()),
+			diceRollControl.initialiseAttack(
+					player.getBoard().getName(move.getTo()),
 					new AttackingDiceRollControlEventHandler() {
 						@Override
 						public void onReadyToRoll(int numberOfAttackingDice) {
@@ -214,7 +221,8 @@ public class GameController implements Initializable, PlayerController {
 			openPopup(diceRollControl);
 			break;
 		case CHOOSE_DEFEND_DICE:
-			diceRollControl.initialiseDefend(player.getBoard().getName(move.getTo()),
+			diceRollControl.initialiseDefend(
+					player.getBoard().getName(move.getTo()),
 					move.getDefendDice(),
 					new DefendingDiceRollControlEventHandler() {
 						@Override
@@ -225,13 +233,24 @@ public class GameController implements Initializable, PlayerController {
 					});
 			openPopup(diceRollControl);
 			break;
+		case OCCUPY_TERRITORY:
+			occupyControl.initialise(new OccupyNumberOfArmiesEventHandler() {
+				@Override
+				public void onNumberOfArmiesSelected(int numberOfArmies) {
+					currentMove.setArmies(numberOfArmies);
+					closePopup(null);
+					notifyMoveCompleted();
+				}
+			}, mapControl.getTerritoryByID(move.getTo()).getName(), lastAttackerNumberOfArmiesSurvived-1, move.getCurrentArmies()-1);
+			openPopup(occupyControl);
+			break;
 		default:
 			break;
 		}
 
 		while (!moveCompleted) {
 			try {
-				wait(); 
+				wait();
 			} catch (InterruptedException e) {
 			}
 		}
@@ -242,7 +261,6 @@ public class GameController implements Initializable, PlayerController {
 		notifyAll();
 	}
 
-	GUITerritory attackFrom;
 	void territoryClicked(GUITerritory territory) {
 
 		if(currentMove == null) {
@@ -269,11 +287,9 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case START_ATTACK:
-			if(attackFrom == null) { 
+			if (attackFrom == null) {
 				attackFrom = territory;
-			}
-			else
-			{
+			} else {
 				currentMove.setFrom(attackFrom.getId());
 				currentMove.setTo(territory.getId());
 				attackFrom = null;
@@ -281,42 +297,43 @@ public class GameController implements Initializable, PlayerController {
 
 			notifyMoveCompleted();
 			break;
-//		case OCCUPY_TERRITORY:
-//			break;
-//		case DECIDE_FORTIFY:
-//			break;
-//		case START_FORTIFY:
-//			break;
-//		case FORTIFY_TERRITORY:
-//			break;
+		// case DECIDE_FORTIFY:
+		// break;
+		// case START_FORTIFY:
+		// break;
+		// case FORTIFY_TERRITORY:
+		// break;
 		default:
 			console.write("Stage " + currentMove.getStage().toString()
 					+ " not implemented");
 		}
 	}
-	
+
 	boolean diceMoveDismissed = false;
+
 	public synchronized void diceRollEnded(Move move) {
 		diceMoveDismissed = false;
+
+		diceRollControl.visualiseResults(
+				new DiceRollResult(move.getAttackDiceRolls(), move
+						.getDefendDiceRolls()), move.getAttackerLosses(), move
+						.getDefenderLosses());
 		
-        diceRollControl.visualiseResults(new DiceRollResult(move.getAttackDiceRolls(),
-        		move.getDefendDiceRolls()), 
-        		move.getAttackerLosses(), 
-        		move.getDefenderLosses());
-        
+		lastAttackerNumberOfArmiesSurvived = this.player.getBoard().getArmies(move.getFrom()) - move.getAttackerLosses();
+
 		while (!diceMoveDismissed) {
 			try {
-				wait(); 
+				wait();
 			} catch (InterruptedException e) {
 			}
 		}
 	}
-	
+
 	public synchronized void notifyDiceMoveDismissed() {
 		diceMoveDismissed = true;
 		notifyAll();
 	}
-	
+
 	// ================================================================================
 	// Popup
 	// ================================================================================
@@ -338,7 +355,7 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		diceRollControl.reset();
-		
+
 		notifyDiceMoveDismissed();
 	}
 }

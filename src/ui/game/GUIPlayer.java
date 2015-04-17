@@ -111,6 +111,7 @@ public class GUIPlayer implements IPlayer {
 		case GAME_END:
 			break;
 		case OCCUPY_TERRITORY:
+			occupyMapUpdate(move);
 			break;
 		case PLACE_ARMIES:
 			territory = gameController.mapControl.getTerritoryByID(move
@@ -144,21 +145,30 @@ public class GUIPlayer implements IPlayer {
 			break;
 		}
 
-		// int number = board.getNumTerritories();
-		// for(int i = 0 ; i < number ; i++) {
-		// int owner = board.getOwner(i);
-		// if (owner >= 0) {
-		// int armies = board.getArmies(i);
-		// String name = board.getName(i);
-		// gameController.mapControl.setArmies(owner + 1, armies,
-		// gameController.mapControl.getTerritoryByName(name));
-		// }
-		// }
-
 		// Networking
 		if (move.getUID() == player.getUID()) {
 			handler.sendMove(move);
 		}
+	}
+	
+	void occupyMapUpdate(Move move) {
+		GUITerritory from = gameController.mapControl
+				.getTerritoryByID(move.getFrom());
+		
+		GUITerritory to = gameController.mapControl
+				.getTerritoryByID(move.getTo());
+		
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameController.mapControl.updateTerritory(
+						move.getUID() + 1, from.getNumberOfArmies() - move.getArmies(),
+						from);
+				gameController.mapControl.updateTerritory(
+						move.getUID() + 1, move.getArmies(),
+						to);
+			}
+		});
 	}
 
 	void postAttackMapUpdate(Move move) {

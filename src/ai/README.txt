@@ -35,7 +35,9 @@ List of Agents:
     Expanded CONTINENTAL
     Uses SmartAggressiveStrategy to decide where to place armies, whether to attack or not, and where to attack.
 
-  FOCUSED : Uses Random
+  FOCUSED : Uses AggressiveStrategy, CardsStrategy, ContinentalStrategy, SmartAggressiveStrategy
+    Expanded CONTINENTAL
+    Uses Focused strategy to reinforce, place armies and attack on 
 
 List of Strategies:
 

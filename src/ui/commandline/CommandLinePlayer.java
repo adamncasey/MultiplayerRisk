@@ -44,7 +44,7 @@ public class CommandLinePlayer implements IPlayer {
        this.handler = handler;
     }
 
-    public void nextMove(String move){
+    public void nextMove(String move, int uid){
         writer.println(move); 
         writer.flush();
     }

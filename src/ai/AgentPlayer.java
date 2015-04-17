@@ -30,7 +30,7 @@ public class AgentPlayer implements IPlayer {
         this.player = player;
     }
 
-    public void nextMove(String move){
+    public void nextMove(String move, int uid){
     }
 
     public void updatePlayer(Move move){

@@ -434,7 +434,6 @@ public class GameController implements Initializable, PlayerController {
 			openPopup(occupyControl);
 			break;
 			
-			
 		default:
 			break;
 		}

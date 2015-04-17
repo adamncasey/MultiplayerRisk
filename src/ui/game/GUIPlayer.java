@@ -96,7 +96,7 @@ public class GUIPlayer implements IPlayer {
 //		case DECIDE_FORTIFY:
 //			break;
 		case END_ATTACK:
-			if (isRealUserPlaying && move.getUID() == player.getUID()) {
+			if (isRealUserPlaying && (board.getOwner(move.getFrom()) == player.getUID() || board.getOwner(move.getTo()) == player.getUID())) {
 				gameController.diceRollEnded(move);
 			}
 			postAttackMapUpdate(move);

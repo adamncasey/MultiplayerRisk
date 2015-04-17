@@ -206,8 +206,7 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void nextMove(String currentMove) {
-
+    public void nextMove(String currentMove, int uid) {
     }
 
     /* Maps between game Move events and protocol Message */

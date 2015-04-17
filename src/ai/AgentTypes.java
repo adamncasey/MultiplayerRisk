@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class AgentTypes {
     public enum Type {
-        ANGRY, GREEDY, CONTINENTAL, FURIOUS
+        ANGRY, GREEDY, CONTINENTAL, FURIOUS, FOCUSED
     }
 // RANDOM, PASSIVE
 

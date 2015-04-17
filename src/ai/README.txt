@@ -35,8 +35,8 @@ List of Agents:
     Expanded CONTINENTAL
     Uses SmartAggressiveStrategy to decide where to place armies, whether to attack or not, and where to attack.
 
-  FOCUSED : Uses AggressiveStrategy, CardsStrategy, ContinentalStrategy, SmartAggressiveStrategy
-    Expanded CONTINENTAL
+  FOCUSED : Uses RandomStrategy, AggressiveStrategy, CardsStrategy, ContinentalStrategy, SmartAggressiveStrategy, CaptureContinentsStrategy
+    Expanded FURIOUS
     Uses Focused strategy to reinforce, place armies and attack on 
 
 List of Strategies:
@@ -68,12 +68,11 @@ List of Strategies:
       Always attacks if it has an advantage. It has an advantage if it has more armies than a bordering enemy territory.
 
   CaptureContinentsStrategy:
-      Focuses on one continent at a time, reinforces and places armies in that continent (or around it), attacks territories in that continent.
+      Focuses on one continent at a time, placing armies in that continent until it captures it.
 
 // Ideas for future agents / strategies
 
 // SmartContinental - Avoid clashes by picking continents based on how likely it is to capture the whole thing.
-// Continents2 - Focus efforts towards capturing whole continents
 // Cluster - Cluster expands from his biggest set of armies
 // Yakool - Yakool builds on Cluster by, focusing on enemies that are too strong, slower attacks than cluster, tries to get a card every turn.
 // Boscoe - Boscoe is Yakool with a slowed down attack strategy

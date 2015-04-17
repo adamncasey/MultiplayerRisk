@@ -23,49 +23,37 @@ public class CaptureContinentsStrategy extends Strategy {
             case PLACE_ARMIES:
                 placeArmies(move);
                 return;
-            case START_ATTACK:
-                startAttack(move);
-                return;
             default:
                 assert false : move.getStage();
         }
     }
 
     private void placeArmies(Move move){
-
-
-    }
-
-    private void startAttack(Move move){
-
-    }
-
-    private void claimTerritory(Move move){
-        List<Integer> territories = board.getContinent(pickSmallestContinent());
-        move.setTerritory(territories.get(random.nextInt(territories.size())));
-    }
-
-    private int pickSmallestContinent(){
-        int smallestContinent = -1;
-        int bestSize = Integer.MAX_VALUE;
+        if(move.getExtraArmies() > 0){
+            List<Integer> matches = move.getMatches();
+            move.setTerritory(matches.get(random.nextInt(matches.size())));
+            move.setArmies(1);
+            return;
+        }
+        int bestContinent = -1;
+        double bestScore = 0;
         for(int i = 0; i != board.getNumContinents(); ++i){
+            int myForces = 0;
             List<Integer> continent = board.getContinent(i);
-            int freeTerritories = continent.size();
             for(int j = 0; j != continent.size(); ++j){
-                 if(board.getOwner(continent.get(j)) != -1){
-                     freeTerritories--;
-                 }
+                if(board.getOwner(continent.get(j)) == move.getUID()){
+                    myForces++;
+                }
             }
-            if(freeTerritories == 0){
-                continue;
-            }
-            int continentSize = continent.size();
-            if(continentSize < bestSize){
-                smallestContinent = i;
-                bestSize = continentSize;
+            double score = (double)myForces / (double)continent.size();
+            if(score >= bestScore && score != 1.0){
+                bestContinent = i;
+                bestScore = score;
             }
         }
-        return smallestContinent;
+        List<Integer> continent = board.getContinent(bestContinent);
+        move.setTerritory(continent.get(random.nextInt(continent.size())));
+        move.setArmies(1);
     }
 }
 

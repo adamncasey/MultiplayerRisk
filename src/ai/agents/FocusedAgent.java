@@ -4,6 +4,7 @@ import ai.strategy.AggressiveStrategy;
 import ai.strategy.RandomStrategy;
 import ai.strategy.CardsStrategy;
 import ai.strategy.ContinentsStrategy;
+import ai.strategy.SmartAggressiveStrategy;
 import ai.strategy.CaptureContinentsStrategy;
 import logic.move.Move;
 import logic.state.Board;
@@ -15,6 +16,7 @@ public class FocusedAgent extends Agent {
     private RandomStrategy rs;
     private CardsStrategy cs;
     private ContinentsStrategy cos;
+    private SmartAggressiveStrategy sas;
     private CaptureContinentsStrategy ccs;
 
     public FocusedAgent(){
@@ -27,6 +29,7 @@ public class FocusedAgent extends Agent {
         rs = new RandomStrategy(player, board, random);
         cs = new CardsStrategy(player, board, random);
         cos = new ContinentsStrategy(player, board, random);
+        sas = new SmartAggressiveStrategy(player, board, random);
         ccs = new CaptureContinentsStrategy(player, board, random);
     }
 
@@ -46,13 +49,13 @@ public class FocusedAgent extends Agent {
                 cs.getMove(move);
                 return;
             case PLACE_ARMIES:
-                as.getMove(move);
+                ccs.getMove(move);
                 return;
             case DECIDE_ATTACK:
-                as.getMove(move);
+                sas.getMove(move);
                 return;
             case START_ATTACK:
-                as.getMove(move);
+                sas.getMove(move);
                 return;
             case CHOOSE_ATTACK_DICE:
                 as.getMove(move);

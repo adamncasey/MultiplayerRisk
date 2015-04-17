@@ -7,6 +7,7 @@ import ai.agents.AngryAgent;
 import ai.agents.GreedyAgent;
 import ai.agents.ContinentalAgent;
 import ai.agents.FuriousAgent;
+import ai.agents.FocusedAgent;
 import ai.AgentTypes.Type;
 import player.PlayerController;
 
@@ -26,6 +27,8 @@ public class AgentFactory {
                 return new ContinentalAgent();
             case FURIOUS:
                 return new FuriousAgent();
+            case FOCUSED:
+                return new FocusedAgent();
             default:
                 assert false : type;
         }

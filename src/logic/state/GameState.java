@@ -29,10 +29,10 @@ public class GameState {
         this.players = new ArrayList<Player>();
         this.names = new ArrayList<String>();
         for(int i = 0; i != playerInterfaces.size(); ++i){
-            this.players.add(new Player(playerInterfaces.get(i).getPlayerID()));
+            this.players.add(new Player(playerInterfaces.get(i).getPlayerid()));
             this.names.add(names.get(i));
         }
-        this.activePlayerCount = numPlayers;
+        this.activePlayerCount = playerInterfaces.size();
         
         this.board = new Board();
         if(deck == null){

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logic.state.GameState;
+import player.IPlayer;
 
 public class DecideAttackResultTest{
 
@@ -14,7 +15,7 @@ public class DecideAttackResultTest{
 
     @Before
     public void setupGame(){
-        this.game = new GameState(0, new ArrayList<String>(), null); 
+        this.game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
     }
 
     @Test

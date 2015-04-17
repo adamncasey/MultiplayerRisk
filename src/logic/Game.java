@@ -2,6 +2,8 @@ package logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import logic.move.Move;
 import logic.move.MoveChecker;
@@ -20,6 +22,7 @@ import static logic.move.Move.Stage.*;
  */
 public class Game implements Runnable {
 	private List<IPlayer> playerInterfaces;
+    private Map<Integer, IPlayer> playerInterfacesMap;
 	private int numPlayers = 0;
 
 	private GameState state;
@@ -28,7 +31,11 @@ public class Game implements Runnable {
 
 	public Game(List<IPlayer> playerInterfaces,
 			LocalPlayerHandler handler, Deck deck) {
-		this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
+        this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
+        this.playerInterfacesMap = new HashMap<Integer, IPlayer>();
+        for(int i = 0; i != playerInterfaces.size(); ++i){
+            this.playerInterfacesMap.put(playerInterfaces.get(i).getPlayerid(), playerInterfaces.get(i));
+        }
 		this.numPlayers = playerInterfaces.size();
 		
 		List<String> playerNames = new ArrayList<String>();
@@ -37,7 +44,7 @@ public class Game implements Runnable {
 		}
 		this.names = playerNames;
 
-		this.state = new GameState(numPlayers, names, deck);
+		this.state = new GameState(playerInterfaces, names, deck);
 		this.checker = new MoveChecker(state);
 
 		for (int i = 0; i != this.numPlayers; ++i) {
@@ -66,7 +73,7 @@ public class Game implements Runnable {
 
 		int currentPlayer = 0;
 		while (armiesToPlace > 0) {
-            int actualID = players.get(currentPlayer).getPlayerID();
+            int actualID = playerInterfaces.get(currentPlayer).getPlayerid();
 			Move move;
 			int territory;
 			if (territoriesToClaim > 0) {
@@ -101,7 +108,7 @@ public class Game implements Runnable {
 
 		int currentPlayer = 0;
 		while (state.getActivePlayerCount() != 1) {
-            int actualID = players.get(currentPlayer).getPlayerID();
+            int actualID = playerInterfaces.get(currentPlayer).getPlayerid();
 			if (isActive(actualID)) {
 				playerTurn(actualID);
 				turnCounter++;
@@ -115,7 +122,7 @@ public class Game implements Runnable {
 
 		Move gameEnded = new Move(-1, GAME_END);
 		gameEnded.setTurns(turnCounter);
-		gameEnded.setPlayer(players.get(winner).getPlayerID());
+		gameEnded.setPlayer(playerInterfaces.get(winner).getPlayerid());
 		updatePlayers(gameEnded);
 	}
 
@@ -277,9 +284,9 @@ public class Game implements Runnable {
 
 	private void updatePlayers(Move move) {
 		move.setReadOnly();
-		for (IPlayer pi : playerInterfaces) {
-			pi.updatePlayer(move);
-		}
+        for(int i = 0; i != numPlayers; ++i){
+            playerInterfaces.get(i).updatePlayer(move);
+        }
 	}
 
 	public void getMove(Move move){
@@ -290,11 +297,11 @@ public class Game implements Runnable {
         }
 
         for(IPlayer p : playerInterfaces){
-            p.nextMove(Move.describeStatus(move), names.get(move.getUID()));
+            p.nextMove(Move.describeStatus(move), p.getPlayerName());
         }
 
         move.setReadOnlyInputs();
-        IPlayer player = playerInterfaces.get(move.getUID());
+        IPlayer player = playerInterfacesMap.get(move.getUID());
         player.getMove(move);
         while(!checker.checkMove(move)){
             player.getMove(move);
@@ -345,7 +352,7 @@ public class Game implements Runnable {
 		List<Int256> rollHashes = new ArrayList<Int256>();
 		for (int i = 0; i != numPlayers; ++i) {
 			if (isActive(i)) {
-				Move move = new Move(i, ROLL_HASH);
+				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_HASH);
 				move.setRNG(rngs.get(i));
 				getMove(move);
 				rollHashes.add(Int256.fromString(move.getRollHash()));
@@ -358,7 +365,7 @@ public class Game implements Runnable {
 		List<Int256> rollNumbers = new ArrayList<Int256>();
 		for (int i = 0; i != numPlayers; ++i) {
 			if (isActive(i)) {
-				Move move = new Move(i, ROLL_NUMBER);
+				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_NUMBER);
 				move.setRNG(rngs.get(i));
 				move.setRollHash(rollHashes.get(i).string);
 				getMove(move);

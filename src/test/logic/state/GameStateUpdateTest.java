@@ -9,6 +9,7 @@ import java.util.List;
 import logic.Card;
 import logic.move.Move;
 import logic.state.GameState;
+import player.IPlayer;
 
 public class GameStateUpdateTest{
 
@@ -77,7 +78,7 @@ public class GameStateUpdateTest{
 
     @Test
     public void setArmiesTest1(){
-        GameState game = new GameState(0, new ArrayList<String>(), null); 
+        GameState game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
         int expectedValues[] = {4, 6, 8, 10, 12, 15, 20, 25};
         for(int i : expectedValues){
             assertEquals(i, game.calculateSetArmies(1));
@@ -86,7 +87,7 @@ public class GameStateUpdateTest{
 
     @Test
     public void setArmiesTest2(){
-        GameState game = new GameState(0, new ArrayList<String>(), null); 
+        GameState game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
         int expectedValues[] = {10, 18, 27, 45};
         for(int i : expectedValues){
             assertEquals(i, game.calculateSetArmies(2));

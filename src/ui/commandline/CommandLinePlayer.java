@@ -44,10 +44,8 @@ public class CommandLinePlayer implements IPlayer {
     }
 
     public void nextMove(String move, String playerName){
-        if(move.getStage() != Move.Stage.ROLL_HASH && move.getStage() != Move.Stage.ROLL_NUMBER){
-            writer.println(move); 
-            writer.flush();
-        }
+        writer.println(move); 
+        writer.flush();
     }
 
     public void updatePlayer(Move move){

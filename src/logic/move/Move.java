@@ -2,13 +2,15 @@ package logic.move;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import logic.Card;
 import logic.rng.RNG;
 import logic.state.Board;
 
 public class Move {
-    private static List<String> names = null;
+    private static Map<Integer, String> names = null;
 
     public enum Stage {
         // Moves - Stages that IPlayers have to react to
@@ -340,7 +342,7 @@ public class Move {
     public static String describeMove(Move move, Board board){
         String name = "Computer";
         if(move.getUID() != -1){
-            name = names.get(move.getUID());
+            name = String.format("%s (%d)", names.get(move.getUID()), move.getUID());
         }
         String message;
         switch(move.getStage()){
@@ -466,7 +468,7 @@ public class Move {
 
     // Returns a string describe what the player is about to do. (To be displayed while waiting)
     public static String describeStatus(Move move){
-        String name = names.get(move.getUID());
+        String name = String.format("%s (%d)", names.get(move.getUID()), move.getUID());
         Stage stage = move.getStage();
         String message = "";
         switch(stage){
@@ -567,9 +569,9 @@ public class Move {
         return null;
     }
 
-    public static void setNames(List<String> playerNames){
+    public static void setNames(Map<Integer, String> playerNames){
         if(names == null){
-            names = new ArrayList<String>(playerNames);
+            names = new HashMap<Integer, String>(playerNames);
         }
     }
 }

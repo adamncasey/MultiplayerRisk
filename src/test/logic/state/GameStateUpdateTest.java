@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import logic.Card;
 import logic.move.Move;
@@ -78,7 +79,7 @@ public class GameStateUpdateTest{
 
     @Test
     public void setArmiesTest1(){
-        GameState game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
+        GameState game = new GameState(new ArrayList<IPlayer>(), new HashMap<Integer, String>(), null); 
         int expectedValues[] = {4, 6, 8, 10, 12, 15, 20, 25};
         for(int i : expectedValues){
             assertEquals(i, game.calculateSetArmies(1));
@@ -87,7 +88,7 @@ public class GameStateUpdateTest{
 
     @Test
     public void setArmiesTest2(){
-        GameState game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
+        GameState game = new GameState(new ArrayList<IPlayer>(), new HashMap<Integer, String>(), null); 
         int expectedValues[] = {10, 18, 27, 45};
         for(int i : expectedValues){
             assertEquals(i, game.calculateSetArmies(2));

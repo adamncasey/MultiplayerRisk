@@ -35,6 +35,8 @@ List of Agents:
     Expanded CONTINENTAL
     Uses SmartAggressiveStrategy to decide where to place armies, whether to attack or not, and where to attack.
 
+  FOCUSED : Uses Random
+
 List of Strategies:
 
   PassiveStrategy:
@@ -62,6 +64,9 @@ List of Strategies:
   SmartAggressiveStrategy:
       Places armies onto the front lines.
       Always attacks if it has an advantage. It has an advantage if it has more armies than a bordering enemy territory.
+
+  CaptureContinentsStrategy:
+      Focuses on one continent at a time, reinforces and places armies in that continent (or around it), attacks territories in that continent.
 
 // Ideas for future agents / strategies
 

@@ -59,7 +59,7 @@ public class WatchCLI {
 
         String nameSummary = "Players were ";
         for(IPlayer player : players){
-            nameSummary += String.format("%s, ", player.getPlayerName());
+            nameSummary += String.format("%s (%d), ", player.getPlayerName(), player.getPlayerid());
         }
         nameSummary = nameSummary.substring(0, nameSummary.length() - 2);
         writer.println(nameSummary); 

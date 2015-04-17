@@ -21,7 +21,7 @@ public class GUIPlayer implements IPlayer {
 	private GameController gameController;
 	private Board board;
 	private Player player;
-	int lastPlayerToMove = -1;
+	String lastPlayerToMove;
 	private boolean isRealUserPlaying;
 	private String playerName;
 	private MoveChecker moveChecker;
@@ -33,10 +33,11 @@ public class GUIPlayer implements IPlayer {
 	public GUIPlayer(GameController gameController, String playerName, int playerid) {
 		this.gameController = gameController;
 		this.playerName = playerName;
+		
 		this.playerid = playerid;
 	}
 
-	public void setup(Player player, List<String> names, Board board,
+	public void setup(Player player, Map<Integer, String> names, Board board,
 			MoveChecker checker, LocalPlayerHandler handler) {
 		this.board = board;
 		this.player = player;
@@ -45,7 +46,7 @@ public class GUIPlayer implements IPlayer {
 		this.moveChecker = checker;
 	}
 
-	public void nextMove(String move, int playerID) {
+	public void nextMove(String move) {
 		GameController.console.write(move);
 
 		Platform.runLater(new Runnable() {
@@ -56,7 +57,7 @@ public class GUIPlayer implements IPlayer {
 		});
 
 		final BorderPane lastShield;
-		if (lastPlayerToMove != -1) {
+		if (lastPlayerToMove != null) {
 			lastShield = gameController.playerShields.get(lastPlayerToMove);
 
 			Platform.runLater(new Runnable() {
@@ -67,7 +68,7 @@ public class GUIPlayer implements IPlayer {
 			});
 		}
 
-		final BorderPane shield = gameController.playerShields.get(playerID);
+		final BorderPane shield = gameController.playerShields.get(playerName);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -75,7 +76,7 @@ public class GUIPlayer implements IPlayer {
 			}
 		});
 
-		lastPlayerToMove = playerID;
+		lastPlayerToMove = playerName;
 	}
 
 	public void updatePlayer(Move move) {
@@ -153,11 +154,7 @@ public class GUIPlayer implements IPlayer {
 			Thread.sleep(15);
 		} catch (InterruptedException e) {}
 	}
-
-	void updateCards(Move move){
-		gameController.cardsControl.addCard(move.getCard());
-	}
-
+	
 	void updateMapSingleTerritory(Move move) {
 		gameController.mapControl.updateTerritory(move.getUID(),
 				board.getArmies(move.getTerritory()),

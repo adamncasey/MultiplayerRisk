@@ -5,6 +5,7 @@ import org.junit.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 import logic.state.GameState;
 import player.IPlayer;
@@ -15,7 +16,7 @@ public class DecideAttackResultTest{
 
     @Before
     public void setupGame(){
-        this.game = new GameState(new ArrayList<IPlayer>(), new ArrayList<String>(), null); 
+        this.game = new GameState(new ArrayList<IPlayer>(), new HashMap<Integer, String>(), null); 
     }
 
     @Test

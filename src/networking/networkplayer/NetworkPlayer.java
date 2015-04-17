@@ -67,7 +67,7 @@ public class NetworkPlayer implements IPlayer {
     }
 
     @Override
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
+    public void setup(Player player, Map<Integer, String> names, Board board, MoveChecker checker, LocalPlayerHandler localPlayerHandler) {
         this.moveChecker = checker;
         this.player = player;
     }
@@ -206,7 +206,7 @@ public class NetworkPlayer implements IPlayer {
 	}
 
     @Override
-    public void nextMove(String currentMove, int playerID) {
+    public void nextMove(String currentMove) {
 
     }
 

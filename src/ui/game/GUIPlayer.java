@@ -21,7 +21,7 @@ public class GUIPlayer implements IPlayer {
 	private GameController gameController;
 	private Board board;
 	private Player player;
-	String lastPlayerToMove;
+	int lastPlayerToMove = -1;
 	private boolean isRealUserPlaying;
 	private String playerName;
 	private MoveChecker moveChecker;
@@ -33,7 +33,6 @@ public class GUIPlayer implements IPlayer {
 	public GUIPlayer(GameController gameController, String playerName, int playerid) {
 		this.gameController = gameController;
 		this.playerName = playerName;
-		
 		this.playerid = playerid;
 	}
 
@@ -46,7 +45,7 @@ public class GUIPlayer implements IPlayer {
 		this.moveChecker = checker;
 	}
 
-	public void nextMove(String move, String playerName) {
+	public void nextMove(String move, int playerID) {
 		GameController.console.write(move);
 
 		Platform.runLater(new Runnable() {
@@ -57,8 +56,8 @@ public class GUIPlayer implements IPlayer {
 		});
 
 		final BorderPane lastShield;
-		if (lastPlayerToMove != null) {
-			lastShield = gameController.playerShields.get(lastPlayerToMove);
+		if (lastPlayerToMove != -1) {
+			lastShield = gameController.playerShields.get(playerID);
 
 			Platform.runLater(new Runnable() {
 				@Override
@@ -68,7 +67,7 @@ public class GUIPlayer implements IPlayer {
 			});
 		}
 
-		final BorderPane shield = gameController.playerShields.get(playerName);
+		final BorderPane shield = gameController.playerShields.get(playerID);
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -76,7 +75,7 @@ public class GUIPlayer implements IPlayer {
 			}
 		});
 
-		lastPlayerToMove = playerName;
+		lastPlayerToMove = playerID;
 	}
 
 	public void updatePlayer(Move move) {

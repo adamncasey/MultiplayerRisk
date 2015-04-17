@@ -78,7 +78,7 @@ public class GameController implements Initializable, PlayerController {
 
 	Move currentMove;
 
-	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
+	Map<Integer, BorderPane> playerShields = new HashMap<Integer, BorderPane>();
 
 	// ================================================================================
 	// Startup
@@ -127,7 +127,7 @@ public class GameController implements Initializable, PlayerController {
 			BorderPane.setMargin(label, new Insets(0, 0, 7, 0));
 
 			playerShieldContainer.getChildren().add(pane);
-			playerShields.put(players.get(i).getPlayerName(), pane);
+			playerShields.put(players.get(i).getPlayerid(), pane);
 		}
 	}
 

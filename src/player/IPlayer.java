@@ -16,7 +16,7 @@ public interface IPlayer {
     public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler);
 
     // Lets the player know who is currently acting, and what they are doing
-    public void nextMove(String currentMove, String playerName);
+    public void nextMove(String currentMove, int playerID);
 
     // Lets the player know when ever the gamestate changes, and describes how it changed
     public void updatePlayer(Move move);

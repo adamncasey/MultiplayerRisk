@@ -297,7 +297,7 @@ public class Game implements Runnable {
         }
 
         for(IPlayer p : playerInterfaces){
-            p.nextMove(Move.describeStatus(move), p.getPlayerName());
+            p.nextMove(Move.describeStatus(move), move.getUID());
         }
 
         move.setReadOnlyInputs();

@@ -21,7 +21,7 @@
     </Label>
   </top>
   <stylesheets>
-    <URL value="@../../../../../../../../home/victor/Workspace/riskybusiness/src/ui/game/dice/DiceRollControl.css" />
+    <URL value="@Cards.css" />
   </stylesheets>
    <right>
       <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Play!" BorderPane.alignment="CENTER_LEFT">

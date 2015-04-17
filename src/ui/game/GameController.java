@@ -114,7 +114,7 @@ public class GameController implements Initializable, PlayerController {
 			image.setPreserveRatio(true);
 
 			InputStream in = GameController.class.getResourceAsStream(String
-					.format("player/shield_player_%d.png", i + 1));
+					.format("player/shield_player_%d.png", players.get(i).getPlayerid() + 1));
 			image.setImage(new Image(in));
 			pane.setCenter(image);
 			BorderPane.setAlignment(image, Pos.TOP_CENTER);

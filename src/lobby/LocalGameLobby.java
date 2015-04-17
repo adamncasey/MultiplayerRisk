@@ -107,6 +107,7 @@ public class LocalGameLobby extends Thread {
 
                 readyMessage(router);
 
+                // Pick version & features compatible with players...
                 initialiseMessage(router);
 
                 firstPlayer = LobbyUtil.decidePlayerOrder(router, HOST_PLAYERID, netClients, handler);
@@ -115,9 +116,6 @@ public class LocalGameLobby extends Thread {
                 this.deck = board.getDeck();
                 LobbyUtil.shuffleCards(router, LocalGameLobby.HOST_PLAYERID, netClients, deck, handler); // perhaps GameRouter is needed here?
 
-                // Pick version & features compatible with players.
-
-                // initialise game.
             } catch(InterruptedException e) {
                 // TODO Log exception?
                 handler.onFailure(e);

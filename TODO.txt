@@ -10,11 +10,8 @@ Refactoring:
 
 Adam's list of things to do which will actually get done:
 
-1. Card shuffle. Mostly there thanks to Nathan, just needs to add in the Networked dice roll part.
-2. Update our dice rolling implementation as per what's on the Google Drive.
-3. No more negative acknowledgement IDs! (implementing 0, 1, 2... ack_id's is quite a lot of work for minimal gain)
-========== At this poiint we should be able to test with Saad's group ============
-4. in NetworkPlayer, if we ever can't receive a message, tell the Game Logic we should be a neutral player.
+========== At this point we should be able to test with Saad's group ============
+1. in NetworkPlayer, if we ever can't receive a message, tell the Game Logic we should be a neutral player.
 
 -------- Not likely to get done
 Warnings on some messages. Fix them!
@@ -34,13 +31,13 @@ James/Victor - Add all stages of game to GUIPlayer getMove and GUIPlayer updateP
 James/Victor - Make GUIPlayer safer so that it doesn't crash all the time
 
 Adam - All of network changes required to make game protocol compliant - Test game with other group
-Nathan - Logic RNG isnt protocol compliat
-
 
 Everyone - Fix it so names are consistent across all games
 
 Nathan - Implement a better AI
 
+Kill Lobby Threads when exiting lobby windows. They currently persist in the background.
 
+Investigate memory usage
 
-
+Investigate card oddities? See FB chat

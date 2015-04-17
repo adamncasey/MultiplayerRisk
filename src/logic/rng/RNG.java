@@ -22,11 +22,16 @@ public class RNG {
         Int256 newValue = Int256.xor(seedValues);
 
         // Feed into RC4 somehow
-        RC4 rc4 = new RC4(newValue.toBytes());
+        SeededGenerator generator = new SeededGenerator();
 
-        List<Integer> rolls = new ArrayList<Integer>();
+        for(Int256 bigInt : seedValues) {
+            generator.addNumber(bigInt.toBytes());
+        }
+        generator.finalise();
+
+        List<Integer> rolls = new ArrayList<>();
         for(int i = 0; i != numRolls; ++i){
-            int roll = ((rc4.nextInt() % numFaces) + numFaces) % numFaces + 1;
+            int roll = (int) ((generator.nextInt() % numFaces) + numFaces) % numFaces + 1;
             rolls.add(roll);
         }
         return rolls;

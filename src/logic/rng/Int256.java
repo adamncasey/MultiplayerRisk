@@ -82,7 +82,7 @@ public class Int256 {
     }
 
     public byte[] toBytes(){
-        ByteBuffer bbuffer = ByteBuffer.allocate(256);
+        ByteBuffer bbuffer = ByteBuffer.allocate(32);
         IntBuffer ibuffer = bbuffer.asIntBuffer();
         ibuffer.put(value);
         return bbuffer.array(); 

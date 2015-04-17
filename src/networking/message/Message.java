@@ -45,7 +45,7 @@ public class Message {
     }
 
     private static int generateAcknowledgementID() {
-        return new Random().nextInt();
+        return Math.abs(new Random().nextInt());
     }
 
 	public String toString() {

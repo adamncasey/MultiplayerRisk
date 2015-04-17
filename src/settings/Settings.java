@@ -19,5 +19,5 @@ public class Settings {
     public static boolean SUPPORT_WRAPPER_MESSAGES = true;
 
 
-    public static boolean printNetworkMessages = false;
+    public static boolean printNetworkMessages = true;
 }

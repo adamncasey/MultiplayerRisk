@@ -125,11 +125,11 @@ public class Move {
         return this.decision;
     }
 
-    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE
+    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, END_ATTACK, OCCUPY_TERRITORY, FORTIFY_TERRITORY
     private int from = -1;
     public void setFrom(int territory){
         checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE, Stage.END_ATTACK, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
-        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE, Stage.END_ATTACK, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
         this.from = territory;
     }
     public int getFrom(){
@@ -137,11 +137,11 @@ public class Move {
         return this.from;
     }
 
-    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE
+    // START_ATTACK, START_FORTIFY, CHOOSE_ATTACK_DICE, CHOOSE_DEFEND_DICE, END_ATTACK, OCCUPY_TERRITORY, FORTIFY_TERRITORY
     private int to = -1;
     public void setTo(int territory){
         checkStage(Stage.START_ATTACK, Stage.START_FORTIFY, Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE, Stage.END_ATTACK, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
-        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE);
+        checkPermissions(Stage.CHOOSE_ATTACK_DICE, Stage.CHOOSE_DEFEND_DICE, Stage.END_ATTACK, Stage.OCCUPY_TERRITORY, Stage.FORTIFY_TERRITORY);
         this.to = territory;
     }
     public int getTo(){

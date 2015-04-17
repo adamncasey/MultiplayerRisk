@@ -121,8 +121,7 @@ public class Game implements Runnable {
 		List<Card> hand = state.getPlayer(uid).getHand();
 		List<Card> toTradeIn = new ArrayList<Card>();
 
-		while (hand.size() >= 5) { // Force more TRADE_IN_CARDS if hand is too
-									// big
+		while (hand.size() >= 5) { // Force more TRADE_IN_CARDS if hand is too big
 			hand = tradeInCards(uid, toTradeIn);
 		}
 		// Always do atleast 1 TRADE_IN_CARDS
@@ -132,8 +131,7 @@ public class Game implements Runnable {
 		int armies = state.calculateTerritoryArmies(uid);
 		armies += state.calculateContinentArmies(uid);
 		armies += state.calculateSetArmies(sets);
-		List<Integer> matchingCards = state.calculateMatchingCards(uid,
-				toTradeIn);
+		List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
 		int extraArmies = state.calculateMatchingArmies(matchingCards);
 
 		while ((armies + extraArmies) != 0) {

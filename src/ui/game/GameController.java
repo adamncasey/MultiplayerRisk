@@ -239,7 +239,7 @@ public class GameController implements Initializable, PlayerController {
 							notifyMoveCompleted();
 						}
 					}, 1, maxArmies);
-			//openPopup(diceRollControl);
+			openPopup(diceRollControl);
 
 			break;
 
@@ -260,7 +260,7 @@ public class GameController implements Initializable, PlayerController {
 							notifyMoveCompleted();
 						}
 					}, 1, maxArmies);
-			//openPopup(diceRollControl);
+			openPopup(diceRollControl);
 			break;
 		case OCCUPY_TERRITORY:
 			showActionButton("Occupy "
@@ -275,7 +275,7 @@ public class GameController implements Initializable, PlayerController {
 			}, mapControl.getTerritoryByID(move.getTo()).getName(),
 					lastAttackerNumberOfArmiesSurvived,
 					move.getCurrentArmies() - 1);
-			//openPopup(occupyControl);
+			openPopup(occupyControl);
 			break;
 		default:
 			break;

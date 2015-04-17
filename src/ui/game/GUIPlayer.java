@@ -94,8 +94,9 @@ public class GUIPlayer implements IPlayer {
 		case CLAIM_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
-		case CARD_DRAWN:
-			updateCards(move);
+//		case CARD_DRAWN:
+//			updateCards(move);
+//			break;
 //		case DECIDE_ATTACK:
 //			break;
 //		case DECIDE_FORTIFY:

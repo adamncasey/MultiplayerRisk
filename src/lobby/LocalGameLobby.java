@@ -2,10 +2,7 @@ package lobby;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 
@@ -16,6 +13,7 @@ import networking.*;
 import networking.message.Message;
 import networking.message.payload.InitialiseGamePayload;
 import networking.message.payload.IntegerPayload;
+import networking.message.payload.PlayersJoinedPayload;
 import player.IPlayer;
 
 /**
@@ -84,6 +82,7 @@ public class LocalGameLobby extends Thread {
                     netClients.add(newPlayer);
 
                     // TODO Send PLAYERS_JOINED command.
+                    playersJoined(router, netClients);
                 }
             }
 
@@ -135,6 +134,21 @@ public class LocalGameLobby extends Thread {
             handler.onLobbyComplete(playersBefore, playersAfter, deck);
         }
 	}
+
+    private void playersJoined(GameRouter router, Collection<NetworkClient> otherClients) {
+        // Generate Players Joined message
+        PlayersJoinedPayload.PlayerInfo[] playerInfos = new PlayersJoinedPayload.PlayerInfo[otherClients.size() + 1];
+        playerInfos[0] = new PlayersJoinedPayload.PlayerInfo(LocalGameLobby.HOST_PLAYERID, this.name);
+
+        int i=1;
+        for(NetworkClient client : otherClients) {
+            playerInfos[i++] = new PlayersJoinedPayload.PlayerInfo(client.playerid, client.getName());
+        }
+
+        Message msg =  new Message(Command.PLAYERS_JOINED, LocalGameLobby.HOST_PLAYERID, new PlayersJoinedPayload(playerInfos), false);
+
+        router.sendToAllPlayers(msg);
+    }
 
     private void setupRouterForwarding(GameRouter router, List<LobbyClient> clients) {
         // Tells the GameRouter to forward messages received from clients to every other client
@@ -239,7 +253,7 @@ public class LocalGameLobby extends Thread {
     private boolean receiveReadyFromAll(GameRouter router, Message msg) throws InterruptedException {
         // Ensure we receive an acknowledgement from all players for that ready message
 
-        return RemoteGameLobby.readyAcknowledgements(router, router.getAllPlayers(), msg, handler);
+        return RemoteGameLobby.readyAcknowledgements(router, null, router.getAllPlayers(), msg, handler);
     }
 
     private Message sendReadyToAll(GameRouter router) {

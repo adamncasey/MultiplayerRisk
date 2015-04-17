@@ -59,7 +59,7 @@ public class NetworkPlayer implements IPlayer {
 
     @Override
     public String getPlayerName() {
-        return client.name;
+        return client.getName();
     }
 
     public int getPlayerID() {

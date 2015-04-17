@@ -37,6 +37,7 @@ public class RemoteGameLobby extends Thread {
     boolean nonPlayingHost;
 
     private Deck deck;
+    private boolean handledHostPing;
 
     // TODO Implement timeouts in networking
 
@@ -45,6 +46,7 @@ public class RemoteGameLobby extends Thread {
         this.port = port;
         this.handler = handler;
         this.name = name;
+        handledHostPing = false;
     }
 
     public void run() {
@@ -75,18 +77,22 @@ public class RemoteGameLobby extends Thread {
         }
         // Now we have a playerid
 
-
-        int firstPlayer;
-        List<Integer> cards;
+        // Signifies we have received a PING message from the host.
+        int numPlayers = -1;
         List<NetworkClient> otherPlayers = new LinkedList<>();
         otherPlayers.add(host);
+
+        while(numPlayers == -1) {
+            numPlayers = handleHostMessage(router, conn, host, otherPlayers);
+        }
+        System.out.println("Host Ping received. numPlayers: " + numPlayers + ". otherPlayers size: " + otherPlayers.size());
+
+        int firstPlayer;
         try {
-            // Receive either a PING or a PLAYERS_JOINED command.
+            handlePings(router, host, otherPlayers); // callbacks: onPingReceive
 
-            List<NetworkClient> nonHostOtherPlayers = handlePings(router, conn, host); // callbacks: onPingReceive
-            otherPlayers.addAll(nonHostOtherPlayers);
-
-            if(!handleReady(router, host, nonHostOtherPlayers)) {
+            System.out.println("Pings complete. numPlayers: " + numPlayers + ". otherPlayers size: " + otherPlayers.size());
+            if(!handleReady(router, host, otherPlayers)) {
                 return; // callbacks: onReady + onReadyAcknowledge
             }
 
@@ -114,8 +120,73 @@ public class RemoteGameLobby extends Thread {
         LinkedList<IPlayer> playersAfter = new LinkedList<>();
         LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
 
-        // TODO Pass cards up to onLobbyComplete handler
         handler.onLobbyComplete(playersBefore, playersAfter, deck);
+    }
+
+    /**
+     * Receives a message and processes it for the (PLAYERS_JOINED or PING) stage of the lobby
+     * @param host
+     * @return numPlayers in the game if a PING message was received. Otherwise -1
+     */
+    private int handleHostMessage(GameRouter router, IConnection conn, NetworkClient host, List<NetworkClient> otherPlayers) {
+
+        Message msg;
+        try {
+            msg = host.readMessage();
+        } catch (TimeoutException | ConnectionLostException | ParserException e) {
+            e.printStackTrace();
+            handler.onFailure(e);
+            throw new RuntimeException("Invalid message received from host");
+        }
+
+        if(msg.command == Command.PLAYERS_JOINED) {
+            // Process it for new players? Ikd
+            System.out.println("Received a PLAYERS_JOINED message... Ignoring for now!");
+            PlayersJoinedPayload payload = (PlayersJoinedPayload) msg.payload;
+
+            for(PlayersJoinedPayload.PlayerInfo info : payload.info) {
+                if(info.playerid == this.playerid) {
+                    continue; // Skip over our playerid.
+                }
+
+                handler.onPlayerJoin(info.playerid, info.name);
+
+                updateNetworkClientInfo(router, conn, info.playerid, info.name, otherPlayers);
+            }
+
+            return -1;
+        }
+        else if (msg.command == Command.PING) {
+
+            handler.onPingStart();
+            int numplayers = processHostPingMessage(msg);
+
+            if(numplayers < 2) {
+                throw new RuntimeException("Invalid number of players received from host. " + numplayers);
+            }
+
+            return numplayers;
+        }
+
+        // Unknown message. Ignore
+        return -1;
+    }
+
+    private void updateNetworkClientInfo(GameRouter router, IConnection conn, int playerid, String name, List<NetworkClient> allPlayers) {
+
+        for(NetworkClient client : allPlayers) {
+            if(client.playerid == playerid) {
+                client.setName(name);
+                return;
+            }
+        }
+
+        // Otherwise, we didn't find the network client in the list.. Time to make it!
+
+        NetworkClient client = new NetworkClient(router, playerid, name, false);
+        allPlayers.add(client);
+        router.addRoute(client, conn);
+        System.out.println("Added client: " + playerid);
     }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
@@ -127,7 +198,7 @@ public class RemoteGameLobby extends Thread {
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
     	Socket soc = new Socket();
     	soc.connect(new InetSocketAddress(address, port), Settings.socketTimeout);
-    	soc.setSoTimeout(Settings.socketTimeout);
+        soc.setSoTimeout(Settings.socketTimeout);
         return new Connection(soc);
     }
 
@@ -179,20 +250,12 @@ public class RemoteGameLobby extends Thread {
 
     /**
      *
-     * @param router
-     * @param conn
-     * @param host
      * @return Collection of NetworkClients - Containing all other players in the game (Not host or this local player)
      * @throws InterruptedException
      */
-    private List<NetworkClient> handlePings(GameRouter router, IConnection conn, NetworkClient host) throws InterruptedException {
-        int numplayers = receiveHostPing(host);
-        handler.onPingStart();
-
-        if(numplayers < 2) {
-            throw new RuntimeException("Invalid number of players received from host. " + numplayers);
-        }
-        List<NetworkClient> players = setupOtherPlayers(router, conn, numplayers);
+    private void handlePings(GameRouter router, NetworkClient host, Collection<NetworkClient> players) throws InterruptedException {
+        LinkedList<NetworkClient> nonHostPlayers = new LinkedList<>(players);
+        nonHostPlayers.remove(host);
 
         // Send ping to all other players
         sendPing(router);
@@ -200,19 +263,10 @@ public class RemoteGameLobby extends Thread {
         // Receive ping from all other players
         // TODO Try to receive ping from all other players.
         // TODO But if we get a ready command from the host, we should stop trying.
-        receivePingResponseFromConnections(players);
-        return players;
+        receivePingResponseFromConnections(nonHostPlayers);
     }
 
-    private int receiveHostPing(NetworkClient host) {
-        Message msg;
-        try {
-            msg = host.readMessage();
-        } catch (TimeoutException | ConnectionLostException | ParserException e) {
-            e.printStackTrace();
-            handler.onFailure(e);
-            throw new RuntimeException("Invalid message received from host");
-        }
+    private int processHostPingMessage(Message msg) {
 
         int numplayers = handlePingMessage(msg);
 
@@ -226,24 +280,6 @@ public class RemoteGameLobby extends Thread {
         }
 
         return numplayers;
-    }
-
-    private List<NetworkClient> setupOtherPlayers(GameRouter router, IConnection conn, int numplayers) {
-        List<NetworkClient> clients = new LinkedList<>();
-
-        for(int i=1; i<numplayers; i++) {
-            if(i != this.playerid) {
-
-                String name = "NetPlayer " + i;
-                System.out.println("Added player " + name);
-
-                clients.add(new NetworkClient(router, i, name, false));
-            }
-        }
-
-        addOtherPlayersToRouter(router, conn, clients);
-
-        return clients;
     }
 
     private void receivePingResponseFromConnections(Collection<NetworkClient> connections) throws InterruptedException {
@@ -291,9 +327,6 @@ public class RemoteGameLobby extends Thread {
         if(msg.command != Command.PING) {
             throw new RuntimeException("Invalid message");
         }
-
-        //TODO Handle name elsewhere. This is just a good place to inject a fake name.
-        handler.onPlayerJoin(msg.playerid, "Player " + msg.playerid);
         
         handler.onPingReceive(msg.playerid);
 
@@ -318,18 +351,21 @@ public class RemoteGameLobby extends Thread {
         acknowledgeMessage(msg, router);
 
         // receive all other acknowledgements
-        return readyAcknowledgements(router, players, msg, handler);
+        return readyAcknowledgements(router, host, players, msg, handler);
     }
 
-    protected static boolean readyAcknowledgements(GameRouter router, Collection<NetworkClient> players, Message msg, LobbyEventHandler handler) {
+    protected static boolean readyAcknowledgements(GameRouter router, NetworkClient host, Collection<NetworkClient> players, Message msg, LobbyEventHandler handler) {
 
-        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(router, msg, players);
+        List<NetworkClient> nonHostPlayers = new LinkedList<>(players);
+        nonHostPlayers.remove(host);
+
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(router, msg, nonHostPlayers);
 
         for(int playerid : responses) {
             handler.onReadyAcknowledge(playerid);
         }
 
-        if(responses.size() != players.size()) {
+        if(responses.size() != nonHostPlayers.size()) {
             handler.onFailure(new IOException("Did not receive acknowledgement from all players"));
             return false;
         }

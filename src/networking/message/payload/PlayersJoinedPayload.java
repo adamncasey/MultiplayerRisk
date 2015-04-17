@@ -60,7 +60,7 @@ public class PlayersJoinedPayload extends Payload {
         return list;
     }
 
-    public class PlayerInfo {
+    public static class PlayerInfo {
         public final int playerid;
         public final String name;
 
@@ -70,7 +70,7 @@ public class PlayersJoinedPayload extends Payload {
         }
 
         public Object getJSONValue() {
-            return Arrays.asList(playerid, name);
+            return Arrays.asList((Object)playerid, (Object)name);
         }
     }
 }

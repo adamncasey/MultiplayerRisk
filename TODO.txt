@@ -7,26 +7,24 @@ Refactoring:
     Reduces the complexity in NetworkPlayer::updatePlayer.
   LobbyUtil.createIPlayersInOrder could do with a second look at some point. It's really complicated for no great reason.
 
-Work remaining for our version of networked risk:
-2.  Handle leaving the game when we win / lose.
-1.	Card Shuffle (basically just a dice roll)
-3.  Handle NetworkPlayer disconnection.
 
-  Work to be done to play with other implementations:
-1.  Handle players_joined command (Send and receive it)
-2.  Update our dice rolling implementation, assuming other groups do that too.
-3.  ack_id should start at zero and increment by one for each message. We currently just generate a random number.
-4.  Stop receiving PING messages when host sends READY command.
-5.  Ensure unknown messages are ignored by the game (Other groups might implement Chat for example)
-6.  Host must timeout players
+Adam's list of things to do which will actually get done:
 
-  Protocol Extensions:
-1.  Message Signing (Store public_keys from players joined, use to verify messages.)
+1. Card shuffle. Mostly there thanks to Nathan, just needs to add in the Networked dice roll part.
+2. Update our dice rolling implementation as per what's on the Google Drive.
+3. No more negative acknowledgement IDs! (implementing 0, 1, 2... ack_id's is quite a lot of work for minimal gain)
+========== At this poiint we should be able to test with Saad's group ============
+4. in NetworkPlayer, if we ever can't receive a message, tell the Game Logic we should be a neutral player.
 
-
-
-
-
+-------- Not likely to get done
+Maybe stop receiveing PING messages when the host sends READY. This requires quite a re-architecture of the lobby code as far as I can tell
+Maybe Check that unknown messages are ignored by the game at all important points.
+Maybe also check that the host forwards unknown messages. The host should probably just forward line by line instead of parsing and resending. Does this happen already?
+Maybe also timeout players if they take way too long. I'm not so keen on this though really.
+------- Never actually going to get done.
+Never implement message signing, nice idea but no group is going to get far enough to cheat. Talk about the theory in the report, because quite a lot of thought was put into this.
+----------------------
+----------------------
 
 Everyone - Entire Report
 

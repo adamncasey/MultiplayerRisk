@@ -1,6 +1,7 @@
 package networking;
 
 import networking.message.Message;
+import networking.parser.Parser;
 import networking.parser.ParserException;
 
 import java.util.concurrent.BlockingQueue;
@@ -12,7 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class NetworkClient {
 
     public final int playerid;
-    public final String name;
+    private String name;
     public final boolean hostPlayer;
 
     public final GameRouter router;
@@ -27,9 +28,15 @@ public class NetworkClient {
         this.messageQueue = new LinkedBlockingQueue<>();
     }
 
-    public Message readMessage() throws TimeoutException, ConnectionLostException, ParserException {
+    public String getName() {
+        return name;
+    }
 
-        System.out.println("readMessage NetworkClient playerid: " + playerid);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Message readMessage() throws TimeoutException, ConnectionLostException, ParserException {
         Object obj;
         try {
             // TODO: Timeout?
@@ -40,6 +47,14 @@ public class NetworkClient {
 
             throw ex;
         }
+
+        return processQueuedObject(obj);
+    }
+
+    private Message processQueuedObject(Object obj) throws TimeoutException, ConnectionLostException, ParserException {
+
+        System.out.println("readMessage NetworkClient playerid: " + playerid);
+
 
         if(obj instanceof Message) {
             return (Message)obj;

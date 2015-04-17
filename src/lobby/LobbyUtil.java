@@ -69,7 +69,7 @@ public class LobbyUtil {
                     continue;
                 }
 
-                NetworkPlayer player = new NetworkPlayer(client, ourPlayerID, delegatedBroadcast);
+                NetworkPlayer player = new NetworkPlayer(client, client.playerid, ourPlayerID, delegatedBroadcast);
                 delegatedBroadcast = false;
 
                 // If we've passed our playerid, add to playersAfter

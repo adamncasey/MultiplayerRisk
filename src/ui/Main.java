@@ -118,13 +118,13 @@ public class Main extends Application {
 	}
 
 	public void goToGame(List<IPlayer> playersBefore,
-			List<IPlayer> playersAfter, Deck deck, String playerType, String playerName) {
+			List<IPlayer> playersAfter, Deck deck, String playerType, String playerName, int playerid) {
 		try {
 			GameController game = (GameController) replaceSceneContent(
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
 			stage.setResizable(true);
 
-			GUIPlayer player = new GUIPlayer(game, playerName);
+			GUIPlayer player = new GUIPlayer(game, playerName, playerid);
 			switch (playerType) {
 				case "Self": {
 					break;
@@ -161,7 +161,7 @@ public class Main extends Application {
 			stage.setResizable(true);
 
 			Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.FURIOUS);
-			GUIPlayer player = new GUIPlayer(game, "Host");
+			GUIPlayer player = new GUIPlayer(game, "Host", 0); // Get rid of this at some point.
 			
 			player.setPlayerController(userAgent);
 

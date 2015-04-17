@@ -23,7 +23,7 @@ import player.IPlayer;
  */
 public class LocalGameLobby extends Thread {
 
-    protected static final int HOST_PLAYERID = 0;
+    public static final int HOST_PLAYERID = 0;
 
 	boolean lobbyOpen = true;
 	boolean lobbyCancelled = false;

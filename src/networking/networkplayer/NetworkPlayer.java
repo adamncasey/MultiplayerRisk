@@ -22,6 +22,9 @@ public class NetworkPlayer implements IPlayer {
     // TODO Consider whether wrapping the local IPlayer in a "NetworkBroadcastPlayer" might be cleaner.
     final int localPlayerID;
     final boolean delegatedLocalBroadcast;
+    
+    final int remotePlayerID;
+    
     MoveChecker moveChecker;
     Player player;
     Set<NetworkClient> players;
@@ -42,7 +45,7 @@ public class NetworkPlayer implements IPlayer {
 
     boolean eliminatationKnown = false;
 
-    public NetworkPlayer(NetworkClient client, int localPlayerID, boolean broadcastLocalPlayer) {
+    public NetworkPlayer(NetworkClient client, int remotePlayerID, int localPlayerID, boolean broadcastLocalPlayer) {
         this.client = client;
         this.localPlayerID = localPlayerID;
 
@@ -50,6 +53,8 @@ public class NetworkPlayer implements IPlayer {
 
         players = client.router.getAllPlayers();
         unprocessedMessage = null;
+        
+        this.remotePlayerID = remotePlayerID;
     }
 
     @Override
@@ -576,4 +581,9 @@ public class NetworkPlayer implements IPlayer {
     public String toString() {
     	return getPlayerName() != null ? getPlayerName() :  "";
     }
+
+	@Override
+	public int getPlayerid() {
+		return remotePlayerID;
+	}
 }

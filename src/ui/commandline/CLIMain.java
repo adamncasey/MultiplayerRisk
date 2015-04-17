@@ -39,7 +39,7 @@ public class CLIMain {
         String value = reader.readLine();
         if(value.equals("host")) {
             lobby = hostLobby("Host Player Name");
-
+            ourPlayerid = LocalGameLobby.HOST_PLAYERID;
             value = reader.readLine();
             if(value.equals("start")) {
                 System.out.println("Start game requested");
@@ -56,6 +56,7 @@ public class CLIMain {
 
     static List<IPlayer> playersBefore = null;
     static List<IPlayer> playersAfter = null;
+    static int ourPlayerid;
 
     public static void setPlayers(List<IPlayer> before, List<IPlayer> after) {
         playersBefore = before;
@@ -69,7 +70,7 @@ public class CLIMain {
         }
         System.out.println("Starting game");
         Agent agent = AgentFactory.buildAgent(AgentTypes.Type.GREEDY);
-        IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out), "Me");
+        IPlayer localPlayer = new CommandLinePlayer(agent, new Scanner(System.in), new PrintWriter(System.out), "Me", ourPlayerid);
 
         List<IPlayer> players = new LinkedList<>();
         players.addAll(playersBefore);
@@ -214,6 +215,7 @@ public class CLIMain {
         @Override
         public void onJoinAccepted(int playerid) {
             System.out.println("onJoinAccepted " + playerid);
+            CLIMain.ourPlayerid = playerid;
         }
 
         @Override

@@ -42,13 +42,15 @@ public class WatchCLI {
         }
 
         writer.format("Loading game with %d AIs\n", numAI);
+
+        int nextPlayerID = 0;
         List<IPlayer> players = new ArrayList<IPlayer>();
         Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer, userAgent.getName());
+        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer, userAgent.getName(), nextPlayerID++);
         players.add(user);
         for(int i = 0; i != numAI-1; ++i){
             Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
-            AgentPlayer ai = new AgentPlayer(agent);
+            AgentPlayer ai = new AgentPlayer(agent, nextPlayerID++);
             players.add(ai);
         }
         Game game = new Game(players, new LocalPlayerHandler(), null);

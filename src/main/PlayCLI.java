@@ -44,12 +44,14 @@ public class PlayCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
 
+        int nextPlayerID = 0;
+        
         List<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, "CLI Player");
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, "CLI Player", nextPlayerID++);
         players.add(user);
         for(int i = 0; i != numAI; ++i){
             Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
-            AgentPlayer ai = new AgentPlayer(agent);
+            AgentPlayer ai = new AgentPlayer(agent, nextPlayerID++);
             players.add(ai);
         }
         Game game = new Game(players, new LocalPlayerHandler(), null);

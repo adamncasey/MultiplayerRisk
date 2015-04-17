@@ -16,9 +16,12 @@ public class AgentPlayer implements IPlayer {
 
     private LocalPlayerHandler handler;
     private Player player;
+    
+    private final int playerid;
 
-    public AgentPlayer(Agent controller){
+    public AgentPlayer(Agent controller, int playerid){
         this.controller = controller;
+        this.playerid = playerid;
     }
 
     public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
@@ -47,5 +50,10 @@ public class AgentPlayer implements IPlayer {
 	@Override
 	public String getPlayerName() {
 		return controller.getName();
+	}
+
+	@Override
+	public int getPlayerid() {
+		return playerid;
 	}
 }

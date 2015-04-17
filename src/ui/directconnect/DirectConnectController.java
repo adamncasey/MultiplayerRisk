@@ -52,6 +52,8 @@ public class DirectConnectController extends AnchorPane implements
 	@FXML
 	private Button connectButton;
 	
+	private int playerid = -1;
+	
 	private BooleanProperty isFormEditable = new SimpleBooleanProperty(true);
 	public boolean getIsFormEditable() {
 		return isFormEditable.get();
@@ -151,6 +153,8 @@ public class DirectConnectController extends AnchorPane implements
 		public void onJoinAccepted(int playerid) {
 			setIsFormEditable(false);
 			status("Join accepted!\nYou are player number " + playerid + "\n\nWaiting for host to start the game...");
+			
+			DirectConnectController.this.playerid = playerid;
 		}
 
 		@Override
@@ -223,12 +227,15 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
+			
+			assert(playerid != -1 ); //: "playerid must be set. Is onJoinAccepted called"
+			
 			status("onLobbyComplete: ");
 			String selectedPlayerType = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, deck, selectedPlayerType, name.getText());
+					application.goToGame(playersBefore, playersAfter, deck, selectedPlayerType, name.getText(), playerid);
 				}
 			});
 		}

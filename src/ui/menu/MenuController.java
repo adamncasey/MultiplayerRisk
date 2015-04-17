@@ -57,21 +57,26 @@ public class MenuController extends AnchorPane implements Initializable {
         	
             PrintWriter writer = new PrintWriter(System.out);
 
-            int numAI = 3;
+            int numAI = 2;
             
             writer.format("Loading game with %d AIs\n", numAI);
             List<IPlayer> players = new ArrayList<IPlayer>();
             List<String> names = new ArrayList<String>();
             
-            Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.ANGRY);
+            int nextPlayerID = 0;
+            
+            Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.FURIOUS);
             
             names.add(String.format("%s 1", userAgent.getName()));
+            players.add(new AgentPlayer(userAgent, nextPlayerID++));
+            
             for(int i = 0; i != numAI-1; ++i){
-                Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
-                AgentPlayer ai = new AgentPlayer(agent);
+                Agent agent = AgentFactory.buildAgent(AgentTypes.Type.GREEDY);
+                AgentPlayer ai = new AgentPlayer(agent, nextPlayerID++);
                 players.add(ai);
                 names.add(String.format("%s %d", agent.getName(), i + 2));
             }
+            
             String nameSummary = "Players were ";
             for(String s : names){
                 nameSummary += String.format("%s, ", s);

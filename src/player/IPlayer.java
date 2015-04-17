@@ -26,4 +26,6 @@ public interface IPlayer {
 
     // Get this players name    
     public String getPlayerName();
+    
+    public int getPlayerid();
 }

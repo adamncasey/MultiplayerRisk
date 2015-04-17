@@ -27,10 +27,14 @@ public class GUIPlayer implements IPlayer {
 	private MoveChecker moveChecker;
 
 	private LocalPlayerHandler handler;
+	
+	private final int playerid;
 
-	public GUIPlayer(GameController gameController, String playerName) {
+	public GUIPlayer(GameController gameController, String playerName, int playerid) {
 		this.gameController = gameController;
 		this.playerName = playerName;
+		
+		this.playerid = playerid;
 	}
 
 	public void setup(Player player, List<String> names, Board board,
@@ -230,5 +234,10 @@ public class GUIPlayer implements IPlayer {
 	public MoveChecker getMoveChecker() {
 		return moveChecker;
 
+	}
+
+	@Override
+	public int getPlayerid() {
+		return playerid;
 	}
 }

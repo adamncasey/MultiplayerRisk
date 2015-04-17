@@ -25,12 +25,15 @@ public class CommandLinePlayer implements IPlayer {
     private Board board;
 
     private LocalPlayerHandler handler;
+    
+    private final int playerid;
 
-    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, String playerName){
+    public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, String playerName, int playerid){
         this.controller = controller;
         this.reader = reader;
         this.writer = writer;
         this.playerName = playerName;
+        this.playerid = playerid;
     }
 
     public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
@@ -65,6 +68,11 @@ public class CommandLinePlayer implements IPlayer {
 	@Override
 	public String getPlayerName() {
 		return playerName;
+	}
+
+	@Override
+	public int getPlayerid() {
+		return playerid;
 	}
 }
 

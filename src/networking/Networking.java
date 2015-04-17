@@ -82,6 +82,8 @@ public class Networking {
         };
     }
 
+    private static Executor executor;
+    
     /**
      * Read a message from every connection given.
      * @param clients - Clients to read from
@@ -93,7 +95,9 @@ public class Networking {
         }
 
         //TODO: This will create a new thread pool every call. We should be able to cache this.
-        Executor executor = Executors.newFixedThreadPool(clients.size());
+        if(executor == null) {
+        	executor = Executors.newFixedThreadPool(clients.size());
+        }
 
         ExecutorCompletionService<Message> ecs = new ExecutorCompletionService<>(executor);
         for(NetworkClient client : clients) {

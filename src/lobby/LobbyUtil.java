@@ -7,6 +7,7 @@ import networking.NetworkClient;
 import networking.networkplayer.NetworkPlayer;
 import player.IPlayer;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -82,6 +83,9 @@ public class LobbyUtil {
                 }
             }
         }
+
+        System.out.println("Players Before: " + Arrays.toString(playersBefore.toArray()));
+        System.out.println("Players After: " + Arrays.toString(playersAfter.toArray()));
     }
 
     static class NetworkClientComparator implements Comparator<NetworkClient> {
@@ -125,7 +129,7 @@ public class LobbyUtil {
         return playerid;
     }
 
-    public static void shuffleCards(Deck deck){
+    public static void shuffleCards(Deck deck) {
         // over the network deck shuffling madness goes here!
     }
 }

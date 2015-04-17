@@ -60,7 +60,7 @@ public class RemoteGameLobby extends Thread {
     private void joinLobby() throws IOException {
 
         GameRouter router = new GameRouter();
-        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, name, true);
+        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, "Host", true);
 
 
         IConnection conn = tcpConnect(address, port);

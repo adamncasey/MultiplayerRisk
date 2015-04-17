@@ -1,6 +1,14 @@
 Logic:
   Add a timeout feature to stop AIs from taking too long
 
+  Check James changes to END_ATTACK
+
+  check deck stuff
+
+  check names stuff
+
+  fortify stuff, you can fortify more than one along at a time
+
 Adam:
 Refactoring:
   NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.

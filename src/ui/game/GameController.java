@@ -62,7 +62,7 @@ public class GameController implements Initializable, PlayerController {
 	@FXML
 	Label moveDescription;
 	@FXML
-	Button doneButton;
+	Button actionButton;
 
 	public static GameConsole console;
 	public GUIPlayer player;
@@ -207,10 +207,10 @@ public class GameController implements Initializable, PlayerController {
 
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
-			setDoneButtonDisabled(false);
+			showActionButton("Done");
 			break;
 		case DECIDE_FORTIFY:
-			setDoneButtonDisabled(false);
+			showActionButton("Done");
 			break;
 
 		case TRADE_IN_CARDS:
@@ -218,6 +218,7 @@ public class GameController implements Initializable, PlayerController {
 			moveCompleted = true;
 			break;
 		case CHOOSE_ATTACK_DICE:
+			showActionButton("Continue");
 			diceRollControl.initialiseAttack(
 					player.getBoard().getName(move.getTo()),
 					new AttackingDiceRollControlEventHandler() {
@@ -232,6 +233,7 @@ public class GameController implements Initializable, PlayerController {
 			break;
 
 		case CHOOSE_DEFEND_DICE:
+			showActionButton("Continue");
 			diceRollControl.initialiseDefend(
 					player.getBoard().getName(move.getTo()),
 					move.getDefendDice(),
@@ -245,6 +247,7 @@ public class GameController implements Initializable, PlayerController {
 			openPopup(diceRollControl);
 			break;
 		case OCCUPY_TERRITORY:
+			showActionButton("Occupy " + player.getBoard().getName(move.getTo()));
 			occupyControl.initialise(new OccupyNumberOfArmiesEventHandler() {
 				@Override
 				public void onNumberOfArmiesSelected(int numberOfArmies) {
@@ -269,7 +272,7 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		currentMove = null;
-		setDoneButtonDisabled(true);
+		hideActionButton();
 	}
 
 	public synchronized void notifyMoveCompleted() {
@@ -397,6 +400,7 @@ public class GameController implements Initializable, PlayerController {
 			} catch (InterruptedException e) {
 			}
 		}
+		diceRollControl.reset();
 	}
 
 	public synchronized void notifyDiceMoveDismissed() {
@@ -407,31 +411,50 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// Buttons
 	// ================================================================================
-	public void doneButtonAction(ActionEvent event) {
+	public void onActionButtonClick(ActionEvent event) {
 		if (currentMove == null)
 			return;
 
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
 			currentMove.setDecision(false);
-			setDoneButtonDisabled(true);
 			notifyMoveCompleted();
 			break;
 		case DECIDE_FORTIFY:
 			currentMove.setDecision(false);
-			setDoneButtonDisabled(true);
 			notifyMoveCompleted();
 			break;
+		case CHOOSE_ATTACK_DICE:
+			openPopup(diceRollControl);
+			break;
+		case CHOOSE_DEFEND_DICE:
+			openPopup(diceRollControl);
+			break;
+		case OCCUPY_TERRITORY:
+			openPopup(occupyControl);
+			break;
+			
+			
 		default:
 			break;
 		}
 	}
 
-	void setDoneButtonDisabled(boolean isDisabled) {
+	void showActionButton(String text) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				doneButton.setDisable(isDisabled);
+				actionButton.setText(text);
+				actionButton.setVisible(true);
+			}
+		});
+	}
+	
+	void hideActionButton() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				actionButton.setVisible(false);
 			}
 		});
 	}
@@ -455,8 +478,6 @@ public class GameController implements Initializable, PlayerController {
 		for (Node n : popupContent.getChildren()) {
 			n.setVisible(false);
 		}
-
-		diceRollControl.reset();
 
 		notifyDiceMoveDismissed();
 	}

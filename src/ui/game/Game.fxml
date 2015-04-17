@@ -56,7 +56,7 @@
       <center>
           <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="450.0">
               <children>
-                  <GridPane>
+                  <GridPane maxWidth="-Infinity" prefWidth="120.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -73,7 +73,7 @@
                       </MapControl>
                     </children>
                   </Pane>
-                  <GridPane>
+                  <GridPane maxWidth="-Infinity" prefWidth="120.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
@@ -81,7 +81,11 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <Button fx:id="doneButton" onAction="#doneButtonAction" disable="true" text="Done" />
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                           <children>
+                              <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" />
+                           </children>
+                        </VBox>
                      </children>
                   </GridPane>
               </children>

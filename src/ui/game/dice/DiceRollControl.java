@@ -171,13 +171,16 @@ public class DiceRollControl extends BorderPane {
 	private Mode mode;
 
 	public void reset() {
-		setIsResultsVisible(false);
-		title.setText("");
-		mode = null;
-		userDiceChoiceBox.getSelectionModel().selectFirst();
-		userDiceHBox.getChildren().clear();
-		enemyDiceHBox.getChildren().clear();
-
-		winnerName.setText("");
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				setIsResultsVisible(false);
+				title.setText("");
+				mode = null;
+				userDiceChoiceBox.getSelectionModel().selectFirst();
+				userDiceHBox.getChildren().clear();
+				enemyDiceHBox.getChildren().clear();
+			}
+		});
 	}
 }

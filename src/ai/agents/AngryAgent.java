@@ -14,6 +14,7 @@ public class AngryAgent extends Agent {
     private PassiveStrategy ps;
 
     public AngryAgent(){
+        super("Angry");
     }
 
     public void setup(Player player, Board board){
@@ -21,10 +22,6 @@ public class AngryAgent extends Agent {
         as = new AggressiveStrategy(player, board, random);
         rs = new RandomStrategy(player, board, random);
         ps = new PassiveStrategy(player, board, random);
-    }
-
-    public String getName(){
-        return "Angry";
     }
 
     public String getDescription(){

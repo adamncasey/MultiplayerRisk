@@ -12,16 +12,13 @@ public class RandomAgent extends Agent {
     private PassiveStrategy ps;
 
     public RandomAgent(){
+        super("Random");
     }
 
     public void setup(Player player, Board board){
         super.setup(player, board);
         rs = new RandomStrategy(player, board, random);
         ps = new PassiveStrategy(player, board, random);
-    }
-
-    public String getName(){
-        return "Random";
     }
 
     public String getDescription(){

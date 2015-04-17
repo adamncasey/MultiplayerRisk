@@ -14,6 +14,7 @@ public class GreedyAgent extends Agent {
     private CardsStrategy cs;
 
     public GreedyAgent(){
+        super("Greedy");
     }
 
     public void setup(Player player, Board board){
@@ -21,10 +22,6 @@ public class GreedyAgent extends Agent {
         as = new AggressiveStrategy(player, board, random);
         rs = new RandomStrategy(player, board, random);
         cs = new CardsStrategy(player, board, random);
-    }
-
-    public String getName(){
-        return "Greedy";
     }
 
     public String getDescription(){

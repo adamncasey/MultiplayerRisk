@@ -18,6 +18,7 @@ public class FuriousAgent extends Agent {
     private SmartAggressiveStrategy sas;
 
     public FuriousAgent(){
+        super("Furious");
     }
 
     public void setup(Player player, Board board){
@@ -27,10 +28,6 @@ public class FuriousAgent extends Agent {
         cs = new CardsStrategy(player, board, random);
         cos = new ContinentsStrategy(player, board, random);
         sas = new SmartAggressiveStrategy(player, board, random);
-    }
-
-    public String getName(){
-        return "Furious";
     }
 
     public String getDescription(){

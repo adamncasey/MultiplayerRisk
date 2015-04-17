@@ -70,7 +70,7 @@ public class GameController implements Initializable, PlayerController {
 	List<IPlayer> players;
 
 	Deck deck;
-	
+
 	Move currentMove;
 
 	Map<String, BorderPane> playerShields = new HashMap<String, BorderPane>();
@@ -81,10 +81,9 @@ public class GameController implements Initializable, PlayerController {
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter,
 			Deck deck, GUIPlayer player) {
-		
+
 		this.players = combinePlayers(playersBefore, player, playersAfter);
-		
-        this.deck = deck;
+		this.deck = deck;
 
 		// If playing as self, use this as the PlayerController.
 		if (player.getPlayerController() == null) {
@@ -96,8 +95,8 @@ public class GameController implements Initializable, PlayerController {
 		setPlayers();
 		startGame(combinePlayers(playersBefore, player, playersAfter));
 	}
-	
-	void setPlayers() {	
+
+	void setPlayers() {
 
 		// Add player shields for each player.
 		for (int i = 0; i < players.size(); i++) {
@@ -130,11 +129,10 @@ public class GameController implements Initializable, PlayerController {
 	List<IPlayer> combinePlayers(List<IPlayer> playersBefore, GUIPlayer player,
 			List<IPlayer> playersAfter) {
 		List<IPlayer> players = new LinkedList<>();
+
 		players.addAll(playersBefore);
 		players.add(player);
-
-		if (playersAfter != null)
-			players.addAll(playersAfter);
+		players.addAll(playersAfter);
 
 		return players;
 	}
@@ -159,10 +157,10 @@ public class GameController implements Initializable, PlayerController {
 	// PlayerController Functions
 	// ================================================================================
 
-    private Agent testingAI;
-    boolean testing = false;
-    Stage testingStage = Stage.DECIDE_ATTACK;
-	
+	private Agent testingAI;
+	boolean testing = false;
+	Stage testingStage = Stage.DECIDE_ATTACK;
+
 	// TODO: Replace this with Cards control.
 	private PassiveStrategy ps;
 
@@ -250,7 +248,8 @@ public class GameController implements Initializable, PlayerController {
 			openPopup(diceRollControl);
 			break;
 		case OCCUPY_TERRITORY:
-			showActionButton("Occupy " + player.getBoard().getName(move.getTo()));
+			showActionButton("Occupy "
+					+ player.getBoard().getName(move.getTo()));
 			occupyControl.initialise(new OccupyNumberOfArmiesEventHandler() {
 				@Override
 				public void onNumberOfArmiesSelected(int numberOfArmies) {
@@ -287,10 +286,10 @@ public class GameController implements Initializable, PlayerController {
 		if (currentMove == null)
 			return;
 
-		if(currentMove == null) {
+		if (currentMove == null) {
 			return;
 		}
-		
+
 		switch (currentMove.getStage()) {
 		case CLAIM_TERRITORY:
 			currentMove.setTerritory(territory.getId());
@@ -319,21 +318,19 @@ public class GameController implements Initializable, PlayerController {
 				if (isAttackFromValid(territory, currentMove)) {
 					this.attackFrom = territory;
 					console.write("Choose a territory to attack");
-				}
-				else {
+				} else {
 					console.write("Choose a territory to attack from");
 				}
 
 				break;
 			}
-			
+
 			// Selecting attack to
 			if (isAttackToValid(attackFrom, territory, currentMove)) {
 				currentMove.setFrom(attackFrom.getId());
 				currentMove.setTo(territory.getId());
 				notifyMoveCompleted();
-			}
-			else {
+			} else {
 				attackFrom = null;
 				console.write("Inavalid attack move");
 				console.write("Choose a territory to attack from");
@@ -354,10 +351,10 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	boolean isAttackFromValid(GUITerritory attackFrom, Move move) {
-		if(attackFrom == null) {
+		if (attackFrom == null) {
 			return false;
 		}
-		
+
 		if (player.getBoard().getOwner(attackFrom.getId()) != move.getUID()) {
 			console.write(String.format("%s is not your territory!",
 					attackFrom.getName()));
@@ -405,7 +402,6 @@ public class GameController implements Initializable, PlayerController {
 		}
 		diceRollControl.reset();
 	}
-	
 
 	// ================================================================================
 	// Buttons
@@ -432,7 +428,7 @@ public class GameController implements Initializable, PlayerController {
 		case OCCUPY_TERRITORY:
 			openPopup(occupyControl);
 			break;
-			
+
 		default:
 			break;
 		}
@@ -447,7 +443,7 @@ public class GameController implements Initializable, PlayerController {
 			}
 		});
 	}
-	
+
 	void hideActionButton() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -460,12 +456,11 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 	// Popup
 	// ================================================================================
-	
+
 	public synchronized void notifyDiceMoveDismissed() {
 		diceMoveDismissed = true;
 		notifyAll();
 	}
-
 
 	public void openPopup(Node child) {
 		Platform.runLater(new Runnable() {
@@ -482,8 +477,8 @@ public class GameController implements Initializable, PlayerController {
 		for (Node n : popupContent.getChildren()) {
 			n.setVisible(false);
 		}
-		
-		if(diceRollControl.isDiceMoveCompleted()) {
+
+		if (diceRollControl.isDiceMoveCompleted()) {
 			notifyDiceMoveDismissed();
 		}
 	}

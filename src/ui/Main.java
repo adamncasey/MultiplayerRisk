@@ -36,7 +36,7 @@ public class Main extends Application {
 	private final double MINIMUM_WINDOW_HEIGHT = 600;
 
 	private final double MENU_HEIGHT = 600;
-	private final double IN_GAME_HEIGHT = 800;
+	private final double IN_GAME_HEIGHT = 700;
 	
 	private final double MENU_WIDTH = 1000;
 	private final double IN_GAME_WIDTH = 1000;

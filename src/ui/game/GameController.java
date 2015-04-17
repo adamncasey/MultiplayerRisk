@@ -22,6 +22,7 @@ import logic.state.Player;
 import player.IPlayer;
 import player.PlayerController;
 import networking.LocalPlayerHandler;
+import ui.game.cards.CardsControl;
 import ui.game.dice.AttackingDiceRollControlEventHandler;
 import ui.game.dice.DefendingDiceRollControlEventHandler;
 import ui.game.dice.DiceRollControl;
@@ -52,6 +53,8 @@ public class GameController implements Initializable, PlayerController {
 	DiceRollControl diceRollControl;
 	@FXML
 	OccupyControl occupyControl;
+	@FXML
+	CardsControl cardsControl;
 	@FXML
 	TextArea consoleTextArea;
 	@FXML
@@ -443,6 +446,10 @@ public class GameController implements Initializable, PlayerController {
 		default:
 			break;
 		}
+	}
+
+	public void onCardsButtonClick(ActionEvent event){
+		openPopup(cardsControl);
 	}
 
 	void showActionButton(String text) {

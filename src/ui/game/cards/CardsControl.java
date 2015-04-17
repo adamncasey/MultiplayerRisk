@@ -1,5 +1,7 @@
 package ui.game.cards;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
@@ -12,6 +14,7 @@ import logic.Card;
 
 import javax.xml.stream.EventFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,6 +28,19 @@ public class CardsControl extends BorderPane{
     ImageView[] cells = {cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23, cell24, cell25, cell26, cell27, cell28, cell29, cell30, cell31, cell32, cell33, cell34, cell35, cell36, cell37, cell38, cell39, cell40, cell41};
 
     ImageView noCard;
+
+    private boolean isDiceMoveCompleted = false;
+
+    private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
+
+    public boolean getIsResultsVisible() {
+        return isResultsVisible.get();
+    }
+
+    public void setIsResultsVisible(boolean value) {
+        isResultsVisible.set(value);
+    }
+
 
     private int selectionCount = 0;
     private final int MAX_SELECT = 3;
@@ -54,8 +70,18 @@ public class CardsControl extends BorderPane{
             throw new RuntimeException(exception);
         }
 
-        noCard = new ImageView(new Image("resources/nocard.png"));
+        noCard = getCard("nocard");
     }
+
+    public ImageView getCard(String name) {
+        ImageView result = new ImageView();
+        result.setPreserveRatio(true);
+        InputStream in = CardsControl.class
+                .getResourceAsStream("resources/" + name + ".png");
+        result.setImage(new Image(in));
+        return result;
+    }
+
 
     public void populateCardMap(){
         cardNameMapping.put("North Africa","AF0");
@@ -102,7 +128,7 @@ public class CardsControl extends BorderPane{
         cardNameMapping.put("Siam","AS11");
 
         for(String name : NAMES){
-            cardImageMapping.put(name, new ImageView(new Image("resources/" + cardNameMapping.get(name) + ".png")));
+            cardImageMapping.put(name, getCard(cardNameMapping.get(name)));
             imageCardMapping.put(cardImageMapping.get(name), name);
             selection.put(name, false);
         }
@@ -133,7 +159,7 @@ public class CardsControl extends BorderPane{
 
     private ImageView getFirstFreeCell(){
         for(ImageView cell : cells){
-            if(cell.getImage().equals(new Image("resurces/nocard.png")))
+            if(cell.getImage().equals(getCard("nocard").getImage()))
                 return cell;
         }
         return null;
@@ -141,7 +167,7 @@ public class CardsControl extends BorderPane{
 
     private ImageView getCellWithCard(String name){
         for(ImageView cell : cells){
-            if(cell.getImage().equals(new Image("resurces/"+cardNameMapping.get(name)+".png")))
+            if(cell.getImage().equals(getCard(cardNameMapping.get(name)).getImage()))
                 return cell;
         }
         return null;

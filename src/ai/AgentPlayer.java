@@ -1,6 +1,6 @@
 package ai;
 
-import java.util.List;
+import java.util.Map;
 
 import ai.agents.Agent;
 import logic.move.Move;
@@ -24,13 +24,13 @@ public class AgentPlayer implements IPlayer {
         this.playerid = playerid;
     }
 
-    public void setup(Player player, List<String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
+    public void setup(Player player, Map<Integer, String> names, Board board, MoveChecker checker, LocalPlayerHandler handler){
         this.controller.setup(player, board);
         this.handler = handler;
         this.player = player;
     }
 
-    public void nextMove(String move, int playerID){
+    public void nextMove(String move){
     }
 
     public void updatePlayer(Move move){

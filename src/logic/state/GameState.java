@@ -2,7 +2,9 @@ package logic.state;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import logic.Card;
@@ -14,7 +16,7 @@ public class GameState {
 
     private Board board;
     private Deck deck;
-    private List<String> names;
+    private Map<Integer, String> names;
 
     private static int setValues[] = {4, 6, 8, 10, 12, 15};
     private int setCounter = 0;
@@ -25,12 +27,11 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(List<IPlayer> playerInterfaces, List<String> names, Deck deck){
+    public GameState(List<IPlayer> playerInterfaces, Map<Integer, String> names, Deck deck){
         this.players = new ArrayList<Player>();
-        this.names = new ArrayList<String>();
+        this.names = names;
         for(int i = 0; i != playerInterfaces.size(); ++i){
             this.players.add(new Player(playerInterfaces.get(i).getPlayerid()));
-            this.names.add(names.get(i));
         }
         this.activePlayerCount = playerInterfaces.size();
         
@@ -65,8 +66,8 @@ public class GameState {
         return this.deck;
     }
 
-    public List<String> getNames(){
-        return Collections.unmodifiableList(this.names);
+    public Map<Integer, String> getNames(){
+        return Collections.unmodifiableMap(this.names);
     }
 
     public Player getPlayer(int uid){

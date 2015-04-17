@@ -57,7 +57,7 @@ public class GUIPlayer implements IPlayer {
 
 		final BorderPane lastShield;
 		if (lastPlayerToMove != -1) {
-			lastShield = gameController.playerShields.get(playerID);
+			lastShield = gameController.playerShields.get(lastPlayerToMove);
 
 			Platform.runLater(new Runnable() {
 				@Override

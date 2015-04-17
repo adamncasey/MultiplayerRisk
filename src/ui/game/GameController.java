@@ -64,6 +64,8 @@ public class GameController implements Initializable, PlayerController {
 	Label moveDescription;
 	@FXML
 	Button actionButton;
+	@FXML
+	Button cardsButton;
 
 	public static GameConsole console;
 	public GUIPlayer player;
@@ -220,6 +222,11 @@ public class GameController implements Initializable, PlayerController {
 			break;
 		case CHOOSE_ATTACK_DICE:
 			showActionButton("Continue");
+			
+			int maxArmies = player.getBoard().getArmies(move.getFrom()) - 1;
+			if(maxArmies > 3)
+				maxArmies = 3;
+			
 			diceRollControl.initialiseAttack(
 					player.getBoard().getName(move.getTo()),
 					new AttackingDiceRollControlEventHandler() {
@@ -228,13 +235,18 @@ public class GameController implements Initializable, PlayerController {
 							currentMove.setAttackDice(numberOfAttackingDice);
 							notifyMoveCompleted();
 						}
-					}, 1, player.getBoard().getArmies(move.getFrom()) - 1);
-			openPopup(diceRollControl);
+					}, 1, maxArmies);
+			//openPopup(diceRollControl);
 
 			break;
 
 		case CHOOSE_DEFEND_DICE:
 			showActionButton("Continue");
+			
+			maxArmies = player.getBoard().getArmies(move.getTo());
+			if(maxArmies > 2)
+				maxArmies = 2;
+			
 			diceRollControl.initialiseDefend(
 					player.getBoard().getName(move.getTo()),
 					move.getDefendDice(),
@@ -244,8 +256,8 @@ public class GameController implements Initializable, PlayerController {
 							currentMove.setDefendDice(numberOfDefendingDice);
 							notifyMoveCompleted();
 						}
-					}, 1, player.getBoard().getArmies(move.getTo()));
-			openPopup(diceRollControl);
+					}, 1, maxArmies);
+			//openPopup(diceRollControl);
 			break;
 		case OCCUPY_TERRITORY:
 			showActionButton("Occupy "
@@ -260,7 +272,7 @@ public class GameController implements Initializable, PlayerController {
 			}, mapControl.getTerritoryByID(move.getTo()).getName(),
 					lastAttackerNumberOfArmiesSurvived,
 					move.getCurrentArmies() - 1);
-			openPopup(occupyControl);
+			//openPopup(occupyControl);
 			break;
 		default:
 			break;
@@ -313,7 +325,6 @@ public class GameController implements Initializable, PlayerController {
 
 			break;
 		case START_ATTACK:
-			// Selecting attack from.
 			if (attackFrom == null) {
 				if (isAttackFromValid(territory, currentMove)) {
 					this.attackFrom = territory;

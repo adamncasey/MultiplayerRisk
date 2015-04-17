@@ -44,9 +44,8 @@ public class PlayCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
 
-
         List<IPlayer> players = new ArrayList<IPlayer>();
-        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, "CL Player");
+        CommandLinePlayer user = new CommandLinePlayer(new CommandLineController(reader, writer), reader, writer, "CLI Player");
         players.add(user);
         for(int i = 0; i != numAI; ++i){
             Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());

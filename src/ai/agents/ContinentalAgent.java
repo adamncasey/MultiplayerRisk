@@ -16,6 +16,7 @@ public class ContinentalAgent extends Agent {
     private ContinentsStrategy cos;
 
     public ContinentalAgent(){
+        super("Continental");
     }
 
     public void setup(Player player, Board board){
@@ -24,10 +25,6 @@ public class ContinentalAgent extends Agent {
         rs = new RandomStrategy(player, board, random);
         cs = new CardsStrategy(player, board, random);
         cos = new ContinentsStrategy(player, board, random);
-    }
-
-    public String getName(){
-        return "Continental";
     }
 
     public String getDescription(){

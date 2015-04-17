@@ -43,24 +43,21 @@ public class WatchCLI {
 
         writer.format("Loading game with %d AIs\n", numAI);
         List<IPlayer> players = new ArrayList<IPlayer>();
-        List<String> names = new ArrayList<String>();
         Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer, "CL Player");
+        CommandLinePlayer user = new CommandLinePlayer(userAgent, reader, writer, userAgent.getName());
         players.add(user);
-        names.add(String.format("%s 1", userAgent.getName()));
         for(int i = 0; i != numAI-1; ++i){
             Agent agent = AgentFactory.buildAgent(AgentTypes.randomType());
             AgentPlayer ai = new AgentPlayer(agent);
             players.add(ai);
-            names.add(String.format("%s %d", agent.getName(), i + 2));
         }
         Game game = new Game(players, new LocalPlayerHandler());
 
         game.run();
 
         String nameSummary = "Players were ";
-        for(String s : names){
-            nameSummary += String.format("%s, ", s);
+        for(IPlayer player : players){
+            nameSummary += String.format("%s, ", player.getPlayerName());
         }
         nameSummary = nameSummary.substring(0, nameSummary.length() - 2);
         writer.println(nameSummary); 

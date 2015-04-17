@@ -8,11 +8,16 @@ import logic.state.Player;
 import player.PlayerController;
 
 public abstract class Agent implements PlayerController {
+    private static int ID_COUNTER = 1;
+
     protected Random random;
     protected Board board;
     protected Player player;
 
-    public Agent(){
+    private String name;
+
+    public Agent(String name){
+        this.name = String.format("%s %d", name, ID_COUNTER++);
     }
 
     public void setup(Player player, Board board){
@@ -21,7 +26,9 @@ public abstract class Agent implements PlayerController {
         this.player = player;
     }
 
-    public abstract String getName();
+    public String getName(){
+        return this.name;
+    }
 
     public abstract String getDescription();
 

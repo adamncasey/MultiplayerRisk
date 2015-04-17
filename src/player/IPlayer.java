@@ -23,6 +23,7 @@ public interface IPlayer {
 
     // Asks the player to make their move
     public void getMove(Move move);
-    
+
+    // Get this players name    
     public String getPlayerName();
 }

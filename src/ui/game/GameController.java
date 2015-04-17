@@ -163,7 +163,7 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 
 	private Agent testingAI;
-	boolean testing = false;
+	boolean testing = true;
 	Stage testingStage = Stage.DECIDE_ATTACK;
 
 	// TODO: Replace this with Cards control.

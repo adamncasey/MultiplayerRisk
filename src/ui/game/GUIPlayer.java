@@ -94,6 +94,8 @@ public class GUIPlayer implements IPlayer {
 		case CLAIM_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
+		case CARD_DRAWN:
+			updateCards(move);
 //		case DECIDE_ATTACK:
 //			break;
 //		case DECIDE_FORTIFY:
@@ -150,7 +152,11 @@ public class GUIPlayer implements IPlayer {
 			Thread.sleep(15);
 		} catch (InterruptedException e) {}
 	}
-	
+
+	void updateCards(Move move){
+		gameController.cardsControl.addCard(move.getCard());
+	}
+
 	void updateMapSingleTerritory(Move move) {
 		gameController.mapControl.updateTerritory(move.getUID(),
 				board.getArmies(move.getTerritory()),

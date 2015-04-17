@@ -64,6 +64,8 @@ public class GameController implements Initializable, PlayerController {
 	Label moveDescription;
 	@FXML
 	Button actionButton;
+	@FXML
+	Button cardsButton;
 
 	public static GameConsole console;
 	public GUIPlayer player;

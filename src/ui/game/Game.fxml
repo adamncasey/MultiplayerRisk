@@ -11,6 +11,7 @@
 <?import ui.game.map.MapControl?>
 <?import ui.game.popup.OccupyControl?>
 
+
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
@@ -63,6 +64,9 @@
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
+                     <children>
+                        <Button fx:id="cardsButton" mnemonicParsing="false" prefHeight="80.0" prefWidth="85.0" text="Cards" />
+                     </children>
                   </GridPane>
                   <Pane fx:id="centerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" GridPane.rowIndex="1">
                     <GridPane.margin>
@@ -71,6 +75,7 @@
                     <children>
                       <MapControl fx:id="mapControl">
                       </MapControl>
+
                     </children>
                   </Pane>
                   <GridPane maxWidth="-Infinity" prefWidth="120.0">
@@ -83,7 +88,7 @@
                      <children>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                            <children>
-                              <Button fx:id="actionButton" visible="false" onAction="#onActionButtonClick" text="Done" />
+                              <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" visible="false" />
                            </children>
                         </VBox>
                      </children>
@@ -121,10 +126,11 @@
       <children>
         <Pane fx:id="popupContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
           <children>
-            <DiceRollControl fx:id="diceRollControl" visible="false">
+		<DiceRollControl fx:id="diceRollControl" visible="false">
             </DiceRollControl>
             <OccupyControl fx:id="occupyControl" visible="false">
             </OccupyControl>
+
           </children>
         </Pane>
         <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />

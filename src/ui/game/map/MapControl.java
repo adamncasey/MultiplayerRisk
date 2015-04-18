@@ -37,6 +37,8 @@ public class MapControl extends Pane {
 
 	ArrayList<GUITerritory> clickableTerritories;
 
+	private GUITerritory selectedFrom, selectedTo;
+
 	public MapControl() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
 				"MapControl.fxml"));
@@ -106,7 +108,9 @@ public class MapControl extends Pane {
 				new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent mouseEvent) {
-						territory.getImage().setOpacity(0);
+						if (MapControl.this.getSelectedFrom() != territory
+								&& MapControl.this.getSelectedTo() != territory)
+							territory.getImage().setOpacity(0);
 					}
 				});
 	}
@@ -146,20 +150,21 @@ public class MapControl extends Pane {
 			int labelOffset = 0;
 
 			switch (territory.getArmyClass()) {
-			 case Artillery:
-			 image = new ImageView(artilleryImages.get(territory
-			 .getOwnerID() + 1));
-			 labelOffset = -162;
-			 break;
-			 case Cavalry:
-			 image = new ImageView(cavalryImages.get(territory.getOwnerID() + 1));
-			 labelOffset = -110;
-			 break;
-			 case Infantry:
-			 image = new ImageView(
-			 infantryImages.get(territory.getOwnerID() + 1));
-			 labelOffset = -94;
-			 break;
+			case Artillery:
+				image = new ImageView(artilleryImages.get(territory
+						.getOwnerID() + 1));
+				labelOffset = -162;
+				break;
+			case Cavalry:
+				image = new ImageView(
+						cavalryImages.get(territory.getOwnerID() + 1));
+				labelOffset = -110;
+				break;
+			case Infantry:
+				image = new ImageView(
+						infantryImages.get(territory.getOwnerID() + 1));
+				labelOffset = -94;
+				break;
 			default:
 				image = null;
 				break;
@@ -201,15 +206,43 @@ public class MapControl extends Pane {
 		}
 	}
 
-	// ================================================================================
-	// Accessors
-	// ================================================================================
-
 	public ArrayList<GUITerritory> getClickableTerritories() {
 		return clickableTerritories;
 	}
 
 	public GUITerritory getTerritoryByID(int id) {
 		return territoryByID.get(id);
+	}
+
+	public GUITerritory getSelectedFrom() {
+		return selectedFrom;
+	}
+
+	public void setSelectedFrom(GUITerritory selectedFrom) {
+		if (this.selectedFrom != null) {
+			this.selectedFrom.setSelected(false);
+		}
+
+		if (selectedFrom != null) {
+			selectedFrom.setSelected(true);
+		}
+
+		this.selectedFrom = selectedFrom;
+	}
+
+	public GUITerritory getSelectedTo() {
+		return selectedTo;
+	}
+
+	public void setSelectedTo(GUITerritory selectedTo) {
+		if (this.selectedTo != null) {
+			this.selectedTo.setSelected(false);
+		}
+
+		if (selectedTo != null) {
+			selectedTo.setSelected(true);
+		}
+
+		this.selectedTo = selectedTo;
 	}
 }

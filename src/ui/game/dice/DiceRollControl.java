@@ -133,6 +133,8 @@ public class DiceRollControl extends BorderPane {
 
 	public void visualiseResults(DiceRollResult results, int attackerLosses,
 			int defenderLosses) {
+		isDiceMoveCompleted = true;
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -149,8 +151,6 @@ public class DiceRollControl extends BorderPane {
 				}
 			}
 		});
-
-		isDiceMoveCompleted = true;
 		// winnerName.setText("");
 	}
 
@@ -190,9 +190,5 @@ public class DiceRollControl extends BorderPane {
 
 	public boolean isDiceMoveCompleted() {
 		return isDiceMoveCompleted;
-	}
-
-	public void setDiceMoveCompleted(boolean isDiceMoveCompleted) {
-		this.isDiceMoveCompleted = isDiceMoveCompleted;
 	}
 }

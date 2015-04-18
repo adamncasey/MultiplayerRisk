@@ -3,6 +3,7 @@ package ui.directconnect;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -146,7 +147,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onTCPConnect() {
-			status("onTCPConnect ");
+			status("Opened connection to Game Host");
 		}
 
 		@Override
@@ -164,64 +165,62 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onPlayerJoin(int playerid, String name) {
-			status("onPlayerJoin (" + playerid + "): " + name);
+			status("A player joined the lobby! (" + playerid + "): " + name);
 		}
 
 		@Override
 		public void onPlayerLeave(int playerid) {
-			status("onPlayerLeave " + playerid);
+			status("A player left the lobby: " + playerid);
 		}
 
 		@Override
 		public void onPingStart() {
 
-			status("onPingStart ");
+			status("The host started the game ");
 		}
 
 		@Override
 		public void onPingReceive(int playerid) {
-			status("onPingReceive " + playerid);
+			status("Player ping received " + playerid);
 
 		}
 
 		@Override
 		public void onReady() {
-			status("onReady ");
+			status("Game starting... ");
 
 		}
 
 		@Override
 		public void onReadyAcknowledge(int playerid) {
-			status("onReadyAcknowledge " + playerid);
-
+			status("Game starting... " + playerid);
 		}
 
 		@Override
 		public void onInitialiseGame(double protocolVersion, String[] extendedFeatures) {
-			status("onInitialiseGame " + protocolVersion + ". " + extendedFeatures.toString());
+			status("Game starting. Version " + protocolVersion + ". Features: " + Arrays.toString(extendedFeatures));
 		}
 
 		@Override
 		public void onDicePlayerOrder() {
-			status("onDicePlayerOrder ");
-
+			status("Deciding player order ");
 		}
 
 		@Override
 		public void onDiceHash(int playerid) {
-			status("onDiceHash " + playerid);
+			status("Dice Hash received " + playerid);
 
 		}
 
 		@Override
 		public void onDiceNumber(int playerid) {
-			status("onDiceNumber " + playerid);
+			status("Dice Roll Received " + playerid);
 
 		}
 
 		@Override
 		public void onDiceCardShuffle() {
-			status("onDiceCardShuffle ");
+			status("Performing card shuffle ");
 
 		}
 
@@ -230,8 +229,8 @@ public class DirectConnectController extends AnchorPane implements
 			
 			assert(playerid != -1 ); //: "playerid must be set. Is onJoinAccepted called"
 			
-			status("onLobbyComplete: ");
-			String selectedPlayerType = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
+			status("Game is ready to start: ");
+			String selectedPlayerType = playAsChoiceBox.getSelectionModel().getSelectedItem();
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
@@ -242,7 +241,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onFailure(Throwable e) {
-			status("onFailure: " + e.getMessage());
+			status("Error occurred: " + e.getMessage());
 			
 			Platform.runLater(new Runnable() {
 				@Override

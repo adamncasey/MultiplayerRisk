@@ -179,10 +179,6 @@ public class LobbyHostController extends AnchorPane implements Initializable {
 
         @Override
         public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
-            writeToConsole("onLobbyComplete: ");
-			writeToConsole("\tplayers before: " + playersBefore.toString());
-			writeToConsole("\tplayers after: " + playersAfter.toString());
-			
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {

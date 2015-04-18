@@ -83,9 +83,6 @@ public class LobbyUtil {
                 }
             }
         }
-
-        System.out.println("Players Before: " + Arrays.toString(playersBefore.toArray()));
-        System.out.println("Players After: " + Arrays.toString(playersAfter.toArray()));
     }
 
     static class NetworkClientComparator implements Comparator<NetworkClient> {

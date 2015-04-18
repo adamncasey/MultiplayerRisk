@@ -33,14 +33,14 @@ public class Game implements Runnable {
 
 	public Game(List<IPlayer> playerInterfaces,
 			LocalPlayerHandler handler, Deck deck) {
-        this.playerInterfaces = new ArrayList<IPlayer>(playerInterfaces);
-        this.playerInterfacesMap = new HashMap<Integer, IPlayer>();
+        this.playerInterfaces = new ArrayList<>(playerInterfaces);
+        this.playerInterfacesMap = new HashMap<>();
         for(int i = 0; i != playerInterfaces.size(); ++i){
             this.playerInterfacesMap.put(playerInterfaces.get(i).getPlayerid(), playerInterfaces.get(i));
         }
 		this.numPlayers = playerInterfaces.size();
 		
-		this.names = new HashMap<Integer, String>();
+		this.names = new HashMap<>();
 		for(IPlayer player : playerInterfaces) {
 			this.names.put(player.getPlayerid(), player.getPlayerName());
 		}
@@ -48,9 +48,8 @@ public class Game implements Runnable {
 		this.state = new GameState(playerInterfaces, this.names, deck);
 		this.checker = new MoveChecker(state);
 
-		for (int i = 0; i != this.numPlayers; ++i) {
-			this.playerInterfaces.get(i).setup(state.getPlayer(i),
-					this.names, state.getBoard(), this.checker, handler);
+		for (IPlayer player : this.playerInterfaces) {
+			player.setup(state.getPlayer(player.getPlayerid()), this.names, state.getBoard(), this.checker, handler);
 		}
 	}
 

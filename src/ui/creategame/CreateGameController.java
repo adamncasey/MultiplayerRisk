@@ -119,7 +119,7 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@FXML
 	protected void startButtonAction(ActionEvent event) {
 		if (isFormValid()) {
-			String selected = (String)playAsChoiceBox.getSelectionModel().getSelectedItem();
+			String selected = playAsChoiceBox.getSelectionModel().getSelectedItem();
 			InetAddress addr;
 			try {
 				addr = InetAddress.getByName(ipaddress.getText());

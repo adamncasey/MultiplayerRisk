@@ -138,11 +138,21 @@ public class Game implements Runnable {
 		hand = tradeInCards(uid, toTradeIn);
 
 		int sets = state.tradeInCards(uid, toTradeIn);
-		int armies = state.calculateTerritoryArmies(uid);
-		armies += state.calculateContinentArmies(uid);
-		armies += state.calculateSetArmies(sets);
+		int tArmies = state.calculateTerritoryArmies(uid);
+        int cArmies = state.calculateContinentArmies(uid);
+        int setArmies = state.calculateSetArmies(sets);
 		List<Integer> matchingCards = state.calculateMatchingCards(uid, toTradeIn);
-		int extraArmies = state.calculateMatchingArmies(matchingCards);
+        int extraArmies = state.calculateMatchingArmies(matchingCards);
+
+
+        int armies = tArmies + cArmies + setArmies;
+
+        System.out.format("Territory Armies : %d\n", tArmies);
+        System.out.format("Continent Armies : %d\n", cArmies);
+        System.out.format("Set Armies : %d\n", setArmies);
+        System.out.format("Total Armies : %d\n", armies);
+        System.out.format("Extra Armies : %d\n", extraArmies);
+        System.out.flush();
 
 		while ((armies + extraArmies) != 0) {
 			move = new Move(uid, PLACE_ARMIES);

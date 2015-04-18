@@ -765,8 +765,8 @@ public class MoveCheckerTest {
         int[] armies = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
         MoveChecker checker = new MoveChecker(new GameState(true, 3, owners, armies));
         Move move = new Move(0, ROLL_NUMBER);
-        move.setRollHash("CAD4C36ABE7F36E1F5C40E2879C7FC16A46225C024A3B50B0E6D3D94AB5D9C63");
-        move.setRollNumber("1234123412341234123412341234123412341234123412341234123412341234");
+        move.setRollHash("DEA972021186F84A751A1AC1F981F850A4C5A0B7C1A2669949F7120F2AC3D073");
+        move.setRollNumber("459D935F60606172953493ABDDF59DEA1B3402A7FC33781F74FDB19356231C12");
         assertTrue(checker.checkMove(move));
     }
 

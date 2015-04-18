@@ -72,6 +72,10 @@ List of Strategies:
 
 // Ideas for future agents / strategies
 
+// Think about attacking territories you have surrounded
+// Think about forcing towards specific continents
+// Think about how fortifying is done, will it always consistently move to the front lines?
+
 // SmartContinental - Avoid clashes by picking continents based on how likely it is to capture the whole thing.
 // Cluster - Cluster expands from his biggest set of armies
 // Yakool - Yakool builds on Cluster by, focusing on enemies that are too strong, slower attacks than cluster, tries to get a card every turn.

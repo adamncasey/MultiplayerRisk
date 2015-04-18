@@ -118,7 +118,7 @@ public class DirectConnectController extends AnchorPane implements
 		try {
 			connectButton.setDisable(true);
 			RemoteGameLobby lobby = new RemoteGameLobby(
-					InetAddress.getByName(ip.getText()), Settings.port,
+					InetAddress.getByName(ip.getText()), Integer.parseInt(port.getText()),
 					joinHandler,
 					name.getText());
 			lobby.start();

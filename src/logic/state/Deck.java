@@ -38,5 +38,12 @@ public class Deck {
     public void shuffleSwap(int index1, int index2) {
         Collections.swap(cards, index1, index2);
     }
+
+	public void printCards() {
+		
+		for(Card card : cards) {
+			System.out.println("Card " + card.getID() + " type " + card.getType());
+		}
+	}
 }
 

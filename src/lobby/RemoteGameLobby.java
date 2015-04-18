@@ -204,7 +204,7 @@ public class RemoteGameLobby extends Thread {
 
     private void sendJoinGame(GameRouter router) throws ConnectionLostException {
 
-        JoinGamePayload payload = new JoinGamePayload(new double[] { 0.1 }, new String[] {}, name);
+        JoinGamePayload payload = new JoinGamePayload(new double[] { 1.0 }, new String[] {}, name);
 
         Message msg = new Message(Command.JOIN_GAME, payload);
 

@@ -18,6 +18,9 @@ public class Settings {
      */
     public static boolean SUPPORT_WRAPPER_MESSAGES = true;
 
+    public static final int ACKNOWLEDGEMENT_TIMEOUT = 100;
+    public static final int MOVE_TIMEOUT = 200;
 
-    public static boolean printNetworkMessages = true;
+
+    public static boolean printNetworkMessages = false;
 }

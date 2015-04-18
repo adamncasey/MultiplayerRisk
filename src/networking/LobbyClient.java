@@ -4,6 +4,7 @@ import networking.message.payload.AcceptJoinGamePayload;
 import networking.message.Message;
 import networking.message.payload.RejectJoinGamePayload;
 import networking.parser.Parser;
+import settings.Settings;
 
 /**
  * Handles accept / reject process.
@@ -40,7 +41,7 @@ public class LobbyClient {
 	public boolean accept(int playerid) {
 		// send message JOIN_ACCEPT (player_id, ack timeout, move timeout)
 
-        AcceptJoinGamePayload payload = new AcceptJoinGamePayload(playerid, conn.getTimeout(), conn.getTimeout());
+        AcceptJoinGamePayload payload = new AcceptJoinGamePayload(playerid, Settings.ACKNOWLEDGEMENT_TIMEOUT, Settings.MOVE_TIMEOUT);
 
 		Message msg = new Message(Command.JOIN_ACCEPT, hostPlayerid, payload);
 		try {

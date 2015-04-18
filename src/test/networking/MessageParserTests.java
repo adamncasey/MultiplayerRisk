@@ -7,11 +7,12 @@ import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 
+import org.json.simple.JSONObject;
 import org.junit.Test;
 
 public class MessageParserTests {
 
-	@Test
+	/*@Test
 	public void escapeTest() {
 		String test = "\"";
 		assertEquals("\\\"", Parser.escapeJson(test));
@@ -21,13 +22,13 @@ public class MessageParserTests {
 
 		test = "\n";
 		assertEquals("\\n", Parser.escapeJson(test));
-	}
+	}*/
 
 	@Test
 	public void testWrapperFormat() throws ParserException {
 		String innerMessage = "{\"command\": \"acknowledgement\", \"payload\": 32183921, \"player_id\": 5 }";
 
-		String message = "{\"message\": \"" + Parser.escapeJson(innerMessage) + "\"}";
+		String message = "{\"message\": \"" + JSONObject.escape(innerMessage) + "\"}";
 
 		Message msg = Parser.parseOuterMesage(message);
 

@@ -22,8 +22,6 @@ public class Parser {
             return innerMessage;
         }
 
-        innerMessage = escapeJson(innerMessage);
-
         Map<String, Object> map = new HashMap<>();
         map.put("message", innerMessage);
 
@@ -61,12 +59,10 @@ public class Parser {
 
         String innerMessage = (String)wrapper.get("message");
 
-        innerMessage = unescapeJson(innerMessage);
-
         return parseMessage(innerMessage);
     }
 
-    public static String unescapeJson(String innerMessage) {
+    /*public static String unescapeJson(String innerMessage) {
 
         innerMessage = innerMessage.replaceAll(Pattern.quote("\\\""), "\"");
         innerMessage = innerMessage.replaceAll(Pattern.quote("\\n"), "\n");
@@ -88,7 +84,7 @@ public class Parser {
         innerMessage = innerMessage.replace("\"", "\\\"");
 
         return innerMessage;
-    }
+    }*/
 
     /**
 	 * Parses an entire JSON object in the format described by Json communication structure

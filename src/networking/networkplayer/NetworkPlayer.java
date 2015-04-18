@@ -545,6 +545,7 @@ public class NetworkPlayer implements IPlayer {
             for(int id : setTradedIn) {
                 if(card.getID() == id) {
                     result.add(card);
+                    break;
                 }
             }
         }

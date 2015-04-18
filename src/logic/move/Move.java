@@ -307,7 +307,7 @@ public class Move {
             StackTraceElement[] ste = Thread.currentThread().getStackTrace();
             String callingMethod = ste[2].getMethodName();
             String message = String.format("%s cannot be accessed from stage %s.", callingMethod, Move.stageName(stage));
-            System.out.println(message);
+            System.err.println(message);
             System.exit(-1);
         }
     }
@@ -325,13 +325,13 @@ public class Move {
      */
     private void checkPermissions(Stage... stages){
         if(readOnly){
-            System.out.println("Attempted to write to a read only move.");
+            System.err.println("Attempted to write to a read only move.");
             System.exit(-1);
         }
         if(readOnlyInputs){
             for(Stage s : stages){
                 if(s == this.stage){
-                    System.out.println("Attempted to write to an input only field.");
+                    System.err.println("Attempted to write to an input only field.");
                     System.exit(-1);
                 }
             }

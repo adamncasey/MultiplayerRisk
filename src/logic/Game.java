@@ -1,5 +1,6 @@
 package logic;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,10 @@ public class Game implements Runnable {
 				|| numPlayers > Settings.MaxNumberOfPlayers) {
 			return;
 		}
-		Move setupMove = new Move(0, SETUP_BEGIN);
+
+		int currentPlayer = 0;
+
+		Move setupMove = new Move(playerInterfaces.get(currentPlayer).getPlayerid(), SETUP_BEGIN);
 		setupMove.setPlayer(numPlayers);
 		updatePlayers(setupMove);
 
@@ -71,7 +75,6 @@ public class Game implements Runnable {
 		int armiesToPlace = numPlayers * setupValues[numPlayers - 3];
 		int territoriesToClaim = state.getBoard().getNumTerritories();
 
-		int currentPlayer = 0;
 		while (armiesToPlace > 0) {
             int actualID = playerInterfaces.get(currentPlayer).getPlayerid();
 			Move move;
@@ -92,7 +95,6 @@ public class Game implements Runnable {
 			armiesToPlace--;
 			currentPlayer = ++currentPlayer % numPlayers;
 		}
-		System.out.println();
 		updatePlayers(new Move(-1, SETUP_END));
 	}
 
@@ -101,12 +103,12 @@ public class Game implements Runnable {
 				|| numPlayers > Settings.MaxNumberOfPlayers) {
 			return;
 		}
-		updatePlayers(new Move(-1, GAME_BEGIN));
+		int currentPlayer = 0;
+		updatePlayers(new Move(playerInterfaces.get(currentPlayer).getPlayerid(), GAME_BEGIN));
 
 		int turnCounter = 0;
 		int winner = 0;
 
-		int currentPlayer = 0;
 		while (state.getActivePlayerCount() != 1) {
             int actualID = playerInterfaces.get(currentPlayer).getPlayerid();
 			if (isActive(actualID)) {
@@ -347,6 +349,10 @@ public class Game implements Runnable {
 
 	private List<Card> tradeInCards(int uid, List<Card> toTradeIn) {
 		Move move = new Move(uid, TRADE_IN_CARDS);
+
+		System.out.println("Trade_in_cards. Playerobj: " + state.getPlayer(uid).getUID());
+		Card.printHand(new PrintWriter(System.out), state.getPlayer(uid).getHand());
+
 		getMove(move);
 		toTradeIn.addAll(move.getToTradeIn());
 		state.tradeInCards(uid, toTradeIn);
@@ -355,12 +361,12 @@ public class Game implements Runnable {
 	}
 
 	public List<Integer> performDiceRolls(int numDice) {
-		List<RNG> rngs = new ArrayList<RNG>();
+		List<RNG> rngs = new ArrayList<>();
 		for (int i = 0; i != numPlayers; ++i) {
 			rngs.add(new RNG());
 		}
 
-		List<Int256> rollHashes = new ArrayList<Int256>();
+		List<Int256> rollHashes = new ArrayList<>();
 		for (int i = 0; i != numPlayers; ++i) {
 			if (isActive(i)) {
 				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_HASH);
@@ -373,7 +379,7 @@ public class Game implements Runnable {
 			}
 		}
 
-		List<Int256> rollNumbers = new ArrayList<Int256>();
+		List<Int256> rollNumbers = new ArrayList<>();
 		for (int i = 0; i != numPlayers; ++i) {
 			if (isActive(i)) {
 				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_NUMBER);

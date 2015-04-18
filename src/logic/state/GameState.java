@@ -12,7 +12,7 @@ import logic.move.Move;
 import player.IPlayer;
 
 public class GameState {
-    private List<Player> players;
+    private Map<Integer, Player> players;
 
     private Board board;
     private Deck deck;
@@ -27,12 +27,14 @@ public class GameState {
     /**
      * Create a blank GameState
      */
-    public GameState(List<IPlayer> playerInterfaces, Map<Integer, String> names, Deck deck){
-        this.players = new ArrayList<Player>();
+    public GameState(List<IPlayer> playerInterfaces, Map<Integer, String> names, Deck deck) {
+        this.players = new HashMap<>();
         this.names = names;
-        for(int i = 0; i != playerInterfaces.size(); ++i){
-            this.players.add(new Player(playerInterfaces.get(i).getPlayerid()));
+
+        for(IPlayer player : playerInterfaces) {
+            players.put(player.getPlayerid(), new Player(player.getPlayerid()));
         }
+
         this.activePlayerCount = playerInterfaces.size();
         
         this.board = new Board();
@@ -48,9 +50,10 @@ public class GameState {
      * Load in a GameState
      */
     public GameState(boolean testing, int numPlayers, int[] owners, int[] armies){
-        this.players = new ArrayList<Player>();
+        this.players = new HashMap<>();
+
         for(int i = 0; i != numPlayers; ++i){
-            this.players.add(new Player(i));
+            this.players.put(i, new Player(i));
         }
         this.activePlayerCount = numPlayers;
 
@@ -117,7 +120,7 @@ public class GameState {
     }
 
     public List<Integer> calculateMatchingCards(int uid, List<Card> toTradeIn){
-        List<Integer> matches = new ArrayList<Integer>();
+        List<Integer> matches = new ArrayList<>();
         for(Card card : toTradeIn){
             if(board.getOwner(card.getID()) == uid){
                 matches.add(card.getID());
@@ -156,8 +159,8 @@ public class GameState {
     }
 
     public List<Integer> decideAttackResult(List<Integer> attack, List<Integer> defend){
-        attack = new ArrayList<Integer>(attack);
-        defend = new ArrayList<Integer>(defend);
+        attack = new ArrayList<>(attack);
+        defend = new ArrayList<>(defend);
         int attackerLosses = 0; int defenderLosses = 0;
 
         while(attack.size() != 0 && defend.size() != 0){
@@ -184,7 +187,7 @@ public class GameState {
             defend.remove(defendIndex);
         }
 
-        List<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ArrayList<>();
         result.add(attackerLosses);
         result.add(defenderLosses);
         return result;

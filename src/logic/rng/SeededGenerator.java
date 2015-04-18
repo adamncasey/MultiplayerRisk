@@ -1,7 +1,5 @@
 package logic.rng;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +35,7 @@ public class SeededGenerator {
      * @param str
      *            The string to convert
      */
-    private static byte[] hexToByte(String str) {
+    public static byte[] hexToByte(String str) {
         int len = str.length();
         byte[] data = new byte[len >> 1];
 

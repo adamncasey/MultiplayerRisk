@@ -15,13 +15,11 @@ public class RNG {
     public RNG() {
         this.number = Int256.fromRandom();
         this.hash = Int256.fromHash(number);
-    };
+    }
 
     public static List<Integer> getDiceRolls(Collection<Int256> seedValues, int numRolls, int numFaces){
-        // XOR seedValues together
-        Int256 newValue = Int256.xor(seedValues);
 
-        // Feed into RC4 somehow
+        // Feed into our RNG
         SeededGenerator generator = new SeededGenerator();
 
         for(Int256 bigInt : seedValues) {

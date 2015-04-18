@@ -1,5 +1,8 @@
 package logic.rng;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.ByteBuffer;
@@ -28,12 +31,18 @@ public class Int256 {
     }
 
     public static Int256 fromString(String s){
+        int[] value = parseHex(s);
+        return new Int256(value);
+    }
+
+    public static int[] parseHex(String s) {
         int[] value = new int[8];
         for(int i = 0; i != 8; ++i){
             String part = s.substring(i*8, (i+1)*8);
             value[i] = (int)Long.parseLong(part, 16);
         }
-        return new Int256(value);
+
+        return value;
     }
 
     public static Int256 fromHash(Int256 i){

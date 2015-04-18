@@ -149,5 +149,7 @@ public class LobbyUtil {
 
             deck.shuffleSwap(i++, num);
         }
+        
+        deck.printCards();
     }
 }

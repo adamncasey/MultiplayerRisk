@@ -40,7 +40,6 @@ public class NetworkPlayer implements IPlayer {
     ArrayList<int[]> partialDeployment = new ArrayList<>();
     int storedSourceTerritory = -1;
     int storedDestinationTerritory = -1;
-    boolean receivedNullAttack = false;
     boolean receivedNullFortify = false;
 
     boolean eliminatationKnown = false;
@@ -81,19 +80,6 @@ public class NetworkPlayer implements IPlayer {
         if(previousMove.getUID() == player.getUID()) {
             if(!eliminatationKnown && player.isEliminated()) {
                 // send LEAVE_GAME with continue listening = true.
-            }
-
-            if(previousMove.getStage() == Move.Stage.DECIDE_ATTACK) {
-                if(previousMove.getDecision() || receivedNullAttack) {
-                    receivedNullAttack = false;
-                    return;
-                }
-
-                // Receive ATTACK payload: null and acknowledge this.
-                // TODO: Weird hack, might work.
-                getMove(previousMove);
-
-                return;
             }
 
             if(previousMove.getStage() == Move.Stage.DECIDE_FORTIFY) {
@@ -242,7 +228,17 @@ public class NetworkPlayer implements IPlayer {
                 // We need to save up these message until getExtraArmies == 0
 
                 // Add this moves deployment to persistent list
-                partialDeployment.add(new int[]{move.getTerritory(), move.getArmies()});
+            	boolean applied = false;
+            	for(int[] deployment : partialDeployment) {
+            		if(deployment[0] == move.getTerritory()) {
+            			deployment[1] += move.getArmies();
+            			applied = true;
+            			break;
+            		}
+            	}
+            	if(!applied) {
+            		partialDeployment.add(new int[]{move.getTerritory(), move.getArmies()});
+            	}
 
                 int numArmiesLeft = move.getCurrentArmies() + move.getExtraArmies() - move.getArmies();
                 System.out.println("PLACE_ARMIES to Network Message " + numArmiesLeft + ": " + move.getCurrentArmies() + " "+ move.getExtraArmies() + " " + move.getArmies());
@@ -258,10 +254,10 @@ public class NetworkPlayer implements IPlayer {
                 return MoveProcessResult.MORE_WORK_NEEDED;
             }
             case DECIDE_ATTACK: {
-                if(!move.getDecision()) {
+                /*if(!move.getDecision()) {
                     // Send a null attack message.
                     return new MoveProcessResult(new Message(Command.ATTACK, move.getUID(), null, true));
-                }
+                }*/
                 return MoveProcessResult.NO_RESPONSE_NEEDED;
             }
             case START_ATTACK:
@@ -411,7 +407,6 @@ public class NetworkPlayer implements IPlayer {
 
                 // TODO move to LocalHandler
                 // Reset Null Attack / Fortify at a random point in the game...
-                receivedNullAttack = false;
                 receivedNullFortify = false;
 
                 return MessageProcessResult.COMPLETE;
@@ -425,8 +420,6 @@ public class NetworkPlayer implements IPlayer {
                             unprocessedMessage = msg;
                             return MessageProcessResult.COMPLETE;
                         }
-                        // Otherwise ....
-                        receivedNullAttack = true;
 
                         // This message isn't entirely processed yet. Will process the rest on the next getMove call
                         return MessageProcessResult.COMPLETE;
@@ -474,6 +467,11 @@ public class NetworkPlayer implements IPlayer {
             // TODO This is identical code to case ATTACK. Refactor?
             case FORTIFY: {
                 switch (move.getStage()) {
+	                case DECIDE_ATTACK: {
+	                	move.setDecision(false);
+	                	unprocessedMessage = msg;
+	                	return MessageProcessResult.COMPLETE;
+	                }
                     case DECIDE_FORTIFY: {
                         // Is this player fortifying?
                         if(msg.payload != null) {

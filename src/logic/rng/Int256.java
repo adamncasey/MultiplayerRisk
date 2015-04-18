@@ -1,7 +1,7 @@
 package logic.rng;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+//import org.apache.commons.codec.DecoderException;
+//import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

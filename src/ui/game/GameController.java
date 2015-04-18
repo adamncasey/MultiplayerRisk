@@ -114,7 +114,8 @@ public class GameController implements Initializable, PlayerController {
 			image.setPreserveRatio(true);
 
 			InputStream in = GameController.class.getResourceAsStream(String
-					.format("player/shield_player_%d.png", players.get(i).getPlayerid() + 1));
+					.format("player/shield_player_%d.png", players.get(i)
+							.getPlayerid() + 1));
 			image.setImage(new Image(in));
 			pane.setCenter(image);
 			BorderPane.setAlignment(image, Pos.TOP_CENTER);
@@ -173,7 +174,6 @@ public class GameController implements Initializable, PlayerController {
 	boolean moveCompleted = false;
 	Player userDetails;
 
-	GUITerritory attackFrom;
 	int lastAttackerNumberOfArmiesSurvived;
 
 	@Override
@@ -213,24 +213,38 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		switch (currentMove.getStage()) {
-		case DECIDE_ATTACK:
-			showActionButton("Done");
-			break;
-		case DECIDE_FORTIFY:
-			showActionButton("Done");
-			break;
-
 		case TRADE_IN_CARDS:
 			ps.getMove(move);
 			moveCompleted = true;
 			break;
+
+		case DECIDE_FORTIFY:
+			showActionButton("Done");
+			break;
+		case START_FORTIFY:
+			currentMove.setFrom(mapControl.getSelectedFrom().getId());
+			currentMove.setTo(mapControl.getSelectedTo().getId());
+			notifyMoveCompleted();
+			break;
+
+		// case FORTIFY_TERRITORY:
+		// break;
+
+		case DECIDE_ATTACK:
+			showActionButton("Done");
+			break;
+		case START_ATTACK:
+			currentMove.setFrom(mapControl.getSelectedFrom().getId());
+			currentMove.setTo(mapControl.getSelectedTo().getId());
+			notifyMoveCompleted();
+			break;
+
 		case CHOOSE_ATTACK_DICE:
 			showActionButton("Continue");
-			
 			int maxArmies = player.getBoard().getArmies(move.getFrom()) - 1;
-			if(maxArmies > 3)
+			if (maxArmies > 3)
 				maxArmies = 3;
-			
+
 			diceRollControl.initialiseAttack(
 					player.getBoard().getName(move.getTo()),
 					new AttackingDiceRollControlEventHandler() {
@@ -246,11 +260,11 @@ public class GameController implements Initializable, PlayerController {
 
 		case CHOOSE_DEFEND_DICE:
 			showActionButton("Continue");
-			
+
 			maxArmies = player.getBoard().getArmies(move.getTo());
-			if(maxArmies > 2)
+			if (maxArmies > 2)
 				maxArmies = 2;
-			
+
 			diceRollControl.initialiseDefend(
 					player.getBoard().getName(move.getTo()),
 					move.getDefendDice(),
@@ -263,6 +277,7 @@ public class GameController implements Initializable, PlayerController {
 					}, 1, maxArmies);
 			openPopup(diceRollControl);
 			break;
+
 		case OCCUPY_TERRITORY:
 			showActionButton("Occupy "
 					+ player.getBoard().getName(move.getTo()));
@@ -278,6 +293,7 @@ public class GameController implements Initializable, PlayerController {
 					move.getCurrentArmies() - 1);
 			openPopup(occupyControl);
 			break;
+
 		default:
 			break;
 		}
@@ -321,17 +337,9 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case DECIDE_ATTACK:
-			if (isAttackFromValid(territory, currentMove)) {
-				currentMove.setDecision(true);
-				this.attackFrom = territory;
-				notifyMoveCompleted();
-			}
-
-			break;
-		case START_ATTACK:
-			if (attackFrom == null) {
+			if (mapControl.getSelectedFrom() == null) {
 				if (isAttackFromValid(territory, currentMove)) {
-					this.attackFrom = territory;
+					mapControl.setSelectedFrom(territory);
 					console.write("Choose a territory to attack");
 				} else {
 					console.write("Choose a territory to attack from");
@@ -340,30 +348,73 @@ public class GameController implements Initializable, PlayerController {
 				break;
 			}
 
-			// Selecting attack to
-			if (isAttackToValid(attackFrom, territory, currentMove)) {
-				currentMove.setFrom(attackFrom.getId());
-				currentMove.setTo(territory.getId());
+			if (isAttackToValid(mapControl.getSelectedFrom(), territory,
+					currentMove)) {
+				mapControl.setSelectedTo(territory);
+				currentMove.setDecision(true);
 				notifyMoveCompleted();
 			} else {
-				attackFrom = null;
-				console.write("Inavalid attack move");
+				mapControl.setSelectedFrom(null);
+				console.write("Invalid attack move");
 				console.write("Choose a territory to attack from");
 			}
 
 			break;
 
-		// case DECIDE_FORTIFY:
-		// break;
-		// case START_FORTIFY:
-		// break;
-		// case FORTIFY_TERRITORY:
-		// break;
+		case DECIDE_FORTIFY:
+			if (mapControl.getSelectedFrom() == null) {
+				if (isFortifyFromValid(territory, currentMove)) {
+					mapControl.setSelectedFrom(territory);
+					console.write("Choose a territory to move armies to");
+				} else {
+					console.write("Choose a territory to move armies from");
+				}
+
+				break;
+			}
+
+			if (isFortifyToValid(mapControl.getSelectedFrom(), territory,
+					currentMove)) {
+				mapControl.setSelectedTo(territory);
+				currentMove.setDecision(true);
+				notifyMoveCompleted();
+			} else {
+				mapControl.setSelectedFrom(null);
+				console.write("Invalid move");
+				console.write("Choose a territory to move armies from");
+			}
+			break;
+
 		default:
 			console.write("Stage " + currentMove.getStage().toString()
 					+ " not implemented");
 		}
 	}
+	
+	boolean diceMoveDismissed = false;
+	public synchronized void diceRollEnded(Move move) {
+		diceMoveDismissed = false;
+
+		diceRollControl.visualiseResults(
+				new DiceRollResult(move.getAttackDiceRolls(), move
+						.getDefendDiceRolls()), move.getAttackerLosses(), move
+						.getDefenderLosses());
+
+		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size()
+				- move.getAttackerLosses();
+
+		while (!diceMoveDismissed) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+			}
+		}
+		diceRollControl.reset();
+	}
+	
+	// ================================================================================
+	// User move validation
+	// ================================================================================
 
 	boolean isAttackFromValid(GUITerritory attackFrom, Move move) {
 		if (attackFrom == null) {
@@ -391,32 +442,46 @@ public class GameController implements Initializable, PlayerController {
 	boolean isAttackToValid(GUITerritory attackFrom, GUITerritory attackTo,
 			Move move) {
 		boolean valid = player.getMoveChecker().checkStartAttack(
-				currentMove.getUID(), attackFrom.getId(), attackTo.getId());
+				player.getPlayerid(), attackFrom.getId(), attackTo.getId());
 
 		return valid;
 	}
-
-	boolean diceMoveDismissed = false;
-
-	public synchronized void diceRollEnded(Move move) {
-		diceMoveDismissed = false;
-
-		diceRollControl.visualiseResults(
-				new DiceRollResult(move.getAttackDiceRolls(), move
-						.getDefendDiceRolls()), move.getAttackerLosses(), move
-						.getDefenderLosses());
-
-		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size()
-				- move.getAttackerLosses();
-
-		while (!diceMoveDismissed) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-			}
+	
+	boolean isFortifyFromValid(GUITerritory from, Move move) {
+		if (from == null) {
+			return false;
 		}
-		diceRollControl.reset();
+
+		if (player.getBoard().getOwner(from.getId()) != player.getPlayerid()) {
+			console.write(String.format("%s is not your territory!",
+					from.getName()));
+			from = null;
+			return false;
+		}
+
+		if (from.getNumberOfArmies() < 2) {
+			console.write(String.format(
+					"%s has too few armies",
+					from.getName()));
+			from = null;
+			return false;
+		}
+
+		return true;
 	}
+	
+	boolean isFortifyToValid(GUITerritory from, GUITerritory to,
+			Move move) {
+		
+		if (player.getBoard().getOwner(to.getId()) != player.getPlayerid()) {
+			console.write(String.format("%s is not your territory!",
+					from.getName()));
+			return false;
+		}
+		
+		return player.getMoveChecker().checkStartFortify(player.getPlayerid(), from.getId(), to.getId());
+	}
+	
 
 	// ================================================================================
 	// Buttons
@@ -428,6 +493,8 @@ public class GameController implements Initializable, PlayerController {
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
 			currentMove.setDecision(false);
+			mapControl.setSelectedFrom(null);
+			mapControl.setSelectedTo(null);
 			notifyMoveCompleted();
 			break;
 		case DECIDE_FORTIFY:
@@ -449,8 +516,8 @@ public class GameController implements Initializable, PlayerController {
 		}
 	}
 
-	public void onCardsButtonClick(ActionEvent event){
-		//cardsControl = new CardsControl();
+
+	public void onCardsButtonClick(ActionEvent event) {
 		openPopup(cardsControl);
 		cardsControl.showHand(player.getLogicPlayer().getHand());
 	}

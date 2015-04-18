@@ -3,8 +3,8 @@ package test.logic;
 import logic.rng.Int256;
 import logic.rng.RNG;
 import logic.rng.SeededGenerator;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+//import org.apache.commons.codec.DecoderException;
+//import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
@@ -36,7 +36,7 @@ public class RNGTests {
         assertEquals(2, (int)list.get(0));
     }
 
-    @Test
+/*    @Test
     public void testHexCodeCompatibility() throws DecoderException {
         String hex = "7add42d07f4261c642d59e7df2abd7fc9ca95fcbe087feeb7929a36f348c8d2f";
 
@@ -47,7 +47,7 @@ public class RNGTests {
         assertArrayEquals(apacheBytes, carsonBytes);
         assertArrayEquals(groupjBytes, apacheBytes);
     }
-
+*/
     private byte[] intArrayToByteArray(int[] ints) {
         ByteBuffer buf = ByteBuffer.allocate(32);
 

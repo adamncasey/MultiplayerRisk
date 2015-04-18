@@ -1,5 +1,6 @@
 package ui.game;
 
+import java.io.*;
 import java.util.*;
 
 import javafx.application.Platform;
@@ -27,13 +28,14 @@ public class GUIPlayer implements IPlayer {
 	private MoveChecker moveChecker;
 
 	private LocalPlayerHandler handler;
-	
+
 	private final int playerid;
 
-	public GUIPlayer(GameController gameController, String playerName, int playerid) {
+	public GUIPlayer(GameController gameController, String playerName,
+			int playerid) {
 		this.gameController = gameController;
 		this.playerName = playerName;
-		
+
 		this.playerid = playerid;
 	}
 
@@ -89,16 +91,24 @@ public class GUIPlayer implements IPlayer {
 		GameController.console.write(desc);
 		System.out.print(desc);
 
+        try{
+            FileWriter out = new FileWriter(String.format("log%d.txt", player.getUID()), true);
+            out.write(desc); 
+            out.close();
+        }catch(IOException e){
+        }
+
 		switch (move.getStage()) {
-//		case CARD_DRAWN:
-//			break;
-//		case CHOOSE_ATTACK_DICE:
-//			break;
-//		case CHOOSE_DEFEND_DICE:
-//			break;
+		// case CARD_DRAWN:
+		// break;
+		// case CHOOSE_ATTACK_DICE:
+		// break;
+		// case CHOOSE_DEFEND_DICE:
+		// break;
 		case CLAIM_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
+
 		case CARD_DRAWN:
 			System.out.print("Card drawn!");
 			break;
@@ -106,8 +116,18 @@ public class GUIPlayer implements IPlayer {
 //			break;
 //		case DECIDE_FORTIFY:
 //			break;
+		// case CARD_DRAWN:
+		// updateCards(move);
+		// break;
+		// case DECIDE_ATTACK:
+		// break;
+		// case DECIDE_FORTIFY:
+		// break;
+
 		case END_ATTACK:
-			if (isRealUserPlaying && (board.getOwner(move.getFrom()) == player.getUID() || board.getOwner(move.getTo()) == player.getUID())) {
+			if (isRealUserPlaying
+					&& (board.getOwner(move.getFrom()) == player.getUID() || board
+							.getOwner(move.getTo()) == player.getUID())) {
 				gameController.diceRollEnded(move);
 			}
 			postAttackMapUpdate(move);
@@ -116,10 +136,10 @@ public class GUIPlayer implements IPlayer {
 		case FORTIFY_TERRITORY:
 			updateMapMoveBetweenTerritories(move);
 			break;
-//		case GAME_BEGIN:
-//			break;
-//		case GAME_END:
-//			break;
+		// case GAME_BEGIN:
+		// break;
+		// case GAME_END:
+		// break;
 		case OCCUPY_TERRITORY:
 			updateMapMoveBetweenTerritories(move);
 			break;
@@ -131,18 +151,20 @@ public class GUIPlayer implements IPlayer {
 		case REINFORCE_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
-//		case ROLL_HASH:
-//			break;
-//		case ROLL_NUMBER:
-//			break;
-//		case SETUP_BEGIN:
-//			break;
-//		case SETUP_END:
-//			break;
-//		case START_ATTACK:
-//			break;
-//		case START_FORTIFY:
-//			break;
+		// case ROLL_HASH:
+		// break;
+		// case ROLL_NUMBER:
+		// break;
+		// case SETUP_BEGIN:
+		// break;
+		// case SETUP_END:
+		// break;
+		 case START_ATTACK:
+			 gameController.mapControl.setSelectedFrom(gameController.mapControl.getTerritoryByID(move.getFrom()));
+			 gameController.mapControl.setSelectedTo(gameController.mapControl.getTerritoryByID(move.getTo()));
+		 break;
+		// case START_FORTIFY:
+		// break;
 		case TRADE_IN_CARDS:
 			break;
 		default:
@@ -153,12 +175,13 @@ public class GUIPlayer implements IPlayer {
 		if (move.getUID() == player.getUID()) {
 			handler.sendMove(move);
 		}
-		
+
 		try {
 			Thread.sleep(15);
-		} catch (InterruptedException e) {}
+		} catch (InterruptedException e) {
+		}
 	}
-	
+
 	void updateMapSingleTerritory(Move move) {
 		gameController.mapControl.updateTerritory(move.getUID(),
 				board.getArmies(move.getTerritory()),
@@ -184,23 +207,21 @@ public class GUIPlayer implements IPlayer {
 	}
 
 	void postAttackMapUpdate(Move move) {
-		GUITerritory attackerTerritory = gameController.mapControl
-				.getTerritoryByID(move.getFrom());
-
-		GUITerritory defenderTerritory = gameController.mapControl
-				.getTerritoryByID(move.getTo());
-
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
+				gameController.mapControl.updateTerritory(board.getOwner(move
+						.getFrom()), board.getArmies(move.getFrom()),
+						gameController.mapControl.getTerritoryByID(move
+								.getFrom()));
 				gameController.mapControl.updateTerritory(
-						board.getOwner(attackerTerritory.getId()),
-						board.getArmies(move.getFrom()), attackerTerritory);
-				gameController.mapControl.updateTerritory(
-						board.getOwner(defenderTerritory.getId()),
-						board.getArmies(move.getTo()), defenderTerritory);
+						board.getOwner(move.getTo()),
+						board.getArmies(move.getTo()),
+						gameController.mapControl.getTerritoryByID(move.getTo()));
 			}
 		});
+		gameController.mapControl.setSelectedFrom(null);
+		gameController.mapControl.setSelectedTo(null);
 	}
 
 	public void getMove(Move move) {
@@ -231,7 +252,6 @@ public class GUIPlayer implements IPlayer {
 	public void setRealUserPlaying(boolean isRealUserPlaying) {
 		this.isRealUserPlaying = isRealUserPlaying;
 	}
-
 
 	@Override
 	public String getPlayerName() {

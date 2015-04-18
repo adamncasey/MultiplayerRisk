@@ -36,7 +36,7 @@ public class CaptureContinentsStrategy extends Strategy {
             return;
         }
         int bestContinent = -1;
-        double bestScore = 0;
+        double bestScore = -1;
         for(int i = 0; i != board.getNumContinents(); ++i){
             int myForces = 0;
             List<Integer> continent = board.getContinent(i);
@@ -46,7 +46,7 @@ public class CaptureContinentsStrategy extends Strategy {
                 }
             }
             double score = (double)myForces / (double)continent.size();
-            if(score >= bestScore && score != 1.0){
+            if(score > bestScore && (score < 1 || bestScore == -1) && score > 0){
                 bestContinent = i;
                 bestScore = score;
             }

@@ -262,6 +262,6 @@ public class CardsControl extends BorderPane{
     }
 
     public void clearCrads(){
-        
+
     }
 }

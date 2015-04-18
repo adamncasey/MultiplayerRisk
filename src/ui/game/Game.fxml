@@ -7,10 +7,12 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
+
 <?import ui.game.dice.DiceRollControl?>
 <?import ui.game.map.MapControl?>
 <?import ui.game.numericControl.NumericControl?>
 <?import ui.game.cards.CardsControl?>
+
 
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
@@ -62,7 +64,7 @@
                       <Insets />
                     </GridPane.margin>
                     <children>
-
+			
                       <MapControl fx:id="mapControl">
                       </MapControl>
 
@@ -72,6 +74,7 @@
                      <children>
                          <NumericControl fx:id="numericControl" visible="false">
                          </NumericControl>
+                        <Button fx:id="cardsButton" onAction="#onCardsButtonClick" text="Cards" />
 
                         <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" visible="false">
                         </Button>
@@ -120,10 +123,10 @@
 
             <DiceRollControl fx:id="diceRollControl" visible="false">
             </DiceRollControl>
-
+		
             <CardsControl fx:id="cardsControl" visible="false">
             </CardsControl>
-
+		
           </children>
         </Pane>
         <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />

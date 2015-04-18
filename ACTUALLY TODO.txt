@@ -1,0 +1,12 @@
+Extra armies. Hard to work out why the game keeps asking for more reinforcements.
+	Highlight territories you are allowed to place armies on?
+	Or just display text in console?
+Change text in top right of UI to be clearer
+Change text on "Done" buttons. "End Attack", "Skip Fortify" ?
+30-40 territories. Number to occupy with gets hard to select. 
+"The Stage * not implemented" prints in game console.
+
+When "back" is pressed on create game or direct connect screens. We should be closing the lobby threads.
+When the window is closed, not all threads die. This needs fixing
+
+On Windows, the Main Screen background is offset by a few pixels.

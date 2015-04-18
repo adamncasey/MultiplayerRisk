@@ -76,10 +76,6 @@ public class NetworkClient {
         throw new RuntimeException("Received invalid object in messageQueue: " + obj.getClass().toString() + " : " + obj.toString());
     }
 
-    public void sendMessage(Message message) throws ConnectionLostException {
-        throw new RuntimeException("Not implemented sending messages directly to specific NetworkClients");
-    }
-
     protected void addMessageToQueue(Message msg) {
 
         // TODO Handle leave_game messages here?

@@ -1,5 +1,6 @@
 package ui.game;
 
+import java.io.*;
 import java.util.*;
 
 import javafx.application.Platform;
@@ -85,6 +86,13 @@ public class GUIPlayer implements IPlayer {
 		String desc = Move.describeMove(move, board);
 		GameController.console.write(desc);
 		System.out.print(desc);
+
+        try{
+            FileWriter out = new FileWriter(String.format("log%d.txt", player.getUID()), true);
+            out.write(desc); 
+            out.close();
+        }catch(IOException e){
+        }
 
 		switch (move.getStage()) {
 		// case CARD_DRAWN:

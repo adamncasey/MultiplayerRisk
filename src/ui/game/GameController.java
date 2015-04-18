@@ -226,8 +226,20 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 
-		// case FORTIFY_TERRITORY:
-		// break;
+		 case FORTIFY_TERRITORY:
+				numericControl.initialise(new NumberSelectedEventHandler() {
+					@Override
+					public void onSelected(int number) {
+						hideNumericControl();
+						currentMove.setArmies(number);
+						notifyMoveCompleted();
+					}
+				}, String.format(
+						"How many armies would move from %s to %s", player
+								.getBoard().getName(move.getFrom()), player
+								.getBoard().getName(move.getTo())), 1, move.getCurrentArmies()-1);
+				showNumericControl();
+		 break;
 
 		case DECIDE_ATTACK:
 			showActionButton("Done");

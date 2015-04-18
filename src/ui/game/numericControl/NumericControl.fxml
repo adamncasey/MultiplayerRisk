@@ -12,45 +12,40 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
 
-<fx:root prefHeight="450" prefWidth="650" styleClass="background" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefWidth="310" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <top>
-    <Label fx:id="title" styleClass="title" text="Occupy" BorderPane.alignment="CENTER">
+    <Label fx:id="title" styleClass="title" text="Title" wrapText="true" BorderPane.alignment="CENTER">
       <BorderPane.margin>
         <Insets top="20.0" />
       </BorderPane.margin>
     </Label>
   </top>
   <center>
-    <GridPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" vgap="10.0" BorderPane.alignment="CENTER">
+    <GridPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0" vgap="10.0" BorderPane.alignment="CENTER">
       <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
       </columnConstraints>
       <rowConstraints>
         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="NEVER" />
       </rowConstraints>
       <children>
-        <Label text="How many armies would you like to use:" GridPane.columnIndex="0" GridPane.rowIndex="0">
-          <GridPane.margin>
-            <Insets left="40.0" />
-          </GridPane.margin>
-        </Label>
         <ChoiceBox fx:id="choiceBox" prefWidth="60.0">
           <GridPane.margin>
-            <Insets left="350.0" />
+            <Insets />
           </GridPane.margin>
         </ChoiceBox>
-        <Button onAction="#submit" text="Occupy" GridPane.halignment="RIGHT">
+        <Button onAction="#submit" text="Select" GridPane.halignment="LEFT">
           <GridPane.margin>
-            <Insets right="70.0" />
+            <Insets left="100.0" />
           </GridPane.margin>
         </Button>
       </children>
       <BorderPane.margin>
-        <Insets bottom="30.0" left="20.0" right="20.0" top="50.0" />
+        <Insets left="20.0" right="20.0" top="30.0" />
       </BorderPane.margin>
     </GridPane>
   </center>
   <stylesheets>
-    <URL value="@Popup.css" />
+    <URL value="@NumericControl.css" />
   </stylesheets>
 </fx:root>

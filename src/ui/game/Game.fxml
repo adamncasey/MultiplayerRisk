@@ -7,12 +7,10 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-
 <?import ui.game.dice.DiceRollControl?>
 <?import ui.game.map.MapControl?>
-<?import ui.game.popup.OccupyControl?>
+<?import ui.game.numericControl.NumericControl?>
 <?import ui.game.cards.CardsControl?>
-
 
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
@@ -57,51 +55,35 @@
         </GridPane>
       </top>
       <center>
-          <HBox alignment="CENTER" maxHeight="-Infinity" prefHeight="450.0">
+          <GridPane maxHeight="-Infinity" prefHeight="450.0" BorderPane.alignment="CENTER">
               <children>
-                  <GridPane maxWidth="-Infinity" prefWidth="120.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-                           <children>
-                              <Button fx:id="cardsButton" onAction="#onCardsButtonClick" text="Cards" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </GridPane>
-                  <Pane fx:id="centerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" GridPane.rowIndex="1">
+                  <Pane fx:id="centerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0">
                     <GridPane.margin>
-                      <Insets top="30.0" />
+                      <Insets />
                     </GridPane.margin>
                     <children>
-	
+
                       <MapControl fx:id="mapControl">
                       </MapControl>
-		
+
                     </children>
                   </Pane>
-                  <GridPane maxWidth="-Infinity" prefWidth="120.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                  <VBox spacing="20.0" GridPane.columnIndex="1" GridPane.halignment="LEFT">
                      <children>
-                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-                           <children>
-                              <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" visible="false" />
-                           </children>
-                        </VBox>
+                        <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" visible="false" />
+                        <NumericControl fx:id="numericControl" visible="false">
+                        </NumericControl>
                      </children>
-                  </GridPane>
+                  </VBox>
               </children>
-          </HBox>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints hgrow="ALWAYS" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
+          </GridPane>
 
       </center>
       <bottom>
@@ -133,14 +115,13 @@
       <children>
         <Pane fx:id="popupContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
           <children>
-	
-		<DiceRollControl fx:id="diceRollControl" visible="false">
-            </DiceRollControl>
-            <OccupyControl fx:id="occupyControl" visible="false">
-            </OccupyControl>
 
-		<CardsControl fx:id="cardsControl" visible="false">
-		</CardsControl>
+            <DiceRollControl fx:id="diceRollControl" visible="false">
+            </DiceRollControl>
+
+            <CardsControl fx:id="cardsControl" visible="false">
+            </CardsControl>
+
           </children>
         </Pane>
         <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />

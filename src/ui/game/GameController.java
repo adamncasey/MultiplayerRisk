@@ -29,8 +29,8 @@ import ui.game.dice.DiceRollControl;
 import ui.game.dice.DiceRollResult;
 import ui.game.map.GUITerritory;
 import ui.game.map.MapControl;
-import ui.game.popup.OccupyControl;
-import ui.game.popup.OccupyNumberOfArmiesEventHandler;
+import ui.game.numericControl.NumberSelectedEventHandler;
+import ui.game.numericControl.NumericControl;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class GameController implements Initializable, PlayerController {
 	@FXML
 	DiceRollControl diceRollControl;
 	@FXML
-	OccupyControl occupyControl;
+	NumericControl numericControl;
 	@FXML
 	CardsControl cardsControl;
 	@FXML
@@ -278,19 +278,20 @@ public class GameController implements Initializable, PlayerController {
 			break;
 
 		case OCCUPY_TERRITORY:
-			showActionButton("Occupy "
-					+ player.getBoard().getName(move.getTo()));
-			occupyControl.initialise(new OccupyNumberOfArmiesEventHandler() {
+			numericControl.initialise(new NumberSelectedEventHandler() {
 				@Override
-				public void onNumberOfArmiesSelected(int numberOfArmies) {
-					currentMove.setArmies(numberOfArmies);
+				public void onSelected(int number) {
+					hideNumericControl();
+					currentMove.setArmies(number);
 					closePopup(null);
 					notifyMoveCompleted();
 				}
-			}, mapControl.getTerritoryByID(move.getTo()).getName(),
+			}, String.format(
+					"How many armies would you like to occupy %s with", player
+							.getBoard().getName(move.getTo())),
 					lastAttackerNumberOfArmiesSurvived,
 					move.getCurrentArmies() - 1);
-			openPopup(occupyControl);
+			showNumericControl();
 			break;
 
 		default:
@@ -389,8 +390,9 @@ public class GameController implements Initializable, PlayerController {
 					+ " not implemented");
 		}
 	}
-	
+
 	boolean diceMoveDismissed = false;
+
 	public synchronized void diceRollEnded(Move move) {
 		diceMoveDismissed = false;
 
@@ -410,7 +412,7 @@ public class GameController implements Initializable, PlayerController {
 		}
 		diceRollControl.reset();
 	}
-	
+
 	// ================================================================================
 	// User move validation
 	// ================================================================================
@@ -445,7 +447,7 @@ public class GameController implements Initializable, PlayerController {
 
 		return valid;
 	}
-	
+
 	boolean isFortifyFromValid(GUITerritory from, Move move) {
 		if (from == null) {
 			return false;
@@ -459,28 +461,25 @@ public class GameController implements Initializable, PlayerController {
 		}
 
 		if (from.getNumberOfArmies() < 2) {
-			console.write(String.format(
-					"%s has too few armies",
-					from.getName()));
+			console.write(String.format("%s has too few armies", from.getName()));
 			from = null;
 			return false;
 		}
 
 		return true;
 	}
-	
-	boolean isFortifyToValid(GUITerritory from, GUITerritory to,
-			Move move) {
-		
+
+	boolean isFortifyToValid(GUITerritory from, GUITerritory to, Move move) {
+
 		if (player.getBoard().getOwner(to.getId()) != player.getPlayerid()) {
 			console.write(String.format("%s is not your territory!",
 					from.getName()));
 			return false;
 		}
-		
-		return player.getMoveChecker().checkStartFortify(player.getPlayerid(), from.getId(), to.getId());
+
+		return player.getMoveChecker().checkStartFortify(player.getPlayerid(),
+				from.getId(), to.getId());
 	}
-	
 
 	// ================================================================================
 	// Buttons
@@ -500,14 +499,12 @@ public class GameController implements Initializable, PlayerController {
 			currentMove.setDecision(false);
 			notifyMoveCompleted();
 			break;
+
 		case CHOOSE_ATTACK_DICE:
 			openPopup(diceRollControl);
 			break;
 		case CHOOSE_DEFEND_DICE:
 			openPopup(diceRollControl);
-			break;
-		case OCCUPY_TERRITORY:
-			openPopup(occupyControl);
 			break;
 
 		default:
@@ -534,6 +531,27 @@ public class GameController implements Initializable, PlayerController {
 			@Override
 			public void run() {
 				actionButton.setVisible(false);
+			}
+		});
+	}
+
+	// ================================================================================
+	// Numeric input control
+	// ================================================================================
+	public void showNumericControl() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				numericControl.setVisible(true);
+			}
+		});
+	}
+
+	public void hideNumericControl() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				numericControl.setVisible(false);
 			}
 		});
 	}

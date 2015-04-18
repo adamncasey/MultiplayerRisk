@@ -1,4 +1,5 @@
-package ui.game.popup;
+package ui.game.numericControl;
+
 
 import java.io.IOException;
 
@@ -11,7 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-public class OccupyControl extends BorderPane {
+public class NumericControl extends BorderPane {
 
 	@FXML
 	Label title;
@@ -19,12 +20,12 @@ public class OccupyControl extends BorderPane {
 	ChoiceBox<Integer> choiceBox;
 
 	ObservableList<Integer> choices;
-	
-	OccupyNumberOfArmiesEventHandler onSubmit;
 
-	public OccupyControl() {
+	NumberSelectedEventHandler onSubmit;
+
+	public NumericControl() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-				"Occupy.fxml"));
+				"NumericControl.fxml"));
 		fxmlLoader.setRoot(this);
 		fxmlLoader.setController(this);
 		try {
@@ -33,20 +34,20 @@ public class OccupyControl extends BorderPane {
 			throw new RuntimeException(exception);
 		}
 	}
-	
-	public void initialise(OccupyNumberOfArmiesEventHandler e, String territory, int minArmies, int maxArmies) {
+
+	public void initialise(NumberSelectedEventHandler e, String message, int min, int max) {
 		onSubmit = e;
-		
+
 		choices = FXCollections.observableArrayList();
-		
-		for (int i = minArmies; i <= maxArmies; i++) {
+
+		for (int i = min; i <= max; i++) {
 			choices.add(i);
 		}
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				title.setText(String.format("Occupy %s", territory));
+				title.setText(message);
 				choiceBox.setItems(choices);
 			}
 		});
@@ -56,6 +57,6 @@ public class OccupyControl extends BorderPane {
 	protected void submit() {
 		int selectedNumber = (int) choiceBox.getSelectionModel()
 				.getSelectedItem();
-		onSubmit.onNumberOfArmiesSelected(selectedNumber);
+		onSubmit.onSelected(selectedNumber);
 	}
 }

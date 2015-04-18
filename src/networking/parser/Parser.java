@@ -236,10 +236,10 @@ public class Parser {
                 return singleIntegerPayload(payloadObj);
 
             case FORTIFY: // Null or ArmyMovement
-            case ATTACK: // ArmyMovement Payload or null
                 if(payloadObj == null) {
                     return null;
                 }
+            case ATTACK: // ArmyMovement Payload or null
             case ATTACK_CAPTURE:
                 validatePayloadType(payloadObj, JSONArray.class);
                 return new ArmyMovementPayload((JSONArray) payloadObj);

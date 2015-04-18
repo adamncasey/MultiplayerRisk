@@ -308,6 +308,7 @@ public class Move {
             String callingMethod = ste[2].getMethodName();
             String message = String.format("%s cannot be accessed from stage %s.", callingMethod, Move.stageName(stage));
             System.err.println(message);
+            System.err.println(ste.toString());
             System.exit(-1);
         }
     }
@@ -522,51 +523,7 @@ public class Move {
 
     // Returns a string describing what has just happened.
     public static String stageName(Stage s){
-        switch(s){
-            case CLAIM_TERRITORY:
-                return "CLAIM_TERRITORY";
-            case REINFORCE_TERRITORY:
-                return "REINFORCE_TERRITORY";
-            case TRADE_IN_CARDS:
-                return "TRADE_IN_CARDS";
-            case PLACE_ARMIES:
-                return "PLACE_ARMIES";
-            case DECIDE_ATTACK:
-                return "DECIDE_ATTACK";
-            case START_ATTACK:
-                return "START_ATTACK";
-            case CHOOSE_ATTACK_DICE:
-                return "CHOOSE_ATTACK_DICE";
-            case CHOOSE_DEFEND_DICE:
-                return "CHOOSE_DEFEND_DICE";
-            case ROLL_HASH:
-                return "ROLL_HASH";
-            case ROLL_NUMBER:
-                return "ROLL_NUMBER";
-            case OCCUPY_TERRITORY:
-                return "OCCUPY_TERRITORY";
-            case DECIDE_FORTIFY:
-                return "DECIDE_FORTIFY";
-            case START_FORTIFY:
-                return "START_FORTIFY";
-            case FORTIFY_TERRITORY:
-                return "FORTIFY_TERRITORY";
-            case END_ATTACK:
-                return "END_ATTACK";
-            case PLAYER_ELIMINATED:
-                return "PLAYER_ELIMINATED";
-            case CARD_DRAWN:
-                return "CARD_DRAWN";
-            case SETUP_BEGIN:
-                return "SETUP_BEGIN";
-            case SETUP_END:
-                return "SETUP_END";
-            case GAME_BEGIN:
-                return "GAME_BEGIN";
-            case GAME_END:
-                return "GAME_END";
-        }
-        return null;
+        return s.name();
     }
 
     public static void setNames(Map<Integer, String> playerNames){

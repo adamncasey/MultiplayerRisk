@@ -172,7 +172,6 @@ public class GameController implements Initializable, PlayerController {
 	boolean moveCompleted = false;
 	Player userDetails;
 
-	GUITerritory attackFrom;
 	int lastAttackerNumberOfArmiesSurvived;
 
 	@Override
@@ -223,6 +222,13 @@ public class GameController implements Initializable, PlayerController {
 			ps.getMove(move);
 			moveCompleted = true;
 			break;
+			
+		case START_ATTACK:
+			currentMove.setFrom(mapControl.getSelectedFrom().getId());
+			currentMove.setTo(mapControl.getSelectedTo().getId());
+			notifyMoveCompleted();
+			break;
+			
 		case CHOOSE_ATTACK_DICE:
 			showActionButton("Continue");
 			
@@ -320,17 +326,9 @@ public class GameController implements Initializable, PlayerController {
 			notifyMoveCompleted();
 			break;
 		case DECIDE_ATTACK:
-			if (isAttackFromValid(territory, currentMove)) {
-				currentMove.setDecision(true);
-				this.attackFrom = territory;
-				notifyMoveCompleted();
-			}
-
-			break;
-		case START_ATTACK:
-			if (attackFrom == null) {
+			if (mapControl.getSelectedFrom() == null) {
 				if (isAttackFromValid(territory, currentMove)) {
-					this.attackFrom = territory;
+					mapControl.setSelectedFrom(territory);
 					console.write("Choose a territory to attack");
 				} else {
 					console.write("Choose a territory to attack from");
@@ -340,17 +338,21 @@ public class GameController implements Initializable, PlayerController {
 			}
 
 			// Selecting attack to
-			if (isAttackToValid(attackFrom, territory, currentMove)) {
-				currentMove.setFrom(attackFrom.getId());
-				currentMove.setTo(territory.getId());
+			if (isAttackToValid(mapControl.getSelectedFrom(), territory, currentMove)) {
+				mapControl.setSelectedTo(territory);
+				currentMove.setDecision(true);
 				notifyMoveCompleted();
 			} else {
-				attackFrom = null;
+				mapControl.setSelectedFrom(null);
 				console.write("Inavalid attack move");
 				console.write("Choose a territory to attack from");
 			}
 
 			break;
+			
+//		case START_ATTACK:
+//			break;
+			
 
 		// case DECIDE_FORTIFY:
 		// break;
@@ -427,6 +429,8 @@ public class GameController implements Initializable, PlayerController {
 		switch (currentMove.getStage()) {
 		case DECIDE_ATTACK:
 			currentMove.setDecision(false);
+			mapControl.setSelectedFrom(null);
+			mapControl.setSelectedTo(null);
 			notifyMoveCompleted();
 			break;
 		case DECIDE_FORTIFY:

@@ -2,6 +2,7 @@ package ui.game.dice;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,7 @@ public class DiceRollControl extends BorderPane {
 	HBox enemyDiceHBox;
 
 	@FXML
-	Label winnerName;
+	Label results;
 
 	private boolean isDiceMoveCompleted = false;
 
@@ -56,6 +57,8 @@ public class DiceRollControl extends BorderPane {
 				for (int defendDie : results.defendingDice) {
 					defenderHBox.getChildren().add(getDie(defendDie));
 				}
+				
+				DiceRollControl.this.results.setText(String.format("The attacker lost %d armies, the defender lost %d armies.\n", attackerLosses, defenderLosses));
 			}
 		});
 	}
@@ -81,6 +84,7 @@ public class DiceRollControl extends BorderPane {
 			public void run() {
 				userDiceHBox.getChildren().clear();
 				enemyDiceHBox.getChildren().clear();
+				DiceRollControl.this.results.setText("");
 			}
 		});
 	}

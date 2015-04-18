@@ -153,8 +153,6 @@ public class Networking {
             return false;
         }
 
-        System.out.println("\tMessage::playerid " + ack.playerid);
-
         if(ack.command != Command.ACKNOWLEDGEMENT) {
             throw new RuntimeException("invalid message received: " + ack.command);
         }

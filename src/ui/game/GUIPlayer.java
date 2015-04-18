@@ -1,5 +1,6 @@
 package ui.game;
 
+import java.io.*;
 import java.util.*;
 
 import javafx.application.Platform;
@@ -47,6 +48,10 @@ public class GUIPlayer implements IPlayer {
 		this.moveChecker = checker;
 	}
 
+	public Player getLogicPlayer(){
+		return this.player;
+	}
+
 	public void nextMove(String move, int playerID) {
 		GameController.console.write(move);
 
@@ -86,6 +91,13 @@ public class GUIPlayer implements IPlayer {
 		GameController.console.write(desc);
 		System.out.print(desc);
 
+        try{
+            FileWriter out = new FileWriter(String.format("log%d.txt", player.getUID()), true);
+            out.write(desc); 
+            out.close();
+        }catch(IOException e){
+        }
+
 		switch (move.getStage()) {
 		// case CARD_DRAWN:
 		// break;
@@ -96,6 +108,14 @@ public class GUIPlayer implements IPlayer {
 		case CLAIM_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
+
+		case CARD_DRAWN:
+			System.out.print("Card drawn!");
+			break;
+//		case DECIDE_ATTACK:
+//			break;
+//		case DECIDE_FORTIFY:
+//			break;
 		// case CARD_DRAWN:
 		// updateCards(move);
 		// break;
@@ -103,6 +123,7 @@ public class GUIPlayer implements IPlayer {
 		// break;
 		// case DECIDE_FORTIFY:
 		// break;
+
 		case END_ATTACK:
 			if (isRealUserPlaying
 					&& (board.getOwner(move.getFrom()) == player.getUID() || board

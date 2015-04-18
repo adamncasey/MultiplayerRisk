@@ -208,9 +208,10 @@ public class Game implements Runnable {
 			defendingDice = move.getDefendDice();
 			updatePlayers(move);
 
-			List<Integer> attackDiceRolls = performDiceRolls(attackingDice);
+            List<Integer> allRolls = performDiceRolls(attackingDice + defendingDice);
 
-			List<Integer> defendDiceRolls = performDiceRolls(defendingDice);
+            List<Integer> attackDiceRolls = allRolls.subList(0, attackingDice);
+            List<Integer> defendDiceRolls = allRolls.subList(attackingDice, attackingDice + defendingDice);
 
 			List<Integer> attackResult = state.decideAttackResult(
 					attackDiceRolls, defendDiceRolls);

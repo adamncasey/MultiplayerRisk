@@ -13,6 +13,8 @@ import networking.parser.ParserException;
 import player.IPlayer;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class NetworkPlayer implements IPlayer {
@@ -34,6 +36,8 @@ public class NetworkPlayer implements IPlayer {
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
 
+    private Logger logger;
+
 
     // State which is required between calls from Game Logic.
     // TODO I don't like the weird state going on here
@@ -54,6 +58,8 @@ public class NetworkPlayer implements IPlayer {
         unprocessedMessage = null;
         
         this.remotePlayerID = remotePlayerID;
+
+        logger = Logger.getLogger("NetworkPlayer ("+client.getName()+")");
     }
 
     @Override
@@ -83,18 +89,17 @@ public class NetworkPlayer implements IPlayer {
             }
 
             if(previousMove.getStage() == Move.Stage.DECIDE_FORTIFY) {
-                System.out.println("Potentially getting DECIDE_FORTIFY message");
+                logger.log(Level.FINE, "Potentially getting DECIDE_FORTIFY message");
                 if(previousMove.getDecision() || receivedNullFortify) {
 
-                    System.out.println("Not getting DECIDE_FORTIFY because :" + previousMove.getDecision() + " " + receivedNullFortify);
+                    logger.log(Level.FINE, "Not getting DECIDE_FORTIFY because :" + previousMove.getDecision() + " " + receivedNullFortify);
                     receivedNullFortify = false;
                     return;
                 }
 
                 // Receive FORTIFY payload: null and acknowledge this.
-                // TODO: Weird hack, might work.
                 getMove(previousMove);
-                System.out.println("Getting DECIDE_FORTIFY message");
+                logger.log(Level.FINE, "Getting DECIDE_FORTIFY message");
 
                 return;
             }
@@ -129,9 +134,9 @@ public class NetworkPlayer implements IPlayer {
         }
 
         // Receive acknowledgements from all players but the playerid of the message
-        System.out.println("Waiting for acknowledgements from " + players.size() + "players");
+        logger.log(Level.FINE, "Waiting for acknowledgements from " + players.size() + "players");
         List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
-        System.out.println("Received acknowledgement from " + responses.size() + "players");
+        logger.log(Level.FINE, "Received acknowledgement from " + responses.size() + "players");
     }
 
 	@Override
@@ -183,11 +188,9 @@ public class NetworkPlayer implements IPlayer {
             response = Acknowledgement.acknowledgeMessage(msg, localPlayerID);
 
             client.router.sendToAllPlayers(response);
-            System.out.println("Sent acknowledgement");
 
             // receive acknowledgements from all players but us and the person who sent the message.
             List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
-            System.out.println("Received acknowledgement from " + responses.size() + "players");
         }
 	}
 
@@ -241,9 +244,9 @@ public class NetworkPlayer implements IPlayer {
             	}
 
                 int numArmiesLeft = move.getCurrentArmies() + move.getExtraArmies() - move.getArmies();
-                System.out.println("PLACE_ARMIES to Network Message " + numArmiesLeft + ": " + move.getCurrentArmies() + " "+ move.getExtraArmies() + " " + move.getArmies());
+                logger.log(Level.FINE, "PLACE_ARMIES to Network Message " + numArmiesLeft + " unplaced armies");
                 if (numArmiesLeft == 0) {
-                    System.out.println("PLACE_ARMIES Message sending");
+                    logger.log(Level.FINE, "Command.DEPLOY sending");
                     // Create DeployPayload
                     int[][] deployments = partialDeployment.toArray(new int[partialDeployment.size()][]);
                     partialDeployment.clear();
@@ -563,10 +566,9 @@ public class NetworkPlayer implements IPlayer {
             }
         }
 
-        System.out.println("Waiting for acknowledgements from " + players.size() + "players");
+        logger.log(Level.FINE, "Waiting for acknowledgements from " + players.size() + "players");
 
-        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(client.router, message, players);
-        System.out.println("Received acknowledgement from " + responses.size() + "players");
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(message, players);
 
         if(removed != null)
             players.add(removed);

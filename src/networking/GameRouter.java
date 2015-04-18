@@ -39,8 +39,6 @@ public class GameRouter {
         players.add(player);
 
         connections.put(conn, players);
-
-        System.out.println("Router addRoute(" + player.playerid + ", " + conn.getPort() + ")");
     }
 
     public void removeRoute(NetworkClient player, IConnection conn) {
@@ -58,8 +56,6 @@ public class GameRouter {
         }
 
         connections.put(conn, players);
-
-        System.out.println("Router removeRoute(" + player.playerid + ", " + conn.getPort() + ")");
     }
 
     public void removeAllRoutes(NetworkClient player) {
@@ -78,8 +74,6 @@ public class GameRouter {
         destinations.add(resendDest);
 
         connectionBridges.put(msgSource, destinations);
-        // TODO Verbose log level
-        //System.out.println("Router addBridge(" + msgSource.getPort() + ", " + resendDest.getPort() + ")");
     }
 
     public int getNumPlayers() {
@@ -144,8 +138,6 @@ public class GameRouter {
         }
 
         for(IConnection dest : destinations) {
-
-            System.out.println("Forwarded message from " + conn.getPort() + " to " + dest.getPort());
             sendToConnection(msg, dest);
         }
     }
@@ -166,8 +158,8 @@ public class GameRouter {
         NetworkClient client = findNetworkClient(playerid);
 
         if(client == null) {
-            //Log received message with playerid for which we have no client registered in the router
-            System.out.println("Cannot route message to NetworkClient: Received msg.playerid=" + msg.playerid);
+            // Log received message with playerid for which we have no client registered in the router
+            System.err.println("Cannot route message to NetworkClient: Received msg.playerid=" + msg.playerid);
             return;
         }
 

@@ -81,16 +81,14 @@ public class LocalGameLobby extends Thread {
 
                     netClients.add(newPlayer);
 
-                    // TODO Send PLAYERS_JOINED command.
                     playersJoined(router, netClients);
                 }
             }
 
             closeSocket(server);
         } catch (Exception e) {
-            // TODO: Log/handle exception properly.
             handler.onFailure(e);
-            throw new RuntimeException("Exception occurred in whilst getting client in Host Lobby loop." + e.getMessage());
+            return;
         }
 
         if(!isLobbyCancelled()) {
@@ -103,9 +101,13 @@ public class LocalGameLobby extends Thread {
             int firstPlayer;
 
             try {
-                pingMessage(router);
+                if(!pingMessage(router)) {
+                    return;
+                }
 
-                readyMessage(router);
+                if(!readyMessage(router)) {
+                    return;
+                }
 
                 // Pick version & features compatible with players...
                 initialiseMessage(router);
@@ -117,7 +119,6 @@ public class LocalGameLobby extends Thread {
                 LobbyUtil.shuffleCards(router, LocalGameLobby.HOST_PLAYERID, netClients, deck, handler); // perhaps GameRouter is needed here?
 
             } catch(InterruptedException e) {
-                // TODO Log exception?
                 handler.onFailure(e);
                 return;
             }
@@ -128,7 +129,6 @@ public class LocalGameLobby extends Thread {
 
             LobbyUtil.createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
 
-            // TODO Pass cards up to onLobbyComplete handler
             handler.onLobbyComplete(playersBefore, playersAfter, deck);
         }
 	}
@@ -164,7 +164,7 @@ public class LocalGameLobby extends Thread {
             try {
                 socket.close();
             } catch (IOException e) {
-                // TODO Not sure we care if there is an exception on close.
+                // This exception would have no impact on any part of the game.
             }
         }
     }
@@ -213,10 +213,6 @@ public class LocalGameLobby extends Thread {
                 Throwable ex = e.getCause();
 
                 handler.onFailure(ex);
-                // TODO tidy this up when onFailure is confirmed to be a working error handler.
-                // TODO Should we also log this?
-                e.printStackTrace();
-                ex.printStackTrace();
 
                 success = false;
             }
@@ -227,12 +223,10 @@ public class LocalGameLobby extends Thread {
 
     private boolean handlePingReply(Message msg) {
         if(msg.command != Command.PING) {
-            //TODO Properly handle receive invalid message from client
             handler.onFailure(new RuntimeException("Unhandled Invalid message received from client"));
             return false;
         }
 
-        // TODO: Verify we receive a ping from each playerid, not just the right number? Done by GameRouter?
         handler.onPingReceive(msg.playerid);
         return true;
     }
@@ -267,7 +261,7 @@ public class LocalGameLobby extends Thread {
         double version = 1.0;
         String[] features = new String[0];
 
-        // TODO This probably shouldn't be hard coded. But actually working this out isn't exactly simple.
+        // TODO This version number shouldn't be hard coded. However finding a subset of supported features / versions is full of problems.
         InitialiseGamePayload payload = new InitialiseGamePayload(version, features);
         Message msg = new Message(Command.INITIALISE_GAME, HOST_PLAYERID, payload, false);
 
@@ -301,17 +295,6 @@ public class LocalGameLobby extends Thread {
         return null;
     }
 
-    private LobbyMulticastThread startMulticastThread() {
-        // TODO: This is not spec'ed, not used at the moment
-        // Start broadcasting the lobby.
-
-        LobbyMulticastThread multicastThread = new LobbyMulticastThread("" /*friendlyName*/);
-        multicastThread.start();
-
-        return multicastThread;
-        // TODO: Also needs stopMulticastThread
-    }
-
     /**
      * Checks the lobbyOpen value in a thread-safe manner.
      * @return lobbyOpen
@@ -323,25 +306,10 @@ public class LocalGameLobby extends Thread {
     private synchronized boolean isLobbyCancelled() {
         return lobbyCancelled;
     }
-    
-    public synchronized void closeLobby() {
-    	lobbyOpen = false;
-    	try {
-    		if(server != null) {
-    			server.close();
-    		}
-		} catch (Exception e) {
-		}
-    }
-    
+
     public synchronized void cancelLobby() {
     	lobbyCancelled = true;
     	lobbyOpen = false;
-    	try {
-    		if(server != null) {
-    			server.close();
-    		}
-		} catch (Exception e) {
-		}
+    	closeSocket(server);
     }
 }

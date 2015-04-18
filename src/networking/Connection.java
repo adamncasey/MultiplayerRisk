@@ -50,7 +50,7 @@ public class Connection implements IConnection {
 		if (out.checkError())
 			throw new ConnectionLostException();
 
-		if(Settings.printNetworkMessages) {
+		if(Settings.PRINT_NETWORK_TRAFFIC) {
 			System.out.println("Sent: " + message);
 		}
 	}
@@ -60,7 +60,7 @@ public class Connection implements IConnection {
 		try {
 			String message = in.readLine();
 
-			if(Settings.printNetworkMessages) {
+			if(Settings.PRINT_NETWORK_TRAFFIC) {
 				System.out.println("Received: " + message);
 			}
 

@@ -12,8 +12,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LobbyUtil {
+
+    static Logger logger = Logger.getLogger("LobbyUtil");
 
     // TODO Revisit this to simplify?
     public static void createIPlayersInOrder(List<NetworkClient> clients, int firstID, int ourPlayerID, List<IPlayer> playersBefore, List<IPlayer> playersAfter) {
@@ -105,8 +109,6 @@ public class LobbyUtil {
 
         result -= 1; // We want to index from 0, not 1.
 
-        System.out.println("Player Order Dice result: " + result + "th player");
-
         // Convert from the player number, to the player ID.
         // Required because player IDs might not be continuous at this point.
         // Eg 2nd player goes first. Playerids = (0, 5, 6). Playerid must be 5.
@@ -122,7 +124,7 @@ public class LobbyUtil {
 
         int playerid = playerids.get(result);
 
-        System.out.println("Player Order Dice result: Playerid going first:" + playerid);
+        logger.log(Level.FINE, "Dice roll outcome: " + result + " playerid plays first");
 
         return playerid;
     }
@@ -136,17 +138,11 @@ public class LobbyUtil {
             throw new RuntimeException("Cannot roll dice to shuffle cards.");
         }
 
-        System.out.println("Deck being shuffled");
-
         int i = 0;
         for (int num : randomNumbers) {
-
-            System.out.println(i + " swaps with " + num);
             num -= 1; // Dice roll code produces 1-indexed numbers, we need zero-indexed.
 
             deck.shuffleSwap(i++, num);
         }
-        
-        deck.printCards();
     }
 }

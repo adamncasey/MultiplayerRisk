@@ -6,11 +6,15 @@ import networking.parser.ParserException;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Adam on 08/02/2015.
  */
 public class NetworkClient {
+
+    Logger logger = Logger.getLogger("NetworkClient");
 
     public final int playerid;
     private String name;
@@ -53,8 +57,7 @@ public class NetworkClient {
 
     private Message processQueuedObject(Object obj) throws TimeoutException, ConnectionLostException, ParserException {
 
-        System.out.println("readMessage NetworkClient playerid: " + playerid);
-
+        logger.log(Level.FINE, "readMessage NetworkClient playerid: " + playerid);
 
         if(obj instanceof Message) {
             return (Message)obj;
@@ -77,7 +80,6 @@ public class NetworkClient {
 
     public void sendMessage(Message message) throws ConnectionLostException {
         throw new RuntimeException("Not implemented sending messages directly to specific NetworkClients");
-
     }
 
     protected void addMessageToQueue(Message msg) {
@@ -95,6 +97,6 @@ public class NetworkClient {
 
     private void addToQueue(Object obj) {
         messageQueue.add(obj);
-        System.out.println("Added object to queue playerid: " + playerid);
+        logger.log(Level.FINE, "readMessage NetworkClient playerid: " + playerid);
     }
 }

@@ -1,6 +1,5 @@
 package networking;
 
-import lobby.handler.LobbyEventHandler;
 import networking.message.payload.IntegerPayload;
 import networking.message.payload.JoinGamePayload;
 import networking.message.Message;
@@ -8,6 +7,7 @@ import networking.parser.Parser;
 import networking.parser.ParserException;
 import settings.Settings;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,26 +15,27 @@ import java.util.concurrent.*;
 
 // General "Networking Utilities" class.
 public class Networking {
-	/**
-	 * Gets a risk player connection from the socket
-	 * 
-	 * @param socket
-	 * @return A LobbyClient object, which may be used to accept or reject the
-	 *         join request.
-	 * @return null if an error occurs during the initial connection
-	 */
-	public static LobbyClient getLobbyClient(IConnection socket, int hostPlayerid) {
+
+    /**
+     * Gets a risk player connection from the socket
+     *
+     * @param socket - The socket to communicate with the client on
+     * @param hostPlayerid - The playerid of the host.
+     * @return A LobbyClient object, which may be used to accept or reject the
+     *         join request.
+     * @throws IOException on Socket error or invalid message received
+     */
+	public static LobbyClient getLobbyClient(IConnection socket, int hostPlayerid) throws IOException {
 
 		Message message;
 		try {
 			message = Networking.readMessage(socket);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
+			throw new IOException("Unable to read from newly connected client: " + e.getMessage());
 		}
 
 		if (message == null || message.command != Command.JOIN_GAME) {
-			return null;
+            throw new IOException("null, or otherwise invalid message received from newly connected client");
 		}
 
 		JoinGamePayload payload = (JoinGamePayload) message.payload;
@@ -47,10 +48,9 @@ public class Networking {
 	 * Reads a line from conn, and parses it as a JSON Object in the protocol
 	 * format.
 	 * 
-	 * @param conn
-	 *            - Connection to read from
+	 * @param conn Connection to read from
 	 * @return Message on success
-     * @throws Exception on error. ParserException for invalid packet.
+     * @throws ParserException on error. ParserException for invalid packet.
      * ConnectionLostException or TimeoutException for network related errors
 	 */
 	public static Message readMessage(IConnection conn) throws ParserException,
@@ -82,6 +82,7 @@ public class Networking {
         };
     }
 
+    // Re-usable thread pool.
     private static Executor executor;
     
     /**
@@ -94,7 +95,6 @@ public class Networking {
             throw new IllegalArgumentException("Cannot readMessage from empty collection of clients");
         }
 
-        //TODO: This will create a new thread pool every call. We should be able to cache this.
         if(executor == null) {
         	executor = Executors.newFixedThreadPool(clients.size());
         }
@@ -108,7 +108,7 @@ public class Networking {
     }
 
     /* Return list of players which acknowledged message */
-    public static List<Integer> readAcknowledgementsForMessageFromPlayers(GameRouter router, Message message, Collection<NetworkClient> players) {
+    public static List<Integer> readAcknowledgementsForMessageFromPlayers(Message message, Collection<NetworkClient> players) {
         List<Integer> result = new LinkedList<>();
         if(players.size() == 0) {
             return result;

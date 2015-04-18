@@ -165,7 +165,7 @@ public class DirectConnectController extends AnchorPane implements
 
 		@Override
 		public void onPlayerJoin(int playerid, String name) {
-			status("A player joined the lobby! (" + playerid + "): " + name);
+			status(name + " joined the lobby! (" + playerid + ")");
 		}
 
 		@Override

@@ -58,7 +58,6 @@ public class RemoteGameLobby extends Thread {
         }
     }
 
-    // TODO: Write custom Exceptions with user friendly error messages. (instead of just throwing RuntimeException)
     private void joinLobby() throws IOException {
 
         GameRouter router = new GameRouter();
@@ -85,13 +84,11 @@ public class RemoteGameLobby extends Thread {
         while(numPlayers == -1) {
             numPlayers = handleHostMessage(router, conn, host, otherPlayers);
         }
-        System.out.println("Host Ping received. numPlayers: " + numPlayers + ". otherPlayers size: " + otherPlayers.size());
 
         int firstPlayer;
         try {
             handlePings(router, host, otherPlayers); // callbacks: onPingReceive
 
-            System.out.println("Pings complete. numPlayers: " + numPlayers + ". otherPlayers size: " + otherPlayers.size());
             if(!handleReady(router, host, otherPlayers)) {
                 return; // callbacks: onReady + onReadyAcknowledge
             }
@@ -140,8 +137,6 @@ public class RemoteGameLobby extends Thread {
         }
 
         if(msg.command == Command.PLAYERS_JOINED) {
-            // Process it for new players? Ikd
-            System.out.println("Received a PLAYERS_JOINED message... Ignoring for now!");
             PlayersJoinedPayload payload = (PlayersJoinedPayload) msg.payload;
 
             for(PlayersJoinedPayload.PlayerInfo info : payload.info) {
@@ -186,7 +181,6 @@ public class RemoteGameLobby extends Thread {
         NetworkClient client = new NetworkClient(router, playerid, name, false);
         allPlayers.add(client);
         router.addRoute(client, conn);
-        System.out.println("Added client: " + playerid);
     }
 
     private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
@@ -216,9 +210,9 @@ public class RemoteGameLobby extends Thread {
         try {
             msg = host.readMessage();
         } catch(ParserException e) {
-            // TODO Clean up logging
             e.printStackTrace();
-            System.out.println(e.getMessage() + " cannot handle response");
+            handler.onFailure(e);
+            System.err.println(e.getMessage() + " cannot handle response");
             return false;
         } catch (TimeoutException e) {
 			e.printStackTrace();
@@ -226,7 +220,8 @@ public class RemoteGameLobby extends Thread {
 		}
 
         if(msg == null) {
-            throw new IOException("Networking error: Invalid or no message received from host.");
+            handler.onFailure(new IOException("Networking error: Invalid or no message received from host."));
+            return false;
         }
 
         if(msg.command == Command.JOIN_ACCEPT) {
@@ -244,7 +239,8 @@ public class RemoteGameLobby extends Thread {
             return false;
         }
         else {
-            throw new RuntimeException("Incorrect message received. Expected accept/reject_join_game. Received: " + msg.command.toString());
+            handler.onFailure(new RuntimeException("Incorrect message received. Expected accept/reject_join_game. Received: " + msg.command.toString()));
+            return false;
         }
     }
 
@@ -283,7 +279,6 @@ public class RemoteGameLobby extends Thread {
     }
 
     private void receivePingResponseFromConnections(Collection<NetworkClient> connections) throws InterruptedException {
-        System.out.println("receivePingResponseFromConnections " + connections.size());
         if(connections.size() == 0) {
             return;
         }
@@ -359,7 +354,7 @@ public class RemoteGameLobby extends Thread {
         List<NetworkClient> nonHostPlayers = new LinkedList<>(players);
         nonHostPlayers.remove(host);
 
-        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(router, msg, nonHostPlayers);
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(msg, nonHostPlayers);
 
         for(int playerid : responses) {
             handler.onReadyAcknowledge(playerid);

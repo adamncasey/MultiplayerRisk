@@ -6,12 +6,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
-
 import networking.Command;
 import settings.Settings;
-
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class Parser {
 

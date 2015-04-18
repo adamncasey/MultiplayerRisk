@@ -3,11 +3,8 @@ package networking.message.payload;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import networking.parser.PayloadParser;
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 

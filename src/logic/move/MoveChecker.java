@@ -1,9 +1,7 @@
 package logic.move;
 
 import java.util.List;
-
 import logic.Card;
-import logic.move.Move.Stage;
 import logic.rng.Int256;
 import logic.state.Board;
 import logic.state.GameState;

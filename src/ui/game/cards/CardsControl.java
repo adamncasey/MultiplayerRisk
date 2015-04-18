@@ -3,7 +3,6 @@ package ui.game.cards;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
@@ -11,11 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import logic.Card;
-import logic.state.Board;
-import logic.state.GameState;
-import player.IPlayer;
-
-import javax.xml.stream.EventFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -35,8 +29,6 @@ public class CardsControl extends BorderPane{
     ImageView noCard;
 
     boolean[] cellIsFree = new boolean[42];
-
-    private boolean isDiceMoveCompleted = false;
 
     private BooleanProperty isResultsVisible = new SimpleBooleanProperty(false);
 
@@ -191,7 +183,7 @@ public class CardsControl extends BorderPane{
         }
     }
 
-    EventHandler click = new EventHandler<MouseEvent>() {
+    EventHandler<MouseEvent> click = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent mouseEvent) {
             ImageView source = (ImageView) mouseEvent.getSource();
@@ -243,7 +235,7 @@ public class CardsControl extends BorderPane{
         int index = getFirstFreeCell();
         ImageView currentCell = cells[index];
         currentCell.setImage(cardImageMapping.get(name).getImage());
-        currentCell.addEventFilter(MouseEvent.MOUSE_CLICKED, click);
+        //currentCell.addEventFilter(MouseEvent.MOUSE_CLICKED, click);
         cellIsFree[index] = false;
     }
 
@@ -258,7 +250,7 @@ public class CardsControl extends BorderPane{
     public void removeCard(String name){
         ImageView currentCell = getCellWithCard(name);
         currentCell.setImage(noCard.getImage());
-        currentCell.removeEventFilter(MouseEvent.MOUSE_CLICKED, click);
+        //currentCell.removeEventFilter(MouseEvent.MOUSE_CLICKED, click);
     }
 
     public void clearCrads(){

@@ -11,15 +11,8 @@ import logic.Card;
 public class IsSubsetTest{
 
     private Card infantry; // an infantry card
-    private Card infantry2; // an infantry card with a different id
-    private Card infantry3; // an infantry card with another different id
     private Card cavalry; // a cavalry card
-    private Card cavalry2;
-    private Card cavalry3;
     private Card artillery; // an artillery card
-    private Card artillery2;
-    private Card artillery3;
-    private Card wildcard; // a wildcard
 
     @Before
     public void setupCards(){

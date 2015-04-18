@@ -1,20 +1,11 @@
 package test.logic;
 
 import logic.rng.Int256;
-import logic.rng.RNG;
 import logic.rng.SeededGenerator;
-//import org.apache.commons.codec.DecoderException;
-//import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
-
-import java.nio.ByteBuffer;
-import java.util.LinkedList;
-import java.util.List;
-
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Adam on 18/04/2015.
@@ -33,13 +24,13 @@ public class RNGTests {
         assertArrayEquals(groupjBytes, apacheBytes);
     }
 
-    private byte[] intArrayToByteArray(int[] ints) {
-        ByteBuffer buf = ByteBuffer.allocate(32);
-
-        for(int i : ints) {
-            buf.putInt(i);
-        }
-
-        return buf.array();
-    }
+//    private byte[] intArrayToByteArray(int[] ints) {
+//        ByteBuffer buf = ByteBuffer.allocate(32);
+//
+//        for(int i : ints) {
+//            buf.putInt(i);
+//        }
+//
+//        return buf.array();
+//    }
 }

@@ -11,7 +11,6 @@ import networking.message.Message;
 import networking.message.payload.*;
 import networking.parser.ParserException;
 import player.IPlayer;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,8 +29,6 @@ public class NetworkPlayer implements IPlayer {
     MoveChecker moveChecker;
     Player player;
     Set<NetworkClient> players;
-
-    private LocalPlayerHandler localPlayerHandler;
 
     // Used to store a message which is referred to in multiple Move Stages.
     private Message unprocessedMessage;
@@ -190,7 +187,7 @@ public class NetworkPlayer implements IPlayer {
             client.router.sendToAllPlayers(response);
 
             // receive acknowledgements from all players but us and the person who sent the message.
-            List<Integer> responses = readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
+            readAcknowledgementsIgnorePlayerid(msg, msg.playerid);
         }
 	}
 

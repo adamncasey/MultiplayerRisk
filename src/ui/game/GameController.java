@@ -1,16 +1,13 @@
 package ui.game;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.event.*;
+import javafx.fxml.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import logic.Game;
@@ -19,28 +16,16 @@ import logic.move.Move.Stage;
 import logic.state.Board;
 import logic.state.Deck;
 import logic.state.Player;
-import player.IPlayer;
-import player.PlayerController;
+import player.*;
 import networking.LocalPlayerHandler;
 import ui.game.cards.CardsControl;
-import ui.game.dice.AttackingDiceRollControlEventHandler;
-import ui.game.dice.DefendingDiceRollControlEventHandler;
-import ui.game.dice.DiceRollControl;
-import ui.game.dice.DiceRollResult;
-import ui.game.map.GUITerritory;
-import ui.game.map.MapControl;
-import ui.game.numericControl.NumberSelectedEventHandler;
-import ui.game.numericControl.NumericControl;
+import ui.game.dice.*;
+import ui.game.map.*;
+import ui.game.numericControl.*;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.ResourceBundle;
-import ai.agents.Agent;
-import ai.agents.RandomAgent;
+import java.util.*;
+import ai.agents.*;
 import ai.strategy.PassiveStrategy;
 
 public class GameController implements Initializable, PlayerController {
@@ -75,11 +60,10 @@ public class GameController implements Initializable, PlayerController {
 	List<IPlayer> players;
 
 	Deck deck;
-
 	Move currentMove;
-
 	Map<Integer, BorderPane> playerShields = new HashMap<Integer, BorderPane>();
 
+	
 	// ================================================================================
 	// Startup
 	// ================================================================================
@@ -102,8 +86,6 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	void setPlayers() {
-
-		// Add player shields for each player.
 		for (int i = 0; i < players.size(); i++) {
 			BorderPane pane = new BorderPane();
 			pane.setPrefSize(70, 60);
@@ -160,6 +142,7 @@ public class GameController implements Initializable, PlayerController {
 
 	}
 
+	
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
@@ -173,7 +156,6 @@ public class GameController implements Initializable, PlayerController {
 
 	boolean moveCompleted = false;
 	Player userDetails;
-
 	int lastAttackerNumberOfArmiesSurvived;
 
 	@Override
@@ -425,6 +407,7 @@ public class GameController implements Initializable, PlayerController {
 		diceRollControl.reset();
 	}
 
+	
 	// ================================================================================
 	// User move validation
 	// ================================================================================

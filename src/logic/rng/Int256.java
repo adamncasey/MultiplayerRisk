@@ -1,15 +1,11 @@
 package logic.rng;
 
-//import org.apache.commons.codec.DecoderException;
-//import org.apache.commons.codec.binary.Hex;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 public class Int256 {

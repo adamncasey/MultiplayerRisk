@@ -1,9 +1,7 @@
 package networking;
 
 import networking.message.Message;
-import networking.parser.Parser;
 import networking.parser.ParserException;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;

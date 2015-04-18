@@ -1,9 +1,7 @@
 package ai.strategy;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import logic.move.Move;
 import logic.state.Board;
 import logic.state.Player;

@@ -8,8 +8,6 @@ import java.util.List;
  */
 public class Continent {
 
-    private Integer ID;
-
     // Stores the IDs of the territories in the continent
     private List<Integer> territories;
 
@@ -17,7 +15,6 @@ public class Continent {
     private String name;
 
     public Continent(Integer id){
-        this.ID = id;
         this.territories = new ArrayList<Integer>();
         this.value = 0;
         this.name = "";

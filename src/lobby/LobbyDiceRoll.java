@@ -67,7 +67,7 @@ public class LobbyDiceRoll {
 
         ExecutorCompletionService<Message> ecs = Networking.readMessageFromConnections(otherPlayers);
 
-        for(NetworkClient client : otherPlayers) {
+        for(@SuppressWarnings("unused") NetworkClient client : otherPlayers) {
             try {
                 Future<Message> msg = ecs.take();
 
@@ -119,7 +119,9 @@ public class LobbyDiceRoll {
     }
 
     public static class DiceRollException extends Exception {
-        public DiceRollException(String msg) {
+		private static final long serialVersionUID = 4740712956119808077L;
+
+		public DiceRollException(String msg) {
             super(msg);
         }
     }

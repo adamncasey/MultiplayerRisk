@@ -16,7 +16,8 @@ public class SeededGenerator {
     private byte[] mixednumber = new byte[32];
     private int ptr = 0;
 
-    private SecureRandom sr;
+    @SuppressWarnings("unused")
+	private SecureRandom sr;
 
     private boolean finalised = false;
 

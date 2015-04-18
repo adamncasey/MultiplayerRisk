@@ -2,15 +2,11 @@ package test.logic.move;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import logic.move.Move;
 import logic.move.MoveChecker;
-import logic.rng.Int256;
 import logic.state.GameState;
-
 import static logic.move.Move.Stage.*;
 
 public class MoveCheckerTest {

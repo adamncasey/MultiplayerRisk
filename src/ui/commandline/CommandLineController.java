@@ -4,8 +4,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Random;
-
 import ai.agents.Agent;
 import ai.agents.RandomAgent;
 import logic.Card;
@@ -13,15 +11,12 @@ import logic.move.Move;
 import logic.move.Move.Stage;
 import logic.state.Board;
 import logic.state.Player;
-import player.IPlayer;
 import player.PlayerController;
 
 /**
  * CommandLineController --- Allows the user to control a player from the command line.
  */
 public class CommandLineController implements PlayerController {
-    private static Random random = new Random();
-
     private Scanner reader;
     private PrintWriter writer;
 

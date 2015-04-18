@@ -3,12 +3,8 @@ package logic.rng;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
-import javax.crypto.Cipher;
 
 public class RNG {
-    private static Random random = new Random();
-
     public final Int256 hash;
     public final Int256 number;
 

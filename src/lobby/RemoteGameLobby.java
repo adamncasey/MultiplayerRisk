@@ -37,7 +37,6 @@ public class RemoteGameLobby extends Thread {
     boolean nonPlayingHost;
 
     private Deck deck;
-    private boolean handledHostPing;
 
     // TODO Implement timeouts in networking
 
@@ -46,7 +45,6 @@ public class RemoteGameLobby extends Thread {
         this.port = port;
         this.handler = handler;
         this.name = name;
-        handledHostPing = false;
     }
 
     public void run() {
@@ -183,12 +181,6 @@ public class RemoteGameLobby extends Thread {
         router.addRoute(client, conn);
     }
 
-    private void addOtherPlayersToRouter(GameRouter router, IConnection conn, Collection<NetworkClient> players) {
-        for(NetworkClient client : players) {
-            router.addRoute(client, conn);
-        }
-    }
-
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
     	Socket soc = new Socket();
     	soc.connect(new InetSocketAddress(address, port), Settings.socketTimeout);
@@ -285,7 +277,7 @@ public class RemoteGameLobby extends Thread {
 
         ExecutorCompletionService<Message> ecs = Networking.readMessageFromConnections(connections);
 
-        for(NetworkClient client : connections) {
+        for(@SuppressWarnings("unused") NetworkClient client : connections) {
             try {
                 Future<Message> msg = ecs.take();
 
@@ -406,9 +398,5 @@ public class RemoteGameLobby extends Thread {
         handler.onInitialiseGame(payload.version, payload.features);
 
         return true;
-    }
-
-    private List<Integer> shuffleCards() {
-        return null;
     }
 }

@@ -4,12 +4,7 @@ import networking.message.payload.Payload;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import networking.parser.PayloadParser;
-import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class DeployPayload extends Payload {

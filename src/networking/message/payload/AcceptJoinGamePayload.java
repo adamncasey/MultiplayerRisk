@@ -2,6 +2,7 @@ package networking.message.payload;
 
 import networking.parser.Parser;
 import networking.parser.ParserException;
+
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -31,7 +32,8 @@ public class AcceptJoinGamePayload extends Payload {
         this.move_timeout = ((Long)payload.get("move_timeout")).intValue();
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Map getJSONValue() {
         Map<String, Object> map = new HashMap<>();
 

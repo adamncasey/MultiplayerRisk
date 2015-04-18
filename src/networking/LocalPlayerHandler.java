@@ -1,8 +1,6 @@
 package networking;
 
 import logic.move.Move;
-import logic.rng.Int256;
-import logic.rng.RNG;
 
 public class LocalPlayerHandler {
 

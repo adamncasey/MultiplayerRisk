@@ -6,8 +6,6 @@ import networking.GameRouter;
 import networking.NetworkClient;
 import networking.networkplayer.NetworkPlayer;
 import player.IPlayer;
-
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;

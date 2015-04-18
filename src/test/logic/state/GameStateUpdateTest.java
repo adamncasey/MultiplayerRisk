@@ -2,13 +2,10 @@ package test.logic.state;
 
 import static org.junit.Assert.*;
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
-
 import logic.Card;
-import logic.move.Move;
 import logic.state.GameState;
 import player.IPlayer;
 

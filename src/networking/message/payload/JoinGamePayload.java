@@ -39,7 +39,8 @@ public class JoinGamePayload extends Payload {
         playerName = (String)payload.get("name");
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Map getJSONValue() {
         // JSONObject: "supported_versions": [float, float]
         //             "supported_features": [string, string]

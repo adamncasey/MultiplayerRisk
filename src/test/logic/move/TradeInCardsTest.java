@@ -1,6 +1,7 @@
 package test.logic.move;
 
 import static org.junit.Assert.*;
+
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ public class TradeInCardsTest{
     private Card cavalry; // a cavalry card
     private Card cavalry2;
     private Card artillery; // an artillery card
-    private Card wildcard; // a wildcard
+    @SuppressWarnings("unused")
+	private Card wildcard; // a wildcard
 
     private MoveChecker checker;
 

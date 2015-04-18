@@ -1,10 +1,8 @@
 package ui.commandline;
 
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-
 import logic.move.Move;
 import logic.move.MoveChecker;
 import logic.state.Board;
@@ -18,7 +16,6 @@ import networking.LocalPlayerHandler;
  */
 public class CommandLinePlayer implements IPlayer {
     private PlayerController controller;
-    private Scanner reader;
     private PrintWriter writer;
 	private String playerName;
 
@@ -31,7 +28,6 @@ public class CommandLinePlayer implements IPlayer {
 
     public CommandLinePlayer(PlayerController controller, Scanner reader, PrintWriter writer, String playerName, int playerid){
         this.controller = controller;
-        this.reader = reader;
         this.writer = writer;
         this.playerName = playerName;
         this.playerid = playerid;

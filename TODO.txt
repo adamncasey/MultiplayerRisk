@@ -24,20 +24,24 @@ Never implement message signing, nice idea but no group is going to get far enou
 ----------------------
 ----------------------
 
+
+
 Everyone - Entire Report
 
 James/Victor - Add all stages of game to GUIPlayer getMove and GUIPlayer updatePlayer
 
-James/Victor - Make GUIPlayer safer so that it doesn't crash all the time
-
-Adam - All of network changes required to make game protocol compliant - Test game with other group
-
-Everyone - Fix it so names are consistent across all games
-
+Adam - Test game with other group - find problems.
 Nathan - Implement a better AI
 
 Kill Lobby Threads when exiting lobby windows. They currently persist in the background.
 
-Investigate memory usage
-
 Investigate card oddities? See FB chat
+
+Integrate Cards UI into the game!
+
+Make it clearer that it's your turn? Maybe a big pop-up, or a star next to the shield which is yours?
+
+===========REVISIT NEAR SUBMISSION=========
+Make GUIPlayer safer so that it doesn't crash all the time. Largely tackled, but we could always do with more UI testing nearly the deadline.
+
+Investigate memory usage. Again, largely alleviated I think (Adam). But we are still at 300MB, that still seems weirdly high.

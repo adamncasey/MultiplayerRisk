@@ -46,6 +46,10 @@ public class GUIPlayer implements IPlayer {
 		this.moveChecker = checker;
 	}
 
+	public Player getLogicPlayer(){
+		return this.player;
+	}
+
 	public void nextMove(String move, int playerID) {
 		GameController.console.write(move);
 
@@ -95,9 +99,9 @@ public class GUIPlayer implements IPlayer {
 		case CLAIM_TERRITORY:
 			updateMapSingleTerritory(move);
 			break;
-//		case CARD_DRAWN:
-//			updateCards(move);
-//			break;
+		case CARD_DRAWN:
+			System.out.print("Card drawn!");
+			break;
 //		case DECIDE_ATTACK:
 //			break;
 //		case DECIDE_FORTIFY:

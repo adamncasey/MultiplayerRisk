@@ -156,6 +156,7 @@ public class GameController implements Initializable, PlayerController {
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		GameController.console = new GameConsole(consoleTextArea);
 		this.mapControl.initialise();
+
 	}
 
 	// ================================================================================
@@ -163,7 +164,7 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 
 	private Agent testingAI;
-	boolean testing = false;
+	boolean testing = true;
 	Stage testingStage = Stage.DECIDE_ATTACK;
 
 	// TODO: Replace this with Cards control.
@@ -449,7 +450,9 @@ public class GameController implements Initializable, PlayerController {
 	}
 
 	public void onCardsButtonClick(ActionEvent event){
+		//cardsControl = new CardsControl();
 		openPopup(cardsControl);
+		cardsControl.showHand(player.getLogicPlayer().getHand());
 	}
 
 	void showActionButton(String text) {

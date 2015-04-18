@@ -11,12 +11,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import logic.Card;
+import logic.state.Board;
+import logic.state.GameState;
+import player.IPlayer;
 
 import javax.xml.stream.EventFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Created by 120014299 on 16/04/15.
@@ -28,6 +33,8 @@ public class CardsControl extends BorderPane{
     ImageView[] cells = {cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23, cell24, cell25, cell26, cell27, cell28, cell29, cell30, cell31, cell32, cell33, cell34, cell35, cell36, cell37, cell38, cell39, cell40, cell41};
 
     ImageView noCard;
+
+    boolean[] cellIsFree = new boolean[42];
 
     private boolean isDiceMoveCompleted = false;
 
@@ -71,6 +78,56 @@ public class CardsControl extends BorderPane{
         }
 
         noCard = getCard("nocard");
+
+        populateCardMap();
+
+        cells[0] = cell0;
+        cells[1] = cell1;
+        cells[2] = cell2;
+        cells[3] = cell3;
+        cells[4] = cell4;
+        cells[5] = cell5;
+        cells[6] = cell6;
+        cells[7] = cell7;
+        cells[8] = cell8;
+        cells[9] = cell9;
+        cells[10] = cell10;
+        cells[11] = cell11;
+        cells[12] = cell12;
+        cells[13] = cell13;
+        cells[14] = cell14;
+        cells[15] = cell15;
+        cells[16] = cell16;
+        cells[17] = cell17;
+        cells[18] = cell18;
+        cells[19] = cell19;
+        cells[20] = cell20;
+        cells[21] = cell21;
+        cells[22] = cell22;
+        cells[23] = cell23;
+        cells[24] = cell24;
+        cells[25] = cell25;
+        cells[26] = cell26;
+        cells[27] = cell27;
+        cells[28] = cell28;
+        cells[29] = cell29;
+        cells[30] = cell30;
+        cells[31] = cell31;
+        cells[32] = cell32;
+        cells[33] = cell33;
+        cells[34] = cell34;
+        cells[35] = cell35;
+        cells[36] = cell36;
+        cells[37] = cell37;
+        cells[38] = cell38;
+        cells[39] = cell39;
+        cells[40] = cell40;
+        cells[41] = cell41;
+
+
+        for(int i = 0 ; i < 42 ; i++) {
+            cellIsFree[i] = true;
+        }
     }
 
     public ImageView getCard(String name) {
@@ -157,12 +214,21 @@ public class CardsControl extends BorderPane{
         }
     };
 
-    private ImageView getFirstFreeCell(){
-        for(ImageView cell : cells){
-            if(cell.getImage().equals(getCard("nocard").getImage()))
-                return cell;
+    public void showHand(List<Card> hand){
+        ListIterator<Card> cardIter = hand.listIterator();
+
+        while(cardIter.hasNext()){
+            Card currentCard = cardIter.next();
+            addCard(currentCard);
         }
-        return null;
+    }
+
+    private int getFirstFreeCell(){
+        for(int i=0;i<42;i++){
+            if(cellIsFree[i])
+                return i;
+        }
+        return -1;
     }
 
     private ImageView getCellWithCard(String name){
@@ -174,9 +240,11 @@ public class CardsControl extends BorderPane{
     }
 
     public void addCard(String name){
-        ImageView currentCell = getFirstFreeCell();
+        int index = getFirstFreeCell();
+        ImageView currentCell = cells[index];
         currentCell.setImage(cardImageMapping.get(name).getImage());
         currentCell.addEventFilter(MouseEvent.MOUSE_CLICKED, click);
+        cellIsFree[index] = false;
     }
 
     public void addCard(Card card){
@@ -193,4 +261,7 @@ public class CardsControl extends BorderPane{
         currentCell.removeEventFilter(MouseEvent.MOUSE_CLICKED, click);
     }
 
+    public void clearCrads(){
+        
+    }
 }

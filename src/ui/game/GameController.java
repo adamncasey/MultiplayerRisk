@@ -239,42 +239,39 @@ public class GameController implements Initializable, PlayerController {
 			break;
 
 		case CHOOSE_ATTACK_DICE:
-			showActionButton("Continue");
 			int maxArmies = player.getBoard().getArmies(move.getFrom()) - 1;
 			if (maxArmies > 3)
 				maxArmies = 3;
 
-			diceRollControl.initialiseAttack(
-					player.getBoard().getName(move.getTo()),
-					new AttackingDiceRollControlEventHandler() {
-						@Override
-						public void onReadyToRoll(int numberOfAttackingDice) {
-							currentMove.setAttackDice(numberOfAttackingDice);
-							notifyMoveCompleted();
-						}
-					}, 1, maxArmies);
-			openPopup(diceRollControl);
-
+			numericControl.initialise(new NumberSelectedEventHandler() {
+				@Override
+				public void onSelected(int number) {
+					hideNumericControl();
+					currentMove.setAttackDice(number);
+					notifyMoveCompleted();
+				}
+			}, String.format(
+					"How many armies would you like to attack %s with", player
+							.getBoard().getName(move.getTo())), 1, maxArmies);
+			showNumericControl();
 			break;
 
 		case CHOOSE_DEFEND_DICE:
-			showActionButton("Continue");
-
 			maxArmies = player.getBoard().getArmies(move.getTo());
 			if (maxArmies > 2)
 				maxArmies = 2;
 
-			diceRollControl.initialiseDefend(
-					player.getBoard().getName(move.getTo()),
-					move.getDefendDice(),
-					new DefendingDiceRollControlEventHandler() {
-						@Override
-						public void onReadyToRoll(int numberOfDefendingDice) {
-							currentMove.setDefendDice(numberOfDefendingDice);
-							notifyMoveCompleted();
-						}
-					}, 1, maxArmies);
-			openPopup(diceRollControl);
+			numericControl.initialise(new NumberSelectedEventHandler() {
+				@Override
+				public void onSelected(int number) {
+					hideNumericControl();
+					currentMove.setDefendDice(number);
+					notifyMoveCompleted();
+				}
+			}, String.format(
+					"How many armies would you like to defend %s with", player
+							.getBoard().getName(move.getTo())), 1, maxArmies);
+			showNumericControl();
 			break;
 
 		case OCCUPY_TERRITORY:
@@ -399,10 +396,12 @@ public class GameController implements Initializable, PlayerController {
 		diceRollControl.visualiseResults(
 				new DiceRollResult(move.getAttackDiceRolls(), move
 						.getDefendDiceRolls()), move.getAttackerLosses(), move
-						.getDefenderLosses());
+						.getDefenderLosses(), player.getBoard().getOwner(move.getFrom()) == player.getPlayerid());
 
 		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size()
 				- move.getAttackerLosses();
+		
+		openPopup(diceRollControl);
 
 		while (!diceMoveDismissed) {
 			try {
@@ -498,13 +497,6 @@ public class GameController implements Initializable, PlayerController {
 		case DECIDE_FORTIFY:
 			currentMove.setDecision(false);
 			notifyMoveCompleted();
-			break;
-
-		case CHOOSE_ATTACK_DICE:
-			openPopup(diceRollControl);
-			break;
-		case CHOOSE_DEFEND_DICE:
-			openPopup(diceRollControl);
 			break;
 
 		default:

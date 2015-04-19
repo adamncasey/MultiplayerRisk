@@ -29,38 +29,34 @@
          <content>
             <FlowPane fx:id="flowPane" hgap="10.0" prefWidth="300.0" vgap="10.0">
                <children>
-                  <Pane prefHeight="150.0" prefWidth="99.0">
+                  <GridPane maxWidth="-Infinity" prefHeight="150.0" prefWidth="99.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
-                        <GridPane maxWidth="-Infinity" prefWidth="99.0">
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                           <children>
-                              <ImageView fitHeight="150.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@resources/artillery.jpg" />
-                                 </image>
-                              </ImageView>
-                              <Label styleClass="cardName" text="Western United States" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                 <GridPane.margin>
-                                    <Insets top="10.0" />
-                                 </GridPane.margin>
-                              </Label>
-                              <ImageView fitHeight="50.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
-                                 <image>
-                                    <Image url="@../map/territory/AF4_southafrica_highlighted.png" />
-                                 </image>
-                                 <GridPane.margin>
-                                    <Insets bottom="8.0" />
-                                 </GridPane.margin>
-                              </ImageView>
-                           </children>
-                        </GridPane>
+                        <ImageView fitHeight="150.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resources/artillery.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label styleClass="cardName" text="Western United States" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <GridPane.margin>
+                              <Insets top="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ImageView fitHeight="50.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                           <image>
+                              <Image url="@../map/territory/AF4_southafrica_highlighted.png" />
+                           </image>
+                           <GridPane.margin>
+                              <Insets bottom="8.0" />
+                           </GridPane.margin>
+                        </ImageView>
                      </children>
-                  </Pane>
+                  </GridPane>
                </children>
             </FlowPane>
          </content>

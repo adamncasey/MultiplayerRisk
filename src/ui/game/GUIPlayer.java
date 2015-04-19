@@ -48,7 +48,7 @@ public class GUIPlayer implements IPlayer {
 		this.moveChecker = checker;
 	}
 
-	public Player getLogicPlayer(){
+	public Player getLogicPlayer() {
 		return this.player;
 	}
 
@@ -91,16 +91,20 @@ public class GUIPlayer implements IPlayer {
 		GameController.console.write(desc);
 		System.out.print(desc);
 
-        try{
-            FileWriter out = new FileWriter(String.format("log%d.txt", player.getUID()), true);
-            out.write(desc); 
-            out.close();
-        }catch(IOException e){
-        }
+		try {
+			FileWriter out = new FileWriter(String.format("log%d.txt",
+					player.getUID()), true);
+			out.write(desc);
+			out.close();
+		} catch (IOException e) {
+		}
 
 		switch (move.getStage()) {
-		// case CARD_DRAWN:
-		// break;
+		case CARD_DRAWN:
+			if(move.getUID() == player.getUID()) {
+				gameController.cardControl.add(move.getCard());
+			}
+			break;
 		// case CHOOSE_ATTACK_DICE:
 		// break;
 		// case CHOOSE_DEFEND_DICE:
@@ -109,12 +113,10 @@ public class GUIPlayer implements IPlayer {
 			updateMapSingleTerritory(move);
 			break;
 
-		case CARD_DRAWN:
-			break;
-//		case DECIDE_ATTACK:
-//			break;
-//		case DECIDE_FORTIFY:
-//			break;
+		// case DECIDE_ATTACK:
+		// break;
+		// case DECIDE_FORTIFY:
+		// break;
 		// break;
 		// case DECIDE_ATTACK:
 		// break;
@@ -156,10 +158,12 @@ public class GUIPlayer implements IPlayer {
 		// break;
 		// case SETUP_END:
 		// break;
-		 case START_ATTACK:
-			 gameController.mapControl.setSelectedFrom(gameController.mapControl.getTerritoryByID(move.getFrom()));
-			 gameController.mapControl.setSelectedTo(gameController.mapControl.getTerritoryByID(move.getTo()));
-		 break;
+		case START_ATTACK:
+			gameController.mapControl.setSelectedFrom(gameController.mapControl
+					.getTerritoryByID(move.getFrom()));
+			gameController.mapControl.setSelectedTo(gameController.mapControl
+					.getTerritoryByID(move.getTo()));
+			break;
 		// case START_FORTIFY:
 		// break;
 		case TRADE_IN_CARDS:

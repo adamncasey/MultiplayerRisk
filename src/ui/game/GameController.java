@@ -84,6 +84,7 @@ public class GameController implements Initializable, PlayerController {
 		this.player = player;
 
 		setPlayers();
+		cardControl.initialise(mapControl);
 		startGame(combinePlayers(playersBefore, player, playersAfter), playerHandler);
 	}
 

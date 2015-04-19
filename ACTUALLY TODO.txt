@@ -11,4 +11,7 @@ When the window is closed, not all threads die. This needs fixing.
 
 On Windows, the Main Screen background is offset by a few pixels.
 
-Delete "Game Test". (Or turn it into a credits page or something)
+Delete "Game Test". (Or turn it into a credits page or something) // Turned it into a DEMO
+
+When there are 6 players, the Current Move text in the top right slightly overlaps the 6th shield
+

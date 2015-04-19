@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
+
 <?import ui.game.map.MapControl?>
 <?import ui.game.numericControl.NumericControl?>
-<?import ui.game.cards.CardsControl?>
 <?import ui.game.dice.DiceRollControl?>
+<?import ui.game.cards.CardControl?>
+
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
@@ -66,27 +69,28 @@
         </BorderPane>
       </bottom>
       <center>
-        <GridPane BorderPane.alignment="CENTER">
+        <GridPane alignment="CENTER" BorderPane.alignment="CENTER">
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="650.0" prefWidth="650.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="450.0" prefHeight="450.0" vgrow="SOMETIMES" />
           </rowConstraints>
           <children>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.valignment="CENTER">
               <children>
-                <Button fx:id="cardsButton" layoutX="64.0" layoutY="34.0" onAction="#onCardsButtonClick" text="Cards" />
+                  <CardControl fx:id="cardControl" visible="true">
+                  </CardControl>
               </children>
-            </Pane>
-            <MapControl fx:id="mapControl" GridPane.columnIndex="1">
+            </AnchorPane>
+            <MapControl fx:id="mapControl" GridPane.columnIndex="1" GridPane.valignment="CENTER">
             </MapControl>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.valignment="CENTER">
               <children>
-                  <NumericControl fx:id="numericControl" visible="false">
-                  </NumericControl>
+                <NumericControl fx:id="numericControl" visible="false">
+                </NumericControl>
                 <Button fx:id="actionButton" layoutY="200.0" onAction="#onActionButtonClick" text="Done" visible="false" />
               </children>
             </AnchorPane>
@@ -109,23 +113,21 @@
         <Pane fx:id="popupContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
           <children>
             <DiceRollControl fx:id="diceRollControl" visible="false">
-          </DiceRollControl>
-          <CardsControl fx:id="cardsControl" visible="false">
-          </CardsControl>
-        </children>
-      </Pane>
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="2" />
-    </children>
-  </GridPane>
-</children>
-<stylesheets>
-  <URL value="@Game.css" />
-</stylesheets>
+            </DiceRollControl>
+          </children>
+        </Pane>
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="2" />
+      </children>
+    </GridPane>
+  </children>
+  <stylesheets>
+    <URL value="@Game.css" />
+  </stylesheets>
 </AnchorPane>

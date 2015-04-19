@@ -203,6 +203,10 @@ public class MapControl extends Pane {
 					label.relocate(xF, yF);
 				}
 			});
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+			}
 		}
 	}
 

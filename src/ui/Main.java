@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import ai.AgentFactory;
 import ai.AgentTypes;
 import ai.agents.Agent;
@@ -12,12 +13,15 @@ import networking.LocalPlayerHandler;
 import player.IPlayer;
 import logic.state.Deck;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
 import ui.game.GUIPlayer;
@@ -50,6 +54,14 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			stage = primaryStage;
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent arg0) {
+					Platform.exit();
+					System.exit(0);
+				}
+			});
+			
 			stage.setTitle("Risk");
 			stage.setMinWidth(MINIMUM_WINDOW_WIDTH);
 			stage.setMinHeight(MINIMUM_WINDOW_HEIGHT);
@@ -162,8 +174,8 @@ public class Main extends Application {
 					"game/Game.fxml", IN_GAME_WIDTH, IN_GAME_HEIGHT);
 			stage.setResizable(true);
 
-			Agent userAgent = AgentFactory.buildAgent(AgentTypes.Type.FURIOUS);
-			GUIPlayer player = new GUIPlayer(game, "Host", 0); // Get rid of this at some point.
+			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
+			GUIPlayer player = new GUIPlayer(game, userAgent.getName(), 0); 
 			
 			player.setPlayerController(userAgent);
 
@@ -187,6 +199,8 @@ public class Main extends Application {
 			in.close();
 		}
 		Scene scene = new Scene(page, width, height);
+		scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");
+		scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Damion");
 		stage.setScene(scene);
 		// stage.sizeToScene();
 		stage.show();

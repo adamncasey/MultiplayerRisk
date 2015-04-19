@@ -3,7 +3,9 @@ package ui.menu;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
+
 import player.IPlayer;
 import ai.AgentFactory;
 import ai.AgentPlayer;
@@ -56,10 +58,13 @@ public class MenuController extends AnchorPane implements Initializable {
 
 			int nextPlayerID = 1;
 
-			players.add(new AgentPlayer(AgentFactory
-					.buildAgent(AgentTypes.Type.ANGRY), nextPlayerID++));
-			players.add(new AgentPlayer(AgentFactory
-					.buildAgent(AgentTypes.Type.ANGRY), nextPlayerID++));
+			Random r = new Random();
+			int noOfArmies = 2 + r.nextInt(4);
+			
+			for (int i = 0; i < noOfArmies; i++) {
+				players.add(new AgentPlayer(AgentFactory.buildAgent(AgentTypes
+						.randomType()), nextPlayerID++));
+			}
 
 			Board board = new Board();
 			Deck deck = board.getDeck();

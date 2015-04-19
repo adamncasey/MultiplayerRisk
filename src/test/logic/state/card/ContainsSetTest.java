@@ -20,6 +20,7 @@ public class ContainsSetTest{
     private Card artillery2;
     private Card artillery3;
     private Card wildcard; // a wildcard
+    private Card wildcard2;
 
     @Before
     public void setupCards(){
@@ -32,7 +33,8 @@ public class ContainsSetTest{
         artillery = new Card(1, 10, "country");
         artillery2 = new Card(2, 10, "country");
         artillery3 = new Card(3, 10, "country");
-        wildcard = new Card(0, 0, "country");
+        wildcard = new Card(42, 0, "country");
+        wildcard2 = new Card(43, 0, "country");
     }
 
     // hand is empty
@@ -153,7 +155,7 @@ public class ContainsSetTest{
     @Test
     public void wildcardTwoNo(){
         List<Card> hand = new ArrayList<Card>();
-        hand.add(wildcard); hand.add(wildcard);
+        hand.add(wildcard); hand.add(wildcard2);
         assertEquals(false, Card.containsSet(hand));
     }
 
@@ -161,7 +163,7 @@ public class ContainsSetTest{
     @Test
     public void wildcardTwo(){
         List<Card> hand = new ArrayList<Card>();
-        hand.add(infantry); hand.add(wildcard); hand.add(wildcard);
+        hand.add(infantry); hand.add(wildcard); hand.add(wildcard2);
         assertEquals(true, Card.containsSet(hand));
     }
 

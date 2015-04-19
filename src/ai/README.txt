@@ -75,6 +75,7 @@ List of Strategies:
 // Think about attacking territories you have surrounded
 // Think about forcing towards specific continents
 // Think about how fortifying is done, will it always consistently move to the front lines?
+// Stop players from holding full continents
 
 // SmartContinental - Avoid clashes by picking continents based on how likely it is to capture the whole thing.
 // Cluster - Cluster expands from his biggest set of armies

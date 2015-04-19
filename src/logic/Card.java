@@ -101,7 +101,7 @@ public class Card {
         String message = "";
         int counter = 1;
         for(Card c : hand){
-            String type = "";
+            String type = "*";
             if(c.getType() == 1){
                 type = "infantry";
             }else if(c.getType() == 5){

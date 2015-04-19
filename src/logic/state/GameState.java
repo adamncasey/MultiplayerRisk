@@ -120,6 +120,9 @@ public class GameState {
     public List<Integer> calculateMatchingCards(int uid, List<Card> toTradeIn){
         List<Integer> matches = new ArrayList<>();
         for(Card card : toTradeIn){
+            if(card.getType() == 0){
+                continue;
+            }
             if(board.getOwner(card.getID()) == uid){
                 matches.add(card.getID());
             }

@@ -116,8 +116,8 @@ public class Board {
             Card card = new Card(i, TERRITORY_CARDS[i], getName(i));
             deck.addCard(card);
         }
-        for(int i = 0; i != NUM_WILDCARDS; ++i){
-            Card card = new Card(0, 0, "Wildcard");
+        for(int i = territories.size(); i != territories.size()+NUM_WILDCARDS; ++i){
+            Card card = new Card(i, 0, "Wildcard");
             deck.addCard(card);
         }
         return deck;

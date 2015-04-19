@@ -6,13 +6,11 @@ import networking.message.Message;
 import networking.parser.Parser;
 import networking.parser.ParserException;
 import settings.Settings;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.logging.Level;
 
 // General "Networking Utilities" class.
 public class Networking {

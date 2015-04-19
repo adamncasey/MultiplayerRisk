@@ -12,7 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-public class NumericControl extends BorderPane {
+public class NumericControl extends GridPane {
 
 	@FXML
 	Label title;

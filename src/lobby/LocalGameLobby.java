@@ -60,6 +60,7 @@ public class LocalGameLobby extends Thread {
 	 */
 	public void run() {
         GameRouter router = new GameRouter();
+        router.startRouting();
         ArrayList<LobbyClient> lobbyClients = new ArrayList<>();
         List<NetworkClient> netClients = new LinkedList<>();
 
@@ -76,7 +77,7 @@ public class LocalGameLobby extends Thread {
                 if(client != null) {
                     lobbyClients.add(client);
 
-                    NetworkClient newPlayer = new NetworkClient(router, newplayerid, client.name, false);
+                    NetworkClient newPlayer = new NetworkClient(router, newplayerid, client.name);
                     router.addRoute(newPlayer, client.getConnection());
 
                     netClients.add(newPlayer);

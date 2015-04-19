@@ -142,11 +142,11 @@ public class Parser {
                 playerid = null;
             }
             else {
-                validateType(obj, Long.class);
+            	validatePayloadType(obj, Long.class);
                 playerid = ((Long)obj).intValue();
 
-                if(playerid < 0) {
-                    throw new ParserException("Invalid playerid. Playerid must be not be negative");
+                if(playerid < -1) { // Allow playerid = -1 for non-conforming non-player host
+                    throw new ParserException("Invalid playerid. Playerid must be not be < -1");
                 }
             }
         }

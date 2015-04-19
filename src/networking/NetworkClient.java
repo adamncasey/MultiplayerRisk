@@ -16,13 +16,13 @@ public class NetworkClient {
 
     public final int playerid;
     private String name;
-    public final boolean hostPlayer;
+    private boolean hostPlayer;
 
     public final GameRouter router;
     private BlockingQueue<Object> messageQueue;
 
-    public NetworkClient(GameRouter router, int playerid, String name, boolean isHost) {
-        this.hostPlayer = isHost;
+    public NetworkClient(GameRouter router, int playerid, String name) {
+        this.hostPlayer = false;
         this.router = router;
         this.playerid = playerid;
         this.name = name;
@@ -37,8 +37,18 @@ public class NetworkClient {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public boolean isHost() {
+    	return hostPlayer;
+    }
+    
+    public void setHost() {
+    	hostPlayer = true;
+    }
 
     public Message readMessage() throws TimeoutException, ConnectionLostException, ParserException {
+    	System.out.println("waiting for message from playerid " + this.playerid);
+    	
         Object obj;
         try {
             // TODO: Timeout?

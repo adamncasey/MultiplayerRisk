@@ -22,5 +22,5 @@ public class Settings {
     public static final int MOVE_TIMEOUT = 200;
 
 
-    public static final boolean PRINT_NETWORK_TRAFFIC = false;
+    public static final boolean PRINT_NETWORK_TRAFFIC = true;
 }

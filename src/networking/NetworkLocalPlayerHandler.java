@@ -184,6 +184,12 @@ public class NetworkLocalPlayerHandler extends LocalPlayerHandler {
                 // Send roll_number message.
                 return new MoveProcessResult(new Message(Command.DICE_ROLL_NUM, move.getUID(), new StringPayload(move.getRollNumber()), false));
             }
+            case GAME_END: {
+                // Send a leave_game
+
+                // Kill Networking.
+            }
+
 
             case CARD_DRAWN:
             case END_ATTACK:
@@ -191,7 +197,6 @@ public class NetworkLocalPlayerHandler extends LocalPlayerHandler {
             case SETUP_BEGIN:
             case SETUP_END:
             case GAME_BEGIN:
-            case GAME_END:
                 return MoveProcessResult.NO_RESPONSE_NEEDED;
             default:
                 throw new RuntimeException("Unknown move stage: " + move.getStage().name());

@@ -1,7 +1,5 @@
 Adam:
 Refactoring:
-  NetworkLocalPlayer to wrap local IPlayers: Implements DICE_HASH/NUMBER stages and broadcasts moves made locally over network.
-    Reduces the complexity in NetworkPlayer::updatePlayer.
   LobbyUtil.createIPlayersInOrder could do with a second look at some point. It's really complicated for no great reason.
 
 
@@ -40,7 +38,3 @@ Make it clearer that it's your turn? Maybe a big pop-up, or a star next to the s
 
 ===========REVISIT NEAR SUBMISSION=========
 Make GUIPlayer safer so that it doesn't crash all the time. Largely tackled, but we could always do with more UI testing nearly the deadline.
-
-Investigate memory usage. Again, largely alleviated I think (Adam). But we are still at 300MB, that still seems weirdly high.
-
-Update README to what we want Edwin to run

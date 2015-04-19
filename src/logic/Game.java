@@ -130,7 +130,7 @@ public class Game implements Runnable {
 	private void playerTurn(int uid) {
 		Move move;
 		List<Card> hand = state.getPlayer(uid).getHand();
-		List<Card> toTradeIn = new ArrayList<Card>();
+		List<Card> toTradeIn = new ArrayList<>();
 
 		while (hand.size() >= 5) { // Force more TRADE_IN_CARDS if hand is too big
 			hand = tradeInCards(uid, toTradeIn);

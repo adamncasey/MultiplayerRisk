@@ -4,7 +4,10 @@
     <property name="build" location="build" />
     <property name="lib" location="lib" />
     <property name="out.dir" location="bin" />
-    <property name="out.jarname" location="${out.dir}/RiskyBusiness.jar" />
+    <property name="out.main.jarname" location="${out.dir}/Risk.jar" />
+    <property name="out.playcli.jarname" location="${out.dir}/PlayCLI.jar" />
+    <property name="out.watchcli.jarname" location="${out.dir}/WatchCLI.jar" />
+    <property name="out.networkcli.jarname" location="${out.dir}/NetworkCLI.jar" />
 
     <!-- Class path for libraries + non-test files -->
     <path id="3rd-party-classpath">
@@ -13,6 +16,9 @@
         </fileset>
         <pathelement path="${build}" />
     </path>
+	
+	<target name="all" depends="dist,test,playcli,watchcli,networkcli">
+	</target>
 
     <target name="init">
     <!-- Create the build directory structure used by compile -->
@@ -38,7 +44,7 @@
         <mkdir dir="${out.dir}" />
 
         <!-- Put the final JAR file in the output directory -->
-        <jar jarfile="${out.jarname}" basedir="${build}">
+        <jar jarfile="${out.main.jarname}" basedir="${build}">
             <zipgroupfileset dir="lib" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="ui.Main" />
@@ -47,13 +53,16 @@
     </target>
 
     <target name="run" depends="dist" description="Run Game">
-        <java jar="${out.jarname}" fork="true" />
+        <java jar="${out.main.jarname}" fork="true" />
     </target>
 
     <target name="clean" description="Clean up">
         <!-- Delete the ${build} and ${out.dir} directory trees -->
         <delete dir="${build}" />
-        <delete dir="${out.jarname}" />
+        <delete dir="${out.main.jarname}" />
+        <delete dir="${out.playcli.jarname}" />
+        <delete dir="${out.watchcli.jarname}" />
+        <delete dir="${out.networkcli.jarname}" />
     </target>
 
     <target name="compile-test" depends="compile" description="Compile test code">
@@ -74,5 +83,42 @@
             </batchtest>
             <formatter type="plain" usefile="false" />
         </junit>
+    </target>
+	
+    <target name="playcli" depends="compile" description="Builds the PlayCLI JAR file">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${out.dir}" />
+
+        <!-- Put the final JAR file in the output directory -->
+        <jar jarfile="${out.playcli.jarname}" basedir="${build}">
+            <zipgroupfileset dir="lib" includes="*.jar"/>
+            <manifest>
+                <attribute name="Main-Class" value="main.PlayCLI" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="watchcli" depends="compile" description="Builds the PlayCLI JAR file">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${out.dir}" />
+
+        <!-- Put the final JAR file in the output directory -->
+        <jar jarfile="${out.watchcli.jarname}" basedir="${build}">
+            <zipgroupfileset dir="lib" includes="*.jar"/>
+            <manifest>
+                <attribute name="Main-Class" value="main.WatchCLI" />
+            </manifest>
+        </jar>
+    </target>
+    <target name="networkcli" depends="compile" description="Builds the PlayCLI JAR file">
+        <!-- Create the distribution directory -->
+        <mkdir dir="${out.dir}" />
+
+        <!-- Put the final JAR file in the output directory -->
+        <jar jarfile="${out.networkcli.jarname}" basedir="${build}">
+            <zipgroupfileset dir="lib" includes="*.jar"/>
+            <manifest>
+                <attribute name="Main-Class" value="ui.commandline.CLIMain" />
+            </manifest>
+        </jar>
     </target>
 </project>

@@ -7,6 +7,8 @@ Change text on "Done" buttons. "End Attack", "Skip Fortify" ?
 "The Stage * not implemented" prints in game console.
 
 When "back" is pressed on create game or direct connect screens. We should be closing the lobby threads.
-When the window is closed, not all threads die. This needs fixing
+When the window is closed, not all threads die. This needs fixing.
 
 On Windows, the Main Screen background is offset by a few pixels.
+
+Delete "Game Test". (Or turn it into a credits page or something)

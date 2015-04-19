@@ -18,13 +18,15 @@ import logic.state.Deck;
 import logic.state.Player;
 import player.*;
 import networking.LocalPlayerHandler;
-import ui.game.cards.CardsControl;
+import ui.game.cards.CardControl;
 import ui.game.dice.*;
 import ui.game.map.*;
 import ui.game.numericControl.*;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+
 import ai.agents.*;
 import ai.strategy.PassiveStrategy;
 
@@ -39,7 +41,7 @@ public class GameController implements Initializable, PlayerController {
 	@FXML
 	NumericControl numericControl;
 	@FXML
-	CardsControl cardsControl;
+	CardControl cardControl;
 	@FXML
 	TextArea consoleTextArea;
 	@FXML
@@ -498,12 +500,6 @@ public class GameController implements Initializable, PlayerController {
 		default:
 			break;
 		}
-	}
-
-
-	public void onCardsButtonClick(ActionEvent event) {
-		openPopup(cardsControl);
-		cardsControl.showHand(player.getLogicPlayer().getHand());
 	}
 
 	void showActionButton(String text) {

@@ -110,14 +110,11 @@ public class GUIPlayer implements IPlayer {
 			break;
 
 		case CARD_DRAWN:
-			System.out.print("Card drawn!");
 			break;
 //		case DECIDE_ATTACK:
 //			break;
 //		case DECIDE_FORTIFY:
 //			break;
-		// case CARD_DRAWN:
-		// updateCards(move);
 		// break;
 		// case DECIDE_ATTACK:
 		// break;

@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import ai.AgentFactory;
 import ai.AgentTypes;
 import ai.agents.Agent;
@@ -12,12 +13,15 @@ import networking.LocalPlayerHandler;
 import player.IPlayer;
 import logic.state.Deck;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import ui.creategame.CreateGameController;
 import ui.directconnect.DirectConnectController;
 import ui.game.GUIPlayer;
@@ -50,6 +54,14 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			stage = primaryStage;
+			stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent arg0) {
+					Platform.exit();
+					System.exit(0);
+				}
+			});
+			
 			stage.setTitle("Risk");
 			stage.setMinWidth(MINIMUM_WINDOW_WIDTH);
 			stage.setMinHeight(MINIMUM_WINDOW_HEIGHT);

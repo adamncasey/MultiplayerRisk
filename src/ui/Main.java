@@ -175,7 +175,7 @@ public class Main extends Application {
 			stage.setResizable(true);
 
 			Agent userAgent = AgentFactory.buildAgent(AgentTypes.randomType());
-			GUIPlayer player = new GUIPlayer(game, "Host", 0); // Get rid of this at some point.
+			GUIPlayer player = new GUIPlayer(game, userAgent.getName(), 0); 
 			
 			player.setPlayerController(userAgent);
 

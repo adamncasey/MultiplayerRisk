@@ -76,6 +76,9 @@ List of Strategies:
 // Think about forcing towards specific continents
 // Think about how fortifying is done, will it always consistently move to the front lines?
 // Stop players from holding full continents
+// Defend continent borders in some way
+
+// Once the GUI worked we could see what AIs were actually doing easier
 
 // SmartContinental - Avoid clashes by picking continents based on how likely it is to capture the whole thing.
 // Cluster - Cluster expands from his biggest set of armies

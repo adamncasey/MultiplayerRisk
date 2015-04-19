@@ -199,6 +199,8 @@ public class Main extends Application {
 			in.close();
 		}
 		Scene scene = new Scene(page, width, height);
+		scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");
+		scene.getStylesheets().add("http://fonts.googleapis.com/css?family=Damion");
 		stage.setScene(scene);
 		// stage.sizeToScene();
 		stage.show();

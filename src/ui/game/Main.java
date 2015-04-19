@@ -15,7 +15,8 @@ public class Main extends Application {
 		Parent root = FXMLLoader.load(getClass().getResource("Game.fxml"));
 		primaryStage.setTitle("Risk");
 		Scene newScene = new Scene(root, 1000, 800);
-		//newScene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");
+		newScene.getStylesheets().add("http://fonts.googleapis.com/css?family=Open+Sans:400,600");
+		newScene.getStylesheets().add("http://fonts.googleapis.com/css?family=Damion");
 
 		primaryStage.setScene(newScene);
 		primaryStage.show();

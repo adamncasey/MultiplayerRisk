@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
-
-
-<?import ui.game.dice.DiceRollControl?>
 <?import ui.game.map.MapControl?>
 <?import ui.game.numericControl.NumericControl?>
 <?import ui.game.cards.CardsControl?>
-
-
+<?import ui.game.dice.DiceRollControl?>
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
     <BorderPane AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
       <top>
-        <GridPane prefHeight="90.0" BorderPane.alignment="CENTER">
+        <GridPane prefHeight="90.0" prefWidth="1000.0" BorderPane.alignment="CENTER">
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -56,41 +51,6 @@
           </children>
         </GridPane>
       </top>
-      <center>
-          <GridPane maxHeight="-Infinity" prefHeight="450.0" BorderPane.alignment="CENTER">
-              <children>
-                  <Pane fx:id="centerPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="650.0">
-                    <GridPane.margin>
-                      <Insets />
-                    </GridPane.margin>
-                    <children>
-			
-                      <MapControl fx:id="mapControl">
-                      </MapControl>
-
-                    </children>
-                  </Pane>
-                  <VBox spacing="20.0" GridPane.columnIndex="1" GridPane.halignment="LEFT">
-                     <children>
-                         <NumericControl fx:id="numericControl" visible="false">
-                         </NumericControl>
-                        <Button fx:id="cardsButton" onAction="#onCardsButtonClick" text="Cards" />
-
-                        <Button fx:id="actionButton" onAction="#onActionButtonClick" text="Done" visible="false">
-                        </Button>
-                     </children>
-                  </VBox>
-              </children>
-               <columnConstraints>
-                  <ColumnConstraints />
-                  <ColumnConstraints hgrow="ALWAYS" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints />
-               </rowConstraints>
-          </GridPane>
-
-      </center>
       <bottom>
         <BorderPane BorderPane.alignment="CENTER">
           <center>
@@ -105,6 +65,34 @@
           </top>
         </BorderPane>
       </bottom>
+      <center>
+        <GridPane BorderPane.alignment="CENTER">
+          <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="650.0" prefWidth="650.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          </columnConstraints>
+          <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          </rowConstraints>
+          <children>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+              <children>
+                <Button fx:id="cardsButton" layoutX="64.0" layoutY="34.0" onAction="#onCardsButtonClick" text="Cards" />
+              </children>
+            </Pane>
+            <MapControl fx:id="mapControl" GridPane.columnIndex="1">
+            </MapControl>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+              <children>
+                  <NumericControl fx:id="numericControl" visible="false">
+                  </NumericControl>
+                <Button fx:id="actionButton" layoutY="200.0" onAction="#onActionButtonClick" text="Done" visible="false" />
+              </children>
+            </AnchorPane>
+          </children>
+        </GridPane>
+      </center>
     </BorderPane>
     <GridPane fx:id="popup" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <columnConstraints>
@@ -120,27 +108,24 @@
       <children>
         <Pane fx:id="popupContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="380.0" prefWidth="450.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
           <children>
-
             <DiceRollControl fx:id="diceRollControl" visible="false">
-            </DiceRollControl>
-		
-            <CardsControl fx:id="cardsControl" visible="false">
-            </CardsControl>
-		
-          </children>
-        </Pane>
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="2" />
-      </children>
-    </GridPane>
-  </children>
-  <stylesheets>
-    <URL value="@Game.css" />
-  </stylesheets>
+          </DiceRollControl>
+          <CardsControl fx:id="cardsControl" visible="false">
+          </CardsControl>
+        </children>
+      </Pane>
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="1" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Region onMouseClicked="#closePopup" styleClass="blackout" GridPane.rowIndex="2" />
+    </children>
+  </GridPane>
+</children>
+<stylesheets>
+  <URL value="@Game.css" />
+</stylesheets>
 </AnchorPane>

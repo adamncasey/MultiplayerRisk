@@ -56,7 +56,6 @@ public class LobbyUtil {
         Collections.rotate(playeridOrder, -rotationAmount);
 
         boolean after = false;
-        boolean delegatedBroadcast = true;
 
         for(int playerid : playeridOrder) {
             // If we've skipped over our playerid, we should start inserting into the after list now.
@@ -71,8 +70,7 @@ public class LobbyUtil {
                     continue;
                 }
 
-                NetworkPlayer player = new NetworkPlayer(client, client.playerid, ourPlayerID, delegatedBroadcast);
-                delegatedBroadcast = false;
+                NetworkPlayer player = new NetworkPlayer(client, client.playerid, ourPlayerID);
 
                 // If we've passed our playerid, add to playersAfter
                 if(!after) {

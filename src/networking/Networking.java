@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.logging.Level;
 
 // General "Networking Utilities" class.
 public class Networking {
@@ -168,5 +169,24 @@ public class Networking {
 
         // Otherwise ALL OK.
         return true;
+    }
+
+    public static List<Integer> readAcknowledgementsIgnorePlayerid(Message message, int ignoredPlayerID, Collection<NetworkClient> players) {
+        NetworkClient removed = null;
+
+        for(NetworkClient player : players) {
+            if(player.playerid == ignoredPlayerID) {
+                players.remove(player);
+                removed = player;
+                break;
+            }
+        }
+
+        List<Integer> responses = Networking.readAcknowledgementsForMessageFromPlayers(message, players);
+
+        if(removed != null)
+            players.add(removed);
+
+        return responses;
     }
 }

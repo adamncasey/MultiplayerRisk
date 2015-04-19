@@ -56,15 +56,18 @@ public class CLIMain {
 
     static List<IPlayer> playersBefore = null;
     static List<IPlayer> playersAfter = null;
+
+    static LocalPlayerHandler localHandler = null;
     static int ourPlayerid;
 
-    public static void setPlayers(List<IPlayer> before, List<IPlayer> after) {
+    public static void setPlayers(List<IPlayer> before, List<IPlayer> after, LocalPlayerHandler localPlayerHandler) {
         playersBefore = before;
         playersAfter = after;
+        localHandler = localPlayerHandler;
     }
 
     private static void playGame() {
-        if(playersBefore == null || playersAfter == null) {
+        if(playersBefore == null || playersAfter == null || localHandler == null) {
             System.out.println("Error setting up game.");
             return;
         }
@@ -77,7 +80,7 @@ public class CLIMain {
         players.add(localPlayer);
         players.addAll(playersAfter);
 
-        Game game = new Game(players, new LocalPlayerHandler(), null);
+        Game game = new Game(players, localHandler, null);
 
         List<String> names = namePlayers(playersBefore, playersAfter);
         System.out.println("Players: ");
@@ -173,14 +176,14 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck, LocalPlayerHandler localPlayerHandler) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());
 
             System.out.println("At this point, we should pass this data off to the Game Loop");
 
-            setPlayers(playersBefore, playersAfter);
+            setPlayers(playersBefore, playersAfter, localPlayerHandler);
         }
 
         @Override
@@ -279,14 +282,14 @@ public class CLIMain {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck, LocalPlayerHandler localPlayerHandler) {
             System.out.println("onLobbyComplete: ");
             System.out.println("\tplayers: " + playersBefore.toString());
             System.out.println("\tplayers: " + playersAfter.toString());
 
             System.out.println("At this point, we should pass this data off to the Game Loop");
 
-            setPlayers(playersBefore, playersAfter);
+            setPlayers(playersBefore, playersAfter, localPlayerHandler);
         }
 
         @Override

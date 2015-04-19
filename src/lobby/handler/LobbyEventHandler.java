@@ -1,6 +1,7 @@
 package lobby.handler;
 
 import logic.state.Deck;
+import networking.LocalPlayerHandler;
 import player.IPlayer;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public interface LobbyEventHandler {
      * @param playersAfter - List of players whose turn comes after the local turn
      * @param Deck - the shuffled deck of cards
      */
-    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck);
+    void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck, LocalPlayerHandler localPlayerHandler);
 
     /**
      * Called on Error / Exception which causes joining or hosting the lobby to fail.

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import networking.LobbyClient;
+import networking.LocalPlayerHandler;
 import player.IPlayer;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -178,11 +179,11 @@ public class LobbyHostController extends AnchorPane implements Initializable {
         }
 
         @Override
-        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
+        public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck, LocalPlayerHandler localPlayerHandler) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, deck, hostPlayerType, hostNickname, LocalGameLobby.HOST_PLAYERID);
+					application.goToGame(playersBefore, playersAfter, deck, hostPlayerType, hostNickname, LocalGameLobby.HOST_PLAYERID, localPlayerHandler);
 				}
 			});
         }

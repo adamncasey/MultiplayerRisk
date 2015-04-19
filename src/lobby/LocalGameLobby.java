@@ -129,7 +129,7 @@ public class LocalGameLobby extends Thread {
 
             LobbyUtil.createIPlayersInOrder(netClients, firstPlayer, HOST_PLAYERID, playersBefore, playersAfter);
 
-            handler.onLobbyComplete(playersBefore, playersAfter, deck);
+            handler.onLobbyComplete(playersBefore, playersAfter, deck, new NetworkLocalPlayerHandler(router));
         }
 	}
 

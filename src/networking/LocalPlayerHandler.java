@@ -9,7 +9,6 @@ public class LocalPlayerHandler {
     }
 
     public void sendMove(Move move) {
-        // CARD_DRAWN goes here
     }
 
     public void handleRoll(Move move) {

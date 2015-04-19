@@ -115,7 +115,7 @@ public class RemoteGameLobby extends Thread {
         LinkedList<IPlayer> playersAfter = new LinkedList<>();
         LobbyUtil.createIPlayersInOrder(otherPlayers, firstPlayer, playerid, playersBefore, playersAfter);
 
-        handler.onLobbyComplete(playersBefore, playersAfter, deck);
+        handler.onLobbyComplete(playersBefore, playersAfter, deck, new NetworkLocalPlayerHandler(router));
     }
 
     /**

@@ -69,7 +69,7 @@ public class GameController implements Initializable, PlayerController {
 	// ================================================================================
 
 	public void setApp(List<IPlayer> playersBefore, List<IPlayer> playersAfter,
-			Deck deck, GUIPlayer player) {
+			Deck deck, GUIPlayer player, LocalPlayerHandler playerHandler) {
 
 		this.players = combinePlayers(playersBefore, player, playersAfter);
 		this.deck = deck;
@@ -82,7 +82,7 @@ public class GameController implements Initializable, PlayerController {
 		this.player = player;
 
 		setPlayers();
-		startGame(combinePlayers(playersBefore, player, playersAfter));
+		startGame(combinePlayers(playersBefore, player, playersAfter), playerHandler);
 	}
 
 	void setPlayers() {
@@ -125,8 +125,8 @@ public class GameController implements Initializable, PlayerController {
 		return players;
 	}
 
-	void startGame(List<IPlayer> players) {
-		Game game = new Game(players, new LocalPlayerHandler(), deck);
+	void startGame(List<IPlayer> players, LocalPlayerHandler playerHandler) {
+		Game game = new Game(players, playerHandler, deck);
 
 		new Thread() {
 			public void run() {

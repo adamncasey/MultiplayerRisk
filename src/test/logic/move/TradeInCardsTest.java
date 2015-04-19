@@ -170,6 +170,16 @@ public class TradeInCardsTest{
         assertEquals(false, checker.checkTradeInCards(hand, toTradeIn));
     }
 
+    // hand has 3 same cards making a set, toTradeIn contains one of these cards duplicated twice to make a set.
+    @Test
+    public void sameCardPlayedTwice() {
+        List<Card> hand = new ArrayList<Card>();
+        hand.add(infantry); hand.add(infantry2); hand.add(infantry3);
+        List<Card> toTradeIn = new ArrayList<Card>();
+        toTradeIn.add(infantry2); toTradeIn.add(infantry); toTradeIn.add(infantry);
+        assertEquals(false, checker.checkTradeInCards(hand, toTradeIn));
+    }
+
     // hand has 3 cards not making a set, toTradeIn is empty
     @Test
     public void notSetGood(){

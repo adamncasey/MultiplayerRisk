@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import networking.LocalPlayerHandler;
 import player.IPlayer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -225,7 +226,7 @@ public class DirectConnectController extends AnchorPane implements
 		}
 
 		@Override
-		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck) {
+		public void onLobbyComplete(List<IPlayer> playersBefore, List<IPlayer> playersAfter, Deck deck, LocalPlayerHandler localPlayerHandler) {
 			
 			assert(playerid != -1 ); //: "playerid must be set. Is onJoinAccepted called"
 			
@@ -234,7 +235,7 @@ public class DirectConnectController extends AnchorPane implements
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					application.goToGame(playersBefore, playersAfter, deck, selectedPlayerType, name.getText(), playerid);
+					application.goToGame(playersBefore, playersAfter, deck, selectedPlayerType, name.getText(), playerid, localPlayerHandler);
 				}
 			});
 		}

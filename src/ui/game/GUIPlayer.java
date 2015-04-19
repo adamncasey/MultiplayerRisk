@@ -174,7 +174,7 @@ public class GUIPlayer implements IPlayer {
 		}
 
 		try {
-			Thread.sleep(15);
+			Thread.sleep(5);
 		} catch (InterruptedException e) {
 		}
 	}

@@ -15,7 +15,7 @@
          <children>
                 <Button focusTraversable="false" onAction="#createGame" prefHeight="80.0" prefWidth="400.0" text="Create game" />
                 <Button focusTraversable="false" onAction="#directConnect" prefHeight="80.0" prefWidth="400.0" text="Direct connect" />
-                <Button focusTraversable="false" onAction="#gametest" prefHeight="80.0" prefWidth="400.0" text="Game Test" />
+                <Button focusTraversable="false" onAction="#gametest" prefHeight="80.0" prefWidth="400.0" text="Demo" />
                 <Button focusTraversable="false" onAction="#quit" prefHeight="80.0" prefWidth="400.0" text="Quit" />
          </children>
       </HBox>

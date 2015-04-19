@@ -5,9 +5,12 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
+
 <?import ui.game.map.MapControl?>
 <?import ui.game.numericControl.NumericControl?>
 <?import ui.game.dice.DiceRollControl?>
+<?import ui.game.cards.CardControl?>
+
 <AnchorPane prefHeight="800.0" prefWidth="1000.0" styleClass="background" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.game.GameController">
   <children>
     <Pane onMouseClicked="#closePopup" styleClass="blackout" />
@@ -77,6 +80,8 @@
           <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0">
               <children>
+                  <CardControl fx:id="cardControl" visible="true">
+                  </CardControl>
               </children>
             </AnchorPane>
             <MapControl fx:id="mapControl" GridPane.columnIndex="1">

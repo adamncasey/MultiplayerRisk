@@ -25,25 +25,50 @@
     <URL value="@CardControl.css" />
   </stylesheets>
    <children>
-      <FlowPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-         <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@resources/AS1.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@resources/AS1.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@resources/AS1.png" />
-               </image>
-            </ImageView>
-         </children>
-      </FlowPane>
+      <ScrollPane fx:id="root" hbarPolicy="NEVER" vbarPolicy="ALWAYS" GridPane.rowIndex="1">
+         <content>
+            <FlowPane fx:id="flowPane" hgap="10.0" vgap="10.0">
+               <children>
+                  <Pane prefHeight="170.0" prefWidth="120.0" style="-fx-background-color: white; -fx-background-radius: 15px;">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resources/AS1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="170.0" prefWidth="120.0" style="-fx-background-color: white; -fx-background-radius: 15px;">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resources/AS1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="170.0" prefWidth="120.0" style="-fx-background-color: white; -fx-background-radius: 15px;">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resources/AS1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="170.0" prefWidth="120.0" style="-fx-background-color: white; -fx-background-radius: 15px;">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@resources/AS1.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </Pane>
+               </children>
+            </FlowPane>
+         </content>
+      </ScrollPane>
       <Label text="Cards" GridPane.halignment="CENTER" />
       <Button mnemonicParsing="false" text="Trade In" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
    </children>

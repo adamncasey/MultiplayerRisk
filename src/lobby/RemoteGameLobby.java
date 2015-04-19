@@ -18,6 +18,7 @@ import logic.state.Board;
 import logic.state.Deck;
 import networking.*;
 import networking.message.*;
+import networking.parser.Parser;
 import networking.parser.ParserException;
 
 /**
@@ -58,30 +59,39 @@ public class RemoteGameLobby extends Thread {
 
     private void joinLobby() throws IOException {
 
-        GameRouter router = new GameRouter();
-        NetworkClient host = new NetworkClient(router, LocalGameLobby.HOST_PLAYERID, "Host", true);
-
-
         IConnection conn = tcpConnect(address, port);
         handler.onTCPConnect();
 
-        router.addRoute(host, conn);
+        sendJoinGame(conn);
 
-        sendJoinGame(router);
-
-        if(!handleJoinGameResponse(host)) { // callbacks: onJoinAccepted or onJoinRejected
+        if(!handleJoinGameResponse(conn)) { // callbacks: onJoinAccepted or onJoinRejected
             return;
         }
         // Now we have a playerid
 
         // Signifies we have received a PING message from the host.
-        int numPlayers = -1;
         List<NetworkClient> otherPlayers = new LinkedList<>();
-        otherPlayers.add(host);
+        int numPlayers = -1;
+        
+        GameRouter router = new GameRouter();
 
         while(numPlayers == -1) {
-            numPlayers = handleHostMessage(router, conn, host, otherPlayers);
+            numPlayers = handleHostMessage(router, conn, otherPlayers);
         }
+
+        int hostPlayerID = LocalGameLobby.HOST_PLAYERID;
+        if(nonPlayingHost) {
+        	hostPlayerID = -1;
+        }
+
+        NetworkClient host = getHost(hostPlayerID, otherPlayers);
+        if(host == null) {
+        	host = new NetworkClient(router, hostPlayerID, "Host");
+        }
+        host.setHost();
+        router.addRoute(host, conn);
+        
+        router.startRouting(); // beyond this point messages from the socket will be piped to the correct NetworkClient
 
         int firstPlayer;
         try {
@@ -118,16 +128,26 @@ public class RemoteGameLobby extends Thread {
         handler.onLobbyComplete(playersBefore, playersAfter, deck, new NetworkLocalPlayerHandler(router));
     }
 
-    /**
+    private NetworkClient getHost(int hostPlayerID, List<NetworkClient> otherPlayers) {
+		for(NetworkClient client : otherPlayers) {
+			if(client.playerid == hostPlayerID) {
+				 return client;
+			}
+		}
+		
+		return null;
+	}
+
+	/**
      * Receives a message and processes it for the (PLAYERS_JOINED or PING) stage of the lobby
-     * @param host
+
      * @return numPlayers in the game if a PING message was received. Otherwise -1
      */
-    private int handleHostMessage(GameRouter router, IConnection conn, NetworkClient host, List<NetworkClient> otherPlayers) {
+    private int handleHostMessage(GameRouter router, IConnection conn, List<NetworkClient> otherPlayers) {
 
         Message msg;
         try {
-            msg = host.readMessage();
+            msg = Networking.readMessage(conn);
         } catch (TimeoutException | ConnectionLostException | ParserException e) {
             e.printStackTrace();
             handler.onFailure(e);
@@ -176,7 +196,7 @@ public class RemoteGameLobby extends Thread {
 
         // Otherwise, we didn't find the network client in the list.. Time to make it!
 
-        NetworkClient client = new NetworkClient(router, playerid, name, false);
+        NetworkClient client = new NetworkClient(router, playerid, name);
         allPlayers.add(client);
         router.addRoute(client, conn);
     }
@@ -184,23 +204,23 @@ public class RemoteGameLobby extends Thread {
     private IConnection tcpConnect(InetAddress address, int port) throws IOException {
     	Socket soc = new Socket();
     	soc.connect(new InetSocketAddress(address, port), Settings.socketTimeout);
-        soc.setSoTimeout(Settings.socketTimeout);
+        soc.setSoTimeout(0);
         return new Connection(soc);
     }
 
-    private void sendJoinGame(GameRouter router) throws ConnectionLostException {
+    private void sendJoinGame(IConnection conn) throws ConnectionLostException {
 
         JoinGamePayload payload = new JoinGamePayload(new double[] { 1.0 }, new String[] {}, name);
 
         Message msg = new Message(Command.JOIN_GAME, payload);
 
-        router.sendToAllPlayers(msg);
+        conn.sendBlocking(Parser.stringifyMessage(msg));
     }
 
-    private boolean handleJoinGameResponse(NetworkClient host) throws IOException {
+    private boolean handleJoinGameResponse(IConnection conn) throws IOException {
         Message msg;
         try {
-            msg = host.readMessage();
+            msg = Networking.readMessage(conn);
         } catch(ParserException e) {
             e.printStackTrace();
             handler.onFailure(e);
@@ -255,17 +275,17 @@ public class RemoteGameLobby extends Thread {
     }
 
     private int processHostPingMessage(Message msg) {
-
-        int numplayers = handlePingMessage(msg);
-
-        if(msg.playerid == null) {
+ 
+        if(msg.playerid == null || msg.playerid == -1) {
             nonPlayingHost = true;
         } else {
             if(msg.playerid < 0) {
-                throw new RuntimeException("Host did not specific playerid. Playerid must be explicitly null for non playing host");
+                throw new RuntimeException("Host did not specify playerid. Playerid must be explicitly null for non playing host");
             }
             nonPlayingHost = false;
         }
+
+        int numplayers = handlePingMessage(msg);
 
         return numplayers;
     }
@@ -274,6 +294,8 @@ public class RemoteGameLobby extends Thread {
         if(connections.size() == 0) {
             return;
         }
+        
+        System.out.println("Receiving pings from: " + connections.size() + "players");
 
         ExecutorCompletionService<Message> ecs = Networking.readMessageFromConnections(connections);
 
@@ -312,10 +334,16 @@ public class RemoteGameLobby extends Thread {
 
     private int handlePingMessage(Message msg) {
         if(msg.command != Command.PING) {
-            throw new RuntimeException("Invalid message");
+            throw new RuntimeException("Invalid message " + msg.command);
         }
         
-        handler.onPingReceive(msg.playerid);
+        int playerid = -1;
+        		
+        if(msg.playerid != null) {
+        	playerid = msg.playerid;
+        }
+        
+        handler.onPingReceive(playerid);
 
         if(msg.payload instanceof IntegerPayload) {
             return ((IntegerPayload)msg.payload).value;
@@ -391,6 +419,10 @@ public class RemoteGameLobby extends Thread {
         } catch (TimeoutException | ConnectionLostException | ParserException e) {
             e.printStackTrace();
             throw new RuntimeException("Unable to receive initialise_game message: " + e.getClass().toString() + " " + e.getMessage());
+        }
+        
+        if(msg.command != Command.INITIALISE_GAME) {
+        	throw new RuntimeException("Expecting initialise_game. Received: " + msg.command);
         }
 
         InitialiseGamePayload payload = (InitialiseGamePayload)msg.payload;

@@ -55,6 +55,7 @@ public class DirectConnectController extends AnchorPane implements
 	private Button connectButton;
 	
 	private int playerid = -1;
+	RemoteGameLobby lobby = null;
 	
 	private BooleanProperty isFormEditable = new SimpleBooleanProperty(true);
 	public boolean getIsFormEditable() {
@@ -74,6 +75,9 @@ public class DirectConnectController extends AnchorPane implements
 
 	@FXML
 	protected void backButtonAction(ActionEvent event) {
+		if(this.lobby != null) {
+			lobby.interrupt();
+		}
 		application.gotoMenu();
 	}
 
@@ -243,6 +247,8 @@ public class DirectConnectController extends AnchorPane implements
 		@Override
 		public void onFailure(Throwable e) {
 			status("Error occurred: " + e.getMessage());
+			
+			e.printStackTrace();
 			
 			Platform.runLater(new Runnable() {
 				@Override

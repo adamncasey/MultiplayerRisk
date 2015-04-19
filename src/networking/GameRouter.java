@@ -17,14 +17,31 @@ public class GameRouter {
     private Map<IConnection, ReadThread> readThreads;
 
     private Map<IConnection, Set<IConnection>> connectionBridges;
+    
+    boolean startedRouting;
 
     public GameRouter() {
         connections = new HashMap<>();
         readThreads = new HashMap<>();
         connectionBridges = new HashMap<>();
+        
+        startedRouting = false;
+    }
+    
+    public void startRouting() {
+    	if(startedRouting) {
+    		return;
+    	}
+    	
+    	for(IConnection conn : connections.keySet()) {
+    		startNewListenThread(conn);
+    	}
+    	
+    	startedRouting = true;
     }
 
     public void addRoute(NetworkClient player, IConnection conn) {
+    	
         // Each playerid should only have one route
         removeAllRoutes(player);
 
@@ -33,7 +50,9 @@ public class GameRouter {
         if(players == null) {
             players = new HashSet<>();
 
-            startNewListenThread(conn);
+            if(startedRouting) {
+            	startNewListenThread(conn);
+            }
         }
 
         players.add(player);
@@ -90,8 +109,6 @@ public class GameRouter {
         return players;
     }
 
-    // TODO: Send should work the same way as receive (Performed on different thread with result).
-    //      TCP sends can block and would give a nice way to feedback errors to sender code.
     public void sendToAllPlayers(Message message) {
         // Send once on each socket
         for(IConnection conn : connections.keySet()) {
@@ -173,7 +190,7 @@ public class GameRouter {
                     return client;
                 }
 
-                if(playerid == -1 && client.hostPlayer) {
+                if(playerid == -1 && client.isHost()) {
                     return client;
                 }
             }

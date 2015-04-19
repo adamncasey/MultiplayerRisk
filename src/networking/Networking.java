@@ -58,7 +58,7 @@ public class Networking {
 		// representatives to formally agree on this
 		String msgString = conn.receiveLine();
 		if(msgString == null) { 
-			throw new ParserException("Received null message");
+			throw new ConnectionLostException("Connection terminated");
 		}
 		else
 		{

@@ -199,12 +199,13 @@ public class GameController implements Initializable, PlayerController {
 
 		switch (currentMove.getStage()) {
 		case TRADE_IN_CARDS:
+			moveDescription.setText("Choose your cards to trade-in");
 			ps.getMove(move);
 			moveCompleted = true;
 			break;
 
 		case DECIDE_FORTIFY:
-			showActionButton("Done");
+			showActionButton("Skip Fortify");
 			break;
 		case START_FORTIFY:
 			currentMove.setFrom(mapControl.getSelectedFrom().getId());
@@ -228,7 +229,7 @@ public class GameController implements Initializable, PlayerController {
 		 break;
 
 		case DECIDE_ATTACK:
-			showActionButton("Done");
+			showActionButton("End Attack");
 			break;
 		case START_ATTACK:
 			currentMove.setFrom(mapControl.getSelectedFrom().getId());

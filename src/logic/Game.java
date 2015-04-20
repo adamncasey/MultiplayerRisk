@@ -367,7 +367,7 @@ public class Game implements Runnable {
 
 		List<Int256> rollHashes = new ArrayList<>();
 		for (int i = 0; i != numPlayers; ++i) {
-			if (isActive(i)) {
+			if (isActive(playerInterfaces.get(i).getPlayerid())) {
 				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_HASH);
 				move.setRNG(rngs.get(i));
 				getMove(move);
@@ -380,7 +380,7 @@ public class Game implements Runnable {
 
 		List<Int256> rollNumbers = new ArrayList<>();
 		for (int i = 0; i != numPlayers; ++i) {
-			if (isActive(i)) {
+			if (isActive(playerInterfaces.get(i).getPlayerid())) {
 				Move move = new Move(playerInterfaces.get(i).getPlayerid(), ROLL_NUMBER);
 				move.setRNG(rngs.get(i));
 				move.setRollHash(rollHashes.get(i).string);

@@ -24,5 +24,3 @@ Everyone - Entire Report
 
 Adam - Test game with other group - find problems.
 Nathan - Implement a better AI
-
-Integrate Cards UI into the game!

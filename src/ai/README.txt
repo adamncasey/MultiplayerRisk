@@ -37,7 +37,11 @@ List of Agents:
 
   FOCUSED : Uses RandomStrategy, AggressiveStrategy, CardsStrategy, ContinentalStrategy, SmartAggressiveStrategy, CaptureContinentsStrategy
     Expanded FURIOUS
-    Uses Focused strategy to reinforce, place armies and attack on 
+    Uses FocusedStrategy to reinforce, place armies and attack on 
+
+  STEADY : Uses RandomStrategy, AggressiveStrategy, CardsStrategy, ContinentalStrategy, SmartAggressiveStrategy, ControlledStrategy
+    Expanded FURIOUS
+    Uses ControlledStrategy to place armies
 
 List of Strategies:
 
@@ -69,6 +73,9 @@ List of Strategies:
 
   CaptureContinentsStrategy:
       Focuses on one continent at a time, placing armies in that continent until it captures it.
+
+  ControlledStrategy:
+      Tries to place armies on the borders equally.
 
 // Ideas for future agents / strategies
 

@@ -41,7 +41,7 @@ public class CardControl extends GridPane {
 	@FXML
 	Button submit;
 
-	Image artilleryImage, cavalryImage, infantryImage;
+	Image artilleryImage, cavalryImage, infantryImage, wildcardImage;
 
 	MapControl map;
 
@@ -88,6 +88,8 @@ public class CardControl extends GridPane {
 				"resources/cavalry.jpg"));
 		infantryImage = new Image(getClass().getResourceAsStream(
 				"resources/infantry.jpg"));
+		wildcardImage = new Image(getClass().getResourceAsStream(
+				"resources/wildcard.jpg"));
 	}
 
 	public void add(Card card) {
@@ -110,8 +112,31 @@ public class CardControl extends GridPane {
 					}
 				});
 	}
+	
+	private GridPane getWildcard(Card card) {
+		GridPane grid = new GridPane();
+		grid.setPrefSize(99, 150);
+
+		ImageView background = new ImageView(wildcardImage);
+		background.setFitHeight(150);
+		background.setPickOnBounds(true);
+		background.setPreserveRatio(true);
+		
+		Region blackout = new Region();
+		blackout.getStyleClass().add("blackout");
+		selectRegions.put(card, blackout);
+
+		grid.add(blackout, 0, 0);
+		grid.getStyleClass().add("card");
+
+		return grid;
+	}
 
 	private GridPane getCard(Card card) {
+		if(card.getID() > 41) {
+			return getWildcard(card);
+		}
+		
 		GridPane grid = new GridPane();
 		grid.setPrefSize(99, 150);
 

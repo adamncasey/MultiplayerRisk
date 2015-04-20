@@ -5,6 +5,7 @@ import logic.Card;
 import logic.rng.Int256;
 import logic.state.Board;
 import logic.state.GameState;
+import settings.Settings;
 
 public class MoveChecker {
     private GameState state;
@@ -133,8 +134,14 @@ public class MoveChecker {
         }
         int extrasLeft = extraArmies - placedExtras;
         if(extrasLeft > 0){
-            if(armies > currentArmies && placedExtras == 0){
-                return false;
+            if(Settings.ExtraArmiesTogether){
+                if(armies > currentArmies && placedExtras == 0){
+                    return false;
+                }
+            }else{
+                if(armies > currentArmies && placedExtras != 2){
+                    return false;
+                }
             }
         }
         return true;

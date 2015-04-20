@@ -29,7 +29,7 @@ public class ControlledStrategy extends Strategy {
         if(move.getExtraArmies() > 0){
             List<Integer> matches = move.getMatches();
             move.setTerritory(matches.get(random.nextInt(matches.size())));
-            move.setArmies(1);
+            move.setArmies(2);
             return;
         }
         int bestToReinforce= -1;

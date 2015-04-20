@@ -39,6 +39,8 @@
                   <String fx:value="GREEDY AI" />
                   <String fx:value="CONTINENTAL AI" />
                   <String fx:value="FURIOUS AI" />
+                  <String fx:value="FOCUSED AI" />
+                  <String fx:value="STEADY AI" />
                 </FXCollections>
               </items>
               <value>

@@ -159,6 +159,12 @@ public class Main extends Application {
 					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.FURIOUS));
 					break;
 				}
+				case "FOCUSED AI": {
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.FOCUSED));
+				}
+				case "STEADY AI": {
+					player.setPlayerController(AgentFactory.buildAgent(AgentTypes.Type.FOCUSED));
+				}
 			}
 
 			game.setApp(playersBefore, playersAfter, deck, player, playerHandler);

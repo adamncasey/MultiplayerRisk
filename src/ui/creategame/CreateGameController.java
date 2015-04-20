@@ -41,8 +41,8 @@ public class CreateGameController extends AnchorPane implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		this.players.setText("4");
-		this.port.setText(Settings.port + "");
-		this.ipaddress.setText("localhost");
+		this.port.setText(Settings.DEFAULT_PORT + "");
+		this.ipaddress.setText(Settings.DEFAULT_LISTEN_IP);
 	}
 
 	private boolean isFormValid() {

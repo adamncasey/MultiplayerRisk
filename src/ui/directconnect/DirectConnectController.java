@@ -36,7 +36,7 @@ public class DirectConnectController extends AnchorPane implements
 	public void setApp(Main application) {
 		this.application = application;
 		this.ip.setText("localhost");
-		this.port.setText(Settings.port + "");
+		this.port.setText(Settings.DEFAULT_PORT + "");
 	}
 
 	@FXML

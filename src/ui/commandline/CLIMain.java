@@ -108,7 +108,7 @@ public class CLIMain {
     }
 
     public static LocalGameLobby hostLobby(String name) {
-        LocalGameLobby lobby = new LocalGameLobby(handler, Settings.port, name);
+        LocalGameLobby lobby = new LocalGameLobby(handler, Settings.DEFAULT_PORT, name);
         lobby.start();
         return lobby;
     }
@@ -196,7 +196,7 @@ public class CLIMain {
 
     public static void joinLobby() {
         try {
-            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.port, joinHandler, "Player Name");
+            RemoteGameLobby lobby = new RemoteGameLobby(InetAddress.getByName("127.0.0.1"), Settings.DEFAULT_PORT, joinHandler, "Player Name");
 
             lobby.start();
 

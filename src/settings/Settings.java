@@ -23,4 +23,7 @@ public class Settings {
 
 
     public static final boolean PRINT_NETWORK_TRAFFIC = true;
+
+
+    public static final boolean ExtraArmiesTogether = true;
 }

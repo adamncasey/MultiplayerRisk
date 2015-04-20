@@ -39,7 +39,7 @@ public class SmartAggressiveStrategy extends Strategy {
             List<Integer> matches = move.getMatches();
             territory = matches.get(random.nextInt(matches.size()));
             move.setTerritory(territory);
-            move.setArmies(1);
+            move.setArmies(2);
             return;
         }
 

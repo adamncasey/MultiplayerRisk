@@ -60,6 +60,12 @@ public class RandomStrategy extends Strategy {
     }
 
     private void placeArmies(Move move){
+        if(move.getExtraArmies() > 0){
+            List<Integer> matches = move.getMatches();
+            move.setTerritory(matches.get(random.nextInt(matches.size())));
+            move.setArmies(2);
+            return;
+        }
         move.setTerritory(random.nextInt(board.getNumTerritories()));
         move.setArmies(1);
     }

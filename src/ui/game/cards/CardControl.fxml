@@ -35,6 +35,6 @@
       </content>
     </ScrollPane>
     <Label GridPane.halignment="CENTER" />
-    <Button fx:id="submit" mnemonicParsing="false" text="Trade In" visible="false" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+    <Button fx:id="submit" onAction="#submit" mnemonicParsing="false" text="Trade In" visible="false" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
   </children>
 </fx:root>

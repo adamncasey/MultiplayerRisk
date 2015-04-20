@@ -167,6 +167,9 @@ public class GUIPlayer implements IPlayer {
 		// case START_FORTIFY:
 		// break;
 		case TRADE_IN_CARDS:
+			if(move.getUID() == player.getUID()) {
+				gameController.cardControl.removeCards(move.getToTradeIn());
+			}
 			break;
 		default:
 			break;

@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import logic.Card;
 import logic.Game;
 import logic.move.Move;
 import logic.move.Move.Stage;
@@ -19,6 +20,7 @@ import logic.state.Player;
 import player.*;
 import networking.LocalPlayerHandler;
 import ui.game.cards.CardControl;
+import ui.game.cards.CardTradeEventHandler;
 import ui.game.dice.*;
 import ui.game.map.*;
 import ui.game.numericControl.*;
@@ -28,7 +30,6 @@ import java.net.URL;
 import java.util.*;
 
 import ai.agents.*;
-import ai.strategy.PassiveStrategy;
 
 public class GameController implements Initializable, PlayerController {
 
@@ -65,7 +66,6 @@ public class GameController implements Initializable, PlayerController {
 	Move currentMove;
 	Map<Integer, BorderPane> playerShields = new HashMap<Integer, BorderPane>();
 
-	
 	// ================================================================================
 	// Startup
 	// ================================================================================
@@ -84,8 +84,16 @@ public class GameController implements Initializable, PlayerController {
 		this.player = player;
 
 		setPlayers();
-		cardControl.initialise(mapControl);
-		startGame(combinePlayers(playersBefore, player, playersAfter), playerHandler);
+		
+		cardControl.initialise(mapControl, new CardTradeEventHandler() {
+			@Override
+			public void onCardsPicked(List<Card> cards) {
+				onTradeInCardsButtonClick(cards);
+			}
+		});
+		
+		startGame(combinePlayers(playersBefore, player, playersAfter),
+				playerHandler);
 	}
 
 	void setPlayers() {
@@ -145,7 +153,6 @@ public class GameController implements Initializable, PlayerController {
 
 	}
 
-	
 	// ================================================================================
 	// PlayerController Functions
 	// ================================================================================
@@ -154,9 +161,6 @@ public class GameController implements Initializable, PlayerController {
 	boolean testing = false;
 	Stage testingStage = Stage.DECIDE_ATTACK;
 
-	// TODO: Replace this with Cards control.
-	private PassiveStrategy ps;
-
 	boolean moveCompleted = false;
 	Player userDetails;
 	int lastAttackerNumberOfArmiesSurvived;
@@ -164,7 +168,6 @@ public class GameController implements Initializable, PlayerController {
 	@Override
 	public void setup(Player player, Board board) {
 		this.userDetails = player;
-		ps = new PassiveStrategy(player, board, new Random());
 
 		for (final GUITerritory territory : mapControl
 				.getClickableTerritories()) {
@@ -199,9 +202,9 @@ public class GameController implements Initializable, PlayerController {
 
 		switch (currentMove.getStage()) {
 		case TRADE_IN_CARDS:
-			moveDescription.setText("Your turn: Choose your cards to trade-in");
-			ps.getMove(move);
-			moveCompleted = true;
+			showActionButton("End card trading");
+			updateMoveText("Your turn: Choose your cards to trade-in");
+			cardControl.setInTradeStage(true);
 			break;
 
 		case DECIDE_FORTIFY:
@@ -223,12 +226,11 @@ public class GameController implements Initializable, PlayerController {
 					currentMove.setArmies(number);
 					notifyMoveCompleted();
 				}
-			}, String.format(
-					"How many armies would move from %s to %s", player
-							.getBoard().getName(move.getFrom()), player
-							.getBoard().getName(move.getTo())), 1, move.getCurrentArmies()-1);
+			}, String.format("How many armies would move from %s to %s", player
+					.getBoard().getName(move.getFrom()), player.getBoard()
+					.getName(move.getTo())), 1, move.getCurrentArmies() - 1);
 			showNumericControl();
-		 	break;
+			break;
 
 		case PLACE_ARMIES:
 			updateMoveText("Your turn: Place your new armies");
@@ -413,11 +415,13 @@ public class GameController implements Initializable, PlayerController {
 		diceRollControl.visualiseResults(
 				new DiceRollResult(move.getAttackDiceRolls(), move
 						.getDefendDiceRolls()), move.getAttackerLosses(), move
-						.getDefenderLosses(), player.getBoard().getOwner(move.getFrom()) == player.getPlayerid());
+						.getDefenderLosses(),
+				player.getBoard().getOwner(move.getFrom()) == player
+						.getPlayerid());
 
 		lastAttackerNumberOfArmiesSurvived = move.getAttackDiceRolls().size()
 				- move.getAttackerLosses();
-		
+
 		openPopup(diceRollControl);
 
 		while (!diceMoveDismissed) {
@@ -429,7 +433,6 @@ public class GameController implements Initializable, PlayerController {
 		diceRollControl.reset();
 	}
 
-	
 	// ================================================================================
 	// User move validation
 	// ================================================================================
@@ -516,10 +519,19 @@ public class GameController implements Initializable, PlayerController {
 			currentMove.setDecision(false);
 			notifyMoveCompleted();
 			break;
-
+		case TRADE_IN_CARDS:
+			cardControl.setInTradeStage(false);
+			currentMove.setToTradeIn(new ArrayList<Card>());
+			notifyMoveCompleted();
+			break;
 		default:
 			break;
 		}
+	}
+	
+	public void onTradeInCardsButtonClick(List<Card> cards) {
+		currentMove.setToTradeIn(cards);
+		notifyMoveCompleted();
 	}
 
 	void showActionButton(String text) {

@@ -199,35 +199,40 @@ public class GameController implements Initializable, PlayerController {
 
 		switch (currentMove.getStage()) {
 		case TRADE_IN_CARDS:
-			moveDescription.setText("Choose your cards to trade-in");
+			moveDescription.setText("Your turn: Choose your cards to trade-in");
 			ps.getMove(move);
 			moveCompleted = true;
 			break;
 
 		case DECIDE_FORTIFY:
+			updateMoveText("Your turn: Fortify your empire");
 			showActionButton("Skip Fortify");
 			break;
 		case START_FORTIFY:
+			updateMoveText("Your turn: Fortify your empire");
 			currentMove.setFrom(mapControl.getSelectedFrom().getId());
 			currentMove.setTo(mapControl.getSelectedTo().getId());
 			notifyMoveCompleted();
 			break;
+		case FORTIFY_TERRITORY:
+			updateMoveText("Your turn: Fortify your empire");
+			numericControl.initialise(new NumberSelectedEventHandler() {
+				@Override
+				public void onSelected(int number) {
+					hideNumericControl();
+					currentMove.setArmies(number);
+					notifyMoveCompleted();
+				}
+			}, String.format(
+					"How many armies would move from %s to %s", player
+							.getBoard().getName(move.getFrom()), player
+							.getBoard().getName(move.getTo())), 1, move.getCurrentArmies()-1);
+			showNumericControl();
+		 	break;
 
-		 case FORTIFY_TERRITORY:
-				numericControl.initialise(new NumberSelectedEventHandler() {
-					@Override
-					public void onSelected(int number) {
-						hideNumericControl();
-						currentMove.setArmies(number);
-						notifyMoveCompleted();
-					}
-				}, String.format(
-						"How many armies would move from %s to %s", player
-								.getBoard().getName(move.getFrom()), player
-								.getBoard().getName(move.getTo())), 1, move.getCurrentArmies()-1);
-				showNumericControl();
-		 break;
-
+		case PLACE_ARMIES:
+			updateMoveText("Your turn: Place your new armies");
+			break;
 		case DECIDE_ATTACK:
 			showActionButton("End Attack");
 			break;
@@ -238,6 +243,7 @@ public class GameController implements Initializable, PlayerController {
 			break;
 
 		case CHOOSE_ATTACK_DICE:
+			updateMoveText("Your turn: Reinforce a territory");
 			int maxArmies = player.getBoard().getArmies(move.getFrom()) - 1;
 			if (maxArmies > 3)
 				maxArmies = 3;
@@ -256,6 +262,7 @@ public class GameController implements Initializable, PlayerController {
 			break;
 
 		case CHOOSE_DEFEND_DICE:
+			updateMoveText("Your turn: Defend this attack!");
 			maxArmies = player.getBoard().getArmies(move.getTo());
 			if (maxArmies > 2)
 				maxArmies = 2;
@@ -273,7 +280,12 @@ public class GameController implements Initializable, PlayerController {
 			showNumericControl();
 			break;
 
+		case ROLL_HASH:
+			break;
+		case ROLL_NUMBER:
+			break;
 		case OCCUPY_TERRITORY:
+			updateMoveText("Your turn: Occupy your newly conquered territory");
 			numericControl.initialise(new NumberSelectedEventHandler() {
 				@Override
 				public void onSelected(int number) {
@@ -290,6 +302,12 @@ public class GameController implements Initializable, PlayerController {
 			showNumericControl();
 			break;
 
+		case CLAIM_TERRITORY:
+			updateMoveText("Your turn: Claim a new territory");
+			break;
+		case REINFORCE_TERRITORY:
+			updateMoveText("Your turn: Reinforce a territory");
+			break;
 		default:
 			break;
 		}
@@ -572,5 +590,9 @@ public class GameController implements Initializable, PlayerController {
 		if (diceRollControl.isDiceMoveCompleted()) {
 			notifyDiceMoveDismissed();
 		}
+	}
+
+	private void updateMoveText(String text) {
+		Platform.runLater(() -> moveDescription.setText(text));
 	}
 }

@@ -123,7 +123,7 @@ public class Parser {
 		
         Payload payload = parsePayload(command, message.get("payload"));
 
-        Integer playerid = null;
+        Integer playerid;
 
         // player_id is needed on most messages, but not all.
         // player_id is null on NULL_PLAYERID_COMMANDS.
@@ -131,9 +131,6 @@ public class Parser {
         // player_id must be an integer >= 0
         if(NO_PLAYERID_COMMANDS.contains(command)) {
             // playerid shouldn't be sent in this message.
-            if(message.containsKey("player_id")) {
-                System.out.println("Message Warning: " + command.name() + " should not contain player_id field");
-            }
             playerid = -1;
         } else {
             Object obj = message.get("player_id");

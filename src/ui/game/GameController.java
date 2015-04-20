@@ -202,7 +202,7 @@ public class GameController implements Initializable, PlayerController {
 
 		switch (currentMove.getStage()) {
 		case TRADE_IN_CARDS:
-			showActionButton("End card trading");
+			showActionButton("Finish trading cards");
 			updateMoveText("Your turn: Choose your cards to trade-in");
 			cardControl.setInTradeStage(true);
 			break;

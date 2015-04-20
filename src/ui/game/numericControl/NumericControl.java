@@ -43,13 +43,13 @@ public class NumericControl extends GridPane {
 		for (int i = min; i <= max; i++) {
 			choices.add(i);
 		}
-		choiceBox.getSelectionModel().select(0);
 
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				title.setText(message);
 				choiceBox.setItems(choices);
+				choiceBox.getSelectionModel().select(0);
 			}
 		});
 	}

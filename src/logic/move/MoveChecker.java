@@ -135,11 +135,11 @@ public class MoveChecker {
         int extrasLeft = extraArmies - placedExtras;
         if(extrasLeft > 0){
             if(Settings.ExtraArmiesTogether){
-                if(armies > currentArmies && placedExtras == 0){
+                if(armies > currentArmies && placedExtras != 2){
                     return false;
                 }
             }else{
-                if(armies > currentArmies && placedExtras != 2){
+                if(armies > currentArmies && placedExtras == 0){
                     return false;
                 }
             }

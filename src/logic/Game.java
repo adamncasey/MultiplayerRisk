@@ -132,9 +132,9 @@ public class Game implements Runnable {
 		List<Card> hand = state.getPlayer(uid).getHand();
 		List<Card> toTradeIn = new ArrayList<>();
 
-		while (hand.size() >= 5) { // Force more TRADE_IN_CARDS if hand is too big
-			hand = tradeInCards(uid, toTradeIn);
-		}
+//		while (hand.size() >= 5) { // Force more TRADE_IN_CARDS if hand is too big
+//			hand = tradeInCards(uid, toTradeIn);
+//		}
 		// Always do atleast 1 TRADE_IN_CARDS
 		hand = tradeInCards(uid, toTradeIn);
 

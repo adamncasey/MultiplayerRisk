@@ -79,6 +79,13 @@ public class NetworkPlayer implements IPlayer {
                 return;
             }
         }
+
+        if(previousMove.getStage() == Move.Stage.PLAYER_ELIMINATED) {
+        	if(previousMove.getPlayer() == player.getUID()) {
+            	System.out.println("Player eliminated :" + this.client.playerid + " " + this.remotePlayerID + " " + this.player.getUID());
+            	client.router.removeAllRoutes(client);
+            }
+        }
     }
 
 	@Override

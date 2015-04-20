@@ -28,7 +28,7 @@ public class GameRouter {
         startedRouting = false;
     }
     
-    public void startRouting() {
+    public synchronized void startRouting() {
     	if(startedRouting) {
     		return;
     	}
@@ -40,7 +40,7 @@ public class GameRouter {
     	startedRouting = true;
     }
 
-    public void addRoute(NetworkClient player, IConnection conn) {
+    public synchronized void addRoute(NetworkClient player, IConnection conn) {
     	
         // Each playerid should only have one route
         removeAllRoutes(player);
@@ -60,30 +60,35 @@ public class GameRouter {
         connections.put(conn, players);
     }
 
-    public void removeRoute(NetworkClient player, IConnection conn) {
+    private void removeRoute(NetworkClient player, IConnection conn) {
 
         Set<NetworkClient> players = connections.get(conn);
 
         if(players != null && players.contains(player)) {
 
+        	System.out.println("Removed router to playerid: " + player.playerid);
             players.remove(player);
 
             if(players.size() == 0) {
                 players = null;
                 stopReadThread(conn);
+                System.out.println("Stopped listening on Thread");
+                
+                connections.remove(conn);
+            } else {
+                connections.put(conn, players);
             }
         }
 
-        connections.put(conn, players);
     }
 
-    public void removeAllRoutes(NetworkClient player) {
+    public synchronized void removeAllRoutes(NetworkClient player) {
         for(IConnection conn : connections.keySet()) {
             removeRoute(player, conn);
         }
     }
 
-    public void addBridge(IConnection msgSource, IConnection resendDest) {
+    public synchronized void addBridge(IConnection msgSource, IConnection resendDest) {
         Set<IConnection> destinations = connectionBridges.get(msgSource);
 
         if(destinations == null) {
@@ -95,12 +100,12 @@ public class GameRouter {
         connectionBridges.put(msgSource, destinations);
     }
 
-    public int getNumPlayers() {
+    public synchronized int getNumPlayers() {
 
         return getAllPlayers().size();
     }
 
-    public Set<NetworkClient> getAllPlayers() {
+    public synchronized Set<NetworkClient> getAllPlayers() {
 
         HashSet<NetworkClient> players = new HashSet<>();
 
@@ -109,7 +114,7 @@ public class GameRouter {
         return players;
     }
 
-    public void sendToAllPlayers(Message message) {
+    public synchronized void sendToAllPlayers(Message message) {
         // Send once on each socket
         for(IConnection conn : connections.keySet()) {
             sendToConnection(message, conn);
@@ -124,16 +129,14 @@ public class GameRouter {
         }
     }
 
-    protected void handleMessage(IConnection conn, Message msg) {
+    protected synchronized void handleMessage(IConnection conn, Message msg) {
         resendMessage(conn, msg);
 
         // TODO Handle Asynchronous timeout message here?
-        // TODO Oh god timeout has an acknowledgement... Kill me now.
 
         dispatchMessageToNetworkClient(msg);
     }
 
-    // TODO This doesn't seem to put the exception in the message queue of every client on the connection
     protected void handleException(IConnection conn, Exception ex) {
         Set<NetworkClient> clients = connections.get(conn);
 

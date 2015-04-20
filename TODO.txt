@@ -9,7 +9,6 @@ Adam's list of things to do which will actually get done:
 1. in NetworkPlayer, if we ever can't receive a message, tell the Game Logic we should be a neutral player.
 
 -------- Not likely to get done
-Warnings on some messages. Fix them!
 Maybe stop receiveing PING messages when the host sends READY. This requires quite a re-architecture of the lobby code as far as I can tell
 Maybe Check that unknown messages are ignored by the game at all important points.
 Maybe also check that the host forwards unknown messages. The host should probably just forward line by line instead of parsing and resending. Does this happen already?
@@ -23,18 +22,7 @@ Never implement message signing, nice idea but no group is going to get far enou
 
 Everyone - Entire Report
 
-James/Victor - Add all stages of game to GUIPlayer getMove and GUIPlayer updatePlayer
-
 Adam - Test game with other group - find problems.
 Nathan - Implement a better AI
 
-Kill Lobby Threads when exiting lobby windows. They currently persist in the background.
-
-Investigate card oddities? See FB chat
-
 Integrate Cards UI into the game!
-
-Make it clearer that it's your turn? Maybe a big pop-up, or a star next to the shield which is yours?
-
-===========REVISIT NEAR SUBMISSION=========
-Make GUIPlayer safer so that it doesn't crash all the time. Largely tackled, but we could always do with more UI testing nearly the deadline.

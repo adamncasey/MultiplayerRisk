@@ -1,7 +1,7 @@
 CS3099 - Software Engineering Team Project - Risk
 ===============================
 
-Winner of the 2015 MetaSwitch Networks Software Engineering Project Prize
+Winner of the 2015 Metaswitch Networks Software Engineering Project Prize
 
 Contributors
 ------------

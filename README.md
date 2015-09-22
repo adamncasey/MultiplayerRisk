@@ -1,5 +1,7 @@
-CS3099 - Risk
+CS3099 - Software Engineering Team Project - Risk
 ===============================
+
+Winner of the 2015 MetaSwitch Networks Software Engineering Project Prize
 
 Contributors
 ------------
@@ -11,16 +13,12 @@ Contributors
 
 Third Party Contributions
 -------------------------
-We should find licences for these really.
 Apache Commons codec
 Apache Commons lang
 Apache Commons math
 JSON-simple
 hamcrest-core
 JUnit
-
-We should also try to credit other resources used in our game
- * * * * * * * *  * ** * Do this
 
 System Requirements
 -------------------

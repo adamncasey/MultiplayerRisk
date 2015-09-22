@@ -1,7 +1,0 @@
-Extra armies. Hard to work out why the game keeps asking for more reinforcements.
-	Highlight territories you are allowed to place armies on?
-	Or just display text in console?
-30-40 territories. Number to occupy with gets hard to select. 
-"The Stage * not implemented" prints in game console.
-
-On Windows, the Main Screen background is offset by a few pixels. Looked into this, found no solution. Give up?
